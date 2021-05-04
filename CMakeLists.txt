@@ -18,4 +18,9 @@ include(Utilities)
 
 add_library(Rune INTERFACE)
 
+find_package(SDL2 REQUIRED)
+find_package(SDL2_image REQUIRED)
+find_package(SDL2_mixer REQUIRED)
+find_package(SDL2_ttf REQUIRED)
+
 add_subdirectory(test)
