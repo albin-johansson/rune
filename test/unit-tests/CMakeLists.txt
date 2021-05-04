@@ -5,9 +5,10 @@ project(rune-test-unit-tests CXX)
 set(SOURCE_FILES
     serialization_utils.hpp
     test_main.cpp
-    vector2_test.cpp
+
     rune/almost_equal_test.cpp
     rune/to_string_test.cpp
+    rune/vector2_test.cpp
     )
 
 add_executable(UnitTests ${SOURCE_FILES})

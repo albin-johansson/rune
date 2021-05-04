@@ -26,3 +26,4 @@
 #include "rune/compiler.hpp"
 #include "rune/concepts.hpp"
 #include "rune/to_string.hpp"
+#include "rune/vector2.hpp"
