@@ -10,6 +10,10 @@ jobs:
       - uses: seanmiddleditch/gha-setup-ninja@v3
       - uses: lukka/get-cmake@v3.18.3
 
+      - name: Install GCC 10
+        shell: bash
+        run: sudo apt install g++-10
+
       - name: Create build directory
         shell: bash
         run: mkdir -p build
