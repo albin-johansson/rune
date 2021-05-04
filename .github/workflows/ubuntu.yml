@@ -31,6 +31,6 @@ jobs:
           ninja
 
       - name: Run tests
-        working-directory: ./build/test/unit-test
+        working-directory: ./build/test/unit-tests
         shell: bash
         run: ./UnitTests
