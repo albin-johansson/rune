@@ -1,0 +1,27 @@
+name: "CI: Ubuntu"
+
+on: [ push, pull_request ]
+
+jobs:
+  ubuntu-latest-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: seanmiddleditch/gha-setup-ninja@v3
+      - uses: lukka/get-cmake@v3.18.3
+
+      - name: Create build directory
+        shell: bash
+        run: mkdir -p build
+        
+      - name: Build
+        working-directory: ./build
+        shell: bash
+        run: |
+          cmake .. -DCMAKE_BUILD_TYPE=Debug -GNinja'
+          ninja
+
+      - name: Run tests
+        working-directory: ./build/test/unit-test
+        shell: bash
+        run: ./UnitTests
