@@ -80,7 +80,6 @@ endfunction()
 # Adds an executable associated with the target, will be created using WIN32 on windows.
 #   target: the associated target.
 function(create_executable name files)
-  #message("Creating executable from: ${files}")
   if (WIN32)
     add_executable(${name} WIN32 ${files})
   else ()
