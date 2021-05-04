@@ -12,14 +12,17 @@ jobs:
       - uses: lukka/get-cmake@v3.18.3
 
       - name: Create build folder
+        shell: cmd
         run: cmake -E make_directory ./build
 
       - name: Build
         working-directory: ./build
+        shell: cmd
         run: |
           cmake .. -DCMAKE_BUILD_TYPE=Debug -GNinja
           ninja
 
       - name: Run tests
         working-directory: ./build/test/unit-tests
+        shell: cmd
         run: UnitTests
