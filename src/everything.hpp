@@ -22,8 +22,16 @@
 
 #pragma once
 
+#include "rune/aabb_tree.hpp"
 #include "rune/almost_equal.hpp"
 #include "rune/compiler.hpp"
 #include "rune/concepts.hpp"
+#include "rune/engine.hpp"
+#include "rune/game.hpp"
+#include "rune/ini.hpp"
+#include "rune/semi_fixed_game_loop.hpp"
+#include "rune/stack_resource.hpp"
+#include "rune/static_vector.hpp"
+#include "rune/tiled.hpp"
 #include "rune/to_string.hpp"
 #include "rune/vector2.hpp"
