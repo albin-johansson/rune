@@ -24,3 +24,4 @@
 
 #include "rune/almost_equal.hpp"
 #include "rune/compiler.hpp"
+#include "rune/concepts.hpp"
