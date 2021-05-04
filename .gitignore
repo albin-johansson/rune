@@ -34,3 +34,4 @@
 # Custom stuff
 .idea
 cmake-build-*
+doxygen-out
