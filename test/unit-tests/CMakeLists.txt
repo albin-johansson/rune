@@ -6,6 +6,7 @@ set(SOURCE_FILES
     test_main.cpp
     vector2_test.cpp
     rune/almost_equal_test.cpp
+    rune/to_string_test.cpp
     )
 
 add_executable(UnitTests ${SOURCE_FILES})

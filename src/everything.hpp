@@ -25,3 +25,4 @@
 #include "rune/almost_equal.hpp"
 #include "rune/compiler.hpp"
 #include "rune/concepts.hpp"
+#include "rune/to_string.hpp"
