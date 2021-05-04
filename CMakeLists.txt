@@ -1,0 +1,19 @@
+cmake_minimum_required(VERSION 3.17)
+
+project(rune
+    LANGUAGES CXX
+    VERSION 0.1.0
+    HOMEPAGE_URL "https://github.com/albin-johansson/rune")
+
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+set(CMAKE_CXX_STANDARD 20)
+set(CXX_STANDARD_REQUIRED ON)
+set(CXX_EXTENSIONS OFF)
+
+set(RUNE_SOURCE_DIR ${PROJECT_SOURCE_DIR}/src/rune)
+
+include(Utilities)
+
+add_library(Rune INTERFACE)
+
+add_subdirectory(test)
