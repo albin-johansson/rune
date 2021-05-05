@@ -29,6 +29,7 @@
 #include "rune/engine.hpp"
 #include "rune/game.hpp"
 #include "rune/ini.hpp"
+#include "rune/json_utils.hpp"
 #include "rune/semi_fixed_game_loop.hpp"
 #include "rune/stack_resource.hpp"
 #include "rune/static_vector.hpp"
