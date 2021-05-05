@@ -36,6 +36,7 @@
 #include "rune/io/json_utils.hpp"
 #include "rune/math/almost_equal.hpp"
 #include "rune/math/vector2.hpp"
+#include "rune/tmx/tmx_animation.hpp"
 #include "rune/tmx/tmx_color.hpp"
 #include "rune/tmx/tmx_local_id.hpp"
 #include "rune/tmx/tmx_text.hpp"

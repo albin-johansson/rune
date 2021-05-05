@@ -12,6 +12,7 @@ set(SOURCE_FILES
     rune/math/almost_equal_test.cpp
     rune/math/vector2_test.cpp
 
+    rune/tmx/tmx_animation_test.cpp
     rune/tmx/tmx_color_test.cpp
     rune/tmx/tmx_text_test.cpp
     )
