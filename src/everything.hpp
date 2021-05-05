@@ -40,4 +40,5 @@
 #include "rune/tmx/tmx_color.hpp"
 #include "rune/tmx/tmx_local_id.hpp"
 #include "rune/tmx/tmx_point.hpp"
+#include "rune/tmx/tmx_property.hpp"
 #include "rune/tmx/tmx_text.hpp"
