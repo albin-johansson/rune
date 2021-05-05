@@ -16,6 +16,17 @@ jobs:
       - uses: seanmiddleditch/gha-setup-ninja@v3
       - uses: lukka/get-cmake@v3.18.3
 
+      - name: Install graphics drivers
+        shell: bash
+        run: sudo apt-get install libegl1-mesa-dev libgles2-mesa-dev libasound2-dev libpulse-dev
+
+      - name: Emulate video device
+        shell: bash
+        run: |
+          sudo apt install xvfb
+          /sbin/start-stop-daemon --start --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 800x600x24 -ac +extension GLX;
+          sleep 3
+
       - name: Install GCC 10
         shell: bash
         run: |
