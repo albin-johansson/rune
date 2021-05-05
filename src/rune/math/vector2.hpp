@@ -5,8 +5,8 @@
 #include <ostream>   // ostream
 #include <string>    // string
 
+#include "../core/to_string.hpp"
 #include "almost_equal.hpp"
-#include "to_string.hpp"
 
 namespace rune {
 
