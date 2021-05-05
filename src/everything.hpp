@@ -35,5 +35,6 @@
 #include "rune/stack_resource.hpp"
 #include "rune/static_vector.hpp"
 #include "rune/tiled.hpp"
+#include "rune/tmx/tmx_color.hpp"
 #include "rune/to_string.hpp"
 #include "rune/vector2.hpp"

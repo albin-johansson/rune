@@ -9,6 +9,8 @@ set(SOURCE_FILES
     rune/almost_equal_test.cpp
     rune/to_string_test.cpp
     rune/vector2_test.cpp
+
+    rune/tmx/tmx_color_test.cpp
     )
 
 add_executable(UnitTests ${SOURCE_FILES})
