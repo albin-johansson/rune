@@ -15,7 +15,7 @@ struct tmx_object_tag;
 }  // namespace tags
 
 using tmx_file = nenya::strong_type<std::string, tags::tmx_file_tag>;
-using tmx_object = nenya::strong_type<int, tags::tmx_object_tag>;
+using tmx_object_id = nenya::strong_type<int, tags::tmx_object_tag>;
 
 enum class tmx_property_type
 {
@@ -40,7 +40,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM(tmx_property_type,
 struct tmx_property final
 {
   using data_type =
-      std::variant<std::string, tmx_file, tmx_object, tmx_color, int, float, bool>;
+      std::variant<std::string, tmx_file, tmx_object_id, tmx_color, int, float, bool>;
 
   std::string name;
   tmx_property_type type{tmx_property_type::string};
@@ -82,7 +82,7 @@ inline void from_json(const nlohmann::json& json, tmx_property& property)
       break;
 
     case tmx_property_type::object:
-      property.value.emplace<tmx_object>(json.at("value").get<int>());
+      property.value.emplace<tmx_object_id>(json.at("value").get<int>());
       break;
   }
 }
@@ -121,7 +121,7 @@ namespace tmx {
 
 [[nodiscard]] inline auto is_object(const tmx_property& property) noexcept -> bool
 {
-  return std::holds_alternative<tmx_object>(property.value);
+  return std::holds_alternative<tmx_object_id>(property.value);
 }
 
 template <typename T>
@@ -160,9 +160,9 @@ template <typename T>
   return value_cast<tmx_file>(property);
 }
 
-[[nodiscard]] auto as_object(const tmx_property& property) -> const tmx_object&
+[[nodiscard]] auto as_object(const tmx_property& property) -> const tmx_object_id&
 {
-  return value_cast<tmx_object>(property);
+  return value_cast<tmx_object_id>(property);
 }
 
 [[nodiscard]] auto try_as_string(const tmx_property& property) noexcept
@@ -197,9 +197,10 @@ template <typename T>
 }
 
 [[nodiscard]] auto try_as_object(const tmx_property& property) noexcept
-    -> const tmx_object*
+    -> const tmx_object_id*
 {
-  return std::get_if<tmx_object>(&property.value);
+  return std::get_if<tmx_object_id>(&property.value);
+}
 }
 
 }  // namespace tmx
