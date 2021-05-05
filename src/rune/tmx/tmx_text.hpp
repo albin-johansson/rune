@@ -3,7 +3,7 @@
 #include <json.hpp>  // json
 #include <string>    // string
 
-#include "../json_utils.hpp"
+#include "../io/json_utils.hpp"
 #include "tmx_color.hpp"
 
 namespace rune {
