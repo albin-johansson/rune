@@ -22,6 +22,7 @@ is also closely tied to the [Centurion](https://github.com/albin-johansson/centu
 * AABB collision detection.
 * [Tiled](https://github.com/mapeditor/tiled) JSON map parsing.
 * `.ini` parsing support.
+* Performant utilities, e.g. `static_vector`, `vector_map`, `stack_resource`, `to_string()`, etc.
 * Relevant components have serialization support, based on the Cereal library.
 
 ## Example
