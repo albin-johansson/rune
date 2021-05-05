@@ -7,10 +7,16 @@
 
 A modern C++ game framework for 2D games, written in C++20.
 
+## Background
+
+This framework was originally developed from the custom engine built for the
+[Wanderer](https://github.com/albin-johansson/wanderer) indie game, also developed by me.
+
 ## Features
 
 * Distributed as a single header file.
 * Simple framework with little to no performance overhead, e.g. no virtual function calls.
+* Configurable at compile time.
 * Efficient 2D vector implementation.
 * AABB collision detection.
 * [Tiled](https://github.com/mapeditor/tiled) JSON map parsing.
@@ -19,6 +25,7 @@ A modern C++ game framework for 2D games, written in C++20.
 ## Example
 
 ```C++
+#define RUNE_MAX_TICK_RATE 60.0  // This is not required, the default is 120.0
 #include <rune.hpp>
 
 class Game
@@ -43,7 +50,7 @@ class Game
   [[nodiscard]] auto should_quit() const -> bool;
 };
 
-int main(int argc, char**) 
+int main(int, char**) 
 {
   rune::engine<Game> engine;
   return engine.run();
