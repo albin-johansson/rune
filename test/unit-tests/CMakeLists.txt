@@ -6,9 +6,11 @@ set(SOURCE_FILES
     serialization_utils.hpp
     test_main.cpp
 
-    rune/almost_equal_test.cpp
-    rune/to_string_test.cpp
-    rune/vector2_test.cpp
+    rune/core/game_test.cpp
+    rune/core/to_string_test.cpp
+
+    rune/math/almost_equal_test.cpp
+    rune/math/vector2_test.cpp
 
     rune/tmx/tmx_color_test.cpp
     rune/tmx/tmx_text_test.cpp
