@@ -5,7 +5,7 @@
 #include <string_view>   // string_view
 #include <system_error>  // errc
 
-#include "../integers.hpp"
+#include "../aliases/integers.hpp"
 
 namespace rune {
 
