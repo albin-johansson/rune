@@ -15,6 +15,7 @@ add_executable(UnitTests ${SOURCE_FILES})
 set_compiler_options(UnitTests)
 
 add_header_only_lib(Centurion ${RUNE_LIBRARY_DIR}/centurion ${RUNE_LIBRARY_DIR}/centurion/centurion.hpp)
+add_header_only_lib(JSON ${RUNE_LIBRARY_DIR}/json ${RUNE_LIBRARY_DIR}/json/json.hpp)
 add_header_only_lib(Nenya ${RUNE_LIBRARY_DIR}/nenya ${RUNE_LIBRARY_DIR}/nenya/nenya.hpp)
 
 set(TEST_LIBRARY_DIR ${PROJECT_SOURCE_DIR}/../lib)
@@ -38,6 +39,7 @@ target_link_libraries(UnitTests
     PUBLIC ${SDL2_TTF_LIBRARIES}
     PUBLIC ${SDL2_LIBRARY}
     PUBLIC Centurion
+    PUBLIC JSON
     PUBLIC Nenya
     PUBLIC gtest)
 
