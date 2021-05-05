@@ -11,6 +11,7 @@ set(SOURCE_FILES
     rune/vector2_test.cpp
 
     rune/tmx/tmx_color_test.cpp
+    rune/tmx/tmx_text_test.cpp
     )
 
 add_executable(UnitTests ${SOURCE_FILES})
