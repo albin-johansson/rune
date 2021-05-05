@@ -29,3 +29,14 @@ TEST(TmxColor, ARGB)
   ASSERT_EQ(0xC3, color.green);
   ASSERT_EQ(0xD4, color.blue);
 }
+
+TEST(TmxColor, Parse)
+{
+  const nlohmann::json json = "#C142BE8A";
+  const auto color = json.get<rune::tmx_color>();
+
+  ASSERT_EQ(0xC1, color.alpha);
+  ASSERT_EQ(0x42, color.red);
+  ASSERT_EQ(0xBE, color.green);
+  ASSERT_EQ(0x8A, color.blue);
+}

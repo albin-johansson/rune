@@ -2,6 +2,7 @@
 
 #include <cassert>       // assert
 #include <charconv>      // from_chars
+#include <json.hpp>      // json
 #include <string_view>   // string_view
 #include <system_error>  // errc
 
@@ -66,4 +67,10 @@ inline constexpr tmx_color black{0, 0, 0, 0xFF};
 }
 
 }  // namespace tmx
+
+inline void from_json(const nlohmann::json& json, tmx_color& color)
+{
+  color = tmx::make_color(json.get<std::string>());
+}
+
 }  // namespace rune
