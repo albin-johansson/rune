@@ -10,7 +10,8 @@ A modern C++ game framework for 2D games, written in C++20.
 ## Background
 
 This framework was originally developed from the custom engine built for the
-[Wanderer](https://github.com/albin-johansson/wanderer) indie game, also developed by me.
+[Wanderer](https://github.com/albin-johansson/wanderer) indie game, developed by me. This framework
+is also closely tied to the [Centurion](https://github.com/albin-johansson/centurion) library.
 
 ## Features
 
@@ -27,6 +28,7 @@ This framework was originally developed from the custom engine built for the
 ```C++
 #define RUNE_MAX_TICK_RATE 60.0  // This is not required, the default is 120.0
 #include <rune.hpp>
+#include <centurion.hpp>
 
 class Game
 {
@@ -52,6 +54,7 @@ class Game
 
 int main(int, char**) 
 {
+  cen::library centurion;
   rune::engine<Game> engine;
   return engine.run();
 }
