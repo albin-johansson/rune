@@ -2,6 +2,12 @@ name: "CI: Ubuntu"
 
 on: [ push, pull_request ]
 
+env:
+  SDL_VERSION: 2.0.14
+  IMG_VERSION: 2.0.5
+  MIX_VERSION: 2.0.4
+  TTF_VERSION: 2.0.15
+
 jobs:
   ubuntu-latest-test:
     runs-on: ubuntu-latest
@@ -15,6 +21,42 @@ jobs:
         run: |
           sudo apt update
           sudo apt install gcc-10 g++-10
+
+      - name: Install SDL2
+        shell: bash
+        run: |
+          curl -L https://www.libsdl.org/release/SDL2-${{env.SDL_VERSION}}.tar.gz | tar xz
+          cd SDL2-${{env.SDL_VERSION}}
+          ./configure
+          make
+          sudo make install
+
+      - name: Install SDL2_image
+        shell: bash
+        run: |
+          curl -L https://www.libsdl.org/projects/SDL_image/release/SDL2_image-${{env.IMG_VERSION}}.tar.gz | tar xz
+          cd SDL2_image-${{env.IMG_VERSION}}
+          ./configure
+          make
+          sudo make install
+
+      - name: Install SDL2_mixer
+        shell: bash
+        run: |
+          curl -L https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-${{env.MIX_VERSION}}.tar.gz | tar xz
+          cd SDL2_mixer-${{env.MIX_VERSION}}
+          ./configure
+          make
+          sudo make install
+
+      - name: Install SDL2_ttf
+        shell: bash
+        run: |
+          curl -L https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-${{env.TTF_VERSION}}.tar.gz | tar xz
+          cd SDL2_ttf-${{env.TTF_VERSION}}
+          ./configure
+          make
+          sudo make install
 
       - name: Create build directory
         shell: bash
