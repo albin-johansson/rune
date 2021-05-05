@@ -89,7 +89,7 @@ jobs:
           cmake .. -DCMAKE_BUILD_TYPE=Debug -GNinja
           ninja
 
-      - name: Run tests
-        working-directory: ./build/test/unit-tests
-        shell: cmd
-        run: ctest
+      # - name: Run tests
+      #   working-directory: ./build/test/unit-tests
+      #   shell: cmd
+      #   run: ctest
