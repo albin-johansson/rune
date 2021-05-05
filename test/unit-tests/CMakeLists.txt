@@ -14,11 +14,17 @@ set(SOURCE_FILES
 add_executable(UnitTests ${SOURCE_FILES})
 set_compiler_options(UnitTests)
 
+add_header_only_lib(Centurion ${RUNE_LIBRARY_DIR}/centurion ${RUNE_LIBRARY_DIR}/centurion/centurion.hpp)
+
 set(TEST_LIBRARY_DIR ${PROJECT_SOURCE_DIR}/../lib)
 
 target_include_directories(UnitTests
     PUBLIC .
     PUBLIC ${RUNE_SOURCE_DIR}
+    SYSTEM PUBLIC ${SDL2_INCLUDE_DIR}
+    SYSTEM PUBLIC ${SDL2_IMAGE_INCLUDE_DIRS}
+    SYSTEM PUBLIC ${SDL2_MIXER_INCLUDE_DIRS}
+    SYSTEM PUBLIC ${SDL2_TTF_INCLUDE_DIRS}
     SYSTEM PUBLIC ${TEST_LIBRARY_DIR}/cereal
     SYSTEM PUBLIC ${gtest_SOURCE_DIR}/include
     SYSTEM PUBLIC ${gtest_SOURCE_DIR}
@@ -26,6 +32,15 @@ target_include_directories(UnitTests
     SYSTEM PUBLIC ${gmock_SOURCE_DIR})
 
 target_link_libraries(UnitTests
+    PUBLIC ${SDL2_IMAGE_LIBRARIES}
+    PUBLIC ${SDL2_MIXER_LIBRARIES}
+    PUBLIC ${SDL2_TTF_LIBRARIES}
+    PUBLIC ${SDL2_LIBRARY}
+    PUBLIC Centurion
     PUBLIC gtest)
 
 add_test(NAME UnitTests COMMAND UnitTests)
+
+if (WIN32)
+  copy_directory_post_build(UnitTests ${RUNE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+endif ()
