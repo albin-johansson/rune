@@ -28,6 +28,18 @@ void get_if_exists(const nlohmann::json& json,
 }
 
 template <typename Container>
+void fill(const nlohmann::json& json, Container& container)
+{
+  assert(json.is_array());
+
+  container.reserve(json.size());
+  for (const auto& [key, value] : json.items())
+  {
+    container.push_back(value.get<typename Container::value_type>());
+  }
+}
+
+template <typename Container>
 void fill(const nlohmann::json& json, const std::string_view key, Container& container)
 {
   const auto it = json.find(key);
