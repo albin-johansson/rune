@@ -13,8 +13,7 @@ TEST(TmxPoint, Defaults)
 
 TEST(TmxPoint, Parse)
 {
-  const nlohmann::json json = {{"x", 12.3}, {"y", 94.6}};
-
+  const auto json = R"({ "x": 12.3, "y": 94.6 })"_json;
   const auto point = json.get<rune::tmx_point>();
   ASSERT_FLOAT_EQ(12.3f, point.x);
   ASSERT_FLOAT_EQ(94.6f, point.y);
