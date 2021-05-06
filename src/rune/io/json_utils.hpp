@@ -35,7 +35,8 @@ void fill(const nlohmann::json& json, Container& container)
   container.reserve(json.size());
   for (const auto& [key, value] : json.items())
   {
-    container.push_back(value.get<typename Container::value_type>());
+    using value_type = typename Container::value_type;
+    container.push_back(value.get<value_type>());
   }
 }
 
@@ -49,7 +50,8 @@ void fill(const nlohmann::json& json, const std::string_view key, Container& con
   container.reserve(it->size());
   for (const auto& [key, value] : it->items())
   {
-    container.push_back(value.get<typename Container::value_type>());
+    using value_type = typename Container::value_type;
+    container.push_back(value.get<value_type>());
   }
 }
 
@@ -63,7 +65,8 @@ void fill_if_exists(const nlohmann::json& json,
     container.reserve(it->size());
     for (const auto& [key, value] : it->items())
     {
-      container.push_back(value.get<typename Container::value_type>());
+      using value_type = typename Container::value_type;
+      container.push_back(value.get<value_type>());
     }
   }
 }
