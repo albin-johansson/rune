@@ -27,20 +27,24 @@ TEST(TmxText, Defaults)
 
 TEST(TmxTest, Parse)
 {
-  const nlohmann::json text_json = {{"text", "foobar"},
-                                    {"fontfamily", "Ironfoot"},
-                                    {"color", "#1234ABCD"},
-                                    {"halign", "center"},
-                                    {"valign", "bottom"},
-                                    {"pixelsize", 24},
-                                    {"bold", true},
-                                    {"italic", true},
-                                    {"kerning", false},
-                                    {"strikeout", false},
-                                    {"underline", false},
-                                    {"wrap", true}};
+  const auto json = R"(
+    {
+      "text": "foobar",
+      "fontfamily": "Ironfoot",
+      "color": "#1234ABCD",
+      "halign": "center",
+      "valign": "bottom",
+      "pixelsize": 24,
+      "bold": true,
+      "italic": true,
+      "kerning": false,
+      "strikeout": false,
+      "underline": false,
+      "wrap": true
+    }
+  )"_json;
 
-  const auto text = text_json.get<rune::tmx_text>();
+  const auto text = json.get<rune::tmx_text>();
   ASSERT_EQ("foobar", text.text);
   ASSERT_EQ("Ironfoot", text.family);
   ASSERT_EQ(0x12, text.color.alpha);
