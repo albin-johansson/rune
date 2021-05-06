@@ -27,24 +27,32 @@ TEST(TmxLayer, Defaults)
 
 TEST(TmxLayer, ParseTileLayer)
 {
-  // clang-format off
-  const nlohmann::json json = {{"data", {1, 1, 1, 1,
-                                         1, 1, 1, 1,
-                                         1, 1, 1, 1}},
-                               {"width", 4},
-                               {"height", 3},
-                               {"id", 42},
-                               {"name", "foo"},
-                               {"type", "tilelayer"},
-                               {"opacity", 0.7},
-                               {"visible", true},
-                               {"x", 0}, // Unused
-                               {"y", 0}, // Unused
-                               {"properties", {
-                                   {{"name", "hello"}, {"type", "int"}, {"value", 79}},
-                                   {{"name", "world"}, {"type", "bool"}, {"value", false}}
-                               }}};
-  // clang-format on
+  const auto json = R"(
+    {
+      "id": 42,
+      "name": "foo",
+      "type": "tilelayer",
+      "opacity": 0.7,
+      "visible": true,
+      "width": 4,
+      "height": 3,
+      "data": [1, 1, 1, 1,
+               1, 1, 1, 1,
+               1, 1, 1, 1],
+      "properties": [
+        {
+          "name": "hello",
+          "type": "int",
+          "value": 79
+        },
+        {
+          "name": "world",
+          "type": "bool",
+          "value": false
+        }
+      ]
+    }
+  )"_json;
 
   const auto layer = json.get<rune::tmx_layer>();
   ASSERT_EQ(4, layer.width);
@@ -86,15 +94,19 @@ TEST(TmxLayer, ParseTileLayer)
 
 TEST(TmxLayer, ParseImageLayer)
 {
-  const nlohmann::json json = {{"id", 27},
-                               {"name", "Sauron"},
-                               {"image", "mordor.png"},
-                               {"type", "imagelayer"},
-                               {"opacity", 1},
-                               {"visible", true},
-                               {"startx", 82},
-                               {"starty", 37},
-                               {"transparentcolor", "#214365"}};
+  const auto json = R"(
+    {
+      "id": 27,
+      "name": "Sauron",
+      "image": "mordor.png",
+      "type": "imagelayer",
+      "opacity": 1,
+      "visible": true,
+      "startx": 82,
+      "starty": 37,
+      "transparentcolor": "#214365"
+    }
+  )"_json;
 
   const auto layer = json.get<rune::tmx_layer>();
   ASSERT_EQ(rune::tmx_layer_type::image_layer, layer.type);
@@ -118,29 +130,31 @@ TEST(TmxLayer, ParseImageLayer)
 
 TEST(TmxLayer, ParseObjectLayer)
 {
-  // clang-format off
-  const nlohmann::json json = {{"id", 3},
-                               {"name", "Legolas"},
-                               {"type", "objectgroup"},
-                               {"draworder", "topdown"},
-                               {"opacity", 0.4},
-                               {"visible", true},
-                               {"offsetx", 65},
-                               {"offsety", 173},
-                               {"objects", {
-                                   {
-                                     {"id", 36},
-                                     {"name", "Elrond"},
-                                     {"type", "elf"},
-                                     {"x", 234},
-                                     {"y", 584},
-                                     {"width", 118},
-                                     {"height", 77},
-                                     {"rotation", 3},
-                                     {"visible", true}
-                                   }
-                               }}};
-  // clang-format on
+  const auto json = R"(
+    {
+      "id": 3,
+      "name": "Legolas",
+      "type": "objectgroup",
+      "draworder": "topdown",
+      "opacity": 0.4,
+      "visible": true,
+      "offsetx": 65,
+      "offsety": 173,
+      "objects": [
+        {
+          "id": 36,
+          "name": "Elrond",
+          "type": "elf",
+          "x": 234,
+          "y": 584,
+          "width": 118,
+          "height": 77,
+          "rotation": 3,
+          "visible": true
+        }
+      ]
+    }
+  )"_json;
 
   const auto layer = json.get<rune::tmx_layer>();
   ASSERT_EQ(rune::tmx_layer_type::object_layer, layer.type);
@@ -175,26 +189,27 @@ TEST(TmxLayer, ParseObjectLayer)
 
 TEST(TmxLayer, ParseGroup)
 {
-  // clang-format off
-  const nlohmann::json json = {{"id", 7},
-                               {"type", "group"},
-                               {"name", "Gimli"},
-                               {"opacity", 0.9},
-                               {"visible", false},
-                               {"layers", {
-                                   {
-                                     {"id", 123},
-                                     {"type", "tilelayer"},
-                                     {"name", "Thorin"},
-                                     {"opacity", 0.25},
-                                     {"visible", true},
-                                     {"width", 2},
-                                     {"height", 2},
-                                     {"data", {1, 2,
-                                               3, 4}}
-                                   }
-                               }}};
-  // clang-format on
+  const auto json = R"(
+    {
+      "id": 7,
+      "type": "group",
+      "name": "Gimli",
+      "opacity": 0.9,
+      "visible": false,
+      "layers": [
+        {
+          "id": 123,
+          "type": "tilelayer",
+          "name": "Thorin",
+          "opacity": 0.25,
+          "visible": true,
+          "width": 2,
+          "height": 2,
+          "data": [1, 2, 3, 4]
+        }
+      ]
+    }
+  )"_json;
 
   const auto layer = json.get<rune::tmx_layer>();
   ASSERT_EQ(rune::tmx_layer_type::group, layer.type);
