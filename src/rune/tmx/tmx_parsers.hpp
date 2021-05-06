@@ -21,6 +21,7 @@
 #include "tmx_tile_layer.hpp"
 #include "tmx_tileset.hpp"
 #include "tmx_wang_color.hpp"
+#include "tmx_wang_tile.hpp"
 
 namespace rune {
 
@@ -41,6 +42,12 @@ inline void from_json(const nlohmann::json& json, tmx_wang_color& color)
   json.at("color").get_to(color.color);
   json.at("probability").get_to(color.probability);
   color.tile = tmx_local_id{json.at("tile").get<tmx_local_id::value_type>()};
+}
+
+inline void from_json(const nlohmann::json& json, tmx_wang_tile& tile)
+{
+  tile.tile = tmx_local_id{json.at("tileid").get<tmx_local_id::value_type>()};
+  json.at("wangid").get_to(tile.indices);
 }
 
 inline void from_json(const nlohmann::json& json, tmx_property& property)
