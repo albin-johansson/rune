@@ -23,7 +23,7 @@ TEST(TmxProperty, Defaults)
 
 TEST(TmxProperty, Parse)
 {
-  const nlohmann::json json = {{"name", "Frodo"}, {"type", "int"}, {"value", 123}};
+  const auto json = R"({ "name": "Frodo", "type": "int", "value": 123 })"_json;
   const auto property = json.get<rune::tmx_property>();
 
   ASSERT_EQ("Frodo", property.name);
