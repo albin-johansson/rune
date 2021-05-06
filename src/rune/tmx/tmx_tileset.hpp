@@ -14,7 +14,7 @@ namespace rune {
 
 struct tmx_tileset final
 {
-  tmx_global_id id{1};
+  tmx_global_id first_id{1};
   int tile_width{};
   int tile_height{};
   int tile_count{};
@@ -41,7 +41,5 @@ struct tmx_tileset final
   // TODO std::optional<grid> grid;
   // TODO std::optional<tile_offset> tile_offset;
 };
-
-void from_json(const nlohmann::json& json, tmx_tileset& tileset);
 
 }  // namespace rune

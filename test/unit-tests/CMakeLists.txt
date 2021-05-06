@@ -19,6 +19,7 @@ set(SOURCE_FILES
     rune/tmx/tmx_point_test.cpp
     rune/tmx/tmx_property_test.cpp
     rune/tmx/tmx_text_test.cpp
+    rune/tmx/tmx_tileset_test.cpp
     )
 
 add_executable(UnitTests ${SOURCE_FILES})

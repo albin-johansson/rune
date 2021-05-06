@@ -221,42 +221,6 @@ inline void from_json(const nlohmann::json& json, tmx_group& group)
   }
 }
 
-inline void from_json(const nlohmann::json& json, tmx_tileset& tileset)
-{
-  json.at("tilewidth").get_to(tileset.tile_width);
-  json.at("tileheight").get_to(tileset.tile_height);
-  json.at("tilecount").get_to(tileset.tile_count);
-  json.at("columns").get_to(tileset.column_count);
-  json.at("imagewidth").get_to(tileset.image_width);
-  json.at("imageheight").get_to(tileset.image_height);
-  json.at("margin").get_to(tileset.margin);
-  json.at("spacing").get_to(tileset.spacing);
-  json.at("image").get_to(tileset.image);
-  json.at("name").get_to(tileset.name);
-
-  if (const auto it = json.find("firstgid"); it != json.end())
-  {
-    tileset.id = tmx_global_id{it->get<tmx_global_id::value_type>()};
-  }
-
-  get_if_exists(json, "tiledversion", tileset.tiled_version);
-  get_if_exists(json, "version", tileset.json_version);
-  get_if_exists(json, "backgroundcolor", tileset.background);
-  get_if_exists(json, "transparentcolor", tileset.transparent);
-  // TODO get_if_exists(json, "grid", tileset.grid);
-  // TODO get_if_exists(json, "tileoffset", tileset.tile_offset);
-
-  fill_if_exists(json, "properties", tileset.properties);
-  //  if (const auto it = json.find("properties"); it != json.end())
-  //  {
-  //    tileset.properties = tmx::make_properties(*it);
-  //  }
-
-  fill_if_exists(json, "tiles", tileset.tiles);
-  // TODO fill_if_exists(json, "terrains", tileset.terrains);
-  // TODO fill_if_exists(json, "wangsets", tileset.wang_sets);
-}
-
 inline void from_json(const nlohmann::json& json, tmx_tile& tile)
 {
   get_if_exists(json, "animation", tile.animation);
