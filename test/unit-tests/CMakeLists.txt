@@ -60,3 +60,5 @@ add_test(NAME UnitTests COMMAND UnitTests)
 if (WIN32)
   copy_directory_post_build(UnitTests ${RUNE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 endif ()
+
+copy_directory_post_build(UnitTests ${RUNE_RESOURCES_DIR} ${CMAKE_CURRENT_BINARY_DIR}/resources)
