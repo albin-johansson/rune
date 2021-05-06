@@ -13,8 +13,18 @@ TEST(TmxFrame, Defaults)
 
 TEST(TmxAnimation, Parse)
 {
-  const nlohmann::json json = {{{"tileid", 42}, {"duration", 123}},
-                               {{"tileid", 27}, {"duration", 447}}};
+  const auto json = R"(
+    [
+      {
+        "tileid": 42,
+        "duration": 123
+      },
+      {
+        "tileid": 27,
+        "duration": 447
+      }
+    ]
+  )"_json;
 
   const auto animation = json.get<rune::tmx_animation>();
   ASSERT_EQ(2, animation.frames.size());
