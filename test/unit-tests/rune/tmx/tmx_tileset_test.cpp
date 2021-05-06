@@ -53,8 +53,29 @@ TEST(TmxTileset, ParseEmbedded)
   const rune::tmx_color transparent{0xCC, 0xDD, 0xEE};
   ASSERT_EQ(background, tileset.background);
   ASSERT_EQ(transparent, tileset.transparent);
-
   ASSERT_TRUE(tileset.external_source.empty());
+
+  {  // Terrains
+    ASSERT_EQ(3, tileset.terrains.size());
+
+    const auto& a = tileset.terrains.at(0);
+    ASSERT_EQ(rune::tmx_local_id{4}, a.tile);
+    ASSERT_EQ("ground", a.name);
+
+    ASSERT_EQ(1, a.properties.size());
+    const auto& property = a.properties.at(0);
+    ASSERT_EQ("foo", property.name);
+    ASSERT_EQ(rune::tmx_property_type::boolean, property.type);
+    ASSERT_TRUE(rune::tmx::as_boolean(property));
+
+    const auto& b = tileset.terrains.at(1);
+    ASSERT_EQ(rune::tmx_local_id{12}, b.tile);
+    ASSERT_EQ("chasm", b.name);
+
+    const auto& c = tileset.terrains.at(2);
+    ASSERT_EQ(rune::tmx_local_id{36}, c.tile);
+    ASSERT_EQ("cliff", c.name);
+  }
 }
 
 TEST(TmxTileset, ParseExternal)
@@ -75,4 +96,5 @@ TEST(TmxTileset, ParseExternal)
   ASSERT_EQ("Aragorn", tileset.name);
   ASSERT_EQ("../terrain.png", tileset.image);
   ASSERT_EQ("1.3.4", tileset.tiled_version);
+  ASSERT_EQ("external_tileset_data.json", tileset.external_source);
 }

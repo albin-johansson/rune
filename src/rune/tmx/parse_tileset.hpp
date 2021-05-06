@@ -32,15 +32,10 @@ void parse_tileset(const nlohmann::json& json, tmx_tileset& tileset)
   // TODO get_if_exists(json, "grid", tileset.grid);
   // TODO get_if_exists(json, "tileoffset", tileset.tile_offset);
 
-  fill_if_exists(json, "properties", tileset.properties);
-  //  if (const auto it = json.find("properties"); it != json.end())
-  //  {
-  //    tileset.properties = tmx::make_properties(*it);
-  //  }
-
   fill_if_exists(json, "tiles", tileset.tiles);
-  // TODO fill_if_exists(json, "terrains", tileset.terrains);
+  fill_if_exists(json, "terrains", tileset.terrains);
   // TODO fill_if_exists(json, "wangsets", tileset.wang_sets);
+  fill_if_exists(json, "properties", tileset.properties);
 }
 
 }  // namespace detail
@@ -63,8 +58,11 @@ void parse_tileset(const nlohmann::json& json, tmx_tileset& tileset)
   if (const auto it = json.find("source"); it != json.end())
   {
     // External
-    const auto source = path.parent_path() / it->get<std::string>();
+    tileset.external_source = it->get<std::string>();
+
+    const auto source = path.parent_path() / tileset.external_source;
     const auto external = read(source);
+
     detail::parse_tileset(external, tileset);
   }
   else

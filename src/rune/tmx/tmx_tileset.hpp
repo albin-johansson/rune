@@ -8,6 +8,7 @@
 #include "tmx_color.hpp"
 #include "tmx_global_id.hpp"
 #include "tmx_property.hpp"
+#include "tmx_terrain.hpp"
 #include "tmx_tile.hpp"
 
 namespace rune {
@@ -34,9 +35,9 @@ struct tmx_tileset final
   std::string tiled_version;
 
   std::vector<tmx_tile> tiles;
+  std::vector<tmx_terrain> terrains;
   std::vector<tmx_property> properties;
 
-  // TODO std::vector<terrain> terrains;
   // TODO std::vector<wang_set> wang_sets;
   // TODO std::optional<grid> grid;
   // TODO std::optional<tile_offset> tile_offset;
