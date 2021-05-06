@@ -20,6 +20,7 @@
 #include "tmx_tile.hpp"
 #include "tmx_tile_layer.hpp"
 #include "tmx_tileset.hpp"
+#include "tmx_wang_color.hpp"
 
 namespace rune {
 
@@ -32,6 +33,14 @@ inline void from_json(const nlohmann::json& json, tmx_point& point)
 inline void from_json(const nlohmann::json& json, tmx_color& color)
 {
   color = tmx::make_color(json.get<std::string>());
+}
+
+inline void from_json(const nlohmann::json& json, tmx_wang_color& color)
+{
+  json.at("name").get_to(color.name);
+  json.at("color").get_to(color.color);
+  json.at("probability").get_to(color.probability);
+  color.tile = tmx_local_id{json.at("tile").get<tmx_local_id::value_type>()};
 }
 
 inline void from_json(const nlohmann::json& json, tmx_property& property)
