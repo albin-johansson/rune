@@ -15,6 +15,7 @@
 #include "tmx_object.hpp"
 #include "tmx_object_layer.hpp"
 #include "tmx_point.hpp"
+#include "tmx_terrain.hpp"
 #include "tmx_text.hpp"
 #include "tmx_tile.hpp"
 #include "tmx_tile_layer.hpp"
@@ -31,6 +32,53 @@ inline void from_json(const nlohmann::json& json, tmx_point& point)
 inline void from_json(const nlohmann::json& json, tmx_color& color)
 {
   color = tmx::make_color(json.get<std::string>());
+}
+
+inline void from_json(const nlohmann::json& json, tmx_property& property)
+{
+  json.at("name").get_to(property.name);
+  json.at("type").get_to(property.type);
+
+  switch (property.type)
+  {
+    default:
+      assert(false && "from_json() for tmx_property has missing branch!");
+
+    case tmx_property_type::string:
+      property.value.emplace<std::string>(json.at("value").get<std::string>());
+      break;
+
+    case tmx_property_type::integer:
+      property.value.emplace<int>(json.at("value").get<int>());
+      break;
+
+    case tmx_property_type::floating:
+      property.value.emplace<float>(json.at("value").get<float>());
+      break;
+
+    case tmx_property_type::boolean:
+      property.value.emplace<bool>(json.at("value").get<bool>());
+      break;
+
+    case tmx_property_type::color:
+      property.value.emplace<tmx_color>(json.at("value").get<tmx_color>());
+      break;
+
+    case tmx_property_type::file:
+      property.value.emplace<tmx_file>(json.at("value").get<std::string>());
+      break;
+
+    case tmx_property_type::object:
+      property.value.emplace<tmx_object_id>(json.at("value").get<int>());
+      break;
+  }
+}
+
+inline void from_json(const nlohmann::json& json, tmx_terrain& terrain)
+{
+  terrain.tile = tmx_local_id{json.at("tile").get<tmx_local_id::value_type>()};
+  json.at("name").get_to(terrain.name);
+  fill_if_exists(json, "properties", terrain.properties);
 }
 
 inline void from_json(const nlohmann::json& json, tmx_text& text)
