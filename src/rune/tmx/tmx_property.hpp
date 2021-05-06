@@ -1,9 +1,11 @@
 #pragma once
 
+#include <cassert>    // assert
 #include <json.hpp>   // json
 #include <nenya.hpp>  // strong_type
 #include <string>     // string
 #include <variant>    // variant, get, get_if, holds_alternative
+#include <vector>     // vector
 
 #include "tmx_color.hpp"
 
@@ -130,77 +132,97 @@ template <typename T>
   return std::get<T>(property.value);
 }
 
-[[nodiscard]] auto as_string(const tmx_property& property) -> const std::string&
+[[nodiscard]] inline auto as_string(const tmx_property& property) -> const std::string&
 {
   return value_cast<std::string>(property);
 }
 
-[[nodiscard]] auto as_integer(const tmx_property& property) -> int
+[[nodiscard]] inline auto as_integer(const tmx_property& property) -> int
 {
   return value_cast<int>(property);
 }
 
-[[nodiscard]] auto as_float(const tmx_property& property) -> float
+[[nodiscard]] inline auto as_float(const tmx_property& property) -> float
 {
   return value_cast<float>(property);
 }
 
-[[nodiscard]] auto as_boolean(const tmx_property& property) -> bool
+[[nodiscard]] inline auto as_boolean(const tmx_property& property) -> bool
 {
   return value_cast<bool>(property);
 }
 
-[[nodiscard]] auto as_color(const tmx_property& property) -> const tmx_color&
+[[nodiscard]] inline auto as_color(const tmx_property& property) -> const tmx_color&
 {
   return value_cast<tmx_color>(property);
 }
 
-[[nodiscard]] auto as_file(const tmx_property& property) -> const tmx_file&
+[[nodiscard]] inline auto as_file(const tmx_property& property) -> const tmx_file&
 {
   return value_cast<tmx_file>(property);
 }
 
-[[nodiscard]] auto as_object(const tmx_property& property) -> const tmx_object_id&
+[[nodiscard]] inline auto as_object(const tmx_property& property) -> const tmx_object_id&
 {
   return value_cast<tmx_object_id>(property);
 }
 
-[[nodiscard]] auto try_as_string(const tmx_property& property) noexcept
+[[nodiscard]] inline auto try_as_string(const tmx_property& property) noexcept
     -> const std::string*
 {
   return std::get_if<std::string>(&property.value);
 }
 
-[[nodiscard]] auto try_as_integer(const tmx_property& property) noexcept -> const int*
+[[nodiscard]] inline auto try_as_integer(const tmx_property& property) noexcept -> const
+    int*
 {
   return std::get_if<int>(&property.value);
 }
 
-[[nodiscard]] auto try_as_float(const tmx_property& property) noexcept -> const float*
+[[nodiscard]] inline auto try_as_float(const tmx_property& property) noexcept -> const
+    float*
 {
   return std::get_if<float>(&property.value);
 }
 
-[[nodiscard]] auto try_as_boolean(const tmx_property& property) noexcept -> const bool*
+[[nodiscard]] inline auto try_as_boolean(const tmx_property& property) noexcept -> const
+    bool*
 {
   return std::get_if<bool>(&property.value);
 }
 
-[[nodiscard]] auto try_as_color(const tmx_property& property) noexcept -> const tmx_color*
+[[nodiscard]] inline auto try_as_color(const tmx_property& property) noexcept
+    -> const tmx_color*
 {
   return std::get_if<tmx_color>(&property.value);
 }
 
-[[nodiscard]] auto try_as_file(const tmx_property& property) noexcept -> const tmx_file*
+[[nodiscard]] inline auto try_as_file(const tmx_property& property) noexcept
+    -> const tmx_file*
 {
   return std::get_if<tmx_file>(&property.value);
 }
 
-[[nodiscard]] auto try_as_object(const tmx_property& property) noexcept
+[[nodiscard]] inline auto try_as_object(const tmx_property& property) noexcept
     -> const tmx_object_id*
 {
   return std::get_if<tmx_object_id>(&property.value);
 }
+
+[[nodiscard]] inline auto make_properties(const nlohmann::json& json)
+    -> std::vector<tmx_property>
+{
+  assert(json.is_array());
+
+  std::vector<tmx_property> properties;
+  properties.reserve(json.size());
+
+  for (const auto& [key, value] : json.items())
+  {
+    properties.push_back(value.get<tmx_property>());
+  }
+
+  return properties;
 }
 
 }  // namespace tmx
