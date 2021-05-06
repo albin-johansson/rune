@@ -2,6 +2,8 @@
 
 #include <gtest/gtest.h>
 
+#include "tmx/tmx_parsers.hpp"
+
 TEST(TmxText, Defaults)
 {
   const rune::tmx_text text;

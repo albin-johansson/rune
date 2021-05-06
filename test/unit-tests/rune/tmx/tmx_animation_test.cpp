@@ -2,6 +2,8 @@
 
 #include <gtest/gtest.h>
 
+#include "tmx/tmx_parsers.hpp"
+
 TEST(TmxFrame, Defaults)
 {
   const rune::tmx_frame frame;

@@ -209,21 +209,5 @@ template <typename T>
   return std::get_if<tmx_object_id>(&property.value);
 }
 
-[[nodiscard]] inline auto make_properties(const nlohmann::json& json)
-    -> std::vector<tmx_property>
-{
-  assert(json.is_array());
-
-  std::vector<tmx_property> properties;
-  properties.reserve(json.size());
-
-  for (const auto& [key, value] : json.items())
-  {
-    properties.push_back(value.get<tmx_property>());
-  }
-
-  return properties;
-}
-
 }  // namespace tmx
 }  // namespace rune

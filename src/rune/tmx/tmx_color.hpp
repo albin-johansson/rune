@@ -20,6 +20,8 @@ struct tmx_color final
   [[nodiscard]] constexpr bool operator==(const tmx_color&) const noexcept = default;
 };
 
+void from_json(const nlohmann::json& json, tmx_color& color);
+
 namespace tmx {
 
 inline constexpr tmx_color black{0, 0, 0, 0xFF};
@@ -67,10 +69,4 @@ inline constexpr tmx_color black{0, 0, 0, 0xFF};
 }
 
 }  // namespace tmx
-
-inline void from_json(const nlohmann::json& json, tmx_color& color)
-{
-  color = tmx::make_color(json.get<std::string>());
-}
-
 }  // namespace rune

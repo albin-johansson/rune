@@ -10,10 +10,6 @@ struct tmx_point final
   float y{};
 };
 
-inline void from_json(const nlohmann::json& json, tmx_point& point)
-{
-  json.at("x").get_to(point.x);
-  json.at("y").get_to(point.y);
-}
+void from_json(const nlohmann::json& json, tmx_point& point);
 
 }  // namespace rune
