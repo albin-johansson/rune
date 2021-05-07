@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 
+#include "io/json_utils.hpp"
 #include "tmx/parse_tileset.hpp"
 #include "tmx/tmx.hpp"
 #include "tmx/tmx_parsers.hpp"
@@ -36,7 +37,8 @@ TEST(TmxTileset, Defaults)
 
 TEST(TmxTileset, ParseEmbedded)
 {
-  const auto tileset = rune::tmx::parse_tileset("resources/embedded_tileset.json");
+  const auto json = rune::read_json("resources/embedded_tileset.json");
+  const auto tileset = rune::tmx::parse_tileset("resources/", json);
   ASSERT_EQ(7_global, tileset.first_id);
   ASSERT_EQ(48, tileset.column_count);
   ASSERT_EQ(1270, tileset.image_width);
@@ -100,7 +102,8 @@ TEST(TmxTileset, ParseEmbedded)
 
 TEST(TmxTileset, ParseExternal)
 {
-  const auto tileset = rune::tmx::parse_tileset("resources/external_tileset.json");
+  const auto json = rune::read_json("resources/external_tileset.json");
+  const auto tileset = rune::tmx::parse_tileset("resources/", json);
 
   ASSERT_EQ(32, tileset.column_count);
   ASSERT_EQ(1024, tileset.image_width);

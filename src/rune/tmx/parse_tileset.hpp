@@ -39,9 +39,9 @@ inline void parse_tileset(const nlohmann::json& json, tmx_tileset& tileset)
 
 }  // namespace detail
 
-[[nodiscard]] inline auto parse_tileset(const std::filesystem::path& path) -> tmx_tileset
+[[nodiscard]] inline auto parse_tileset(const std::filesystem::path& directory,
+                                        const nlohmann::json& json) -> tmx_tileset
 {
-  const auto json = read_json(path);
   tmx_tileset tileset;
 
   tileset.first_id = tmx_global_id{json.at("firstgid").get<tmx_global_id::value_type>()};
@@ -50,7 +50,7 @@ inline void parse_tileset(const nlohmann::json& json, tmx_tileset& tileset)
     // External
     tileset.external_source = it->get<std::string>();
 
-    const auto source = path.parent_path() / tileset.external_source;
+    const auto source = directory / tileset.external_source;
     const auto external = read_json(source);
 
     detail::parse_tileset(external, tileset);
