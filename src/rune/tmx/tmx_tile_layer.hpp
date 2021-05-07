@@ -7,6 +7,9 @@
 
 namespace rune {
 
+/// \addtogroup tmx
+/// \{
+
 enum class tmx_tile_layer_compression
 {
   none,
@@ -38,6 +41,8 @@ struct tmx_tile_layer final
 };
 
 void from_json(const nlohmann::json& json, tmx_tile_layer& layer);
+
+/// \} End of group tmx
 
 }  // namespace rune
 

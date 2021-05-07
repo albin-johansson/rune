@@ -43,6 +43,9 @@ inline void parse_tileset(const nlohmann::json& json, tmx_tileset& tileset)
 }  // namespace detail
 /// \endcond
 
+/// \addtogroup tmx
+/// \{
+
 [[nodiscard]] inline auto parse_tileset(const std::filesystem::path& directory,
                                         const nlohmann::json& json) -> tmx_tileset
 {
@@ -67,6 +70,8 @@ inline void parse_tileset(const nlohmann::json& json, tmx_tileset& tileset)
 
   return tileset;
 }
+
+/// \} End of group tmx
 
 }  // namespace rune::tmx
 

@@ -8,6 +8,9 @@
 
 namespace rune {
 
+/// \addtogroup tmx
+/// \{
+
 enum class tmx_halign
 {
   center,
@@ -51,6 +54,8 @@ struct tmx_text final
 };
 
 void from_json(const nlohmann::json& json, tmx_text& text);
+
+/// \} End of group tmx
 
 }  // namespace rune
 

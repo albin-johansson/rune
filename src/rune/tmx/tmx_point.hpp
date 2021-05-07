@@ -5,6 +5,9 @@
 
 namespace rune {
 
+/// \addtogroup tmx
+/// \{
+
 struct tmx_point final
 {
   float x{};
@@ -12,6 +15,8 @@ struct tmx_point final
 };
 
 void from_json(const nlohmann::json& json, tmx_point& point);
+
+/// \} End of group tmx
 
 }  // namespace rune
 

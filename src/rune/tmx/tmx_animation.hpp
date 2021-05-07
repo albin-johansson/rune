@@ -8,6 +8,9 @@
 
 namespace rune {
 
+/// \addtogroup tmx
+/// \{
+
 struct tmx_frame final
 {
   tmx_local_id tile{};
@@ -21,6 +24,8 @@ struct tmx_animation final
 
 void from_json(const nlohmann::json& json, tmx_frame& frame);
 void from_json(const nlohmann::json& json, tmx_animation& animation);
+
+/// \} End of group tmx
 
 }  // namespace rune
 

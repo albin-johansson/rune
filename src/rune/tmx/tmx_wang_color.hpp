@@ -11,6 +11,9 @@
 
 namespace rune {
 
+/// \addtogroup tmx
+/// \{
+
 struct tmx_wang_color final
 {
   tmx_local_id tile{};
@@ -21,6 +24,8 @@ struct tmx_wang_color final
 };
 
 void from_json(const nlohmann::json& json, tmx_wang_color& color);
+
+/// \} End of group tmx
 
 }  // namespace rune
 

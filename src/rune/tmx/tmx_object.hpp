@@ -16,6 +16,9 @@
 
 namespace rune {
 
+/// \addtogroup tmx
+/// \{
+
 struct tmx_object;
 
 struct tmx_polygon final
@@ -63,6 +66,8 @@ void from_json(const nlohmann::json& json, tmx_polygon& polygon);
 void from_json(const nlohmann::json& json, tmx_polyline& line);
 void from_json(const nlohmann::json& json, tmx_template_object& object);
 void from_json(const nlohmann::json& json, tmx_object& object);
+
+/// \} End of group tmx
 
 }  // namespace rune
 

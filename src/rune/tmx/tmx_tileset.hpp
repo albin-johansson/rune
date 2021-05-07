@@ -17,6 +17,9 @@
 
 namespace rune {
 
+/// \addtogroup tmx
+/// \{
+
 struct tmx_tileset final
 {
   tmx_global_id first_id{1};
@@ -45,6 +48,8 @@ struct tmx_tileset final
   std::vector<tmx_wang_set> wang_sets;
   std::vector<tmx_property> properties;
 };
+
+/// \} End of group tmx
 
 }  // namespace rune
 

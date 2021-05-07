@@ -11,6 +11,9 @@
 
 namespace rune {
 
+/// \addtogroup tmx
+/// \{
+
 struct tmx_color final
 {
   uint8 red{};
@@ -23,7 +26,12 @@ struct tmx_color final
 
 void from_json(const nlohmann::json& json, tmx_color& color);
 
+/// \} End of group tmx
+
 namespace tmx {
+
+/// \addtogroup tmx
+/// \{
 
 inline constexpr tmx_color black{0, 0, 0, 0xFF};
 
@@ -68,6 +76,8 @@ inline constexpr tmx_color black{0, 0, 0, 0xFF};
 
   return result;
 }
+
+/// \} End of group tmx
 
 }  // namespace tmx
 }  // namespace rune

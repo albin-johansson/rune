@@ -5,6 +5,9 @@
 
 namespace rune {
 
+/// \addtogroup tmx
+/// \{
+
 enum class tmx_grid_orientation
 {
   orthogonal,
@@ -23,6 +26,8 @@ struct tmx_grid final
 };
 
 void from_json(const nlohmann::json& json, tmx_grid& grid);
+
+/// \} End of group tmx
 
 }  // namespace rune
 

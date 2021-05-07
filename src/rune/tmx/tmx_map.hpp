@@ -13,6 +13,9 @@
 
 namespace rune {
 
+/// \addtogroup tmx
+/// \{
+
 enum class tmx_map_orientation
 {
   orthogonal,
@@ -89,6 +92,8 @@ struct tmx_map final
   std::string json_version;
   bool infinite{};
 };
+
+/// \} End of group tmx
 
 }  // namespace rune
 

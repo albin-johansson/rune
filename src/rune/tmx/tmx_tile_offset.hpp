@@ -5,6 +5,9 @@
 
 namespace rune {
 
+/// \addtogroup tmx
+/// \{
+
 struct tmx_tile_offset final
 {
   int x{};
@@ -12,6 +15,8 @@ struct tmx_tile_offset final
 };
 
 void from_json(const nlohmann::json& json, tmx_tile_offset& offset);
+
+/// \} End of group tmx
 
 }  // namespace rune
 

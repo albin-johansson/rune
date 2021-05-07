@@ -9,6 +9,9 @@
 
 namespace rune {
 
+/// \addtogroup tmx
+/// \{
+
 struct tmx_wang_tile final
 {
   tmx_local_id tile{};
@@ -16,6 +19,8 @@ struct tmx_wang_tile final
 };
 
 void from_json(const nlohmann::json& json, tmx_wang_tile& tile);
+
+/// \} End of group tmx
 
 }  // namespace rune
 

@@ -29,6 +29,12 @@
 
 namespace rune {
 
+/// \addtogroup tmx
+/// \{
+
+/// \name JSON conversions
+/// \{
+
 inline void from_json(const nlohmann::json& json, tmx_point& point)
 {
   json.at("x").get_to(point.x);
@@ -340,6 +346,10 @@ inline void from_json(const nlohmann::json& json, tmx_tile& tile)
     tile.object_group = it->get<tmx_layer>();
   }
 }
+
+/// \} End of JSON conversions
+
+/// \} End of group tmx
 
 }  // namespace rune
 

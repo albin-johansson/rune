@@ -9,6 +9,9 @@
 
 namespace rune {
 
+/// \addtogroup tmx
+/// \{
+
 struct tmx_image_layer final
 {
   std::string image;
@@ -16,6 +19,8 @@ struct tmx_image_layer final
 };
 
 void from_json(const nlohmann::json& json, tmx_image_layer& layer);
+
+/// \} End of group tmx
 
 }  // namespace rune
 

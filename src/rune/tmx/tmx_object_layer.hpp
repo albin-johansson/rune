@@ -9,6 +9,9 @@
 
 namespace rune {
 
+/// \addtogroup tmx
+/// \{
+
 enum class tmx_object_layer_draw_order
 {
   top_down,
@@ -26,6 +29,8 @@ struct tmx_object_layer final  // Note, referred to as "object group" by tiled
 };
 
 void from_json(const nlohmann::json& json, tmx_object_layer& layer);
+
+/// \} End of group tmx
 
 }  // namespace rune
 

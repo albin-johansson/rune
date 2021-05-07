@@ -19,6 +19,9 @@
 
 namespace rune {
 
+/// \addtogroup tmx
+/// \{
+
 struct tmx_layer;
 
 struct tmx_group final
@@ -56,7 +59,15 @@ struct tmx_layer final
 void from_json(const nlohmann::json& json, tmx_group& group);
 void from_json(const nlohmann::json& json, tmx_layer& layer);
 
+/// \} End of group tmx
+
 namespace tmx {
+
+/// \addtogroup tmx
+/// \{
+
+/// \name Layer type casts
+/// \{
 
 [[nodiscard]] inline auto as_tile_layer(const tmx_layer& layer) -> const tmx_tile_layer&
 {
@@ -79,6 +90,11 @@ namespace tmx {
   return std::get<tmx_group>(layer.data);
 }
 
+/// \} End of layer type casts
+
+/// \name Layer type indicators
+/// \{
+
 [[nodiscard]] inline auto is_tile_layer(const tmx_layer& layer) noexcept -> bool
 {
   return std::holds_alternative<tmx_tile_layer>(layer.data);
@@ -98,6 +114,10 @@ namespace tmx {
 {
   return std::holds_alternative<tmx_group>(layer.data);
 }
+
+/// \} End of layer type indicators
+
+/// \} End of group tmx
 
 }  // namespace tmx
 }  // namespace rune
