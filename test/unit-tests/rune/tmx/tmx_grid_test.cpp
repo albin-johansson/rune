@@ -9,7 +9,7 @@ TEST(TmxGrid, Defaults)
   const rune::tmx_grid grid;
   ASSERT_EQ(0, grid.cell_width);
   ASSERT_EQ(0, grid.cell_height);
-  ASSERT_EQ(rune::tmx_orientation::orthogonal, grid.orientation);
+  ASSERT_EQ(rune::tmx_grid_orientation::orthogonal, grid.orientation);
 }
 
 TEST(TmxGrid, Parse)
@@ -25,5 +25,5 @@ TEST(TmxGrid, Parse)
   const auto grid = json.get<rune::tmx_grid>();
   ASSERT_EQ(42, grid.cell_width);
   ASSERT_EQ(27, grid.cell_height);
-  ASSERT_EQ(rune::tmx_orientation::isometric, grid.orientation);
+  ASSERT_EQ(rune::tmx_grid_orientation::isometric, grid.orientation);
 }

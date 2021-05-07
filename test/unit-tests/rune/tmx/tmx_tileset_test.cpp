@@ -92,7 +92,7 @@ TEST(TmxTileset, ParseEmbedded)
     ASSERT_TRUE(tileset.grid);
     const auto& grid = tileset.grid.value();
 
-    ASSERT_EQ(rune::tmx_orientation::isometric, grid.orientation);
+    ASSERT_EQ(rune::tmx_grid_orientation::isometric, grid.orientation);
     ASSERT_EQ(48, grid.cell_width);
     ASSERT_EQ(64, grid.cell_height);
   }
