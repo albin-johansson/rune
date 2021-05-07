@@ -6,7 +6,6 @@
 #include <fstream>      // ifstream
 #include <json.hpp>     // json
 #include <optional>     // optional
-#include <ranges>       // range
 #include <string_view>  // string_view
 
 namespace rune {
