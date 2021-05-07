@@ -20,7 +20,8 @@ TEST(TmxWangColor, Parse)
       "color": "#D31313",
       "tile": 18,
       "name": "Anduril",
-      "probability": 0.8
+      "probability": 0.8,
+      "properties": []
     }
   )"_json;
 
@@ -28,6 +29,7 @@ TEST(TmxWangColor, Parse)
   ASSERT_EQ("Anduril", color.name);
   ASSERT_EQ(rune::tmx_local_id{18}, color.tile);
   ASSERT_FLOAT_EQ(0.8f, color.probability);
+  ASSERT_TRUE(color.properties.empty());
 
   const rune::tmx_color expected{0xD3, 0x13, 0x13};
   ASSERT_EQ(expected, color.color);
