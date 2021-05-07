@@ -16,6 +16,7 @@ set(SOURCE_FILES
     rune/tmx/tmx_color_test.cpp
     rune/tmx/tmx_grid_test.cpp
     rune/tmx/tmx_layer_test.cpp
+    rune/tmx/tmx_map_test.cpp
     rune/tmx/tmx_object_test.cpp
     rune/tmx/tmx_point_test.cpp
     rune/tmx/tmx_property_test.cpp
