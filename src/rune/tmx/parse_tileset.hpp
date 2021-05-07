@@ -34,7 +34,7 @@ void parse_tileset(const nlohmann::json& json, tmx_tileset& tileset)
 
   fill_if_exists(json, "tiles", tileset.tiles);
   fill_if_exists(json, "terrains", tileset.terrains);
-  // TODO fill_if_exists(json, "wangsets", tileset.wang_sets);
+  fill_if_exists(json, "wangsets", tileset.wang_sets);
   fill_if_exists(json, "properties", tileset.properties);
 }
 

@@ -21,6 +21,7 @@
 #include "tmx_tile_layer.hpp"
 #include "tmx_tileset.hpp"
 #include "tmx_wang_color.hpp"
+#include "tmx_wang_set.hpp"
 #include "tmx_wang_tile.hpp"
 
 namespace rune {
@@ -50,6 +51,17 @@ inline void from_json(const nlohmann::json& json, tmx_wang_tile& tile)
 {
   tile.tile = tmx_local_id{json.at("tileid").get<tmx_local_id::value_type>()};
   json.at("wangid").get_to(tile.indices);
+}
+
+inline void from_json(const nlohmann::json& json, tmx_wang_set& set)
+{
+  set.tile = tmx_local_id{json.at("tile").get<tmx_local_id::value_type>()};
+  json.at("name").get_to(set.name);
+
+  // TODO check if colors or wangtiles are required
+  fill_if_exists(json, "colors", set.colors);
+  fill_if_exists(json, "wangtiles", set.wang_tiles);
+  fill_if_exists(json, "properties", set.properties);
 }
 
 inline void from_json(const nlohmann::json& json, tmx_property& property)

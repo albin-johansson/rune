@@ -33,4 +33,5 @@ TEST(TmxWangColor, Parse)
 
   const rune::tmx_color expected{0xD3, 0x13, 0x13};
   ASSERT_EQ(expected, color.color);
+
 }

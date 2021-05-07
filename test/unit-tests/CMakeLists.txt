@@ -21,6 +21,7 @@ set(SOURCE_FILES
     rune/tmx/tmx_text_test.cpp
     rune/tmx/tmx_tileset_test.cpp
     rune/tmx/tmx_wang_color_test.cpp
+    rune/tmx/tmx_wang_set_test.cpp
     rune/tmx/tmx_wang_tile_test.cpp
     )
 
