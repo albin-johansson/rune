@@ -31,6 +31,11 @@ namespace tmx_literals {
 /**
  * \brief Parses a Tiled JSON map file, and returns the contents.
  *
+ * \details This function will not validate the specified JSON file. An invalid map file
+ * will likely result in an exception being thrown due to parsing errors. However, there
+ * are debug assertions that try to make it easier to detect errors and their cause,
+ * compared to the generic exceptions from the JSON parser.
+ *
  * \note The Tiled XML format is not supported.
  *
  * \param path the file path to the Tiled JSON map file.
