@@ -6,3 +6,6 @@
 
 /// \defgroup math Math
 /// \brief Contains numeric and mathematical components.
+
+/// \defgroup io IO
+/// \brief Filesystem utilities related to JSON, Ini, etc.
