@@ -9,6 +9,9 @@
 
 namespace rune {
 
+/// \addtogroup core
+/// \{
+
 #ifndef RUNE_GRAPHICS_RENDERER_FLAGS
 #define RUNE_GRAPHICS_RENDERER_FLAGS cen::renderer::default_flags()
 #endif  // RUNE_GRAPHICS_RENDERER_FLAGS
@@ -90,5 +93,7 @@ class graphics
   std::unordered_map<texture_id, texture_index> m_indices;
   std::unordered_map<size_type, cen::font_cache> m_caches;
 };
+
+/// \} End of group core
 
 }  // namespace rune

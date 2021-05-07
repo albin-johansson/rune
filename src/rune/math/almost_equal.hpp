@@ -5,6 +5,9 @@
 
 namespace rune {
 
+/// \addtogroup math
+/// \{
+
 // clang-format off
 
 /// The default epsilon value used for floating point comparisons.
@@ -32,5 +35,7 @@ template <std::floating_point T>
 }
 
 // clang-format on
+
+/// \} End of group math
 
 }  // namespace rune

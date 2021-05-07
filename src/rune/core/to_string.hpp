@@ -13,6 +13,9 @@
 
 namespace rune {
 
+/// \addtogroup core
+/// \{
+
 /**
  * \brief Returns a string representation of an arithmetic value.
  *
@@ -53,5 +56,7 @@ template <numeric T, std::size_t BufferSize = 24>
     }
   }
 }
+
+/// \} End of group core
 
 }  // namespace rune

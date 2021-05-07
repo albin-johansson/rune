@@ -9,6 +9,8 @@
 #include "tmx_tileset.hpp"
 
 namespace rune::tmx {
+
+/// \cond FALSE
 namespace detail {
 
 inline void parse_tileset(const nlohmann::json& json, tmx_tileset& tileset)
@@ -38,6 +40,7 @@ inline void parse_tileset(const nlohmann::json& json, tmx_tileset& tileset)
 }
 
 }  // namespace detail
+/// \endcond
 
 [[nodiscard]] inline auto parse_tileset(const std::filesystem::path& directory,
                                         const nlohmann::json& json) -> tmx_tileset

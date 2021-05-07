@@ -13,6 +13,9 @@
 
 namespace rune {
 
+/// \addtogroup tmx
+/// \{
+
 /**
  * \brief Parses a Tiled JSON map file, and returns the contents.
  *
@@ -71,5 +74,7 @@ namespace rune {
 
   return map;
 }
+
+/// \} End of group tmx
 
 }  // namespace rune

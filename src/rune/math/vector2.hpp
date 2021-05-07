@@ -10,6 +10,9 @@
 
 namespace rune {
 
+/// \addtogroup math
+/// \{
+
 template <std::floating_point T>
 class basic_vector2 final
 {
@@ -252,5 +255,7 @@ auto operator<<(std::ostream& stream, const basic_vector2<T> vec) -> std::ostrea
 {
   return stream << to_string(vec);
 }
+
+/// \} End of group math
 
 }  // namespace rune

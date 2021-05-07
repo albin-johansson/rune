@@ -30,6 +30,7 @@
 #include "rune/core/integers.hpp"
 #include "rune/core/semi_fixed_game_loop.hpp"
 #include "rune/core/to_string.hpp"
+#include "rune/doxygen.hpp"
 #include "rune/generic/stack_resource.hpp"
 #include "rune/generic/static_vector.hpp"
 #include "rune/io/ini.hpp"

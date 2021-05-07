@@ -8,6 +8,9 @@
 
 namespace rune {
 
+/// \addtogroup core
+/// \{
+
 #ifndef RUNE_MAX_TICK_RATE
 #define RUNE_MAX_TICK_RATE 120.0
 #endif  // RUNE_MAX_TICK_RATE
@@ -89,5 +92,7 @@ class semi_fixed_game_loop
   seconds_type m_current;
   bool m_running{true};
 };
+
+/// \} End of group core
 
 }  // namespace rune

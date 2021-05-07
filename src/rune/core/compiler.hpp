@@ -2,6 +2,9 @@
 
 namespace rune {
 
+/// \addtogroup core
+/// \{
+
 /// Indicates whether or not the current compiler is MSVC
 [[nodiscard]] constexpr auto on_msvc() noexcept -> bool
 {
@@ -31,5 +34,7 @@ namespace rune {
   return false;
 #endif  // __clang__
 }
+
+/// \} End of group core
 
 }  // namespace rune

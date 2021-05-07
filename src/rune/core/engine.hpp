@@ -10,6 +10,9 @@
 
 namespace rune {
 
+/// \addtogroup core
+/// \{
+
 // clang-format off
 
 // clang-format on
@@ -85,5 +88,7 @@ class engine
 
   game_type m_game;
 };
+
+/// \} End of group core
 
 }  // namespace rune

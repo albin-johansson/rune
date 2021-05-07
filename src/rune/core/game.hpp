@@ -8,6 +8,9 @@
 
 namespace rune {
 
+/// \addtogroup core
+/// \{
+
 // clang-format off
 
 template <typename T>
@@ -32,5 +35,7 @@ concept has_on_exit = requires (T game)
 };
 
 // clang-format on
+
+/// \} End of group core
 
 }  // namespace rune
