@@ -3,12 +3,15 @@
 #include <gtest/gtest.h>
 
 #include "tmx/parse_tileset.hpp"
+#include "tmx/tmx.hpp"
 #include "tmx/tmx_parsers.hpp"
+
+using namespace rune::tmx_literals;
 
 TEST(TmxTileset, Defaults)
 {
   const rune::tmx_tileset tileset;
-  ASSERT_EQ(rune::tmx_global_id{1}, tileset.first_id);
+  ASSERT_EQ(1_global, tileset.first_id);
   ASSERT_EQ(0, tileset.tile_width);
   ASSERT_EQ(0, tileset.tile_height);
   ASSERT_EQ(0, tileset.tile_count);
@@ -34,7 +37,7 @@ TEST(TmxTileset, Defaults)
 TEST(TmxTileset, ParseEmbedded)
 {
   const auto tileset = rune::tmx::parse_tileset("resources/embedded_tileset.json");
-  ASSERT_EQ(rune::tmx_global_id{7}, tileset.first_id);
+  ASSERT_EQ(7_global, tileset.first_id);
   ASSERT_EQ(48, tileset.column_count);
   ASSERT_EQ(1270, tileset.image_width);
   ASSERT_EQ(960, tileset.image_height);
@@ -59,7 +62,7 @@ TEST(TmxTileset, ParseEmbedded)
     ASSERT_EQ(3, tileset.terrains.size());
 
     const auto& a = tileset.terrains.at(0);
-    ASSERT_EQ(rune::tmx_local_id{4}, a.tile);
+    ASSERT_EQ(4_local, a.tile);
     ASSERT_EQ("ground", a.name);
 
     ASSERT_EQ(1, a.properties.size());
@@ -69,11 +72,11 @@ TEST(TmxTileset, ParseEmbedded)
     ASSERT_TRUE(rune::tmx::as_boolean(property));
 
     const auto& b = tileset.terrains.at(1);
-    ASSERT_EQ(rune::tmx_local_id{12}, b.tile);
+    ASSERT_EQ(12_local, b.tile);
     ASSERT_EQ("chasm", b.name);
 
     const auto& c = tileset.terrains.at(2);
-    ASSERT_EQ(rune::tmx_local_id{36}, c.tile);
+    ASSERT_EQ(36_local, c.tile);
     ASSERT_EQ("cliff", c.name);
   }
 }
