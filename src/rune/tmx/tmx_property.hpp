@@ -19,6 +19,9 @@ struct tmx_object_tag;
 }  // namespace tags
 /// \endcond
 
+/// \addtogroup tmx
+/// \{
+
 using tmx_file = nenya::strong_type<std::string, tags::tmx_file_tag>;
 using tmx_object_id = nenya::strong_type<int, tags::tmx_object_tag>;
 
@@ -53,6 +56,8 @@ struct tmx_property final
 };
 
 void from_json(const nlohmann::json& json, tmx_property& property);
+
+/// \} End of group tmx
 
 namespace tmx {
 
