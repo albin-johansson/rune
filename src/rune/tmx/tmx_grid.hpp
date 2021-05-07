@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_TMX_GRID_HPP
+#define RUNE_TMX_GRID_HPP
 
 #include <json.hpp>  // json, NLOHMANN_JSON_SERIALIZE_ENUM
 
@@ -24,3 +25,5 @@ struct tmx_grid final
 void from_json(const nlohmann::json& json, tmx_grid& grid);
 
 }  // namespace rune
+
+#endif  // RUNE_TMX_GRID_HPP

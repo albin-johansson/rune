@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_TMX_PARSERS_HPP
+#define RUNE_TMX_PARSERS_HPP
 
 #include <cassert>   // assert
 #include <json.hpp>  // json
@@ -341,3 +342,5 @@ inline void from_json(const nlohmann::json& json, tmx_tile& tile)
 }
 
 }  // namespace rune
+
+#endif  // RUNE_TMX_PARSERS_HPP

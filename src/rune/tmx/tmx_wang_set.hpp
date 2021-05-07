@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_TMX_WANG_SET_HPP
+#define RUNE_TMX_WANG_SET_HPP
 
 #include <json.hpp>  // json
 #include <string>    // string
@@ -23,3 +24,5 @@ struct tmx_wang_set final
 void from_json(const nlohmann::json& json, tmx_wang_set& set);
 
 }  // namespace rune
+
+#endif  // RUNE_TMX_WANG_SET_HPP

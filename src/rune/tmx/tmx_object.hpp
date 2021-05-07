@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_TMX_OBJECT_HPP
+#define RUNE_TMX_OBJECT_HPP
 
 #include <memory>    // unique_ptr
 #include <optional>  // optional
@@ -31,7 +32,7 @@ struct tmx_template_object final
 {
   std::string template_file;
   std::unique_ptr<tmx_object> object;
-// TODO std::shared_ptr<tmx_tileset> tileset;  // optional
+  // TODO std::shared_ptr<tmx_tileset> tileset;  // optional
 };
 
 struct tmx_object final
@@ -64,3 +65,5 @@ void from_json(const nlohmann::json& json, tmx_template_object& object);
 void from_json(const nlohmann::json& json, tmx_object& object);
 
 }  // namespace rune
+
+#endif  // RUNE_TMX_OBJECT_HPP

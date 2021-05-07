@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_CORE_GRAPHICS_HPP
+#define RUNE_CORE_GRAPHICS_HPP
 
 #include <centurion.hpp>  // window, renderer, texture, font_cache, pixel_format
 #include <cstddef>        // size_t
@@ -97,3 +98,5 @@ class graphics
 /// \} End of group core
 
 }  // namespace rune
+
+#endif  // RUNE_CORE_GRAPHICS_HPP

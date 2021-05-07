@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_CORE_CONCEPTS_HPP
+#define RUNE_CORE_CONCEPTS_HPP
 
 #include <type_traits>  // is_arithmetic_v, is_same_v
 
@@ -14,3 +15,5 @@ concept numeric = std::is_arithmetic_v<T> && !std::is_same_v<T, bool>;
 /// \} End of group core
 
 }  // namespace rune
+
+#endif  // RUNE_CORE_CONCEPTS_HPP

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_MATH_VECTOR2_HPP
+#define RUNE_MATH_VECTOR2_HPP
 
 #include <cmath>     // lerp, sqrt
 #include <concepts>  // floating_point
@@ -259,3 +260,5 @@ auto operator<<(std::ostream& stream, const basic_vector2<T> vec) -> std::ostrea
 /// \} End of group math
 
 }  // namespace rune
+
+#endif  // RUNE_MATH_VECTOR2_HPP

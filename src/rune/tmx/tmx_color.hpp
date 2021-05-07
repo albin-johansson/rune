@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_TMX_COLOR_HPP
+#define RUNE_TMX_COLOR_HPP
 
 #include <cassert>       // assert
 #include <charconv>      // from_chars
@@ -70,3 +71,5 @@ inline constexpr tmx_color black{0, 0, 0, 0xFF};
 
 }  // namespace tmx
 }  // namespace rune
+
+#endif  // RUNE_TMX_COLOR_TEST

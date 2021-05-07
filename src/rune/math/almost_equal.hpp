@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_MATH_ALMOST_EQUAL_HPP
+#define RUNE_MATH_ALMOST_EQUAL_HPP
 
 #include <cmath>     // abs
 #include <concepts>  // floating_point
@@ -39,3 +40,5 @@ template <std::floating_point T>
 /// \} End of group math
 
 }  // namespace rune
+
+#endif  // RUNE_MATH_ALMOST_EQUAL_HPP

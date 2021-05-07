@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_TMX_LAYER_HPP
+#define RUNE_TMX_LAYER_HPP
 
 #include <cassert>   // assert
 #include <json.hpp>  // json
@@ -100,3 +101,5 @@ namespace tmx {
 
 }  // namespace tmx
 }  // namespace rune
+
+#endif  // RUNE_TMX_LAYER_HPP

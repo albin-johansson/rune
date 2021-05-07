@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_TMX_LAYER_TYPE_HPP
+#define RUNE_TMX_LAYER_TYPE_HPP
 
 #include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
 
@@ -19,3 +20,5 @@ NLOHMANN_JSON_SERIALIZE_ENUM(tmx_layer_type,
                               {tmx_layer_type::group, "group"}})
 
 }  // namespace rune
+
+#endif  // RUNE_TMX_LAYER_TYPE_HPP

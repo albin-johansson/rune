@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_TMX_TEXT_HPP
+#define RUNE_TMX_TEXT_HPP
 
 #include <json.hpp>  // json
 #include <string>    // string
@@ -52,3 +53,5 @@ struct tmx_text final
 void from_json(const nlohmann::json& json, tmx_text& text);
 
 }  // namespace rune
+
+#endif  // RUNE_TMX_TEXT_HPP

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_TMX_GLOBAL_ID_HPP
+#define RUNE_TMX_GLOBAL_ID_HPP
 
 #include <nenya.hpp>  // strong_type
 
@@ -22,3 +23,5 @@ namespace tmx_literals {
 
 }  // namespace tmx_literals
 }  // namespace rune
+
+#endif  // RUNE_TMX_GLOBAL_ID_HPP

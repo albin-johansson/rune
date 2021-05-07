@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_TMX_TMX_HPP
+#define RUNE_TMX_TMX_HPP
 
 #include <cassert>     // assert
 #include <filesystem>  // path
@@ -78,3 +79,5 @@ namespace rune {
 /// \} End of group tmx
 
 }  // namespace rune
+
+#endif  // RUNE_TMX_TMX_HPP

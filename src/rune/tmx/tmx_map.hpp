@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_TMX_MAP_HPP
+#define RUNE_TMX_MAP_HPP
 
 #include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
 #include <optional>  // optional
@@ -90,3 +91,5 @@ struct tmx_map final
 };
 
 }  // namespace rune
+
+#endif  // RUNE_TMX_MAP_HPP

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_CORE_GAME_HPP
+#define RUNE_CORE_GAME_HPP
 
 #include <concepts>  // convertible_to
 
@@ -39,3 +40,5 @@ concept has_on_exit = requires (T game)
 /// \} End of group core
 
 }  // namespace rune
+
+#endif  // RUNE_CORE_GAME_HPP

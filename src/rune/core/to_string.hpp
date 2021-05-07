@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_CORE_TO_STRING_HPP
+#define RUNE_CORE_TO_STRING_HPP
 
 #include <array>         // array
 #include <charconv>      // to_chars
@@ -60,3 +61,5 @@ template <numeric T, std::size_t BufferSize = 24>
 /// \} End of group core
 
 }  // namespace rune
+
+#endif  // RUNE_CORE_TO_STRING_HPP

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_TMX_POINT_HPP
+#define RUNE_TMX_POINT_HPP
 
 #include <json.hpp>  // json
 
@@ -13,3 +14,5 @@ struct tmx_point final
 void from_json(const nlohmann::json& json, tmx_point& point);
 
 }  // namespace rune
+
+#endif  // RUNE_TMX_POINT_HPP

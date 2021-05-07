@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_ALIASES_DELTA_TIME_HPP
+#define RUNE_ALIASES_DELTA_TIME_HPP
 
 namespace rune {
 
@@ -9,3 +10,5 @@ namespace rune {
 using delta_time = RUNE_DELTA_TIME_TYPE;
 
 }  // namespace rune
+
+#endif  // RUNE_ALIASES_DELTA_TIME_HPP

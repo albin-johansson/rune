@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_IO_JSON_UTILS_HPP
+#define RUNE_IO_JSON_UTILS_HPP
 
 #include <cassert>      // assert
 #include <filesystem>   // path
@@ -164,3 +165,5 @@ void fill_if_exists(const nlohmann::json& json,
 /// \} End of group io
 
 }  // namespace rune
+
+#endif  // RUNE_IO_JSON_UTILS_HPP

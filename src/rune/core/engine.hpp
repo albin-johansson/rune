@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_CORE_ENGINE_HPP
+#define RUNE_CORE_ENGINE_HPP
 
 #include <centurion.hpp>  // window
 #include <concepts>       // derived_from
@@ -92,3 +93,5 @@ class engine
 /// \} End of group core
 
 }  // namespace rune
+
+#endif  // RUNE_CORE_ENGINE_HPP

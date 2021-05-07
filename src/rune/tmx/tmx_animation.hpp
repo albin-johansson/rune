@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_TMX_ANIMATION_HPP
+#define RUNE_TMX_ANIMATION_HPP
 
 #include <json.hpp>  // json
 #include <vector>    // vector
@@ -22,3 +23,5 @@ void from_json(const nlohmann::json& json, tmx_frame& frame);
 void from_json(const nlohmann::json& json, tmx_animation& animation);
 
 }  // namespace rune
+
+#endif  // RUNE_TMX_ANIMATION_HPP

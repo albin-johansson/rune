@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_TMX_PROPERTY_HPP
+#define RUNE_TMX_PROPERTY_HPP
 
 #include <cassert>    // assert
 #include <json.hpp>   // json
@@ -173,3 +174,5 @@ template <typename T>
 
 }  // namespace tmx
 }  // namespace rune
+
+#endif  // RUNE_TMX_PROPERTY_HPP

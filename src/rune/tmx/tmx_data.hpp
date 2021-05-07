@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_TMX_DATA_HPP
+#define RUNE_TMX_DATA_HPP
 
 #include <cassert>   // assert
 #include <json.hpp>  // json
@@ -23,3 +24,5 @@ struct tmx_data final
 void from_json(const nlohmann::json& json, tmx_data& data);
 
 }  // namespace rune
+
+#endif  // RUNE_TMX_DATA_HPP

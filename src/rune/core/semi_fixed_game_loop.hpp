@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_CORE_SEMI_FIXED_GAME_LOOP_HPP
+#define RUNE_CORE_SEMI_FIXED_GAME_LOOP_HPP
 
 #include <algorithm>      // min
 #include <centurion.hpp>  // ...
@@ -96,3 +97,5 @@ class semi_fixed_game_loop
 /// \} End of group core
 
 }  // namespace rune
+
+#endif  // RUNE_CORE_SEMI_FIXED_GAME_LOOP_HPP

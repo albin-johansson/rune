@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_TMX_OBJECT_LAYER_HPP
+#define RUNE_TMX_OBJECT_LAYER_HPP
 
 #include <cassert>   // assert
 #include <json.hpp>  // json, NLOHMANN_JSON_SERIALIZE_ENUM
@@ -27,3 +28,5 @@ struct tmx_object_layer final  // Note, referred to as "object group" by tiled
 void from_json(const nlohmann::json& json, tmx_object_layer& layer);
 
 }  // namespace rune
+
+#endif  // RUNE_TMX_OBJECT_LAYER_HPP

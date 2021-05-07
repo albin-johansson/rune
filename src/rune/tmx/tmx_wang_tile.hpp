@@ -1,10 +1,11 @@
-#pragma once
+#ifndef RUNE_TMX_WANG_TILE_HPP
+#define RUNE_TMX_WANG_TILE_HPP
 
 #include <array>     // array
 #include <json.hpp>  // json
 
-#include "tmx_local_id.hpp"
 #include "../aliases/integers.hpp"
+#include "tmx_local_id.hpp"
 
 namespace rune {
 
@@ -17,3 +18,5 @@ struct tmx_wang_tile final
 void from_json(const nlohmann::json& json, tmx_wang_tile& tile);
 
 }  // namespace rune
+
+#endif  // RUNE_TMX_WANG_TILE_HPP

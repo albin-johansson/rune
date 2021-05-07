@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_ALIASES_INTEGERS_HPP
+#define RUNE_ALIASES_INTEGERS_HPP
 
 #include <centurion.hpp>  // ...
 
@@ -18,3 +19,5 @@ using uint32 = cen::u32;
 using uint64 = cen::u64;
 
 }  // namespace rune
+
+#endif  // RUNE_ALIASES_INTEGERS_HPP

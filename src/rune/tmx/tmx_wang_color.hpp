@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_TMX_WANG_COLOR_HPP
+#define RUNE_TMX_WANG_COLOR_HPP
 
 #include <json.hpp>  // json
 #include <string>    // string
@@ -22,3 +23,5 @@ struct tmx_wang_color final
 void from_json(const nlohmann::json& json, tmx_wang_color& color);
 
 }  // namespace rune
+
+#endif  // RUNE_TMX_WANG_COLOR_HPP

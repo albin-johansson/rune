@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_TMX_PARSE_TILESET_HPP
+#define RUNE_TMX_PARSE_TILESET_HPP
 
 #include <filesystem>  // path
 #include <json.hpp>    // json
@@ -68,3 +69,5 @@ inline void parse_tileset(const nlohmann::json& json, tmx_tileset& tileset)
 }
 
 }  // namespace rune::tmx
+
+#endif  // RUNE_TMX_PARSE_TILESET_HPP

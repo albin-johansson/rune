@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_CORE_COMPILER_HPP
+#define RUNE_CORE_COMPILER_HPP
 
 namespace rune {
 
@@ -38,3 +39,5 @@ namespace rune {
 /// \} End of group core
 
 }  // namespace rune
+
+#endif  // RUNE_CORE_COMPILER_HPP

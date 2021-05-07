@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_TMX_TILE_LAYER_HPP
+#define RUNE_TMX_TILE_LAYER_HPP
 
 #include <json.hpp>  // json, NLOHMANN_JSON_SERIALIZE_ENUM
 
@@ -39,3 +40,5 @@ struct tmx_tile_layer final
 void from_json(const nlohmann::json& json, tmx_tile_layer& layer);
 
 }  // namespace rune
+
+#endif  // RUNE_TMX_TILE_LAYER_HPP

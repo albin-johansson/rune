@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RUNE_TMX_TILESET_HPP
+#define RUNE_TMX_TILESET_HPP
 
 #include <json.hpp>  // json
 #include <optional>  // optional
@@ -46,3 +47,5 @@ struct tmx_tileset final
 };
 
 }  // namespace rune
+
+#endif  // RUNE_TMX_TILESET_HPP
