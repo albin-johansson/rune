@@ -1,11 +1,23 @@
 #pragma once
 
 #include <cassert>      // assert
+#include <filesystem>   // path
+#include <fstream>      // ifstream
 #include <json.hpp>     // json
 #include <optional>     // optional
 #include <string_view>  // string_view
 
 namespace rune {
+
+[[nodiscard]] inline auto read_json(const std::filesystem::path& path) -> nlohmann::json
+{
+  std::ifstream stream{path};
+
+  nlohmann::json json;
+  stream >> json;
+
+  return json;
+}
 
 template <typename T>
 void get_if_exists(const nlohmann::json& json, const std::string_view key, T& value)

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <filesystem>  // path
-#include <fstream>     // ifstream
 #include <json.hpp>    // json
 #include <string>      // string
 
@@ -42,16 +41,7 @@ inline void parse_tileset(const nlohmann::json& json, tmx_tileset& tileset)
 
 [[nodiscard]] inline auto parse_tileset(const std::filesystem::path& path) -> tmx_tileset
 {
-  const auto read = [](const std::filesystem::path& file) {
-    std::ifstream stream{file};
-
-    nlohmann::json data;
-    stream >> data;
-
-    return data;
-  };
-
-  const auto json = read(path);
+  const auto json = read_json(path);
   tmx_tileset tileset;
 
   tileset.first_id = tmx_global_id{json.at("firstgid").get<tmx_global_id::value_type>()};
@@ -61,7 +51,7 @@ inline void parse_tileset(const nlohmann::json& json, tmx_tileset& tileset)
     tileset.external_source = it->get<std::string>();
 
     const auto source = path.parent_path() / tileset.external_source;
-    const auto external = read(source);
+    const auto external = read_json(source);
 
     detail::parse_tileset(external, tileset);
   }
