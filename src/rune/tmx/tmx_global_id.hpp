@@ -12,4 +12,13 @@ struct tmx_global_id_tag;
 
 using tmx_global_id = nenya::strong_type<uint, tags::tmx_global_id_tag>;
 
+namespace tmx_literals {
+
+[[nodiscard]] constexpr auto operator""_global(const ulonglong value) noexcept
+    -> tmx_global_id
+{
+  return tmx_global_id{static_cast<tmx_global_id::value_type>(value)};
+}
+
+}  // namespace tmx_literals
 }  // namespace rune
