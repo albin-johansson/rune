@@ -86,8 +86,8 @@ TEST(TmxTileset, ParseEmbedded)
     ASSERT_TRUE(tileset.tile_offset);
     const auto& offset = tileset.tile_offset.value();
 
-    ASSERT_FLOAT_EQ(1574.0f, offset.x);
-    ASSERT_FLOAT_EQ(753.0f, offset.y);
+    ASSERT_EQ(1574, offset.x);
+    ASSERT_EQ(753, offset.y);
   }
 
   {  // Grid
