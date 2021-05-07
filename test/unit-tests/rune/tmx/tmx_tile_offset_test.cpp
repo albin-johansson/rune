@@ -16,6 +16,6 @@ TEST(TmxTileOffset, Parse)
   const auto json = R"({ "x": 123, "y": 84 })"_json;
   const auto offset = json.get<rune::tmx_tile_offset>();
 
-  ASSERT_FLOAT_EQ(123.0f, offset.x);
-  ASSERT_FLOAT_EQ(84.0f, offset.y);
+  ASSERT_EQ(123, offset.x);
+  ASSERT_EQ(84, offset.y);
 }
