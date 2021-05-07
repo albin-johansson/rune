@@ -19,7 +19,7 @@ namespace rune {
  *
  * \pre `file` must refer to a JSON file.
  *
- * \param path the file path of the JSON file.
+ * \param file the file path of the JSON file.
  *
  * \return the parsed JSON data.
  */
