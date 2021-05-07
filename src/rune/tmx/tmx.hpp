@@ -47,7 +47,7 @@ namespace tmx_literals {
   assert(path.extension() == ".json");
 
   const auto json = read_json(path);
-  assert(json.contains("type"));
+  assert(json.contains("type") && "Map file requires \"type\" element!");
   assert(json.at("type").get<std::string>() == "map");
 
   tmx_map map;
