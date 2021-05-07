@@ -79,6 +79,15 @@ TEST(TmxTileset, ParseEmbedded)
     ASSERT_EQ(36_local, c.tile);
     ASSERT_EQ("cliff", c.name);
   }
+
+  {  // Grid
+    ASSERT_TRUE(tileset.grid);
+    const auto& grid = tileset.grid.value();
+
+    ASSERT_EQ(rune::tmx_orientation::isometric, grid.orientation);
+    ASSERT_EQ(48, grid.cell_width);
+    ASSERT_EQ(64, grid.cell_height);
+  }
 }
 
 TEST(TmxTileset, ParseExternal)

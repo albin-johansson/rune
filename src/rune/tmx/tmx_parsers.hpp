@@ -9,6 +9,7 @@
 #include "tmx_animation.hpp"
 #include "tmx_color.hpp"
 #include "tmx_data.hpp"
+#include "tmx_grid.hpp"
 #include "tmx_image_layer.hpp"
 #include "tmx_layer.hpp"
 #include "tmx_local_id.hpp"
@@ -35,6 +36,13 @@ inline void from_json(const nlohmann::json& json, tmx_point& point)
 inline void from_json(const nlohmann::json& json, tmx_color& color)
 {
   color = tmx::make_color(json.get<std::string>());
+}
+
+inline void from_json(const nlohmann::json& json, tmx_grid& grid)
+{
+  json.at("width").get_to(grid.cell_width);
+  json.at("height").get_to(grid.cell_height);
+  json.at("orientation").get_to(grid.orientation);
 }
 
 inline void from_json(const nlohmann::json& json, tmx_wang_color& color)

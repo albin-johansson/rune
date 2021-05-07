@@ -7,6 +7,7 @@
 
 #include "tmx_color.hpp"
 #include "tmx_global_id.hpp"
+#include "tmx_grid.hpp"
 #include "tmx_property.hpp"
 #include "tmx_terrain.hpp"
 #include "tmx_tile.hpp"
@@ -27,20 +28,20 @@ struct tmx_tileset final
   int spacing{};
   float json_version{};
 
-  std::optional<tmx_color> background;
-  std::optional<tmx_color> transparent;
-
   std::string name;
   std::string image;
   std::string external_source;
   std::string tiled_version;
+
+  std::optional<tmx_color> background;
+  std::optional<tmx_color> transparent;
+  std::optional<tmx_grid> grid;
 
   std::vector<tmx_tile> tiles;
   std::vector<tmx_terrain> terrains;
   std::vector<tmx_wang_set> wang_sets;
   std::vector<tmx_property> properties;
 
-  // TODO std::optional<grid> grid;
   // TODO std::optional<tile_offset> tile_offset;
 };
 

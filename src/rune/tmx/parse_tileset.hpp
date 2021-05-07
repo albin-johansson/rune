@@ -29,7 +29,7 @@ void parse_tileset(const nlohmann::json& json, tmx_tileset& tileset)
   get_if_exists(json, "version", tileset.json_version);
   get_if_exists(json, "backgroundcolor", tileset.background);
   get_if_exists(json, "transparentcolor", tileset.transparent);
-  // TODO get_if_exists(json, "grid", tileset.grid);
+  get_if_exists(json, "grid", tileset.grid);
   // TODO get_if_exists(json, "tileoffset", tileset.tile_offset);
 
   fill_if_exists(json, "tiles", tileset.tiles);
