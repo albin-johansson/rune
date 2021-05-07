@@ -80,6 +80,14 @@ TEST(TmxTileset, ParseEmbedded)
     ASSERT_EQ("cliff", c.name);
   }
 
+  {  // Tile offset
+    ASSERT_TRUE(tileset.tile_offset);
+    const auto& offset = tileset.tile_offset.value();
+
+    ASSERT_FLOAT_EQ(1574.0f, offset.x);
+    ASSERT_FLOAT_EQ(753.0f, offset.y);
+  }
+
   {  // Grid
     ASSERT_TRUE(tileset.grid);
     const auto& grid = tileset.grid.value();

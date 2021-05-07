@@ -20,6 +20,7 @@
 #include "tmx_text.hpp"
 #include "tmx_tile.hpp"
 #include "tmx_tile_layer.hpp"
+#include "tmx_tile_offset.hpp"
 #include "tmx_tileset.hpp"
 #include "tmx_wang_color.hpp"
 #include "tmx_wang_set.hpp"
@@ -43,6 +44,12 @@ inline void from_json(const nlohmann::json& json, tmx_grid& grid)
   json.at("width").get_to(grid.cell_width);
   json.at("height").get_to(grid.cell_height);
   json.at("orientation").get_to(grid.orientation);
+}
+
+inline void from_json(const nlohmann::json& json, tmx_tile_offset& offset)
+{
+  json.at("x").get_to(offset.x);
+  json.at("y").get_to(offset.y);
 }
 
 inline void from_json(const nlohmann::json& json, tmx_wang_color& color)

@@ -20,6 +20,7 @@ set(SOURCE_FILES
     rune/tmx/tmx_point_test.cpp
     rune/tmx/tmx_property_test.cpp
     rune/tmx/tmx_text_test.cpp
+    rune/tmx/tmx_tile_offset_test.cpp
     rune/tmx/tmx_tileset_test.cpp
     rune/tmx/tmx_wang_color_test.cpp
     rune/tmx/tmx_wang_set_test.cpp
