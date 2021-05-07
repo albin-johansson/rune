@@ -2,7 +2,29 @@
 
 #include <gtest/gtest.h>
 
+#include <vector>  // vector
+
+#include "io/json_utils.hpp"
 #include "tmx/tmx_parsers.hpp"
+
+TEST(TmxProperty, TmxPropertyTypeEnum)
+{
+  const auto json = R"(
+    [ "string", "int", "float", "bool", "color", "file", "object" ]
+  )"_json;
+
+  std::vector<rune::tmx_property_type> values;
+  rune::fill(json, values);
+
+  ASSERT_EQ(7, values.size());
+  ASSERT_EQ(rune::tmx_property_type::string, values.at(0));
+  ASSERT_EQ(rune::tmx_property_type::integer, values.at(1));
+  ASSERT_EQ(rune::tmx_property_type::floating, values.at(2));
+  ASSERT_EQ(rune::tmx_property_type::boolean, values.at(3));
+  ASSERT_EQ(rune::tmx_property_type::color, values.at(4));
+  ASSERT_EQ(rune::tmx_property_type::file, values.at(5));
+  ASSERT_EQ(rune::tmx_property_type::object, values.at(6));
+}
 
 TEST(TmxProperty, Defaults)
 {
