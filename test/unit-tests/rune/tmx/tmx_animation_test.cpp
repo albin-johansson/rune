@@ -2,12 +2,15 @@
 
 #include <gtest/gtest.h>
 
+#include "tmx/tmx.hpp"
 #include "tmx/tmx_parsers.hpp"
+
+using namespace rune::tmx_literals;
 
 TEST(TmxFrame, Defaults)
 {
   const rune::tmx_frame frame;
-  ASSERT_EQ(rune::tmx_local_id{0}, frame.tile);
+  ASSERT_EQ(0_local, frame.tile);
   ASSERT_EQ(0, frame.duration);
 }
 
@@ -30,10 +33,10 @@ TEST(TmxAnimation, Parse)
   ASSERT_EQ(2, animation.frames.size());
 
   const auto& first = animation.frames.at(0);
-  ASSERT_EQ(rune::tmx_local_id{42}, first.tile);
+  ASSERT_EQ(42_local, first.tile);
   ASSERT_EQ(123, first.duration);
 
   const auto& second = animation.frames.at(1);
-  ASSERT_EQ(rune::tmx_local_id{27}, second.tile);
+  ASSERT_EQ(27_local, second.tile);
   ASSERT_EQ(447, second.duration);
 }
