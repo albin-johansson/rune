@@ -26,11 +26,15 @@ class engine
   using graphics_type = Graphics;
   using loop_type = semi_fixed_game_loop<game_type, graphics_type>;
 
+  // clang-format off
+
   engine()
     : m_loop{this}
     , m_window{"Rune window"}
     , m_graphics{m_window}
   {}
+
+  // clang-format on
 
   void update_logic(const delta_time dt)
   {
