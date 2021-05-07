@@ -12,7 +12,7 @@
 namespace rune::tmx {
 namespace detail {
 
-void parse_tileset(const nlohmann::json& json, tmx_tileset& tileset)
+inline void parse_tileset(const nlohmann::json& json, tmx_tileset& tileset)
 {
   json.at("tilewidth").get_to(tileset.tile_width);
   json.at("tileheight").get_to(tileset.tile_height);
