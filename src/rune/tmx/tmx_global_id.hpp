@@ -7,9 +7,11 @@
 
 namespace rune {
 
+/// \cond FALSE
 namespace tags {
 struct tmx_global_id_tag;
 }
+/// \endcond
 
 using tmx_global_id = nenya::strong_type<uint, tags::tmx_global_id_tag>;
 

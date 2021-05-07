@@ -12,10 +12,12 @@
 
 namespace rune {
 
+/// \cond FALSE
 namespace tags {
 struct tmx_file_tag;
 struct tmx_object_tag;
 }  // namespace tags
+/// \endcond
 
 using tmx_file = nenya::strong_type<std::string, tags::tmx_file_tag>;
 using tmx_object_id = nenya::strong_type<int, tags::tmx_object_tag>;
