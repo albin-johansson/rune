@@ -56,6 +56,12 @@ void from_json(const nlohmann::json& json, tmx_property& property);
 
 namespace tmx {
 
+/// \addtogroup tmx
+/// \{
+
+/// \name Property type indicators
+/// \{
+
 [[nodiscard]] inline auto is_string(const tmx_property& property) noexcept -> bool
 {
   return std::holds_alternative<std::string>(property.value);
@@ -90,6 +96,12 @@ namespace tmx {
 {
   return std::holds_alternative<tmx_object_id>(property.value);
 }
+
+/// \} End of property type indicators
+
+/// \name Property value casts
+/// \brief Type-safe cast functions for properties, that throw on type mismatches.
+/// \{
 
 template <typename T>
 [[nodiscard]] auto value_cast(const tmx_property& property) -> const T&
@@ -132,6 +144,12 @@ template <typename T>
   return value_cast<tmx_object_id>(property);
 }
 
+/// \} End of property value casts
+
+/// \name Non-throwing property value casts
+/// \brief Property cast functions that return null pointers upon type mismatches.
+/// \{
+
 [[nodiscard]] inline auto try_as_string(const tmx_property& property) noexcept
     -> const std::string*
 {
@@ -173,6 +191,10 @@ template <typename T>
 {
   return std::get_if<tmx_object_id>(&property.value);
 }
+
+/// \} End of non-throwing property value casts
+
+/// \} End of group tmx
 
 }  // namespace tmx
 }  // namespace rune
