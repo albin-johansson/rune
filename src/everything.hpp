@@ -28,7 +28,6 @@
 #include "rune/core/concepts.hpp"
 #include "rune/core/engine.hpp"
 #include "rune/core/game.hpp"
-#include "rune/core/integers.hpp"
 #include "rune/core/rune_error.hpp"
 #include "rune/core/semi_fixed_game_loop.hpp"
 #include "rune/core/to_string.hpp"
