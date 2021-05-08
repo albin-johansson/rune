@@ -7,6 +7,7 @@
 #include <json.hpp>     // json
 #include <optional>     // optional
 #include <string_view>  // string_view
+#include "../core/concepts.hpp"
 
 namespace rune {
 
@@ -15,6 +16,16 @@ namespace rune {
 
 /// \name JSON
 /// \{
+
+// clang-format off
+
+template <typename T>
+concept json_type = requires (const nlohmann::json& json)
+{
+  { json.get<T>() };
+};
+
+// clang-format on
 
 /**
  * \brief Parses the JSON file at the specified path, and returns the contents.
@@ -53,7 +64,7 @@ namespace rune {
  * \param[out] value a reference to the value that will be assigned with the data
  * associated with `key`, if it exists.
  */
-template <typename T>
+template <json_type T>
 void get_if_exists(const nlohmann::json& json, const std::string_view key, T& value)
 {
   if (const auto it = json.find(key); it != json.end())
@@ -63,7 +74,7 @@ void get_if_exists(const nlohmann::json& json, const std::string_view key, T& va
 }
 
 /// \copydoc get_if_exists()
-template <typename T>
+template <json_type T>
 void get_if_exists(const nlohmann::json& json,
                    const std::string_view key,
                    std::optional<T>& value)
@@ -88,9 +99,10 @@ void get_if_exists(const nlohmann::json& json,
  * \param array the JSON array that provides the source data.
  * \param[out] container the container that will be filled.
  */
-template <typename Container>
+template <has_value_type Container>
 void fill(const nlohmann::json& array, Container& container)
 {
+  static_assert(json_type<typename Container::value_type>);
   assert(array.is_array());
 
   container.reserve(array.size());
@@ -116,9 +128,11 @@ void fill(const nlohmann::json& array, Container& container)
  * \param key the key of the JSON array element.
  * \param[out] container the container that will be filled.
  */
-template <typename Container>
+template <has_value_type Container>
 void fill(const nlohmann::json& json, const std::string_view key, Container& container)
 {
+  static_assert(json_type<typename Container::value_type>);
+
   const auto it = json.find(key);
   assert(it != json.end());
   assert(it->is_array());
@@ -148,11 +162,13 @@ void fill(const nlohmann::json& json, const std::string_view key, Container& con
  * \param key the key of the JSON array element.
  * \param[out] container the container that will be filled.
  */
-template <typename Container>
+template <has_value_type Container>
 void fill_if_exists(const nlohmann::json& json,
                     const std::string_view key,
                     Container& container)
 {
+  static_assert(json_type<typename Container::value_type>);
+
   if (const auto it = json.find(key); it != json.end())
   {
     assert(it->is_array());
