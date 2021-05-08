@@ -35,7 +35,8 @@ struct tmx_template_object final
 {
   std::string template_file;
   std::unique_ptr<tmx_object> object;
-  // TODO std::shared_ptr<tmx_tileset> tileset;  // optional
+  std::optional<std::string> tileset_source;
+  std::optional<tmx_global_id> tileset_first_id;
 };
 
 struct tmx_object final

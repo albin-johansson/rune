@@ -198,11 +198,12 @@ inline void from_json(const nlohmann::json& json, tmx_template_object& object)
   json.at("template").get_to(object.template_file);
   object.object = std::make_unique<tmx_object>(json.at("object").get<tmx_object>());
 
-  // TODO
-  //  if (const auto it = json.find("tileset"); it != json.end())
-  //  {
-  //    object.tileset = std::make_unique<tmx_tileset>(it->get<tmx_tileset>());
-  //  }
+  if (const auto it = json.find("tileset"); it != json.end())
+  {
+    const tmx_global_id firstId{it->at("firstgid").get<tmx_global_id::value_type>()};
+    object.tileset_first_id = firstId;
+    object.tileset_source = json.at("source").get<std::string>();
+  }
 }
 
 inline void from_json(const nlohmann::json& json, tmx_object& object)
