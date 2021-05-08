@@ -2,6 +2,7 @@
 #define RUNE_TMX_TILE_LAYER_HPP
 
 #include <json.hpp>  // json, NLOHMANN_JSON_SERIALIZE_ENUM
+#include <optional>  // optional
 
 #include "tmx_data.hpp"
 
@@ -36,7 +37,7 @@ struct tmx_tile_layer final
 {
   tmx_tile_layer_compression compression{tmx_tile_layer_compression::none};
   tmx_tile_layer_encoding encoding{tmx_tile_layer_encoding::csv};
-  tmx_data data;  // TODO should maybe be optional
+  std::optional<tmx_data> data;
   // TODO std::vector<chunk> m_chunks;
 };
 

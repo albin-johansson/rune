@@ -83,7 +83,8 @@ TEST(TmxLayer, ParseTileLayer)
   ASSERT_EQ(rune::tmx_tile_layer_encoding::csv, tileLayer.encoding);
   ASSERT_EQ(rune::tmx_tile_layer_compression::none, tileLayer.compression);
 
-  const auto& tiles = std::get<rune::tmx_data::gid_data>(tileLayer.data.tile_data);
+  ASSERT_TRUE(tileLayer.data);
+  const auto& tiles = std::get<rune::tmx_data::gid_data>(tileLayer.data->tile_data);
   ASSERT_EQ(12, tiles.size());
 
   ASSERT_EQ(2, layer.properties.size());
