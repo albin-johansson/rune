@@ -13,6 +13,9 @@ namespace rune {
 /// \addtogroup io
 /// \{
 
+/// \name JSON
+/// \{
+
 /**
  * \brief Parses the JSON file at the specified path, and returns the contents.
  *
@@ -160,6 +163,8 @@ void fill_if_exists(const nlohmann::json& json,
     }
   }
 }
+
+/// \} End of JSON
 
 /// \} End of group io
 
