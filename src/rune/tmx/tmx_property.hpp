@@ -1,12 +1,14 @@
 #ifndef RUNE_TMX_PROPERTY_HPP
 #define RUNE_TMX_PROPERTY_HPP
 
-#include <cassert>    // assert
-#include <json.hpp>   // json
-#include <nenya.hpp>  // strong_type
-#include <string>     // string
-#include <variant>    // variant, get, get_if, holds_alternative
-#include <vector>     // vector
+#include <cassert>      // assert
+#include <json.hpp>     // json
+#include <nenya.hpp>    // strong_type
+#include <ranges>       // any_of
+#include <string>       // string
+#include <string_view>  // string_view
+#include <variant>      // variant, get, get_if, holds_alternative
+#include <vector>       // vector
 
 #include "tmx_color.hpp"
 
@@ -198,6 +200,24 @@ template <typename T>
 }
 
 /// \} End of non-throwing property value casts
+
+/**
+ * \brief Indicates whether or not a property with the specified name exists in a vector
+ * of properties.
+ *
+ * \param properties the vector of properties that will be searched.
+ * \param name the name of the property to look for.
+ *
+ * \return `true` if the properties contains a property with the specified name; `false`
+ * otherwise.
+ */
+[[nodiscard]] inline auto contains(const std::vector<tmx_property>& properties,
+                                   const std::string_view name) -> bool
+{
+  return std::ranges::any_of(properties, [name](const tmx_property& property) noexcept {
+    return property.name == name;
+  });
+}
 
 /// \} End of group tmx
 

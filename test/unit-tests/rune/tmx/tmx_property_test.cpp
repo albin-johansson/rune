@@ -62,3 +62,42 @@ TEST(TmxProperty, Parse)
   ASSERT_EQ(123, rune::tmx::as_integer(property));
   ASSERT_TRUE(rune::tmx::try_as_integer(property));
 }
+
+TEST(TmxProperty, Contains)
+{
+  const auto json = R"(
+    [
+      {
+        "name": "A",
+        "type": "int",
+        "value": 123
+      },
+      {
+        "name": "B",
+        "type": "float",
+        "value": 42.3
+      },
+      {
+        "name": "C",
+        "type": "string",
+        "value": "hello world!"
+      }
+    ]
+  )"_json;
+
+  std::vector<rune::tmx_property> properties;
+  rune::fill(json, properties);
+
+  ASSERT_EQ(3, properties.size());
+  ASSERT_EQ(3, properties.capacity());
+
+  ASSERT_TRUE(rune::tmx::contains(properties, "A"));
+  ASSERT_TRUE(rune::tmx::contains(properties, "B"));
+  ASSERT_TRUE(rune::tmx::contains(properties, "C"));
+
+  ASSERT_FALSE(rune::tmx::contains(properties, ""));
+  ASSERT_FALSE(rune::tmx::contains(properties, "a"));
+  ASSERT_FALSE(rune::tmx::contains(properties, "int"));
+  ASSERT_FALSE(rune::tmx::contains(properties, "hello world!"));
+  ASSERT_FALSE(rune::tmx::contains(properties, "foobar"));
+}
