@@ -4,12 +4,13 @@
 #include <cassert>      // assert
 #include <json.hpp>     // json
 #include <nenya.hpp>    // strong_type
-#include <ranges>       // any_of
+#include <ranges>       // any_of, find_if
 #include <string>       // string
 #include <string_view>  // string_view
 #include <variant>      // variant, get, get_if, holds_alternative
 #include <vector>       // vector
 
+#include "../core/rune_error.hpp"
 #include "tmx_color.hpp"
 
 namespace rune {
@@ -217,6 +218,33 @@ template <typename T>
   return std::ranges::any_of(properties, [name](const tmx_property& property) noexcept {
     return property.name == name;
   });
+}
+
+/**
+ * \brief Attempts to find and return a property with the specified name.
+ *
+ * \param properties the properties that will be searched.
+ * \param name the name of the desired property.
+ *
+ * \return the property with the specified name.
+ *
+ * \throws rune_error if there is no property with the specified name.
+ */
+[[nodiscard]] inline auto find(const std::vector<tmx_property>& properties,
+                               const std::string_view name) -> const tmx_property&
+{
+  const auto it =
+      std::ranges::find_if(properties, [name](const tmx_property& property) noexcept {
+        return property.name == name;
+      });
+  if (it != properties.end())
+  {
+    return *it;
+  }
+  else
+  {
+    throw rune_error{"Could not find property with specified name!"};
+  }
 }
 
 /// \} End of group tmx

@@ -63,9 +63,7 @@ TEST(TmxProperty, Parse)
   ASSERT_TRUE(rune::tmx::try_as_integer(property));
 }
 
-TEST(TmxProperty, Contains)
-{
-  const auto json = R"(
+inline const auto properties_json_array = R"(
     [
       {
         "name": "A",
@@ -85,8 +83,10 @@ TEST(TmxProperty, Contains)
     ]
   )"_json;
 
+TEST(TmxProperty, Contains)
+{
   std::vector<rune::tmx_property> properties;
-  rune::fill(json, properties);
+  rune::fill(properties_json_array, properties);
 
   ASSERT_EQ(3, properties.size());
   ASSERT_EQ(3, properties.capacity());
@@ -100,4 +100,20 @@ TEST(TmxProperty, Contains)
   ASSERT_FALSE(rune::tmx::contains(properties, "int"));
   ASSERT_FALSE(rune::tmx::contains(properties, "hello world!"));
   ASSERT_FALSE(rune::tmx::contains(properties, "foobar"));
+}
+
+TEST(TmxProperty, Find)
+{
+  std::vector<rune::tmx_property> properties;
+  rune::fill(properties_json_array, properties);
+
+  const auto& a = rune::tmx::find(properties, "A");
+  ASSERT_TRUE(rune::tmx::is_integer(a));
+  ASSERT_EQ(123, rune::tmx::as_integer(a));
+
+  const auto& b = rune::tmx::find(properties, "B");
+  ASSERT_TRUE(rune::tmx::is_float(b));
+  ASSERT_EQ(42.3f, rune::tmx::as_float(b));
+
+  ASSERT_THROW(rune::tmx::find(properties, "foo"), rune::rune_error);
 }
