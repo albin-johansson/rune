@@ -7,6 +7,8 @@
 #include <json.hpp>     // json
 #include <optional>     // optional
 #include <string_view>  // string_view
+#include <variant>      // variant
+
 #include "../core/concepts.hpp"
 
 namespace rune {
@@ -82,6 +84,84 @@ void get_if_exists(const nlohmann::json& json,
   if (const auto it = json.find(key); it != json.end())
   {
     value = it->get<T>();
+  }
+}
+
+template <has_value_type T>
+void emplace(const nlohmann::json& json, const std::string_view key, T& value)
+{
+  static_assert(json_type<typename T::value_type>);
+
+  const auto it = json.find(key);
+  assert(it != json.end());
+
+  value = T{it->get<typename T::value_type>()};
+}
+
+template <has_value_type T>
+void emplace(const nlohmann::json& json,
+             const std::string_view key,
+             std::optional<T>& value)
+{
+  static_assert(json_type<typename T::value_type>);
+
+  const auto it = json.find(key);
+  assert(it != json.end());
+
+  value = T{it->get<typename T::value_type>()};
+}
+
+template <has_value_type T>
+void emplace_if_exists(const nlohmann::json& json, const std::string_view key, T& value)
+{
+  static_assert(json_type<typename T::value_type>);
+
+  if (const auto it = json.find(key); it != json.end())
+  {
+    value = T{it->get<typename T::value_type>()};
+  }
+}
+
+template <has_value_type T>
+void emplace_if_exists(const nlohmann::json& json,
+                       const std::string_view key,
+                       std::optional<T>& value)
+{
+  static_assert(json_type<typename T::value_type>);
+
+  if (const auto it = json.find(key); it != json.end())
+  {
+    value.emplace(it->get<typename T::value_type>());
+  }
+}
+
+/**
+ * \brief Writes the data associated with the specified key to the specified variant, as
+ * long as the key exists in the JSON object.
+ *
+ * \details This function requires that values of type `T` can be obtained from JSON
+ * objects, i.e. the type needs to provide an overload of the `from_json()` function.
+ *
+ * \note This function has no effect if there is no element associated with the specified
+ * key.
+ *
+ * \tparam T the type of the data that will be extracted from the JSON object.
+ * \tparam Types the types used by the variant.
+ *
+ * \param json the JSON object.
+ * \param key the element to look for.
+ * \param[out] variant the variant that the data will be written to.
+ */
+template <json_type T, typename... Types>
+void emplace_if_exists(const nlohmann::json& json,
+                       const std::string_view key,
+                       std::variant<Types...>& variant)
+{
+  static_assert(json_type<typename T::value_type>);
+
+  if (const auto it = json.find(key); it != json.end())
+  {
+    variant.template emplace<T>(it->get<T>());
   }
 }
 
