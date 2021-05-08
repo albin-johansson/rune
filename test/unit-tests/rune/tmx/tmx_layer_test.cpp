@@ -71,8 +71,8 @@ TEST(TmxLayer, ParseTileLayer)
   const rune::tmx_color tint{0xF1, 0xCE, 0x12};
   ASSERT_EQ(tint, layer.tint);
 
-  ASSERT_FLOAT_EQ(0.74, layer.parallax_x);
-  ASSERT_FLOAT_EQ(0.38, layer.parallax_y);
+  ASSERT_FLOAT_EQ(0.74f, layer.parallax_x);
+  ASSERT_FLOAT_EQ(0.38f, layer.parallax_y);
 
   ASSERT_TRUE(rune::tmx::is_tile_layer(layer));
   ASSERT_FALSE(rune::tmx::is_object_layer(layer));
