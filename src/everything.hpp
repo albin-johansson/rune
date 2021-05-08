@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include "rune/aliases/czstring.hpp"
 #include "rune/core/aabb_tree.hpp"
 #include "rune/core/compiler.hpp"
 #include "rune/core/concepts.hpp"
