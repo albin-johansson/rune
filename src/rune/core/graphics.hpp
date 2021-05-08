@@ -13,9 +13,23 @@ namespace rune {
 /// \addtogroup core
 /// \{
 
+/// \name Configuration macros
+/// \{
+
+/**
+ * \def RUNE_GRAPHICS_RENDERER_FLAGS
+ *
+ * \brief The renderer flags used when creating `graphics` instances.
+ *
+ * \note This macro should expand to a `uint32` value.
+ *
+ * \details By default, this macro expands to `cen::renderer::default_flags()`.
+ */
 #ifndef RUNE_GRAPHICS_RENDERER_FLAGS
 #define RUNE_GRAPHICS_RENDERER_FLAGS cen::renderer::default_flags()
 #endif  // RUNE_GRAPHICS_RENDERER_FLAGS
+
+/// \} End of configuration macros
 
 class graphics
 {
