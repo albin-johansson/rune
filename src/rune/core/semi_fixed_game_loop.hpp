@@ -6,23 +6,67 @@
 #include <concepts>       // floating_point
 
 #include "../aliases/delta_time.hpp"
+#include "rune_error.hpp"
 
 namespace rune {
 
 /// \addtogroup core
 /// \{
 
+/// \name Configuration macros
+/// \{
+
+/**
+ * \def RUNE_MAX_TICK_RATE
+ *
+ * \brief The maximum tick rate of the game loop, i.e. the maximum amount of ticks per
+ * second.
+ *
+ * \note The value of this macro should be a `double`.
+ *
+ * \details The game loop will try to run at the refresh rate of the primary screen, as
+ * long as the the refresh rate isn't greater than the value of this macro. By default,
+ * this macro expands to `120.0`.
+ */
 #ifndef RUNE_MAX_TICK_RATE
 #define RUNE_MAX_TICK_RATE 120.0
 #endif  // RUNE_MAX_TICK_RATE
 
+/**
+ * \def RUNE_ENGINE_MAX_FRAMES_PER_TICK
+ *
+ * \brief The maximum amount of frames that the game loop can run per tick.
+ *
+ * \note The value of this macro should be an `int`.
+ *
+ * \details The purpose of this limit is to avoid the "spiral-of-death". By default, this
+ * macro expands to `5`.
+ */
 #ifndef RUNE_ENGINE_MAX_FRAMES_PER_TICK
 #define RUNE_ENGINE_MAX_FRAMES_PER_TICK 5
 #endif  // RUNE_ENGINE_MAX_FRAMES_PER_TICK
 
+/// \} End of configuration macros
+
+/// \copybrief RUNE_MAX_TICK_RATE
+/// \see `RUNE_MAX_TICK_RATE`
 inline constexpr double max_tick_rate = RUNE_MAX_TICK_RATE;
+
+/// \copybrief RUNE_ENGINE_MAX_FRAMES_PER_TICK
+/// \see `RUNE_ENGINE_MAX_FRAMES_PER_TICK`
 inline constexpr int engine_max_frames_per_tick = RUNE_ENGINE_MAX_FRAMES_PER_TICK;
 
+/**
+ * \brief Returns the tick rate used by the game loop.
+ *
+ * \details The tick rate is determined by comparing the refresh rate of the primary
+ * screen and the maximum tick rate, and selecting the minimum value.
+ *
+ * \return the tick rate used by the game loop.
+ *
+ * \see `max_tick_rate`
+ * \see `RUNE_MAX_TICK_RATE`
+ */
 [[nodiscard]] inline auto tick_rate() -> double
 {
   return std::min(static_cast<double>(max_tick_rate),
@@ -44,7 +88,12 @@ class semi_fixed_game_loop
       , m_rate{tick_rate()}
       , m_delta{1.0 / m_rate}
       , m_current{cen::counter::now_in_seconds<double>()}
-  {}
+  {
+    if (!m_engine)
+    {
+      throw rune_error{"Cannot create semi_fixed_game_loop from null engine!"};
+    }
+  }
 
   void fetch_current_time() noexcept
   {
