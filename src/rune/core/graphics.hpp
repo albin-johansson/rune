@@ -35,6 +35,8 @@ class graphics
 {
  public:
   using size_type = std::size_t;
+
+  // TODO strong types
   using texture_index = size_type;
   using texture_id = size_type;
   using font_id = size_type;
