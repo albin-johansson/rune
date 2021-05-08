@@ -64,20 +64,20 @@ inline void from_json(const nlohmann::json& json, tmx_wang_color& color)
   json.at("name").get_to(color.name);
   json.at("color").get_to(color.color);
   json.at("probability").get_to(color.probability);
-  color.tile = tmx_local_id{json.at("tile").get<tmx_local_id::value_type>()};
+  emplace(json, "tile", color.tile);
 
   fill_if_exists(json, "properties", color.properties);
 }
 
 inline void from_json(const nlohmann::json& json, tmx_wang_tile& tile)
 {
-  tile.tile = tmx_local_id{json.at("tileid").get<tmx_local_id::value_type>()};
+  emplace(json, "tileid", tile.tile);
   json.at("wangid").get_to(tile.indices);
 }
 
 inline void from_json(const nlohmann::json& json, tmx_wang_set& set)
 {
-  set.tile = tmx_local_id{json.at("tile").get<tmx_local_id::value_type>()};
+  emplace(json, "tile", set.tile);
   json.at("name").get_to(set.name);
 
   // TODO check if colors or wangtiles are required
@@ -156,7 +156,7 @@ inline void from_json(const nlohmann::json& json, tmx_text& text)
 
 inline void from_json(const nlohmann::json& json, tmx_frame& frame)
 {
-  frame.tile = tmx_local_id{json.at("tileid").get<tmx_local_id::value_type>()};
+  emplace(json, "tileid", frame.tile);
   json.at("duration").get_to(frame.duration);
 }
 
@@ -200,8 +200,7 @@ inline void from_json(const nlohmann::json& json, tmx_template_object& object)
 
   if (const auto it = json.find("tileset"); it != json.end())
   {
-    const tmx_global_id firstId{it->at("firstgid").get<tmx_global_id::value_type>()};
-    object.tileset_first_id = firstId;
+    emplace(json, "firstgid", object.tileset_first_id);
     object.tileset_source = json.at("source").get<std::string>();
   }
 }
@@ -225,28 +224,13 @@ inline void from_json(const nlohmann::json& json, tmx_object& object)
 
   if (const auto it = json.find("gid"); it != json.end())
   {
-    object.data.emplace<tmx_global_id>(it->get<uint>());
+    object.data.emplace<tmx_global_id>(it->get<tmx_global_id::value_type>());
   }
 
-  if (const auto it = json.find("text"); it != json.end())
-  {
-    object.data.emplace<tmx_text>(it->get<tmx_text>());
-  }
-
-  if (const auto it = json.find("polygon"); it != json.end())
-  {
-    object.data.emplace<tmx_polygon>(it->get<tmx_polygon>());
-  }
-
-  if (const auto it = json.find("polyline"); it != json.end())
-  {
-    object.data.emplace<tmx_polyline>(it->get<tmx_polyline>());
-  }
-
-  if (const auto it = json.find("template"); it != json.end())
-  {
-    object.data.emplace<tmx_template_object>(it->get<tmx_template_object>());
-  }
+  emplace_if_exists<tmx_text>(json, "text", object.data);
+  emplace_if_exists<tmx_polygon>(json, "polygon", object.data);
+  emplace_if_exists<tmx_polyline>(json, "polyline", object.data);
+  emplace_if_exists<tmx_template_object>(json, "template", object.data);
 }
 
 inline void from_json(const nlohmann::json& json, tmx_tile_layer& layer)
@@ -345,10 +329,7 @@ inline void from_json(const nlohmann::json& json, tmx_tile& tile)
     }
   }
 
-  if (const auto it = json.find("objectgroup"); it != json.end())
-  {
-    tile.object_group = it->get<tmx_layer>();
-  }
+  get_if_exists(json, "objectgroup", tile.object_group);
 }
 
 /// \} End of JSON conversions
