@@ -156,8 +156,10 @@ inline void from_json(const nlohmann::json& json, tmx_text& text)
 
 inline void from_json(const nlohmann::json& json, tmx_frame& frame)
 {
+  using ms_t = std::chrono::milliseconds;
+
   emplace(json, "tileid", frame.tile);
-  json.at("duration").get_to(frame.duration);
+  frame.duration = ms_t{json.at("duration").get<ms_t::rep>()};
 }
 
 inline void from_json(const nlohmann::json& json, tmx_animation& animation)

@@ -6,12 +6,13 @@
 #include "tmx/tmx_parsers.hpp"
 
 using namespace rune::tmx_literals;
+using namespace std::chrono_literals;
 
 TEST(TmxFrame, Defaults)
 {
   const rune::tmx_frame frame;
   ASSERT_EQ(0_local, frame.tile);
-  ASSERT_EQ(0, frame.duration);
+  ASSERT_EQ(std::chrono::milliseconds::zero(), frame.duration);
 }
 
 TEST(TmxAnimation, Parse)
@@ -32,11 +33,12 @@ TEST(TmxAnimation, Parse)
   const auto animation = json.get<rune::tmx_animation>();
   ASSERT_EQ(2, animation.frames.size());
 
+
   const auto& first = animation.frames.at(0);
   ASSERT_EQ(42_local, first.tile);
-  ASSERT_EQ(123, first.duration);
+  ASSERT_EQ(123ms, first.duration);
 
   const auto& second = animation.frames.at(1);
   ASSERT_EQ(27_local, second.tile);
-  ASSERT_EQ(447, second.duration);
+  ASSERT_EQ(447ms, second.duration);
 }

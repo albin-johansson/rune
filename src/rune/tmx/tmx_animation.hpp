@@ -1,6 +1,7 @@
 #ifndef RUNE_TMX_ANIMATION_HPP
 #define RUNE_TMX_ANIMATION_HPP
 
+#include <chrono>    // milliseconds
 #include <json.hpp>  // json
 #include <vector>    // vector
 
@@ -14,7 +15,7 @@ namespace rune {
 struct tmx_frame final
 {
   tmx_local_id tile{};
-  int duration{};  // Milliseconds, TODO chrono?
+  std::chrono::milliseconds duration{};
 };
 
 struct tmx_animation final
