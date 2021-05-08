@@ -283,8 +283,11 @@ inline void from_json(const nlohmann::json& json, tmx_layer& layer)
   get_if_exists(json, "height", layer.height);
   get_if_exists(json, "startx", layer.start_x);
   get_if_exists(json, "starty", layer.start_y);
+  get_if_exists(json, "parallaxx", layer.parallax_x);
+  get_if_exists(json, "parallaxy", layer.parallax_y);
   get_if_exists(json, "offsetx", layer.offset_x);
   get_if_exists(json, "offsety", layer.offset_y);
+  get_if_exists(json, "tintcolor", layer.tint);
 
   fill_if_exists(json, "properties", layer.properties);
 

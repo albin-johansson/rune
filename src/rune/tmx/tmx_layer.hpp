@@ -4,12 +4,14 @@
 #include <cassert>   // assert
 #include <json.hpp>  // json
 #include <memory>    // unique_ptr
+#include <optional>  // optional
 #include <string>    // string
 #include <variant>   // variant, monostate
 #include <vector>    // vector
 
 #include "../aliases/integers.hpp"
 #include "../io/json_utils.hpp"
+#include "tmx_color.hpp"
 #include "tmx_image_layer.hpp"
 #include "tmx_layer_type.hpp"
 #include "tmx_object.hpp"
@@ -39,18 +41,20 @@ struct tmx_layer final
 
   tmx_layer_type type{tmx_layer_type::tile_layer};
   int id{};
-
-  data_type data;
-
-  std::vector<tmx_property> properties;
-
   int width{};
   int height{};
   int start_x{};
   int start_y{};
+  float parallax_x{1};
+  float parallax_y{1};
   float offset_x{};
   float offset_y{};
   float opacity{1};
+
+  std::optional<tmx_color> tint;
+  std::vector<tmx_property> properties;
+
+  data_type data;
 
   std::string name;
   bool visible{true};

@@ -19,7 +19,9 @@ TEST(TmxLayer, Defaults)
   ASSERT_EQ(0, layer.start_y);
   ASSERT_EQ(0, layer.offset_x);
   ASSERT_EQ(0, layer.offset_y);
-  ASSERT_EQ(1, layer.opacity);
+  ASSERT_FLOAT_EQ(1.0f, layer.opacity);
+  ASSERT_FLOAT_EQ(1.0f, layer.parallax_x);
+  ASSERT_FLOAT_EQ(1.0f, layer.parallax_y);
 
   ASSERT_EQ(rune::tmx_layer_type::tile_layer, layer.type);
   ASSERT_TRUE(std::holds_alternative<std::monostate>(layer.data));
@@ -34,6 +36,9 @@ TEST(TmxLayer, ParseTileLayer)
       "type": "tilelayer",
       "opacity": 0.7,
       "visible": true,
+      "tintcolor": "#F1CE12",
+      "parallaxx": 0.74,
+      "parallaxy": 0.38,
       "width": 4,
       "height": 3,
       "data": [1, 1, 1, 1,
@@ -62,6 +67,12 @@ TEST(TmxLayer, ParseTileLayer)
   ASSERT_EQ(rune::tmx_layer_type::tile_layer, layer.type);
   ASSERT_FLOAT_EQ(0.7f, layer.opacity);
   ASSERT_TRUE(layer.visible);
+
+  const rune::tmx_color tint{0xF1, 0xCE, 0x12};
+  ASSERT_EQ(tint, layer.tint);
+
+  ASSERT_FLOAT_EQ(0.74, layer.parallax_x);
+  ASSERT_FLOAT_EQ(0.38, layer.parallax_y);
 
   ASSERT_TRUE(rune::tmx::is_tile_layer(layer));
   ASSERT_FALSE(rune::tmx::is_object_layer(layer));
