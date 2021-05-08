@@ -157,8 +157,6 @@ void emplace_if_exists(const nlohmann::json& json,
                        const std::string_view key,
                        std::variant<Types...>& variant)
 {
-  static_assert(json_type<typename T::value_type>);
-
   if (const auto it = json.find(key); it != json.end())
   {
     variant.template emplace<T>(it->get<T>());
