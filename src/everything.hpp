@@ -29,6 +29,7 @@
 #include "rune/core/compiler.hpp"
 #include "rune/core/concepts.hpp"
 #include "rune/core/engine.hpp"
+#include "rune/core/from_string.hpp"
 #include "rune/core/game.hpp"
 #include "rune/core/rune_error.hpp"
 #include "rune/core/semi_fixed_game_loop.hpp"

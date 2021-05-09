@@ -1,13 +1,12 @@
 #ifndef RUNE_TMX_COLOR_HPP
 #define RUNE_TMX_COLOR_HPP
 
-#include <cassert>       // assert
-#include <charconv>      // from_chars
-#include <json.hpp>      // json
-#include <string_view>   // string_view
-#include <system_error>  // errc
+#include <cassert>      // assert
+#include <json.hpp>     // json
+#include <string_view>  // string_view
 
 #include "../aliases/integers.hpp"
+#include "../core/from_string.hpp"
 
 namespace rune {
 
@@ -38,14 +37,7 @@ inline constexpr tmx_color black{0, 0, 0, 0xFF};
 [[nodiscard]] inline auto from_hex(const std::string_view str) -> uint8
 {
   assert(str.size() == 2);
-
-  uint8 value{};
-  const auto [ptr, error] =
-      std::from_chars(str.data(), str.data() + str.size(), value, 16);
-  assert(error != std::errc::invalid_argument);
-  assert(error != std::errc::result_out_of_range);
-
-  return value;
+  return from_string<uint8>(str, 16).value();
 }
 
 [[nodiscard]] inline auto make_color(const std::string_view str) -> tmx_color
