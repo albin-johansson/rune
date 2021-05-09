@@ -18,6 +18,10 @@ jobs:
       - uses: seanmiddleditch/gha-setup-ninja@v3
       - uses: lukka/get-cmake@v3.18.3
 
+      - name: Update packages
+        shell: bash
+        run: sudo apt-get update
+
       - name: Install graphics drivers
         shell: bash
         run: sudo apt-get install libegl1-mesa-dev libgles2-mesa-dev libasound2-dev libpulse-dev
