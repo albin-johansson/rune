@@ -1,10 +1,10 @@
 #ifndef RUNE_TMX_PROPERTY_HPP
 #define RUNE_TMX_PROPERTY_HPP
 
+#include <algorithm>    // any_of, find_if
 #include <cassert>      // assert
 #include <concepts>     // same_as
 #include <nenya.hpp>    // strong_type
-#include <ranges>       // any_of, find_if
 #include <string>       // string
 #include <string_view>  // string_view
 #include <variant>      // variant, get, get_if, holds_alternative
