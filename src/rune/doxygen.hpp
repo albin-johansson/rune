@@ -25,6 +25,11 @@
 ///   const auto map = rune::parse_tmx("resources/map.json");
 ///   for (const auto& layer : map.layers)
 ///   {
+///     if (const auto* tileLayer = rune::tmx::try_get_tile_layer(layer))
+///     {
+///       // The current layer is a tile layer!
+///     }
+///
 ///     if (rune::tmx::contains(layer.properties, "bar"))
 ///     {
 ///       // The layer has a property named "bar"
