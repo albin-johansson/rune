@@ -26,8 +26,8 @@ struct tmx_tile final
   std::optional<int> image_width;
   std::optional<int> image_height;
   std::optional<float> probability;
-  std::optional<tmx_layer> object_group;
-  std::vector<tmx_property> properties;
+  std::optional<tmx_layer> object_layer;
+  tmx_properties properties;
 };
 
 void from_json(const nlohmann::json& json, tmx_tile& tile);

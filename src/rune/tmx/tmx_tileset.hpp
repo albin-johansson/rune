@@ -46,7 +46,7 @@ struct tmx_tileset final
   std::vector<tmx_tile> tiles;
   std::vector<tmx_terrain> terrains;
   std::vector<tmx_wang_set> wang_sets;
-  std::vector<tmx_property> properties;
+  tmx_properties properties;
 };
 
 /// \} End of group tmx

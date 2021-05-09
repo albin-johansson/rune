@@ -52,7 +52,7 @@ struct tmx_layer final
   float opacity{1};
 
   std::optional<tmx_color> tint;
-  std::vector<tmx_property> properties;
+  tmx_properties properties;
 
   data_type data;
 

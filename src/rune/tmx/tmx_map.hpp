@@ -86,7 +86,7 @@ struct tmx_map final
 
   std::vector<tmx_layer> layers;
   std::vector<tmx_tileset> tilesets;
-  std::vector<tmx_property> properties;
+  tmx_properties properties;
 
   std::string tiled_version;
   std::string json_version;

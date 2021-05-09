@@ -21,7 +21,7 @@ struct tmx_wang_set final
   std::string name;
   std::vector<tmx_wang_tile> wang_tiles;
   std::vector<tmx_wang_color> colors;
-  std::vector<tmx_property> properties;
+  tmx_properties properties;
 };
 
 void from_json(const nlohmann::json& json, tmx_wang_set& set);

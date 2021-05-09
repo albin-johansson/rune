@@ -56,7 +56,7 @@ struct tmx_object final
   float rotation{};
   std::string name;
   std::string type;
-  std::vector<tmx_property> properties;
+  tmx_properties properties;
   data_type data;
   bool is_ellipse{};
   bool is_point{};

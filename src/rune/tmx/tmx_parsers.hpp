@@ -321,7 +321,7 @@ inline void from_json(const nlohmann::json& json, tmx_tile& tile)
   get_if_exists(json, "imagewidth", tile.image_width);
   get_if_exists(json, "imageheight", tile.image_height);
   get_if_exists(json, "probability", tile.probability);
-
+  get_if_exists(json, "objectgroup", tile.object_layer);
   fill_if_exists(json, "properties", tile.properties);
 
   if (const auto it = json.find("terrain"); it != json.end())
@@ -332,8 +332,6 @@ inline void from_json(const nlohmann::json& json, tmx_tile& tile)
       terrain.at(std::stoi(key)) = value.get<int>();  // TODO don't use stoi
     }
   }
-
-  get_if_exists(json, "objectgroup", tile.object_group);
 }
 
 /// \} End of JSON conversions

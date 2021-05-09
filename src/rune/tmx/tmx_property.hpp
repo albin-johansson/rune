@@ -58,6 +58,8 @@ struct tmx_property final
   data_type value;
 };
 
+using tmx_properties = std::vector<tmx_property>;
+
 void from_json(const nlohmann::json& json, tmx_property& property);
 
 /// \} End of group tmx
