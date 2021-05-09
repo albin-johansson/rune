@@ -313,6 +313,8 @@ inline void from_json(const nlohmann::json& json, tmx_group& group)
 
 inline void from_json(const nlohmann::json& json, tmx_tile& tile)
 {
+  emplace(json, "id", tile.id);
+
   get_if_exists(json, "animation", tile.animation);
   get_if_exists(json, "type", tile.type);
   get_if_exists(json, "image", tile.image);
