@@ -20,6 +20,8 @@ NLOHMANN_JSON_SERIALIZE_ENUM(tmx_valign,
                               {tmx_valign::top, "top"},
                               {tmx_valign::bottom, "bottom"}})
 
+/// \} End of group tmx
+
 }  // namespace rune
 
 #endif  // RUNE_TMX_VALIGN_HPP
