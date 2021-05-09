@@ -79,6 +79,20 @@ concept property_value_type = std::same_as<T, int> ||
   });
 }
 
+template <property_value_type T>
+[[nodiscard]] auto try_get_value(const tmx_properties& properties,
+                                 const std::string_view name) noexcept -> const T*
+{
+  if (const auto it = try_get(properties, name); it != properties.end())
+  {
+    return std::get_if<T>(&it->value);
+  }
+  else
+  {
+    return nullptr;
+  }
+}
+
 [[nodiscard]] inline auto try_get_string(const tmx_property& property) noexcept
     -> const std::string*
 {
@@ -89,14 +103,7 @@ concept property_value_type = std::same_as<T, int> ||
                                          const std::string_view name)
     -> const std::string*
 {
-  if (const auto it = try_get(properties, name); it != properties.end())
-  {
-    return std::get_if<std::string>(&it->value);
-  }
-  else
-  {
-    return nullptr;
-  }
+  return try_get_value<std::string>(properties, name);
 }
 
 [[nodiscard]] inline auto try_get_int(const tmx_property& property) noexcept -> const int*
@@ -107,14 +114,7 @@ concept property_value_type = std::same_as<T, int> ||
 [[nodiscard]] inline auto try_get_int(const tmx_properties& properties,
                                       const std::string_view name) -> const int*
 {
-  if (const auto it = try_get(properties, name); it != properties.end())
-  {
-    return std::get_if<int>(&it->value);
-  }
-  else
-  {
-    return nullptr;
-  }
+  return try_get_value<int>(properties, name);
 }
 
 [[nodiscard]] inline auto try_get_float(const tmx_property& property) noexcept -> const
@@ -126,14 +126,7 @@ concept property_value_type = std::same_as<T, int> ||
 [[nodiscard]] inline auto try_get_float(const tmx_properties& properties,
                                         const std::string_view name) -> const float*
 {
-  if (const auto it = try_get(properties, name); it != properties.end())
-  {
-    return std::get_if<float>(&it->value);
-  }
-  else
-  {
-    return nullptr;
-  }
+  return try_get_value<float>(properties, name);
 }
 
 [[nodiscard]] inline auto try_get_bool(const tmx_property& property) noexcept -> const
@@ -145,14 +138,7 @@ concept property_value_type = std::same_as<T, int> ||
 [[nodiscard]] inline auto try_get_bool(const tmx_properties& properties,
                                        const std::string_view name) -> const bool*
 {
-  if (const auto it = try_get(properties, name); it != properties.end())
-  {
-    return std::get_if<bool>(&it->value);
-  }
-  else
-  {
-    return nullptr;
-  }
+  return try_get_value<bool>(properties, name);
 }
 
 [[nodiscard]] inline auto try_get_color(const tmx_property& property) noexcept
@@ -164,14 +150,7 @@ concept property_value_type = std::same_as<T, int> ||
 [[nodiscard]] inline auto try_get_color(const tmx_properties& properties,
                                         const std::string_view name) -> const tmx_color*
 {
-  if (const auto it = try_get(properties, name); it != properties.end())
-  {
-    return std::get_if<tmx_color>(&it->value);
-  }
-  else
-  {
-    return nullptr;
-  }
+  return try_get_value<tmx_color>(properties, name);
 }
 
 [[nodiscard]] inline auto try_get_file(const tmx_property& property) noexcept
@@ -183,14 +162,7 @@ concept property_value_type = std::same_as<T, int> ||
 [[nodiscard]] inline auto try_get_file(const tmx_properties& properties,
                                        const std::string_view name) -> const tmx_file*
 {
-  if (const auto it = try_get(properties, name); it != properties.end())
-  {
-    return std::get_if<tmx_file>(&it->value);
-  }
-  else
-  {
-    return nullptr;
-  }
+  return try_get_value<tmx_file>(properties, name);
 }
 
 [[nodiscard]] inline auto try_get_object(const tmx_property& property) noexcept
@@ -203,14 +175,7 @@ concept property_value_type = std::same_as<T, int> ||
                                          const std::string_view name)
     -> const tmx_object_id*
 {
-  if (const auto it = try_get(properties, name); it != properties.end())
-  {
-    return std::get_if<tmx_object_id>(&it->value);
-  }
-  else
-  {
-    return nullptr;
-  }
+  return try_get_value<tmx_object_id>(properties, name);
 }
 
 template <property_value_type T>
