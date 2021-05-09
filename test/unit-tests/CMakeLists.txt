@@ -9,6 +9,8 @@ set(SOURCE_FILES
     rune/core/game_test.cpp
     rune/core/to_string_test.cpp
 
+    rune/generic/vector_map_test.cpp
+
     rune/math/almost_equal_test.cpp
     rune/math/vector2_test.cpp
 
