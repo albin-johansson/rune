@@ -9,6 +9,7 @@
 #include <string_view>  // string_view
 #include <variant>      // variant
 
+#include "../aliases/json_type.hpp"
 #include "../core/concepts.hpp"
 
 namespace rune {
@@ -22,7 +23,7 @@ namespace rune {
 // clang-format off
 
 template <typename T>
-concept json_type = requires (const nlohmann::json& json)
+concept json_serializable_type = requires (const json_type& json)
 {
   { json.get<T>() };
 };
@@ -38,12 +39,12 @@ concept json_type = requires (const nlohmann::json& json)
  *
  * \return the parsed JSON data.
  */
-[[nodiscard]] inline auto read_json(const std::filesystem::path& file) -> nlohmann::json
+[[nodiscard]] inline auto read_json(const std::filesystem::path& file) -> json_type
 {
   assert(file.extension() == ".json");
   std::ifstream stream{file};
 
-  nlohmann::json json;
+  json_type json;
   stream >> json;
 
   return json;
@@ -66,8 +67,8 @@ concept json_type = requires (const nlohmann::json& json)
  * \param[out] value a reference to the value that will be assigned with the data
  * associated with `key`, if it exists.
  */
-template <json_type T>
-void get_if_exists(const nlohmann::json& json, const std::string_view key, T& value)
+template <json_serializable_type T>
+void get_if_exists(const json_type& json, const std::string_view key, T& value)
 {
   if (const auto it = json.find(key); it != json.end())
   {
@@ -76,8 +77,8 @@ void get_if_exists(const nlohmann::json& json, const std::string_view key, T& va
 }
 
 /// \copydoc get_if_exists()
-template <json_type T>
-void get_if_exists(const nlohmann::json& json,
+template <json_serializable_type T>
+void get_if_exists(const json_type& json,
                    const std::string_view key,
                    std::optional<T>& value)
 {
@@ -88,9 +89,9 @@ void get_if_exists(const nlohmann::json& json,
 }
 
 template <has_value_type T>
-void emplace(const nlohmann::json& json, const std::string_view key, T& value)
+void emplace(const json_type& json, const std::string_view key, T& value)
 {
-  static_assert(json_type<typename T::value_type>);
+  static_assert(json_serializable_type<typename T::value_type>);
 
   const auto it = json.find(key);
   assert(it != json.end());
@@ -99,11 +100,9 @@ void emplace(const nlohmann::json& json, const std::string_view key, T& value)
 }
 
 template <has_value_type T>
-void emplace(const nlohmann::json& json,
-             const std::string_view key,
-             std::optional<T>& value)
+void emplace(const json_type& json, const std::string_view key, std::optional<T>& value)
 {
-  static_assert(json_type<typename T::value_type>);
+  static_assert(json_serializable_type<typename T::value_type>);
 
   const auto it = json.find(key);
   assert(it != json.end());
@@ -112,9 +111,9 @@ void emplace(const nlohmann::json& json,
 }
 
 template <has_value_type T>
-void emplace_if_exists(const nlohmann::json& json, const std::string_view key, T& value)
+void emplace_if_exists(const json_type& json, const std::string_view key, T& value)
 {
-  static_assert(json_type<typename T::value_type>);
+  static_assert(json_serializable_type<typename T::value_type>);
 
   if (const auto it = json.find(key); it != json.end())
   {
@@ -123,11 +122,11 @@ void emplace_if_exists(const nlohmann::json& json, const std::string_view key, T
 }
 
 template <has_value_type T>
-void emplace_if_exists(const nlohmann::json& json,
+void emplace_if_exists(const json_type& json,
                        const std::string_view key,
                        std::optional<T>& value)
 {
-  static_assert(json_type<typename T::value_type>);
+  static_assert(json_serializable_type<typename T::value_type>);
 
   if (const auto it = json.find(key); it != json.end())
   {
@@ -152,8 +151,8 @@ void emplace_if_exists(const nlohmann::json& json,
  * \param key the element to look for.
  * \param[out] variant the variant that the data will be written to.
  */
-template <json_type T, typename... Types>
-void emplace_if_exists(const nlohmann::json& json,
+template <json_serializable_type T, typename... Types>
+void emplace_if_exists(const json_type& json,
                        const std::string_view key,
                        std::variant<Types...>& variant)
 {
@@ -178,9 +177,9 @@ void emplace_if_exists(const nlohmann::json& json,
  * \param[out] container the container that will be filled.
  */
 template <has_value_type Container>
-void fill(const nlohmann::json& array, Container& container)
+void fill(const json_type& array, Container& container)
 {
-  static_assert(json_type<typename Container::value_type>);
+  static_assert(json_serializable_type<typename Container::value_type>);
   assert(array.is_array());
 
   container.reserve(array.size());
@@ -207,9 +206,9 @@ void fill(const nlohmann::json& array, Container& container)
  * \param[out] container the container that will be filled.
  */
 template <has_value_type Container>
-void fill(const nlohmann::json& json, const std::string_view key, Container& container)
+void fill(const json_type& json, const std::string_view key, Container& container)
 {
-  static_assert(json_type<typename Container::value_type>);
+  static_assert(json_serializable_type<typename Container::value_type>);
 
   const auto it = json.find(key);
   assert(it != json.end());
@@ -241,11 +240,11 @@ void fill(const nlohmann::json& json, const std::string_view key, Container& con
  * \param[out] container the container that will be filled.
  */
 template <has_value_type Container>
-void fill_if_exists(const nlohmann::json& json,
+void fill_if_exists(const json_type& json,
                     const std::string_view key,
                     Container& container)
 {
-  static_assert(json_type<typename Container::value_type>);
+  static_assert(json_serializable_type<typename Container::value_type>);
 
   if (const auto it = json.find(key); it != json.end())
   {

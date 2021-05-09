@@ -1,9 +1,9 @@
 #ifndef RUNE_TMX_TEXT_HPP
 #define RUNE_TMX_TEXT_HPP
 
-#include <json.hpp>  // json
-#include <string>    // string
+#include <string>  // string
 
+#include "../aliases/json_type.hpp"
 #include "tmx_color.hpp"
 #include "tmx_halign.hpp"
 #include "tmx_valign.hpp"
@@ -29,7 +29,7 @@ struct tmx_text final
   bool wrap{};
 };
 
-void from_json(const nlohmann::json& json, tmx_text& text);
+void from_json(const json_type& json, tmx_text& text);
 
 /// \} End of group tmx
 

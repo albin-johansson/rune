@@ -1,10 +1,10 @@
 #ifndef RUNE_TMX_ANIMATION_HPP
 #define RUNE_TMX_ANIMATION_HPP
 
-#include <chrono>    // milliseconds
-#include <json.hpp>  // json
-#include <vector>    // vector
+#include <chrono>  // milliseconds
+#include <vector>  // vector
 
+#include "../aliases/json_type.hpp"
 #include "tmx_local_id.hpp"
 
 namespace rune {
@@ -23,8 +23,8 @@ struct tmx_animation final
   std::vector<tmx_frame> frames;
 };
 
-void from_json(const nlohmann::json& json, tmx_frame& frame);
-void from_json(const nlohmann::json& json, tmx_animation& animation);
+void from_json(const json_type& json, tmx_frame& frame);
+void from_json(const json_type& json, tmx_animation& animation);
 
 /// \} End of group tmx
 

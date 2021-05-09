@@ -1,9 +1,9 @@
 #ifndef RUNE_TMX_WANG_COLOR_HPP
 #define RUNE_TMX_WANG_COLOR_HPP
 
-#include <json.hpp>  // json
-#include <string>    // string
+#include <string>  // string
 
+#include "../aliases/json_type.hpp"
 #include "tmx_color.hpp"
 #include "tmx_local_id.hpp"
 #include "tmx_property.hpp"
@@ -22,7 +22,7 @@ struct tmx_wang_color final
   tmx_properties properties;
 };
 
-void from_json(const nlohmann::json& json, tmx_wang_color& color);
+void from_json(const json_type& json, tmx_wang_color& color);
 
 /// \} End of group tmx
 

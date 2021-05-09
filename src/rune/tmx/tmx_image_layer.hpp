@@ -1,10 +1,10 @@
 #ifndef RUNE_TMX_IMAGE_LAYER_HPP
 #define RUNE_TMX_IMAGE_LAYER_HPP
 
-#include <json.hpp>  // json
 #include <optional>  // optional
 #include <string>    // string
 
+#include "../aliases/json_type.hpp"
 #include "tmx_color.hpp"
 
 namespace rune {
@@ -18,7 +18,7 @@ struct tmx_image_layer final
   std::optional<tmx_color> transparent;
 };
 
-void from_json(const nlohmann::json& json, tmx_image_layer& layer);
+void from_json(const json_type& json, tmx_image_layer& layer);
 
 /// \} End of group tmx
 

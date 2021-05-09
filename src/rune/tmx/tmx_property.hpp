@@ -3,7 +3,6 @@
 
 #include <cassert>      // assert
 #include <concepts>     // same_as
-#include <json.hpp>     // json
 #include <nenya.hpp>    // strong_type
 #include <ranges>       // any_of, find_if
 #include <string>       // string
@@ -11,6 +10,7 @@
 #include <variant>      // variant, get, get_if, holds_alternative
 #include <vector>       // vector
 
+#include "../aliases/json_type.hpp"
 #include "../core/rune_error.hpp"
 #include "tmx_color.hpp"
 #include "tmx_property_type.hpp"
@@ -45,7 +45,7 @@ struct tmx_property final
 
 using tmx_properties = std::vector<tmx_property>;
 
-void from_json(const nlohmann::json& json, tmx_property& property);
+void from_json(const json_type& json, tmx_property& property);
 
 /// \} End of group tmx
 

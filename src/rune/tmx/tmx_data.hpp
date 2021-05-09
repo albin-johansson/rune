@@ -1,13 +1,13 @@
 #ifndef RUNE_TMX_DATA_HPP
 #define RUNE_TMX_DATA_HPP
 
-#include <cassert>   // assert
-#include <json.hpp>  // json
-#include <string>    // string
-#include <variant>   // variant
-#include <vector>    // vector
+#include <cassert>  // assert
+#include <string>   // string
+#include <variant>  // variant
+#include <vector>   // vector
 
 #include "../aliases/integers.hpp"
+#include "../aliases/json_type.hpp"
 #include "tmx_global_id.hpp"
 
 namespace rune {
@@ -21,7 +21,7 @@ struct tmx_data final
   data_type tile_data;
 };
 
-void from_json(const nlohmann::json& json, tmx_data& data);
+void from_json(const json_type& json, tmx_data& data);
 
 }  // namespace rune
 

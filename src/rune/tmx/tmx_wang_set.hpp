@@ -1,10 +1,10 @@
 #ifndef RUNE_TMX_WANG_SET_HPP
 #define RUNE_TMX_WANG_SET_HPP
 
-#include <json.hpp>  // json
-#include <string>    // string
-#include <vector>    // vector
+#include <string>  // string
+#include <vector>  // vector
 
+#include "../aliases/json_type.hpp"
 #include "tmx_local_id.hpp"
 #include "tmx_property.hpp"
 #include "tmx_wang_color.hpp"
@@ -24,7 +24,7 @@ struct tmx_wang_set final
   tmx_properties properties;
 };
 
-void from_json(const nlohmann::json& json, tmx_wang_set& set);
+void from_json(const json_type& json, tmx_wang_set& set);
 
 /// \} End of group tmx
 

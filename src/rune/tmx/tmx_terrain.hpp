@@ -1,9 +1,9 @@
 #ifndef RUNE_TMX_TERRAIN_HPP
 #define RUNE_TMX_TERRAIN_HPP
 
-#include <json.hpp>  // json
-#include <string>    // string
+#include <string>  // string
 
+#include "../aliases/json_type.hpp"
 #include "tmx_local_id.hpp"
 #include "tmx_property.hpp"
 
@@ -19,7 +19,7 @@ struct tmx_terrain final
   tmx_properties properties;
 };
 
-void from_json(const nlohmann::json& json, tmx_terrain& terrain);
+void from_json(const json_type& json, tmx_terrain& terrain);
 
 /// \} End of group tmx
 

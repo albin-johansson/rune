@@ -2,9 +2,9 @@
 #define RUNE_TMX_PARSE_TILESET_HPP
 
 #include <filesystem>  // path
-#include <json.hpp>    // json
 #include <string>      // string
 
+#include "../aliases/json_type.hpp"
 #include "../io/json_utils.hpp"
 #include "tmx_global_id.hpp"
 #include "tmx_tileset.hpp"
@@ -14,7 +14,7 @@ namespace rune::tmx {
 /// \cond FALSE
 namespace detail {
 
-inline void parse_tileset(const nlohmann::json& json, tmx_tileset& tileset)
+inline void parse_tileset(const json_type& json, tmx_tileset& tileset)
 {
   json.at("tilewidth").get_to(tileset.tile_width);
   json.at("tileheight").get_to(tileset.tile_height);
@@ -47,7 +47,7 @@ inline void parse_tileset(const nlohmann::json& json, tmx_tileset& tileset)
 /// \{
 
 [[nodiscard]] inline auto parse_tileset(const std::filesystem::path& directory,
-                                        const nlohmann::json& json) -> tmx_tileset
+                                        const json_type& json) -> tmx_tileset
 {
   tmx_tileset tileset;
 

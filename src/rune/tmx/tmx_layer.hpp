@@ -3,7 +3,6 @@
 
 #include <cassert>   // assert
 #include <concepts>  // same_as
-#include <json.hpp>  // json
 #include <memory>    // unique_ptr
 #include <optional>  // optional
 #include <string>    // string
@@ -11,6 +10,7 @@
 #include <vector>    // vector
 
 #include "../aliases/integers.hpp"
+#include "../aliases/json_type.hpp"
 #include "../io/json_utils.hpp"
 #include "tmx_color.hpp"
 #include "tmx_image_layer.hpp"
@@ -63,8 +63,8 @@ struct tmx_layer final
 
 using tmx_layers = std::vector<tmx_layer>;
 
-void from_json(const nlohmann::json& json, tmx_group& group);
-void from_json(const nlohmann::json& json, tmx_layer& layer);
+void from_json(const json_type& json, tmx_group& group);
+void from_json(const json_type& json, tmx_layer& layer);
 
 /// \} End of group tmx
 

@@ -2,10 +2,10 @@
 #define RUNE_TMX_COLOR_HPP
 
 #include <cassert>      // assert
-#include <json.hpp>     // json
 #include <string_view>  // string_view
 
 #include "../aliases/integers.hpp"
+#include "../aliases/json_type.hpp"
 #include "../core/from_string.hpp"
 
 namespace rune {
@@ -23,7 +23,7 @@ struct tmx_color final
   [[nodiscard]] constexpr bool operator==(const tmx_color&) const noexcept = default;
 };
 
-void from_json(const nlohmann::json& json, tmx_color& color);
+void from_json(const json_type& json, tmx_color& color);
 
 /// \} End of group tmx
 

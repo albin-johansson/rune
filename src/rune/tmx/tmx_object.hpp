@@ -8,6 +8,7 @@
 #include <vector>    // vector
 
 #include "../aliases/integers.hpp"
+#include "../aliases/json_type.hpp"
 #include "../io/json_utils.hpp"
 #include "tmx_global_id.hpp"
 #include "tmx_point.hpp"
@@ -63,10 +64,10 @@ struct tmx_object final
   bool visible{true};
 };
 
-void from_json(const nlohmann::json& json, tmx_polygon& polygon);
-void from_json(const nlohmann::json& json, tmx_polyline& line);
-void from_json(const nlohmann::json& json, tmx_template_object& object);
-void from_json(const nlohmann::json& json, tmx_object& object);
+void from_json(const json_type& json, tmx_polygon& polygon);
+void from_json(const json_type& json, tmx_polyline& line);
+void from_json(const json_type& json, tmx_template_object& object);
+void from_json(const json_type& json, tmx_object& object);
 
 /// \} End of group tmx
 

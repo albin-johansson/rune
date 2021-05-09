@@ -2,9 +2,10 @@
 #define RUNE_TMX_OBJECT_LAYER_HPP
 
 #include <cassert>   // assert
-#include <json.hpp>  // json, NLOHMANN_JSON_SERIALIZE_ENUM
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
 #include <vector>    // vector
 
+#include "../aliases/json_type.hpp"
 #include "tmx_object.hpp"
 
 namespace rune {
@@ -28,7 +29,7 @@ struct tmx_object_layer final  // Note, referred to as "object group" by tiled
   std::vector<tmx_object> objects;
 };
 
-void from_json(const nlohmann::json& json, tmx_object_layer& layer);
+void from_json(const json_type& json, tmx_object_layer& layer);
 
 /// \} End of group tmx
 

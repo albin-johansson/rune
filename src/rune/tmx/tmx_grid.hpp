@@ -1,7 +1,9 @@
 #ifndef RUNE_TMX_GRID_HPP
 #define RUNE_TMX_GRID_HPP
 
-#include <json.hpp>  // json, NLOHMANN_JSON_SERIALIZE_ENUM
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+#include "../aliases/json_type.hpp"
 
 namespace rune {
 
@@ -25,7 +27,7 @@ struct tmx_grid final
   tmx_grid_orientation orientation{tmx_grid_orientation::orthogonal};
 };
 
-void from_json(const nlohmann::json& json, tmx_grid& grid);
+void from_json(const json_type& json, tmx_grid& grid);
 
 /// \} End of group tmx
 

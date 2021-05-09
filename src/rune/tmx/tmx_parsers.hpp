@@ -1,12 +1,12 @@
 #ifndef RUNE_TMX_PARSERS_HPP
 #define RUNE_TMX_PARSERS_HPP
 
-#include <cassert>   // assert
-#include <cstddef>   // size_t
-#include <json.hpp>  // json
-#include <memory>    // make_unique
-#include <string>    // string
+#include <cassert>  // assert
+#include <cstddef>  // size_t
+#include <memory>   // make_unique
+#include <string>   // string
 
+#include "../aliases/json_type.hpp"
 #include "../core/from_string.hpp"
 #include "../io/json_utils.hpp"
 #include "tmx_animation.hpp"
@@ -37,31 +37,31 @@ namespace rune {
 /// \name JSON conversions
 /// \{
 
-inline void from_json(const nlohmann::json& json, tmx_point& point)
+inline void from_json(const json_type& json, tmx_point& point)
 {
   json.at("x").get_to(point.x);
   json.at("y").get_to(point.y);
 }
 
-inline void from_json(const nlohmann::json& json, tmx_color& color)
+inline void from_json(const json_type& json, tmx_color& color)
 {
   color = tmx::make_color(json.get<std::string>());
 }
 
-inline void from_json(const nlohmann::json& json, tmx_grid& grid)
+inline void from_json(const json_type& json, tmx_grid& grid)
 {
   json.at("width").get_to(grid.cell_width);
   json.at("height").get_to(grid.cell_height);
   json.at("orientation").get_to(grid.orientation);
 }
 
-inline void from_json(const nlohmann::json& json, tmx_tile_offset& offset)
+inline void from_json(const json_type& json, tmx_tile_offset& offset)
 {
   json.at("x").get_to(offset.x);
   json.at("y").get_to(offset.y);
 }
 
-inline void from_json(const nlohmann::json& json, tmx_wang_color& color)
+inline void from_json(const json_type& json, tmx_wang_color& color)
 {
   json.at("name").get_to(color.name);
   json.at("color").get_to(color.color);
@@ -71,13 +71,13 @@ inline void from_json(const nlohmann::json& json, tmx_wang_color& color)
   fill_if_exists(json, "properties", color.properties);
 }
 
-inline void from_json(const nlohmann::json& json, tmx_wang_tile& tile)
+inline void from_json(const json_type& json, tmx_wang_tile& tile)
 {
   emplace(json, "tileid", tile.tile);
   json.at("wangid").get_to(tile.indices);
 }
 
-inline void from_json(const nlohmann::json& json, tmx_wang_set& set)
+inline void from_json(const json_type& json, tmx_wang_set& set)
 {
   emplace(json, "tile", set.tile);
   json.at("name").get_to(set.name);
@@ -88,7 +88,7 @@ inline void from_json(const nlohmann::json& json, tmx_wang_set& set)
   fill_if_exists(json, "properties", set.properties);
 }
 
-inline void from_json(const nlohmann::json& json, tmx_property& property)
+inline void from_json(const json_type& json, tmx_property& property)
 {
   json.at("name").get_to(property.name);
   json.at("type").get_to(property.type);
@@ -128,14 +128,14 @@ inline void from_json(const nlohmann::json& json, tmx_property& property)
   }
 }
 
-inline void from_json(const nlohmann::json& json, tmx_terrain& terrain)
+inline void from_json(const json_type& json, tmx_terrain& terrain)
 {
   terrain.tile = tmx_local_id{json.at("tile").get<tmx_local_id::value_type>()};
   json.at("name").get_to(terrain.name);
   fill_if_exists(json, "properties", terrain.properties);
 }
 
-inline void from_json(const nlohmann::json& json, tmx_text& text)
+inline void from_json(const json_type& json, tmx_text& text)
 {
   json.at("text").get_to(text.text);
 
@@ -156,7 +156,7 @@ inline void from_json(const nlohmann::json& json, tmx_text& text)
   }
 }
 
-inline void from_json(const nlohmann::json& json, tmx_frame& frame)
+inline void from_json(const json_type& json, tmx_frame& frame)
 {
   using ms_t = std::chrono::milliseconds;
 
@@ -164,12 +164,12 @@ inline void from_json(const nlohmann::json& json, tmx_frame& frame)
   frame.duration = ms_t{json.at("duration").get<ms_t::rep>()};
 }
 
-inline void from_json(const nlohmann::json& json, tmx_animation& animation)
+inline void from_json(const json_type& json, tmx_animation& animation)
 {
   fill(json, animation.frames);
 }
 
-inline void from_json(const nlohmann::json& json, tmx_data& data)
+inline void from_json(const json_type& json, tmx_data& data)
 {
   assert(json.is_array() || json.is_string());
 
@@ -187,17 +187,17 @@ inline void from_json(const nlohmann::json& json, tmx_data& data)
   }
 }
 
-inline void from_json(const nlohmann::json& json, tmx_polygon& polygon)
+inline void from_json(const json_type& json, tmx_polygon& polygon)
 {
   fill(json, polygon.points);
 }
 
-inline void from_json(const nlohmann::json& json, tmx_polyline& line)
+inline void from_json(const json_type& json, tmx_polyline& line)
 {
   fill(json, line.points);
 }
 
-inline void from_json(const nlohmann::json& json, tmx_template_object& object)
+inline void from_json(const json_type& json, tmx_template_object& object)
 {
   json.at("template").get_to(object.template_file);
   object.object = std::make_unique<tmx_object>(json.at("object").get<tmx_object>());
@@ -209,7 +209,7 @@ inline void from_json(const nlohmann::json& json, tmx_template_object& object)
   }
 }
 
-inline void from_json(const nlohmann::json& json, tmx_object& object)
+inline void from_json(const json_type& json, tmx_object& object)
 {
   json.at("id").get_to(object.id);
   json.at("x").get_to(object.x);
@@ -237,7 +237,7 @@ inline void from_json(const nlohmann::json& json, tmx_object& object)
   emplace_if_exists<tmx_template_object>(json, "template", object.data);
 }
 
-inline void from_json(const nlohmann::json& json, tmx_tile_layer& layer)
+inline void from_json(const json_type& json, tmx_tile_layer& layer)
 {
   get_if_exists(json, "compression", layer.compression);
   get_if_exists(json, "encoding", layer.encoding);
@@ -249,18 +249,18 @@ inline void from_json(const nlohmann::json& json, tmx_tile_layer& layer)
   //  }
 }
 
-inline void from_json(const nlohmann::json& json, tmx_image_layer& layer)
+inline void from_json(const json_type& json, tmx_image_layer& layer)
 {
   json.at("image").get_to(layer.image);
   get_if_exists(json, "transparentcolor", layer.transparent);
 }
 
-inline void from_json(const nlohmann::json& json, tmx_object_layer& layer)
+inline void from_json(const json_type& json, tmx_object_layer& layer)
 {
   fill(json, "objects", layer.objects);
 }
 
-inline void from_json(const nlohmann::json& json, tmx_layer& layer)
+inline void from_json(const json_type& json, tmx_layer& layer)
 {
   json.at("type").get_to(layer.type);
 
@@ -303,7 +303,7 @@ inline void from_json(const nlohmann::json& json, tmx_layer& layer)
   }
 }
 
-inline void from_json(const nlohmann::json& json, tmx_group& group)
+inline void from_json(const json_type& json, tmx_group& group)
 {
   const auto& layers = json.at("layers");
   group.layers.reserve(layers.size());
@@ -313,7 +313,7 @@ inline void from_json(const nlohmann::json& json, tmx_group& group)
   }
 }
 
-inline void from_json(const nlohmann::json& json, tmx_tile& tile)
+inline void from_json(const json_type& json, tmx_tile& tile)
 {
   emplace(json, "id", tile.id);
 

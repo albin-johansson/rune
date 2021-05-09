@@ -1,7 +1,7 @@
 #ifndef RUNE_TMX_POINT_HPP
 #define RUNE_TMX_POINT_HPP
 
-#include <json.hpp>  // json
+#include "../aliases/json_type.hpp"
 
 namespace rune {
 
@@ -14,7 +14,7 @@ struct tmx_point final
   float y{};
 };
 
-void from_json(const nlohmann::json& json, tmx_point& point);
+void from_json(const json_type& json, tmx_point& point);
 
 /// \} End of group tmx
 

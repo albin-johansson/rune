@@ -25,6 +25,7 @@
 #include "rune/aliases/czstring.hpp"
 #include "rune/aliases/delta_time.hpp"
 #include "rune/aliases/integers.hpp"
+#include "rune/aliases/json_type.hpp"
 #include "rune/core/aabb_tree.hpp"
 #include "rune/core/compiler.hpp"
 #include "rune/core/concepts.hpp"
