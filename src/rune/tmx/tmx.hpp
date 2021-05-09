@@ -33,8 +33,6 @@ namespace rune {
  */
 [[nodiscard]] inline auto parse_tmx(const std::filesystem::path& path) -> tmx_map
 {
-  assert(path.extension() == ".json");
-
   const auto json = read_json(path);
   assert(json.contains("type") && "Map file requires \"type\" element!");
   assert(json.at("type").get<std::string>() == "map");
