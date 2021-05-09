@@ -10,6 +10,7 @@ set(SOURCE_FILES
     rune/core/to_string_test.cpp
 
     rune/generic/stack_resource_test.cpp
+    rune/generic/static_vector_test.cpp
     rune/generic/vector_map_test.cpp
 
     rune/math/almost_equal_test.cpp
