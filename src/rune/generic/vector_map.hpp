@@ -229,7 +229,7 @@ class vector_map final
     }
     else
     {
-      throw rune_error{"vector_map::at(): invalid key!"};
+      throw rune_error{"vector_map::at(): invalid key"};
     }
   }
 
@@ -243,7 +243,7 @@ class vector_map final
     }
     else
     {
-      throw rune_error{"vector_map::at(): invalid key!"};
+      throw rune_error{"vector_map::at(): invalid key"};
     }
   }
 
