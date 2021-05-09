@@ -2,10 +2,12 @@
 #define RUNE_TMX_PARSERS_HPP
 
 #include <cassert>   // assert
+#include <cstddef>   // size_t
 #include <json.hpp>  // json
 #include <memory>    // make_unique
 #include <string>    // string
 
+#include "../core/from_string.hpp"
 #include "../io/json_utils.hpp"
 #include "tmx_animation.hpp"
 #include "tmx_color.hpp"
@@ -329,7 +331,8 @@ inline void from_json(const nlohmann::json& json, tmx_tile& tile)
     auto& terrain = tile.terrain.emplace();
     for (const auto& [key, value] : it->items())
     {
-      terrain.at(std::stoi(key)) = value.get<int>();  // TODO don't use stoi
+      const auto index = from_string<std::size_t>(key).value();
+      terrain.at(index) = value.get<int>();
     }
   }
 }
