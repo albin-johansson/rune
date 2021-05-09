@@ -16,7 +16,7 @@ class rune_error final : public std::exception
   explicit rune_error(const czstring what) noexcept : m_what{what}
   {}
 
-  [[nodiscard]] auto what() const -> czstring override
+  [[nodiscard]] auto what() const noexcept -> czstring override
   {
     return m_what;
   }
