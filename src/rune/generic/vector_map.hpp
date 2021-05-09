@@ -1,14 +1,14 @@
 #ifndef RUNE_GENERIC_VECTOR_MAP_HPP
 #define RUNE_GENERIC_VECTOR_MAP_HPP
 
-#include <cassert>   // assert
-#include <concepts>  // convertible_to
-#include <cstddef>   // size_t
-#include <iterator>  // distance, iter_swap
-#include <optional>  // optional
-#include <ranges>    // find_if
-#include <utility>   // pair, move, forward
-#include <vector>    // vector
+#include <algorithm>  // find_if
+#include <cassert>    // assert
+#include <concepts>   // convertible_to
+#include <cstddef>    // size_t
+#include <iterator>   // distance, iter_swap
+#include <optional>   // optional
+#include <utility>    // pair, move, forward
+#include <vector>     // vector
 
 #include "../core/rune_error.hpp"
 
