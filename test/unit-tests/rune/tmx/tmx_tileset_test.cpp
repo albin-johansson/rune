@@ -71,7 +71,7 @@ TEST(TmxTileset, ParseEmbedded)
     const auto& property = a.properties.at(0);
     ASSERT_EQ("foo", property.name);
     ASSERT_EQ(rune::tmx_property_type::boolean, property.type);
-    ASSERT_TRUE(rune::tmx::as_boolean(property));
+    ASSERT_TRUE(rune::tmx::get_bool(property));
 
     const auto& b = tileset.terrains.at(1);
     ASSERT_EQ(12_local, b.tile);

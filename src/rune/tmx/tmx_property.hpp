@@ -2,6 +2,7 @@
 #define RUNE_TMX_PROPERTY_HPP
 
 #include <cassert>      // assert
+#include <concepts>     // same_as
 #include <json.hpp>     // json
 #include <nenya.hpp>    // strong_type
 #include <ranges>       // any_of, find_if
@@ -12,13 +13,14 @@
 
 #include "../core/rune_error.hpp"
 #include "tmx_color.hpp"
+#include "tmx_property_type.hpp"
 
 namespace rune {
 
 /// \cond FALSE
 namespace tags {
 struct tmx_file_tag;
-struct tmx_object_tag;
+struct tmx_object_id_tag;
 }  // namespace tags
 /// \endcond
 
@@ -26,28 +28,11 @@ struct tmx_object_tag;
 /// \{
 
 using tmx_file = nenya::strong_type<std::string, tags::tmx_file_tag>;
-using tmx_object_id = nenya::strong_type<int, tags::tmx_object_tag>;
+using tmx_object_id = nenya::strong_type<int, tags::tmx_object_id_tag>;
 
-enum class tmx_property_type
-{
-  string,    ///< For string values, such as `"foo"`.
-  integer,   ///< For integer values, e.g. `27`.
-  floating,  ///< For floating-point values, e.g. `182.4`.
-  boolean,   ///< For the boolean values `true`/`false`.
-  color,     ///< For ARGB/RGB colors, i.e. `"#AARRGGBB"` and `"#RRGGBB"`.
-  file,      ///< For file paths, e.g. `"some/path/abc.png"`.
-  object     ///< For referencing other objects, really just an integer ID.
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_property_type,
-                             {{tmx_property_type::string, "string"},
-                              {tmx_property_type::integer, "int"},
-                              {tmx_property_type::floating, "float"},
-                              {tmx_property_type::boolean, "bool"},
-                              {tmx_property_type::color, "color"},
-                              {tmx_property_type::object, "object"},
-                              {tmx_property_type::file, "file"}})
-
+/**
+ * \brief Represents a property, with an associated name and value.
+ */
 struct tmx_property final
 {
   using data_type =
@@ -69,140 +54,358 @@ namespace tmx {
 /// \addtogroup tmx
 /// \{
 
-/// \name Property type indicators
-/// \{
-
-[[nodiscard]] inline auto is_string(const tmx_property& property) noexcept -> bool
-{
-  return std::holds_alternative<std::string>(property.value);
-}
-
-[[nodiscard]] inline auto is_integer(const tmx_property& property) noexcept -> bool
-{
-  return std::holds_alternative<int>(property.value);
-}
-
-[[nodiscard]] inline auto is_float(const tmx_property& property) noexcept -> bool
-{
-  return std::holds_alternative<float>(property.value);
-}
-
-[[nodiscard]] inline auto is_boolean(const tmx_property& property) noexcept -> bool
-{
-  return std::holds_alternative<bool>(property.value);
-}
-
-[[nodiscard]] inline auto is_color(const tmx_property& property) noexcept -> bool
-{
-  return std::holds_alternative<tmx_color>(property.value);
-}
-
-[[nodiscard]] inline auto is_file(const tmx_property& property) noexcept -> bool
-{
-  return std::holds_alternative<tmx_file>(property.value);
-}
-
-[[nodiscard]] inline auto is_object(const tmx_property& property) noexcept -> bool
-{
-  return std::holds_alternative<tmx_object_id>(property.value);
-}
-
-/// \} End of property type indicators
-
-/// \name Property value casts
-/// \brief Type-safe cast functions for properties, that throw on type mismatches.
-/// \{
+// clang-format off
 
 template <typename T>
-[[nodiscard]] auto value_cast(const tmx_property& property) -> const T&
-{
-  return std::get<T>(property.value);
-}
+concept property_value_type = std::same_as<T, int> ||
+                              std::same_as<T, float> ||
+                              std::same_as<T, bool> ||
+                              std::same_as<T, std::string> ||
+                              std::same_as<T, tmx_color> ||
+                              std::same_as<T, tmx_file> ||
+                              std::same_as<T, tmx_object_id>;
 
-[[nodiscard]] inline auto as_string(const tmx_property& property) -> const std::string&
-{
-  return value_cast<std::string>(property);
-}
+// clang-format on
 
-[[nodiscard]] inline auto as_integer(const tmx_property& property) -> int
-{
-  return value_cast<int>(property);
-}
-
-[[nodiscard]] inline auto as_float(const tmx_property& property) -> float
-{
-  return value_cast<float>(property);
-}
-
-[[nodiscard]] inline auto as_boolean(const tmx_property& property) -> bool
-{
-  return value_cast<bool>(property);
-}
-
-[[nodiscard]] inline auto as_color(const tmx_property& property) -> const tmx_color&
-{
-  return value_cast<tmx_color>(property);
-}
-
-[[nodiscard]] inline auto as_file(const tmx_property& property) -> const tmx_file&
-{
-  return value_cast<tmx_file>(property);
-}
-
-[[nodiscard]] inline auto as_object(const tmx_property& property) -> const tmx_object_id&
-{
-  return value_cast<tmx_object_id>(property);
-}
-
-/// \} End of property value casts
-
-/// \name Non-throwing property value casts
-/// \brief Property cast functions that return null pointers upon type mismatches.
+/// \name Property functions
 /// \{
 
-[[nodiscard]] inline auto try_as_string(const tmx_property& property) noexcept
+[[nodiscard]] inline auto try_get(const tmx_properties& properties,
+                                  const std::string_view name)
+    -> tmx_properties::const_iterator
+{
+  return std::ranges::find_if(properties, [name](const tmx_property& property) noexcept {
+    return property.name == name;
+  });
+}
+
+[[nodiscard]] inline auto try_get_string(const tmx_property& property) noexcept
     -> const std::string*
 {
   return std::get_if<std::string>(&property.value);
 }
 
-[[nodiscard]] inline auto try_as_integer(const tmx_property& property) noexcept -> const
-    int*
+[[nodiscard]] inline auto try_get_string(const tmx_properties& properties,
+                                         const std::string_view name)
+    -> const std::string*
+{
+  if (const auto it = try_get(properties, name); it != properties.end())
+  {
+    return std::get_if<std::string>(&it->value);
+  }
+  else
+  {
+    return nullptr;
+  }
+}
+
+[[nodiscard]] inline auto try_get_int(const tmx_property& property) noexcept -> const int*
 {
   return std::get_if<int>(&property.value);
 }
 
-[[nodiscard]] inline auto try_as_float(const tmx_property& property) noexcept -> const
+[[nodiscard]] inline auto try_get_int(const tmx_properties& properties,
+                                      const std::string_view name) -> const int*
+{
+  if (const auto it = try_get(properties, name); it != properties.end())
+  {
+    return std::get_if<int>(&it->value);
+  }
+  else
+  {
+    return nullptr;
+  }
+}
+
+[[nodiscard]] inline auto try_get_float(const tmx_property& property) noexcept -> const
     float*
 {
   return std::get_if<float>(&property.value);
 }
 
-[[nodiscard]] inline auto try_as_boolean(const tmx_property& property) noexcept -> const
+[[nodiscard]] inline auto try_get_float(const tmx_properties& properties,
+                                        const std::string_view name) -> const float*
+{
+  if (const auto it = try_get(properties, name); it != properties.end())
+  {
+    return std::get_if<float>(&it->value);
+  }
+  else
+  {
+    return nullptr;
+  }
+}
+
+[[nodiscard]] inline auto try_get_bool(const tmx_property& property) noexcept -> const
     bool*
 {
   return std::get_if<bool>(&property.value);
 }
 
-[[nodiscard]] inline auto try_as_color(const tmx_property& property) noexcept
+[[nodiscard]] inline auto try_get_bool(const tmx_properties& properties,
+                                       const std::string_view name) -> const bool*
+{
+  if (const auto it = try_get(properties, name); it != properties.end())
+  {
+    return std::get_if<bool>(&it->value);
+  }
+  else
+  {
+    return nullptr;
+  }
+}
+
+[[nodiscard]] inline auto try_get_color(const tmx_property& property) noexcept
     -> const tmx_color*
 {
   return std::get_if<tmx_color>(&property.value);
 }
 
-[[nodiscard]] inline auto try_as_file(const tmx_property& property) noexcept
+[[nodiscard]] inline auto try_get_color(const tmx_properties& properties,
+                                        const std::string_view name) -> const tmx_color*
+{
+  if (const auto it = try_get(properties, name); it != properties.end())
+  {
+    return std::get_if<tmx_color>(&it->value);
+  }
+  else
+  {
+    return nullptr;
+  }
+}
+
+[[nodiscard]] inline auto try_get_file(const tmx_property& property) noexcept
     -> const tmx_file*
 {
   return std::get_if<tmx_file>(&property.value);
 }
 
-[[nodiscard]] inline auto try_as_object(const tmx_property& property) noexcept
+[[nodiscard]] inline auto try_get_file(const tmx_properties& properties,
+                                       const std::string_view name) -> const tmx_file*
+{
+  if (const auto it = try_get(properties, name); it != properties.end())
+  {
+    return std::get_if<tmx_file>(&it->value);
+  }
+  else
+  {
+    return nullptr;
+  }
+}
+
+[[nodiscard]] inline auto try_get_object(const tmx_property& property) noexcept
     -> const tmx_object_id*
 {
   return std::get_if<tmx_object_id>(&property.value);
 }
 
-/// \} End of non-throwing property value casts
+[[nodiscard]] inline auto try_get_object(const tmx_properties& properties,
+                                         const std::string_view name)
+    -> const tmx_object_id*
+{
+  if (const auto it = try_get(properties, name); it != properties.end())
+  {
+    return std::get_if<tmx_object_id>(&it->value);
+  }
+  else
+  {
+    return nullptr;
+  }
+}
+
+template <property_value_type T>
+[[nodiscard]] auto is(const tmx_property& property) noexcept -> bool
+{
+  return std::holds_alternative<T>(property.value);
+}
+
+template <property_value_type T>
+[[nodiscard]] auto is(const tmx_properties& properties, const std::string_view name)
+    -> bool
+{
+  if (const auto it = try_get(properties, name); it != properties.end())
+  {
+    return is<T>(*it);
+  }
+  else
+  {
+    return false;
+  }
+}
+
+[[nodiscard]] inline auto is_string(const tmx_property& property) noexcept -> bool
+{
+  return is<std::string>(property);
+}
+
+[[nodiscard]] inline auto is_string(const tmx_properties& properties,
+                                    const std::string_view name) -> bool
+{
+  return is<std::string>(properties, name);
+}
+
+[[nodiscard]] inline auto is_int(const tmx_property& property) noexcept -> bool
+{
+  return is<int>(property);
+}
+
+[[nodiscard]] inline auto is_int(const tmx_properties& properties,
+                                 const std::string_view name) -> bool
+{
+  return is<int>(properties, name);
+}
+
+[[nodiscard]] inline auto is_float(const tmx_property& property) noexcept -> bool
+{
+  return is<float>(property);
+}
+
+[[nodiscard]] inline auto is_float(const tmx_properties& properties,
+                                   const std::string_view name) -> bool
+{
+  return is<float>(properties, name);
+}
+
+[[nodiscard]] inline auto is_bool(const tmx_property& property) noexcept -> bool
+{
+  return is<bool>(property);
+}
+
+[[nodiscard]] inline auto is_bool(const tmx_properties& properties,
+                                  const std::string_view name) -> bool
+{
+  return is<bool>(properties, name);
+}
+
+[[nodiscard]] inline auto is_color(const tmx_property& property) noexcept -> bool
+{
+  return is<tmx_color>(property);
+}
+
+[[nodiscard]] inline auto is_color(const tmx_properties& properties,
+                                   const std::string_view name) -> bool
+{
+  return is<tmx_color>(properties, name);
+}
+
+[[nodiscard]] inline auto is_file(const tmx_property& property) noexcept -> bool
+{
+  return is<tmx_file>(property);
+}
+
+[[nodiscard]] inline auto is_file(const tmx_properties& properties,
+                                  const std::string_view name) -> bool
+{
+  return is<tmx_file>(properties, name);
+}
+
+[[nodiscard]] inline auto is_object(const tmx_property& property) noexcept -> bool
+{
+  return is<tmx_object_id>(property);
+}
+
+[[nodiscard]] inline auto is_object(const tmx_properties& properties,
+                                    const std::string_view name) -> bool
+{
+  return is<tmx_object_id>(properties, name);
+}
+
+template <property_value_type T>
+[[nodiscard]] auto get(const tmx_property& property) -> const T&
+{
+  return std::get<T>(property.value);
+}
+
+template <property_value_type T>
+[[nodiscard]] auto get(const tmx_properties& properties, const std::string_view name)
+    -> const T&
+{
+  if (const auto it = try_get(properties, name); it != properties.end())
+  {
+    return get<T>(*it);
+  }
+  else
+  {
+    throw rune_error{"Could not find property with the specified name!"};
+  }
+}
+
+[[nodiscard]] inline auto get_string(const tmx_property& property) -> const std::string&
+{
+  return get<std::string>(property);
+}
+
+[[nodiscard]] inline auto get_string(const tmx_properties& properties,
+                                     const std::string_view name) -> const std::string&
+{
+  return get<std::string>(properties, name);
+}
+
+[[nodiscard]] inline auto get_int(const tmx_property& property) -> int
+{
+  return get<int>(property);
+}
+
+[[nodiscard]] inline auto get_int(const tmx_properties& properties,
+                                  const std::string_view name) -> int
+{
+  return get<int>(properties, name);
+}
+
+[[nodiscard]] inline auto get_float(const tmx_property& property) -> float
+{
+  return get<float>(property);
+}
+
+[[nodiscard]] inline auto get_float(const tmx_properties& properties,
+                                    const std::string_view name) -> float
+{
+  return get<float>(properties, name);
+}
+
+[[nodiscard]] inline auto get_bool(const tmx_property& property) -> bool
+{
+  return get<bool>(property);
+}
+
+[[nodiscard]] inline auto get_bool(const tmx_properties& properties,
+                                   const std::string_view name) -> bool
+{
+  return get<bool>(properties, name);
+}
+
+[[nodiscard]] inline auto get_color(const tmx_property& property) -> const tmx_color&
+{
+  return get<tmx_color>(property);
+}
+
+[[nodiscard]] inline auto get_color(const tmx_properties& properties,
+                                    const std::string_view name) -> const tmx_color&
+{
+  return get<tmx_color>(properties, name);
+}
+
+[[nodiscard]] inline auto get_file(const tmx_property& property) -> const tmx_file&
+{
+  return get<tmx_file>(property);
+}
+
+[[nodiscard]] inline auto get_file(const tmx_properties& properties,
+                                   const std::string_view name) -> const tmx_file&
+{
+  return get<tmx_file>(properties, name);
+}
+
+[[nodiscard]] inline auto get_object(const tmx_property& property) -> tmx_object_id
+{
+  return get<tmx_object_id>(property);
+}
+
+[[nodiscard]] inline auto get_object(const tmx_properties& properties,
+                                     const std::string_view name) -> tmx_object_id
+{
+  return get<tmx_object_id>(properties, name);
+}
 
 /**
  * \brief Indicates whether or not a property with the specified name exists in a vector
@@ -214,7 +417,7 @@ template <typename T>
  * \return `true` if the properties contains a property with the specified name; `false`
  * otherwise.
  */
-[[nodiscard]] inline auto contains(const std::vector<tmx_property>& properties,
+[[nodiscard]] inline auto contains(const tmx_properties& properties,
                                    const std::string_view name) -> bool
 {
   return std::ranges::any_of(properties, [name](const tmx_property& property) noexcept {
@@ -232,14 +435,10 @@ template <typename T>
  *
  * \throws rune_error if there is no property with the specified name.
  */
-[[nodiscard]] inline auto find(const std::vector<tmx_property>& properties,
-                               const std::string_view name) -> const tmx_property&
+[[nodiscard]] inline auto at(const tmx_properties& properties,
+                             const std::string_view name) -> const tmx_property&
 {
-  const auto it =
-      std::ranges::find_if(properties, [name](const tmx_property& property) noexcept {
-        return property.name == name;
-      });
-  if (it != properties.end())
+  if (const auto it = try_get(properties, name); it != properties.end())
   {
     return *it;
   }
@@ -249,9 +448,12 @@ template <typename T>
   }
 }
 
+/// \} End of property functions
+
 /// \} End of group tmx
 
 }  // namespace tmx
+
 }  // namespace rune
 
 #endif  // RUNE_TMX_PROPERTY_HPP

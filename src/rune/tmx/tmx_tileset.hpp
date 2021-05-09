@@ -49,6 +49,8 @@ struct tmx_tileset final
   tmx_properties properties;
 };
 
+using tmx_tilesets = std::vector<tmx_tileset>;
+
 /// \} End of group tmx
 
 }  // namespace rune

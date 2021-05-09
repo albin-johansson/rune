@@ -5,37 +5,13 @@
 #include <string>    // string
 
 #include "tmx_color.hpp"
+#include "tmx_halign.hpp"
+#include "tmx_valign.hpp"
 
 namespace rune {
 
 /// \addtogroup tmx
 /// \{
-
-enum class tmx_halign
-{
-  center,
-  right,
-  left,
-  justify
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_halign,
-                             {{tmx_halign::center, "center"},
-                              {tmx_halign::right, "right"},
-                              {tmx_halign::left, "left"},
-                              {tmx_halign::justify, "justify"}})
-
-enum class tmx_valign
-{
-  center,
-  top,
-  bottom
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_valign,
-                             {{tmx_valign::center, "center"},
-                              {tmx_valign::top, "top"},
-                              {tmx_valign::bottom, "bottom"}})
 
 struct tmx_text final
 {

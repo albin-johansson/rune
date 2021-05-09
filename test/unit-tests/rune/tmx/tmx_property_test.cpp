@@ -32,15 +32,15 @@ TEST(TmxProperty, Defaults)
   ASSERT_TRUE(property.name.empty());
 
   ASSERT_TRUE(rune::tmx::is_string(property));
-  ASSERT_FALSE(rune::tmx::is_integer(property));
+  ASSERT_FALSE(rune::tmx::is_int(property));
   ASSERT_FALSE(rune::tmx::is_float(property));
-  ASSERT_FALSE(rune::tmx::is_boolean(property));
+  ASSERT_FALSE(rune::tmx::is_bool(property));
   ASSERT_FALSE(rune::tmx::is_color(property));
   ASSERT_FALSE(rune::tmx::is_file(property));
   ASSERT_FALSE(rune::tmx::is_object(property));
 
   ASSERT_EQ(rune::tmx_property_type::string, property.type);
-  ASSERT_TRUE(rune::tmx::try_as_string(property));
+  ASSERT_TRUE(rune::tmx::try_get_string(property));
 }
 
 TEST(TmxProperty, Parse)
@@ -51,16 +51,16 @@ TEST(TmxProperty, Parse)
   ASSERT_EQ("Frodo", property.name);
   ASSERT_EQ(rune::tmx_property_type::integer, property.type);
 
-  ASSERT_TRUE(rune::tmx::is_integer(property));
+  ASSERT_TRUE(rune::tmx::is_int(property));
   ASSERT_FALSE(rune::tmx::is_string(property));
   ASSERT_FALSE(rune::tmx::is_float(property));
-  ASSERT_FALSE(rune::tmx::is_boolean(property));
+  ASSERT_FALSE(rune::tmx::is_bool(property));
   ASSERT_FALSE(rune::tmx::is_color(property));
   ASSERT_FALSE(rune::tmx::is_file(property));
   ASSERT_FALSE(rune::tmx::is_object(property));
 
-  ASSERT_EQ(123, rune::tmx::as_integer(property));
-  ASSERT_TRUE(rune::tmx::try_as_integer(property));
+  ASSERT_EQ(123, rune::tmx::get_int(property));
+  ASSERT_TRUE(rune::tmx::try_get_int(property));
 }
 
 inline const auto properties_json_array = R"(
@@ -102,18 +102,36 @@ TEST(TmxProperty, Contains)
   ASSERT_FALSE(rune::tmx::contains(properties, "foobar"));
 }
 
-TEST(TmxProperty, Find)
+TEST(TmxProperty, At)
 {
   std::vector<rune::tmx_property> properties;
   rune::fill(properties_json_array, properties);
 
-  const auto& a = rune::tmx::find(properties, "A");
-  ASSERT_TRUE(rune::tmx::is_integer(a));
-  ASSERT_EQ(123, rune::tmx::as_integer(a));
+  const auto& a = rune::tmx::at(properties, "A");
+  ASSERT_TRUE(rune::tmx::is_int(a));
+  ASSERT_EQ(123, rune::tmx::get_int(a));
 
-  const auto& b = rune::tmx::find(properties, "B");
+  const auto& b = rune::tmx::at(properties, "B");
   ASSERT_TRUE(rune::tmx::is_float(b));
-  ASSERT_EQ(42.3f, rune::tmx::as_float(b));
+  ASSERT_EQ(42.3f, rune::tmx::get_float(b));
 
-  ASSERT_THROW(rune::tmx::find(properties, "foo"), rune::rune_error);
+  ASSERT_THROW(rune::tmx::at(properties, "foo"), rune::rune_error);
+}
+
+TEST(TmxProperty, TryGet)
+{
+  std::vector<rune::tmx_property> properties;
+  rune::fill(properties_json_array, properties);
+
+  ASSERT_NE(rune::tmx::try_get(properties, "A"), properties.end());
+  ASSERT_NE(rune::tmx::try_get(properties, "B"), properties.end());
+  ASSERT_NE(rune::tmx::try_get(properties, "C"), properties.end());
+  ASSERT_EQ(rune::tmx::try_get(properties, "D"), properties.end());
+
+  ASSERT_TRUE(rune::tmx::try_get_int(properties, "A"));
+  ASSERT_TRUE(rune::tmx::try_get_float(properties, "B"));
+  ASSERT_TRUE(rune::tmx::try_get_string(properties, "C"));
+
+  ASSERT_FALSE(rune::tmx::try_get_string(properties, "A"));
+  ASSERT_TRUE(rune::tmx::try_get_string(properties, "C"));
 }

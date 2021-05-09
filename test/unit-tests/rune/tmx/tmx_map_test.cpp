@@ -57,7 +57,7 @@ TEST(TmxMap, Parse)
       ASSERT_FLOAT_EQ(1.0f, groupLayer.opacity);
       ASSERT_TRUE(groupLayer.visible);
 
-      const auto& group = rune::tmx::as_group(groupLayer);
+      const auto& group = rune::tmx::get_group(groupLayer);
       ASSERT_EQ(2, group.layers.size());
 
       const auto& foo = group.layers.at(0);
@@ -87,7 +87,7 @@ TEST(TmxMap, Parse)
       ASSERT_FLOAT_EQ(1.0f, objectLayer.opacity);
       ASSERT_TRUE(objectLayer.visible);
 
-      const auto& data = rune::tmx::as_object_layer(objectLayer);
+      const auto& data = rune::tmx::get_object_layer(objectLayer);
       ASSERT_EQ(rune::tmx_object_layer_draw_order::top_down, data.draw_order);
       ASSERT_EQ(1, data.objects.size());
 
@@ -114,7 +114,7 @@ TEST(TmxMap, Parse)
       ASSERT_FLOAT_EQ(810.5f, imageLayer.offset_y);
       ASSERT_TRUE(imageLayer.visible);
 
-      const auto& data = rune::tmx::as_image_layer(imageLayer);
+      const auto& data = rune::tmx::get_image_layer(imageLayer);
       ASSERT_EQ("images/panda.png", data.image);
       ASSERT_FALSE(data.transparent);
     }

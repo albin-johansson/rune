@@ -79,7 +79,7 @@ TEST(TmxLayer, ParseTileLayer)
   ASSERT_FALSE(rune::tmx::is_image_layer(layer));
   ASSERT_FALSE(rune::tmx::is_group(layer));
 
-  const auto& tileLayer = rune::tmx::as_tile_layer(layer);
+  const auto& tileLayer = rune::tmx::get_tile_layer(layer);
   ASSERT_EQ(rune::tmx_tile_layer_encoding::csv, tileLayer.encoding);
   ASSERT_EQ(rune::tmx_tile_layer_compression::none, tileLayer.compression);
 
@@ -92,16 +92,16 @@ TEST(TmxLayer, ParseTileLayer)
   auto& first = layer.properties.at(0);
   ASSERT_EQ("hello", first.name);
   ASSERT_EQ(rune::tmx_property_type::integer, first.type);
-  ASSERT_TRUE(rune::tmx::is_integer(first));
-  ASSERT_TRUE(rune::tmx::try_as_integer(first));
-  ASSERT_EQ(79, rune::tmx::as_integer(first));
+  ASSERT_TRUE(rune::tmx::is_int(first));
+  ASSERT_TRUE(rune::tmx::try_get_int(first));
+  ASSERT_EQ(79, rune::tmx::get_int(first));
 
   auto& second = layer.properties.at(1);
   ASSERT_EQ("world", second.name);
   ASSERT_EQ(rune::tmx_property_type::boolean, second.type);
-  ASSERT_TRUE(rune::tmx::is_boolean(second));
-  ASSERT_TRUE(rune::tmx::try_as_boolean(second));
-  ASSERT_FALSE(rune::tmx::as_boolean(second));
+  ASSERT_TRUE(rune::tmx::is_bool(second));
+  ASSERT_TRUE(rune::tmx::try_get_bool(second));
+  ASSERT_FALSE(rune::tmx::get_bool(second));
 }
 
 TEST(TmxLayer, ParseImageLayer)
@@ -134,7 +134,7 @@ TEST(TmxLayer, ParseImageLayer)
   ASSERT_FALSE(rune::tmx::is_object_layer(layer));
   ASSERT_FALSE(rune::tmx::is_group(layer));
 
-  const auto& imageLayer = rune::tmx::as_image_layer(layer);
+  const auto& imageLayer = rune::tmx::get_image_layer(layer);
   const rune::tmx_color color{0x21, 0x43, 0x65, 0xFF};
   ASSERT_EQ(color, imageLayer.transparent);
   ASSERT_EQ("mordor.png", imageLayer.image);
@@ -183,7 +183,7 @@ TEST(TmxLayer, ParseObjectLayer)
   ASSERT_FALSE(rune::tmx::is_tile_layer(layer));
   ASSERT_FALSE(rune::tmx::is_group(layer));
 
-  const auto& objectLayer = rune::tmx::as_object_layer(layer);
+  const auto& objectLayer = rune::tmx::get_object_layer(layer);
   ASSERT_EQ(rune::tmx_object_layer_draw_order::top_down, objectLayer.draw_order);
   ASSERT_EQ(1, objectLayer.objects.size());
 
@@ -235,7 +235,7 @@ TEST(TmxLayer, ParseGroup)
   ASSERT_FALSE(rune::tmx::is_image_layer(layer));
   ASSERT_FALSE(rune::tmx::is_tile_layer(layer));
 
-  const auto& group = rune::tmx::as_group(layer);
+  const auto& group = rune::tmx::get_group(layer);
   ASSERT_EQ(1, group.layers.size());
 
   const auto& groupLayer = group.layers.at(0);

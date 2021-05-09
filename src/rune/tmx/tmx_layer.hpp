@@ -2,6 +2,7 @@
 #define RUNE_TMX_LAYER_HPP
 
 #include <cassert>   // assert
+#include <concepts>  // same_as
 #include <json.hpp>  // json
 #include <memory>    // unique_ptr
 #include <optional>  // optional
@@ -60,6 +61,8 @@ struct tmx_layer final
   bool visible{true};
 };
 
+using tmx_layers = std::vector<tmx_layer>;
+
 void from_json(const nlohmann::json& json, tmx_group& group);
 void from_json(const nlohmann::json& json, tmx_layer& layer);
 
@@ -70,56 +73,104 @@ namespace tmx {
 /// \addtogroup tmx
 /// \{
 
-/// \name Layer type casts
+// clang-format off
+
+template <typename T>
+concept layer_value_type = std::same_as<T, tmx_tile_layer> ||
+                           std::same_as<T, tmx_object_layer> ||
+                           std::same_as<T, tmx_image_layer> ||
+                           std::same_as<T, tmx_group>;
+
+// clang-format on
+
+/// \name Layer functions
 /// \{
 
-[[nodiscard]] inline auto as_tile_layer(const tmx_layer& layer) -> const tmx_tile_layer&
+template <layer_value_type T>
+[[nodiscard]] auto get(const tmx_layer& layer) -> const T&
 {
-  return std::get<tmx_tile_layer>(layer.data);
+  return std::get<T>(layer.data);
 }
 
-[[nodiscard]] inline auto as_image_layer(const tmx_layer& layer) -> const tmx_image_layer&
+[[nodiscard]] inline auto get_tile_layer(const tmx_layer& layer) -> const tmx_tile_layer&
 {
-  return std::get<tmx_image_layer>(layer.data);
+  return get<tmx_tile_layer>(layer);
 }
 
-[[nodiscard]] inline auto as_object_layer(const tmx_layer& layer)
+[[nodiscard]] inline auto get_image_layer(const tmx_layer& layer)
+    -> const tmx_image_layer&
+{
+  return get<tmx_image_layer>(layer);
+}
+
+[[nodiscard]] inline auto get_object_layer(const tmx_layer& layer)
     -> const tmx_object_layer&
 {
-  return std::get<tmx_object_layer>(layer.data);
+  return get<tmx_object_layer>(layer);
 }
 
-[[nodiscard]] inline auto as_group(const tmx_layer& layer) -> const tmx_group&
+[[nodiscard]] inline auto get_group(const tmx_layer& layer) -> const tmx_group&
 {
-  return std::get<tmx_group>(layer.data);
+  return get<tmx_group>(layer);
 }
 
-/// \} End of layer type casts
+template <layer_value_type T>
+[[nodiscard]] auto try_get(const tmx_layer& layer) noexcept -> const T*
+{
+  return std::get_if<T>(&layer.data);
+}
 
-/// \name Layer type indicators
-/// \{
+[[nodiscard]] inline auto try_get_tile_layer(const tmx_layer& layer) noexcept
+    -> const tmx_tile_layer*
+{
+  return try_get<tmx_tile_layer>(layer);
+}
+
+[[nodiscard]] inline auto try_get_object_layer(const tmx_layer& layer) noexcept
+    -> const tmx_object_layer*
+{
+  return try_get<tmx_object_layer>(layer);
+}
+
+[[nodiscard]] inline auto try_get_image_layer(const tmx_layer& layer) noexcept
+    -> const tmx_image_layer*
+{
+  return try_get<tmx_image_layer>(layer);
+}
+
+[[nodiscard]] inline auto try_get_group(const tmx_layer& layer) noexcept
+    -> const tmx_group*
+{
+  return try_get<tmx_group>(layer);
+}
+
+template <layer_value_type T>
+[[nodiscard]] auto is(const tmx_layer& layer) noexcept -> bool
+{
+  return std::holds_alternative<T>(layer.data);
+}
 
 [[nodiscard]] inline auto is_tile_layer(const tmx_layer& layer) noexcept -> bool
 {
-  return std::holds_alternative<tmx_tile_layer>(layer.data);
+  return is<tmx_tile_layer>(layer);
 }
 
 [[nodiscard]] inline auto is_object_layer(const tmx_layer& layer) noexcept -> bool
 {
-  return std::holds_alternative<tmx_object_layer>(layer.data);
+  return is<tmx_object_layer>(layer);
 }
 
 [[nodiscard]] inline auto is_image_layer(const tmx_layer& layer) noexcept -> bool
 {
-  return std::holds_alternative<tmx_image_layer>(layer.data);
+  return is<tmx_image_layer>(layer);
 }
 
 [[nodiscard]] inline auto is_group(const tmx_layer& layer) noexcept -> bool
 {
-  return std::holds_alternative<tmx_group>(layer.data);
+  return is<tmx_group>(layer);
 }
 
-/// \} End of layer type indicators
+/// \} End of layer functions
 
 /// \} End of group tmx
 
