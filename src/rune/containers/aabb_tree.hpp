@@ -29,18 +29,6 @@ namespace rune {
 /// \addtogroup containers
 /// \{
 
-// clang-format off
-
-template <typename T>
-[[nodiscard]] auto at(const std::vector<T>& container, const std::size_t index) noexcept(noexcept(container[index]))
-    -> const T&
-{
-  assert(index < container.size());
-  return container[index];
-}
-
-// clang-format on
-
 #ifndef RUNE_AABB_TREE_DEFAULT_CAPACITY
 #define RUNE_AABB_TREE_DEFAULT_CAPACITY 64
 #endif  // RUNE_AABB_TREE_DEFAULT_CAPACITY
