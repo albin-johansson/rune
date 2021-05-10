@@ -6,6 +6,7 @@ set(SOURCE_FILES
     serialization_utils.hpp
     test_main.cpp
 
+    rune/containers/aabb_test.cpp
     rune/containers/stack_resource_test.cpp
     rune/containers/static_vector_test.cpp
     rune/containers/vector_map_test.cpp
