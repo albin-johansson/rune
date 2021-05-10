@@ -28,6 +28,17 @@ class aabb_node final
   int height{-1};                    ///< Amount of levels below the node. TODO check doc
 };
 
+/// \name Serialization
+/// \{
+
+template <typename Key, std::floating_point Precision>
+void serialize(auto& archive, aabb_node<Key, Precision>& node)
+{
+  archive(node.id, node.box, node.parent, node.left, node.right, node.next, node.height);
+}
+
+/// \} End of serialization
+
 template <typename Key, std::floating_point Precision>
 [[nodiscard]] constexpr auto is_leaf(const aabb_node<Key, Precision>& node) noexcept
     -> bool

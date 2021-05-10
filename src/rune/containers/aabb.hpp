@@ -35,6 +35,17 @@ struct basic_aabb final
   }
 };
 
+/// \name Serialization
+/// \{
+
+template <std::floating_point T>
+void serialize(auto& archive, basic_aabb<T>& aabb)
+{
+  archive(aabb.min, aabb.max, aabb.area);
+}
+
+/// \} End of serialization
+
 /// \name AABB operators
 /// \{
 

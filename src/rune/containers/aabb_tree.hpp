@@ -443,6 +443,23 @@ class basic_aabb_tree final
 
   /// \} End of collision queries
 
+  /// \name Serialization
+  /// \{
+
+  void serialize(auto& archive)
+  {
+    archive(m_nodes,
+            m_indices,
+            m_root,
+            m_nextFreeIndex,
+            m_nodeCount,
+            m_nodeCapacity,
+            m_thickness,
+            m_touchIsOverlap);
+  }
+
+  /// \} End of serialization
+
  private:
   inline static constexpr auto def_thickness_factor = static_cast<precision_type>(0.05);
 
