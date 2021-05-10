@@ -10,8 +10,8 @@ namespace rune {
 
 struct tmx_point final
 {
-  float x{};
-  float y{};
+  float x{};  ///< The x-coordinate of the point.
+  float y{};  ///< The y-coordinate of the point.
 };
 
 void from_json(const json_type& json, tmx_point& point);
