@@ -52,5 +52,5 @@
 /// \defgroup io IO
 /// \brief Filesystem utilities related to JSON, Ini, etc.
 
-/// \defgroup generic Generic
+/// \defgroup containers Containers
 /// \brief Contains performant generic data structures and utilities.
