@@ -116,7 +116,7 @@ class basic_aabb_tree final
 
 #ifdef RUNE_DEBUG_CONTAINERS
       validate();
-#endif
+#endif  // RUNE_DEBUG_CONTAINERS
     }
   }
 
@@ -140,7 +140,7 @@ class basic_aabb_tree final
 
 #ifdef RUNE_DEBUG_CONTAINERS
     validate();
-#endif
+#endif  // RUNE_DEBUG_CONTAINERS
   }
 
   /// \} End of insertion/deletion
@@ -231,7 +231,7 @@ class basic_aabb_tree final
 
 #ifdef RUNE_DEBUG_CONTAINERS
     validate();
-#endif
+#endif  // RUNE_DEBUG_CONTAINERS
   }
 
   void print(std::ostream& stream) const
@@ -333,7 +333,7 @@ class basic_aabb_tree final
 
 #ifdef RUNE_DEBUG_CONTAINERS
       validate();
-#endif
+#endif  // RUNE_DEBUG_CONTAINERS
       return true;
     }
     else
