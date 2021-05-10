@@ -27,6 +27,7 @@
 #include "rune/aliases/integers.hpp"
 #include "rune/aliases/json_type.hpp"
 #include "rune/containers/aabb.hpp"
+#include "rune/containers/aabb_node.hpp"
 #include "rune/containers/aabb_tree.hpp"
 #include "rune/containers/stack_resource.hpp"
 #include "rune/containers/static_vector.hpp"
