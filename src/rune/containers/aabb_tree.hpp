@@ -42,8 +42,8 @@ inline constexpr std::size_t aabb_tree_default_capacity = RUNE_AABB_TREE_DEFAULT
 inline constexpr std::size_t aabb_tree_query_buffer_size = RUNE_AABB_TREE_QUERY_BUFFER_SIZE;
 // clang-format on
 
-template <typename Key, std::floating_point Precision>
-class basic_aabb_tree final
+template <typename Key, std::floating_point Precision = float>
+class aabb_tree final
 {
  public:
   using key_type = Key;
@@ -59,7 +59,7 @@ class basic_aabb_tree final
   /// \name Construction
   /// \{
 
-  explicit basic_aabb_tree(const size_type capacity = aabb_tree_default_capacity)
+  explicit aabb_tree(const size_type capacity = aabb_tree_default_capacity)
       : m_nodeCapacity{capacity}
   {
     assert(!m_root);
@@ -1143,11 +1143,8 @@ class basic_aabb_tree final
   /// \} End of validation
 };
 
-template <typename Key>
-using aabb_tree = basic_aabb_tree<Key, float>;
-
 template <typename Key, std::floating_point Precision>
-auto operator<<(std::ostream& stream, const basic_aabb_tree<Key, Precision>& tree)
+auto operator<<(std::ostream& stream, const aabb_tree<Key, Precision>& tree)
     -> std::ostream&
 {
   tree.print(stream);
