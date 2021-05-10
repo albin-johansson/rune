@@ -9,6 +9,9 @@
 
 namespace rune {
 
+/// \addtogroup containers
+/// \{
+
 template <typename Key, std::floating_point Precision>
 class aabb_node final
 {
@@ -45,6 +48,8 @@ template <typename Key, std::floating_point Precision>
 {
   return !node.left;
 }
+
+/// \} End of group containers
 
 }  // namespace rune
 
