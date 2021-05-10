@@ -14,7 +14,7 @@
 
 namespace rune {
 
-/// \addtogroup generic
+/// \addtogroup containers
 /// \{
 
 // clang-format off
@@ -368,7 +368,7 @@ class vector_map final
   }
 };
 
-/// \} End of group generic
+/// \} End of group containers
 
 }  // namespace rune
 

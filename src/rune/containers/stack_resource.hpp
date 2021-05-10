@@ -7,7 +7,7 @@
 
 namespace rune {
 
-/// \addtogroup generic
+/// \addtogroup containers
 /// \{
 
 /**
@@ -42,7 +42,7 @@ class stack_resource final
   std::pmr::monotonic_buffer_resource m_resource{m_buffer.data(), m_buffer.size()};
 };
 
-/// \} End of group generic
+/// \} End of group containers
 
 }  // namespace rune
 

@@ -12,7 +12,7 @@
 
 namespace rune {
 
-/// \addtogroup generic
+/// \addtogroup containers
 /// \{
 
 /**
@@ -270,7 +270,7 @@ class static_vector final
 template <typename T, typename... Rest>
 static_vector(T, Rest...) -> static_vector<T, 1u + sizeof...(Rest)>;
 
-/// \} End of group generic
+/// \} End of group containers
 
 }  // namespace rune
 
