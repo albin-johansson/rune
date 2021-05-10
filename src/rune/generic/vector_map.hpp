@@ -344,8 +344,8 @@ class vector_map final
  private:
   std::vector<value_type> m_data;
 
-  template <bool MoveForward>
-  void move_element(const key_type& key)
+  template <bool MoveForward, transparent_to<key_type> T>
+  void move_element(const T& key)
   {
     if (const auto it = find(key); it != end())
     {
