@@ -42,6 +42,8 @@
 #include "rune/io/ini.hpp"
 #include "rune/io/json_utils.hpp"
 #include "rune/math/almost_equal.hpp"
+#include "rune/math/max.hpp"
+#include "rune/math/min.hpp"
 #include "rune/math/vector2.hpp"
 #include "rune/tmx/parse_tileset.hpp"
 #include "rune/tmx/tmx.hpp"

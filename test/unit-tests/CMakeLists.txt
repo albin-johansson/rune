@@ -14,6 +14,8 @@ set(SOURCE_FILES
     rune/core/to_string_test.cpp
 
     rune/math/almost_equal_test.cpp
+    rune/math/min_test.cpp
+    rune/math/max_test.cpp
     rune/math/vector2_test.cpp
 
     rune/tmx/tmx_animation_test.cpp
