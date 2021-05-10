@@ -16,6 +16,7 @@ set(SOURCE_FILES
     rune/core/to_string_test.cpp
 
     rune/math/almost_equal_test.cpp
+    rune/math/index_to_matrix_test.cpp
     rune/math/min_test.cpp
     rune/math/max_test.cpp
     rune/math/random_utils_test.cpp
