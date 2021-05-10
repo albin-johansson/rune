@@ -873,10 +873,14 @@ class basic_aabb_tree final
     const auto oldParentIndex = m_nodes.at(siblingIndex).parent;
     const auto newParentIndex = allocate_node();
 
-    auto& newParent = m_nodes.at(newParentIndex);
-    newParent.parent = oldParentIndex;
-    newParent.box = merge(leafAabb, m_nodes.at(siblingIndex).box);
-    newParent.height = m_nodes.at(siblingIndex).height + 1;
+    {
+      auto& newParent = m_nodes.at(newParentIndex);
+      newParent.parent = oldParentIndex;
+      newParent.box = merge(leafAabb, m_nodes.at(siblingIndex).box);
+      newParent.height = m_nodes.at(siblingIndex).height + 1;
+      newParent.left = siblingIndex;
+      newParent.right = leafIndex;
+    }
 
     if (oldParentIndex)
     {
@@ -896,10 +900,6 @@ class basic_aabb_tree final
       // The sibling was the root.
       m_root = newParentIndex;
     }
-
-    // TODO check if this can be moved above oldParentIndex stuff
-    newParent.left = siblingIndex;
-    newParent.right = leafIndex;
 
     m_nodes.at(siblingIndex).parent = newParentIndex;
     m_nodes.at(leafIndex).parent = newParentIndex;
