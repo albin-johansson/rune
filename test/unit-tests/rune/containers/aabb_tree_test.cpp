@@ -228,3 +228,25 @@ TEST(AabbTree, Query)
 
   ASSERT_EQ(1, count);
 }
+
+TEST(AabbTree, MixedUsage)
+{
+  aabb_tree tree;
+
+  tree.insert(11, {123, 324}, {342, 832});
+  tree.insert(23, {24, -34}, {1234, 665});
+  tree.insert(97, {761, 234}, {1421, 692});
+
+  tree.erase(11);
+  tree.rebuild();
+
+  tree.set_position(23, {82, 124});
+  tree.update(97, {75, 32}, {842, 134});
+
+  tree.rebuild();
+
+  std::vector<int> candidates;
+  tree.query(23, std::back_inserter(candidates));
+
+  const auto& aabb [[maybe_unused]] = tree.at(23);
+}
