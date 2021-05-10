@@ -1,4 +1,4 @@
-#include "generic/stack_resource.hpp"
+#include "containers/stack_resource.hpp"
 
 #include <gtest/gtest.h>
 

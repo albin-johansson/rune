@@ -1,5 +1,5 @@
-#ifndef RUNE_GENERIC_STACK_RESOURCE_HPP
-#define RUNE_GENERIC_STACK_RESOURCE_HPP
+#ifndef RUNE_CONTAINERS_STACK_RESOURCE_HPP
+#define RUNE_CONTAINERS_STACK_RESOURCE_HPP
 
 #include <array>            // array
 #include <cstddef>          // size_t, byte
@@ -46,4 +46,4 @@ class stack_resource final
 
 }  // namespace rune
 
-#endif  // RUNE_GENERIC_STACK_RESOURCE_HPP
+#endif  // RUNE_CONTAINERS_STACK_RESOURCE_HPP

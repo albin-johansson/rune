@@ -1,5 +1,5 @@
-#ifndef RUNE_GENERIC_STATIC_VECTOR_HPP
-#define RUNE_GENERIC_STATIC_VECTOR_HPP
+#ifndef RUNE_CONTAINERS_STATIC_VECTOR_HPP
+#define RUNE_CONTAINERS_STATIC_VECTOR_HPP
 
 #include <array>             // array
 #include <cassert>           // assert
@@ -274,4 +274,4 @@ static_vector(T, Rest...) -> static_vector<T, 1u + sizeof...(Rest)>;
 
 }  // namespace rune
 
-#endif  // RUNE_GENERIC_STATIC_VECTOR_HPP
+#endif  // RUNE_CONTAINERS_STATIC_VECTOR_HPP

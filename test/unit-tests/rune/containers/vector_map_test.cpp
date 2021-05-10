@@ -1,4 +1,4 @@
-#include "generic/vector_map.hpp"
+#include "containers/vector_map.hpp"
 
 #include <gtest/gtest.h>
 

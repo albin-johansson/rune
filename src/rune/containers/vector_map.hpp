@@ -1,5 +1,5 @@
-#ifndef RUNE_GENERIC_VECTOR_MAP_HPP
-#define RUNE_GENERIC_VECTOR_MAP_HPP
+#ifndef RUNE_CONTAINERS_VECTOR_MAP_HPP
+#define RUNE_CONTAINERS_VECTOR_MAP_HPP
 
 #include <algorithm>  // find_if
 #include <cassert>    // assert
@@ -372,4 +372,4 @@ class vector_map final
 
 }  // namespace rune
 
-#endif  // RUNE_GENERIC_VECTOR_MAP_HPP
+#endif  // RUNE_CONTAINERS_VECTOR_MAP_HPP
