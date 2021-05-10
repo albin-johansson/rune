@@ -7,6 +7,7 @@ set(SOURCE_FILES
     test_main.cpp
 
     rune/containers/aabb_test.cpp
+    rune/containers/aabb_tree_test.cpp
     rune/containers/stack_resource_test.cpp
     rune/containers/static_vector_test.cpp
     rune/containers/vector_map_test.cpp
@@ -37,6 +38,8 @@ set(SOURCE_FILES
 
 add_executable(UnitTests ${SOURCE_FILES})
 set_compiler_options(UnitTests)
+
+target_compile_definitions(UnitTests PUBLIC RUNE_DEBUG_CONTAINERS)
 
 add_header_only_lib(EnTT ${RUNE_LIBRARY_DIR}/entt ${RUNE_LIBRARY_DIR}/entt/entt.hpp)
 add_header_only_lib(Centurion ${RUNE_LIBRARY_DIR}/centurion ${RUNE_LIBRARY_DIR}/centurion/centurion.hpp)

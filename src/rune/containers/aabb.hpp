@@ -16,13 +16,14 @@ namespace rune {
 template <std::floating_point T>
 struct basic_aabb final
 {
-  using vector_type = basic_vector2<T>;
+  using precision_type = T;
+  using vector_type = basic_vector2<precision_type>;
 
   vector_type min;
   vector_type max;
-  double area{};
+  precision_type area{};
 
-  [[nodiscard]] constexpr auto contains(const vector_type& other) const noexcept -> bool
+  [[nodiscard]] constexpr auto contains(const basic_aabb& other) const noexcept -> bool
   {
     return (other.min.x >= min.x) && (other.min.y >= min.y) && (other.max.x <= max.x) &&
            (other.max.y <= max.y);
@@ -34,14 +35,36 @@ struct basic_aabb final
   }
 };
 
+/// \name AABB operators
+/// \{
+
 template <std::floating_point T>
-[[nodiscard]] constexpr auto compute_area(const basic_aabb<T>& aabb) noexcept -> double
+[[nodiscard]] constexpr auto operator==(const basic_aabb<T>& a,
+                                        const basic_aabb<T>& b) noexcept -> bool
 {
-  auto sum = 0.0;
+  return a.min == b.min && a.max == b.max;
+}
+
+template <std::floating_point T>
+[[nodiscard]] constexpr auto operator!=(const basic_aabb<T>& a,
+                                        const basic_aabb<T>& b) noexcept -> bool
+{
+  return !(a == b);
+}
+
+/// \} End of AABB operators
+
+/// \name AABB functions
+/// \{
+
+template <std::floating_point T>
+[[nodiscard]] constexpr auto compute_area(const basic_aabb<T>& aabb) noexcept -> T
+{
+  T sum{0};
 
   for (auto a = 0; a < 2; ++a)
   {
-    auto product = 1.0;
+    T product{1};
 
     for (auto b = 0; b < 2; ++b)
     {
@@ -63,7 +86,7 @@ template <std::floating_point T>
     sum += product;
   }
 
-  return 2.0 * sum;
+  return T{2} * sum;
 }
 
 template <std::floating_point T>
@@ -115,6 +138,25 @@ template <std::floating_point T>
              b.min.y >= a.max.y);
   }
 }
+
+template <std::floating_point T>
+void fatten(basic_aabb<T>& aabb, const T factor) noexcept
+{
+  const auto size = aabb.size();
+
+  const auto dx = factor * size.x;
+  const auto dy = factor * size.y;
+
+  aabb.min.x -= dx;
+  aabb.min.y -= dy;
+
+  aabb.max.x += dx;
+  aabb.max.y += dy;
+
+  aabb.area = compute_area(aabb);
+}
+
+/// \} End of AABB functions
 
 /// \} End of group containers
 
