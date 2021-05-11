@@ -2,11 +2,13 @@
 
 namespace rune {
 
-/// \addtogroup core
-/// \{
-
+/**
+ * \typedef czstring
+ *
+ * \brief An alias for a C-style null-terminated string.
+ *
+ * \ingroup core
+ */
 using czstring = const char*;
-
-/// \} End of group
 
 }  // namespace rune
