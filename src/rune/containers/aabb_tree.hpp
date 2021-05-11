@@ -207,19 +207,21 @@ class aabb_tree final
       const auto index2 = indices.at(jMin);
 
       const auto parentIndex = allocate_node();
-      auto& parentNode = m_nodes.at(parentIndex);
 
-      auto& index1Node = m_nodes.at(index1);
-      auto& index2Node = m_nodes.at(index2);
+      {
+        auto& parentNode = m_nodes.at(parentIndex);
+        auto& index1Node = m_nodes.at(index1);
+        auto& index2Node = m_nodes.at(index2);
 
-      parentNode.left = index1;
-      parentNode.right = index2;
-      parentNode.height = 1 + max(index1Node.height, index2Node.height);
-      parentNode.box = merge(index1Node.box, index2Node.box);
-      parentNode.parent = std::nullopt;
+        parentNode.left = index1;
+        parentNode.right = index2;
+        parentNode.height = 1 + max(index1Node.height, index2Node.height);
+        parentNode.box = merge(index1Node.box, index2Node.box);
+        parentNode.parent = std::nullopt;
 
-      index1Node.parent = parentIndex;
-      index2Node.parent = parentIndex;
+        index1Node.parent = parentIndex;
+        index2Node.parent = parentIndex;
+      }
 
       indices.at(jMin) = indices.at(count - 1);
       indices.at(iMin) = parentIndex;
