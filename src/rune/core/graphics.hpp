@@ -182,7 +182,7 @@ class graphics
   template <typename... Args>
   void emplace_cache(const font_id id, Args&&... args)
   {
-    m_caches.insert_or_assign(id, std::forward<Args>(args)...);
+    m_caches.insert_or_assign(id, cen::font_cache{std::forward<Args>(args)...});
   }
 
   /**
