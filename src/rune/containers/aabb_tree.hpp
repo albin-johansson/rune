@@ -589,18 +589,18 @@ class aabb_tree final
     return index;
   }
 
-  void free_node(const index_type nodeIndex)
+  void free_node(const index_type index)
   {
-    assert(nodeIndex < m_nodeCapacity);
+    assert(index < m_nodeCapacity);
     assert(0 < m_nodeCount);
 
     {
-      auto& node = m_nodes.at(nodeIndex);
+      auto& node = m_nodes.at(index);
       node.next = m_nextFreeIndex;
       node.height = -1;
     }
 
-    m_nextFreeIndex = nodeIndex;
+    m_nextFreeIndex = index;
 
     --m_nodeCount;
   }
@@ -847,17 +847,17 @@ class aabb_tree final
     }
   }
 
-  [[nodiscard]] auto balance(const index_type nodeIndex) -> index_type
+  [[nodiscard]] auto balance(const index_type index) -> index_type
   {
-    if (is_leaf(m_nodes.at(nodeIndex)) || (m_nodes.at(nodeIndex).height < 2))
+    if (is_leaf(m_nodes.at(index)) || (m_nodes.at(index).height < 2))
     {
-      return nodeIndex;
+      return index;
     }
 
-    const auto leftIndex = m_nodes.at(nodeIndex).left.value();
+    const auto leftIndex = m_nodes.at(index).left.value();
     assert(leftIndex < m_nodeCapacity);
 
-    const auto rightIndex = m_nodes.at(nodeIndex).right.value();
+    const auto rightIndex = m_nodes.at(index).right.value();
     assert(rightIndex < m_nodeCapacity);
 
     const auto currentBalance =
@@ -866,18 +866,18 @@ class aabb_tree final
     // Rotate right branch up.
     if (currentBalance > 1)
     {
-      rotate_right(nodeIndex, leftIndex, rightIndex);
+      rotate_right(index, leftIndex, rightIndex);
       return rightIndex;
     }
 
     // Rotate left branch up.
     if (currentBalance < -1)
     {
-      rotate_left(nodeIndex, leftIndex, rightIndex);
+      rotate_left(index, leftIndex, rightIndex);
       return leftIndex;
     }
 
-    return nodeIndex;
+    return index;
   }
 
   void fix_tree_upwards(std::optional<index_type> index)
