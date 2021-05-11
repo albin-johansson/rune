@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "tmx/tmx.hpp"
+#include "tmx/parse_tmx.hpp"
 
 using namespace rune::tmx_literals;
 

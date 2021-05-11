@@ -54,7 +54,7 @@
 #include "rune/math/random_utils.hpp"
 #include "rune/math/vector2.hpp"
 #include "rune/tmx/parse_tileset.hpp"
-#include "rune/tmx/tmx.hpp"
+#include "rune/tmx/parse_tmx.hpp"
 #include "rune/tmx/tmx_animation.hpp"
 #include "rune/tmx/tmx_color.hpp"
 #include "rune/tmx/tmx_data.hpp"
