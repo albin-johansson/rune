@@ -27,6 +27,8 @@ namespace rune {
  *
  * \note The Tiled XML format is not supported.
  *
+ * \todo Support all versions of the JSON format.
+ *
  * \param path the file path to the Tiled JSON map file.
  *
  * \return the parsed Tiled map.
