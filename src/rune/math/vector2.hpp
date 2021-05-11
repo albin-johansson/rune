@@ -19,14 +19,14 @@ namespace rune {
  *
  * \brief A two-dimensional vector with floating point coordinates.
  *
- * \details This class supports `operator==`, `operator!=`, `operator+=`, `operator-=`,
- * `operator*=`, `operator+`, `operator-` and `operator*`.
- *
  * \tparam T the representation type, must a floating-point type.
  *
  * \see `float2`
  * \see `double2`
- * \see `almost_equal(const basic_vector2<T>&, const basic_vector2<T>, T)`
+ * \see `almost_equal(const basic_vector2<T>&, const basic_vector2<T>&, T)`
+ * \see `distance(const basic_vector2<T>&, const basic_vector2<T>&)`
+ * \see `angle(const basic_vector2<T>&, const basic_vector2<T>&)`
+ * \see `cross(const basic_vector2<T>&, const basic_vector2<T>&)`
  */
 template <std::floating_point T>
 class basic_vector2 final
