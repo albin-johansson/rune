@@ -1,4 +1,4 @@
-:root 
+:root
 {
   --primary-color: #678c9f;
   --primary-dark-color: #4e8099;
@@ -13,7 +13,7 @@
 
   --code-foreground: #f97583;
 
-  --fragment-keywordtype: #f97583; /* #e36dcb */
+  --fragment-keywordtype: #f97583;
   --fragment-keywordflow: #f97583;
   --fragment-keyword: #f97583;
   --fragment-token: #ffb97b;
@@ -28,17 +28,17 @@
   color: #b2e1f9;
 }
 
-.memTemplParams 
+.memTemplParams
 {
-	color: #b2e1f9;
+  color: #b2e1f9;
 }
 
-.contents a:visited 
+.contents a:visited
 {
-	color: #4f7ea8;
+  color: #4f7ea8;
 }
 
-.memSeparator 
+.memSeparator
 {
   padding: 4px;
 }
