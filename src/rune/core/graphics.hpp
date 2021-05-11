@@ -8,6 +8,8 @@
 #include <utility>        // forward
 #include <vector>         // vector
 
+#include "../aliases/texture_id.hpp"
+#include "../aliases/texture_index.hpp"
 namespace rune {
 
 /// \addtogroup core
@@ -37,8 +39,6 @@ class graphics
   using size_type = std::size_t;
 
   // TODO strong types
-  using texture_index = size_type;
-  using texture_id = size_type;
   using font_id = size_type;
 
   template <typename T>

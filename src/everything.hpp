@@ -28,6 +28,8 @@
 #include "rune/aliases/delta_time.hpp"
 #include "rune/aliases/integers.hpp"
 #include "rune/aliases/json_type.hpp"
+#include "rune/aliases/texture_id.hpp"
+#include "rune/aliases/texture_index.hpp"
 #include "rune/containers/aabb.hpp"
 #include "rune/containers/aabb_node.hpp"
 #include "rune/containers/aabb_tree.hpp"
