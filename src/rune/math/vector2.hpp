@@ -295,16 +295,9 @@ template <std::floating_point T>
 template <std::floating_point T>
 [[nodiscard]] auto distance(const basic_vector2<T>& a, const basic_vector2<T>& b) -> T
 {
-  //  if (a == b)
-  //  {
-  //    return 0;
-  //  }
-  //  else
-  //  {
   const auto dx = b.x - a.x;
   const auto dy = b.y - a.y;
   return std::sqrt(dx * dx + dy * dy);
-  //  }
 }
 
 /**
