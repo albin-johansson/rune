@@ -3,9 +3,10 @@
 
 #include <algorithm>      // min
 #include <centurion.hpp>  // ...
-#include <concepts>       // floating_point
+#include <concepts>       // floating_point, derived_from
 
 #include "../aliases/delta_time.hpp"
+#include "../math/min.hpp"
 #include "rune_error.hpp"
 
 namespace rune {
@@ -69,13 +70,27 @@ inline constexpr int engine_max_frames_per_tick = RUNE_ENGINE_MAX_FRAMES_PER_TIC
  */
 [[nodiscard]] inline auto tick_rate() -> double
 {
-  return std::min(static_cast<double>(max_tick_rate),
-                  static_cast<double>(cen::screen::refresh_rate().value()));
+  return min(max_tick_rate, static_cast<double>(cen::screen::refresh_rate().value()));
 }
 
 template <game_type Game, std::derived_from<graphics> Graphics>
 class engine;
 
+/**
+ * \class semi_fixed_game_loop
+ *
+ * \brief Represents a "semi-fixed" game loop, that strives to use a fixed delta, but it
+ * can be adjusted dynamically for a few frames at a time.
+ *
+ * \details The game loop will use a tick rate that depends on the refresh rate of the
+ * current monitor, but the tick rate is limited to be at most `max_tick_rate`, see
+ * `tick_rate()` for more information.
+ *
+ * \tparam Game the game type.
+ * \tparam Graphics the graphics context type.
+ *
+ * \see `tick_rate()`
+ */
 template <game_type Game, std::derived_from<graphics> Graphics>
 class semi_fixed_game_loop
 {
@@ -121,7 +136,7 @@ class semi_fixed_game_loop
         break;
       }
 
-      const auto dt = std::min(frameTime, m_delta);
+      const auto dt = min(frameTime, m_delta);
       m_engine->update_logic(static_cast<delta_time>(dt.count()));
 
       frameTime -= dt;
