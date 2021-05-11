@@ -8,7 +8,7 @@ namespace rune {
 /// \cond FALSE
 namespace tags {
 struct delta_time_tag;
-}
+}  // namespace tags
 /// \endcond
 
 /// \addtogroup core
