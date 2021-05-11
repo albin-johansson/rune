@@ -23,11 +23,11 @@ namespace rune {
  * \brief The maximum tick rate of the game loop, i.e. the maximum amount of ticks per
  * second.
  *
- * \note The value of this macro should be a `double`.
- *
  * \details The game loop will try to run at the refresh rate of the primary screen, as
  * long as the the refresh rate isn't greater than the value of this macro. By default,
  * this macro expands to `120.0`.
+ *
+ * \note The value of this macro should be a `double`.
  */
 #ifndef RUNE_MAX_TICK_RATE
 #define RUNE_MAX_TICK_RATE 120.0
@@ -38,10 +38,10 @@ namespace rune {
  *
  * \brief The maximum amount of frames that the game loop can run per tick.
  *
- * \note The value of this macro should be an `int`.
- *
  * \details The purpose of this limit is to avoid the "spiral-of-death". By default, this
  * macro expands to `5`.
+ *
+ * \note The value of this macro should be an `int`.
  */
 #ifndef RUNE_ENGINE_MAX_FRAMES_PER_TICK
 #define RUNE_ENGINE_MAX_FRAMES_PER_TICK 5
