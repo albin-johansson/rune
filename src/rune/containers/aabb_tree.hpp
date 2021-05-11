@@ -425,20 +425,65 @@ class aabb_tree final
   /// \{
 
   template <size_type BufferSize = aabb_tree_query_buffer_size,
-            std::output_iterator<key_type> T>
-  void query(const key_type& key, T iterator) const
-  {
-    query_impl<BufferSize>(key, [&](const key_type& key) {
-      *iterator = key;
-      ++iterator;
-    });
-  }
-
-  template <size_type BufferSize = aabb_tree_query_buffer_size,
             std::invocable<key_type> T>
   void query(const key_type& key, T&& callable) const
   {
-    query_impl<BufferSize>(key, callable);
+    if (const auto it = m_indices.find(key); it != m_indices.end())
+    {
+      const auto index = it->second;
+      const auto& sourceNode = m_nodes.at(index);
+
+      stack_resource<BufferSize * sizeof(std::optional<index_type>)> resource;
+      pmr_stack<std::optional<index_type>> stack{resource.get()};
+
+      stack.push(m_root);
+
+      bool quit{};
+      while (!stack.empty() && !quit)
+      {
+        const auto nodeIndex = stack.top();
+        stack.pop();
+
+        if (!nodeIndex)
+        {
+          continue;
+        }
+
+        const auto& node = m_nodes.at(*nodeIndex);
+
+        // Test for overlap between the AABBs
+        if (overlaps(sourceNode.box, node.box, m_touchIsOverlap))
+        {
+          if (is_leaf(node) && node.id && node.id != key)
+          {
+            // The boolean return type is optional
+            if constexpr (std::same_as<bool, std::invoke_result_t<T, key_type>>)
+            {
+              quit = callable(*node.id);
+            }
+            else
+            {
+              callable(*node.id);
+            }
+          }
+          else
+          {
+            stack.push(node.left);
+            stack.push(node.right);
+          }
+        }
+      }
+    }
+  }
+
+  template <size_type BufferSize = aabb_tree_query_buffer_size,
+            std::output_iterator<key_type> T>
+  void query(const key_type& key, T iterator) const
+  {
+    query<BufferSize>(key, [&](const key_type& key) {
+      *iterator = key;
+      ++iterator;
+    });
   }
 
   /// \} End of collision queries
@@ -956,57 +1001,6 @@ class aabb_tree final
 
   template <typename T>
   using pmr_stack = std::stack<T, std::pmr::deque<T>>;
-
-  template <size_type BufferSize = 256, std::invocable<key_type> Callable>
-  void query_impl(const key_type& key, Callable&& callable) const
-  {
-    if (const auto it = m_indices.find(key); it != m_indices.end())
-    {
-      const auto index = it->second;
-      const auto& sourceNode = m_nodes.at(index);
-
-      stack_resource<BufferSize * sizeof(std::optional<index_type>)> resource;
-      pmr_stack<std::optional<index_type>> stack{resource.get()};
-
-      stack.push(m_root);
-
-      bool quit{};
-      while (!stack.empty() && !quit)
-      {
-        const auto nodeIndex = stack.top();
-        stack.pop();
-
-        if (!nodeIndex)
-        {
-          continue;
-        }
-
-        const auto& node = m_nodes.at(*nodeIndex);
-
-        // Test for overlap between the AABBs
-        if (overlaps(sourceNode.box, node.box, m_touchIsOverlap))
-        {
-          if (is_leaf(node) && node.id && node.id != key)
-          {
-            // The boolean return type is optional
-            if constexpr (std::same_as<bool, std::invoke_result_t<Callable, key_type>>)
-            {
-              quit = callable(*node.id);
-            }
-            else
-            {
-              callable(*node.id);
-            }
-          }
-          else
-          {
-            stack.push(node.left);
-            stack.push(node.right);
-          }
-        }
-      }
-    }
-  }
 
   /// \} End of collision queries
 
