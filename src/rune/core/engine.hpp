@@ -42,6 +42,7 @@ requires game_type<Game, Graphics> class engine
       if constexpr (has_init<game_type, graphics_type>)
       {
         CENTURION_LOG_WARN(
+            "%s",
             "rune::engine > game_type::init(graphics_type&) is not called when "
             "game_type has a constructor that accepts \"graphics_type&\"");
       }
