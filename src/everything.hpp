@@ -20,7 +20,9 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#ifndef RUNE_NO_PRAGMA_ONCE
 #pragma once
+#endif  // RUNE_NO_PRAGMA_ONCE
 
 #include "rune/aliases/czstring.hpp"
 #include "rune/aliases/delta_time.hpp"
