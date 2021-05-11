@@ -47,12 +47,4 @@ class Game final
 
 static_assert(rune::game_type<Game>);
 
-class CustomGraphics : public rune::graphics
-{
- public:
-  template <typename T>
-  explicit CustomGraphics(const cen::basic_window<T>& window) : rune::graphics{window}
-  {}
-};
-
-using RuneEngine = rune::engine<Game, CustomGraphics>;
+using RuneEngine = rune::engine<Game>;
