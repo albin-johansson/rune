@@ -322,15 +322,15 @@ template <std::floating_point T>
   return (a.x * b.x) + (a.y * b.y);
 }
 
-template <std::floating_point T>
-constexpr void operator*=(basic_vector2<T>& vector, const T factor) noexcept
+template <std::floating_point T, typename U>
+constexpr void operator*=(basic_vector2<T>& vector, const U factor) noexcept
 {
   vector.scale(factor);
 }
 
-template <std::floating_point T>
+template <std::floating_point T, typename U>
 [[nodiscard]] constexpr auto operator*(const basic_vector2<T>& vector,
-                                       const T factor) noexcept -> basic_vector2<T>
+                                       const U factor) noexcept -> basic_vector2<T>
 {
   return basic_vector2{vector.x * factor, vector.y * factor};
 }
