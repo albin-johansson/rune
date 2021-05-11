@@ -27,6 +27,7 @@ namespace rune {
  * \see `distance(const basic_vector2<T>&, const basic_vector2<T>&)`
  * \see `angle(const basic_vector2<T>&, const basic_vector2<T>&)`
  * \see `cross(const basic_vector2<T>&, const basic_vector2<T>&)`
+ * \see `dot(const basic_vector2<T>&, const basic_vector2<T>&)`
  */
 template <std::floating_point T>
 class basic_vector2 final
@@ -270,10 +271,92 @@ using float2 = basic_vector2<float>;
 /// A two-dimensional vector using `double` precision.
 using double2 = basic_vector2<double>;
 
+/// \name Vector operators
+/// \{
+
+template <std::floating_point T>
+constexpr void operator+=(basic_vector2<T>& a, const basic_vector2<T>& b) noexcept
+{
+  a.x += b.x;
+  a.y += b.y;
+}
+
+template <std::floating_point T>
+[[nodiscard]] constexpr auto operator+(const basic_vector2<T>& lhs,
+                                       const basic_vector2<T>& rhs) noexcept
+    -> basic_vector2<T>
+{
+  return basic_vector2{lhs.x + rhs.x, lhs.y + rhs.y};
+}
+
+template <std::floating_point T>
+constexpr void operator-=(basic_vector2<T>& a, const basic_vector2<T>& b) noexcept
+{
+  a.x -= b.x;
+  a.y -= b.y;
+}
+
+template <std::floating_point T>
+[[nodiscard]] constexpr auto operator-(const basic_vector2<T>& lhs,
+                                       const basic_vector2<T>& rhs) noexcept
+    -> basic_vector2<T>
+{
+  return basic_vector2{lhs.x - rhs.x, lhs.y - rhs.y};
+}
+
+/**
+ * \brief Returns the dot product of two vectors.
+ *
+ * \note The dot product is commutative, which means that the order of
+ * the operands doesn't matter.
+ *
+ * \param a the first vector.
+ * \param b the second vector.
+ *
+ * \return the dot product of the two vectors.
+ */
+template <std::floating_point T>
+[[nodiscard]] constexpr auto operator*(const basic_vector2<T>& a,
+                                       const basic_vector2<T>& b) noexcept -> T
+{
+  return (a.x * b.x) + (a.y * b.y);
+}
+
+template <std::floating_point T>
+constexpr void operator*=(basic_vector2<T>& vector, const T factor) noexcept
+{
+  vector.scale(factor);
+}
+
+template <std::floating_point T>
+[[nodiscard]] constexpr auto operator*(const basic_vector2<T>& vector,
+                                       const T factor) noexcept -> basic_vector2<T>
+{
+  return basic_vector2{vector.x * factor, vector.y * factor};
+}
+
+template <std::floating_point T>
+[[nodiscard]] constexpr auto operator*(const T factor,
+                                       const basic_vector2<T>& vector) noexcept
+    -> basic_vector2<T>
+{
+  return vector * factor;
+}
+
+/// \} End of vector operators
+
 /// \name Vector functions
 /// \{
 
-/// Indicates whether or not two vectors are almost equal.
+/**
+ * \brief Indicates whether or not two vectors are *almost* equal.
+ *
+ * \param a the first vector.
+ * \param b the second vector.
+ * \param epsilon the epsilon value that will be used.
+ *
+ * \return `true` if the vectors are almost equal; `false` otherwise.
+ */
 template <std::floating_point T>
 [[nodiscard]] auto almost_equal(const basic_vector2<T>& a,
                                 const basic_vector2<T>& b,
@@ -315,6 +398,14 @@ template <std::floating_point T>
   return a.x * b.y - a.y * b.x;
 }
 
+/// \copydoc operator*(const basic_vector2<T>&, const basic_vector2<T>&)
+template <std::floating_point T>
+[[nodiscard]] constexpr auto dot(const basic_vector2<T>& a,
+                                 const basic_vector2<T>& b) noexcept -> T
+{
+  return a * b;
+}
+
 /**
  * \brief Returns the angle between two vectors.
  *
@@ -350,62 +441,6 @@ template <std::floating_point T>
 }
 
 /// \} End of vector functions
-
-/// \name Vector operators
-/// \{
-
-template <std::floating_point T>
-constexpr void operator+=(basic_vector2<T>& a, const basic_vector2<T>& b) noexcept
-{
-  a.x += b.x;
-  a.y += b.y;
-}
-
-template <std::floating_point T>
-[[nodiscard]] constexpr auto operator+(const basic_vector2<T>& lhs,
-                                       const basic_vector2<T>& rhs) noexcept
-    -> basic_vector2<T>
-{
-  return basic_vector2{lhs.x + rhs.x, lhs.y + rhs.y};
-}
-
-template <std::floating_point T>
-constexpr void operator-=(basic_vector2<T>& a, const basic_vector2<T>& b) noexcept
-{
-  a.x -= b.x;
-  a.y -= b.y;
-}
-
-template <std::floating_point T>
-[[nodiscard]] constexpr auto operator-(const basic_vector2<T>& lhs,
-                                       const basic_vector2<T>& rhs) noexcept
-    -> basic_vector2<T>
-{
-  return basic_vector2{lhs.x - rhs.x, lhs.y - rhs.y};
-}
-
-template <std::floating_point T>
-constexpr void operator*=(basic_vector2<T>& vector, const T factor) noexcept
-{
-  vector.scale(factor);
-}
-
-template <std::floating_point T>
-[[nodiscard]] constexpr auto operator*(const basic_vector2<T>& vector,
-                                       const T factor) noexcept -> basic_vector2<T>
-{
-  return basic_vector2{vector.x * factor, vector.y * factor};
-}
-
-template <std::floating_point T>
-[[nodiscard]] constexpr auto operator*(const T factor,
-                                       const basic_vector2<T>& vector) noexcept
-    -> basic_vector2<T>
-{
-  return vector * factor;
-}
-
-/// \} End of vector operators
 
 template <std::floating_point T>
 [[nodiscard]] auto to_string(const basic_vector2<T> vec) -> std::string

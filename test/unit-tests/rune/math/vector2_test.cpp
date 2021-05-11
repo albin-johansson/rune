@@ -4,12 +4,15 @@
 
 #include <cereal/cereal.hpp>
 #include <iostream>     // cout
+#include <numbers>      // pi_v
 #include <type_traits>  // is_same_v
 
 #include "serialization_utils.hpp"
 
 static_assert(std::is_same_v<rune::float2::value_type, float>);
 static_assert(std::is_same_v<rune::double2::value_type, double>);
+
+// TODO dot, operators
 
 TEST(Vector2, Defaults)
 {
@@ -88,6 +91,33 @@ TEST(Vector2, Scale)
   vector.scale(-1);
   ASSERT_FLOAT_EQ(-60, vector.x);
   ASSERT_FLOAT_EQ(-170, vector.y);
+}
+
+TEST(Vector2, SetMagnitude)
+{
+  {  // Normal magnitude
+    rune::float2 vector{1283, 881};
+    vector.set_magnitude(433);
+    ASSERT_FLOAT_EQ(433, vector.magnitude());
+  }
+
+  {  // Create unit vector
+    rune::float2 vector{849, 241};
+    vector.set_magnitude(1);
+    ASSERT_TRUE(vector.is_unit());
+  }
+
+  {  // Zero magnitude
+    rune::float2 vector{849, 241};
+    vector.set_magnitude(0);
+    ASSERT_TRUE(vector.is_zero());
+  }
+
+  {  // Negative magnitude
+    rune::float2 vector{849, 241};
+    vector.set_magnitude(-1);
+    ASSERT_TRUE(vector.is_zero());
+  }
 }
 
 TEST(Vector2, Lerp)
@@ -202,6 +232,74 @@ TEST(Vector2, Serialize)
   }
 }
 
+TEST(Vector2, Distance)
+{
+  {  // Distance to self
+    const rune::float2 vector{783, 334};
+    ASSERT_FLOAT_EQ(0, distance(vector, vector));
+  }
+
+  {  // Normal vectors
+    const rune::float2 a{1892.0f, 4412.0f};
+    const rune::float2 b{442.0f, 266.0f};
+
+    const auto expected = 4392.24f;  // obtained from wolfram alpha
+    ASSERT_NEAR(expected, rune::distance(a, b), 0.005);
+    ASSERT_NEAR(rune::distance(a, b), expected, 0.005);
+  }
+}
+
+TEST(Vector2, Cross)
+{
+  const rune::float2 a{123, 456};
+  const rune::float2 b{789, 434};
+  ASSERT_FLOAT_EQ(0, rune::cross(a, a));
+
+  // Expected values obtained from wolfram alpha
+  ASSERT_FLOAT_EQ(306'402, rune::cross(b, a));
+  ASSERT_FLOAT_EQ(-306'402, rune::cross(a, b));
+}
+
+TEST(Vector2, Angle)
+{
+  {  // Angle to self
+    const rune::float2 vector{1283, 9123};
+    ASSERT_FLOAT_EQ(0, rune::angle(vector, vector));
+  }
+
+  {  // Small vectors
+    const rune::float2 fst{50, 25};
+    const rune::float2 snd{5, 10};
+
+    // Obtained with wolfram alpha
+    const auto expected = std::acos(4.0f / 5.0f);
+
+    ASSERT_FLOAT_EQ(expected, rune::angle(fst, snd));
+    ASSERT_FLOAT_EQ(-expected, rune::angle(snd, fst));
+  }
+
+  {  // Big vectors
+    const rune::float2 a{63'112, 58'124};
+    const rune::float2 b{30'979, 77'437};
+
+    // Obtained with wolfram alpha
+    const auto expected = 0.5f * (std::numbers::pi_v<float> -
+                                  2.0f * std::atan(1614023709.0f / 771645137.0f));
+
+    ASSERT_FLOAT_EQ(expected, rune::angle(a, b));
+    ASSERT_FLOAT_EQ(-expected, rune::angle(b, a));
+  }
+
+  {  // With the zero vector
+    const rune::float2 zero;
+    const rune::float2 nonZero{123, 123};
+
+    ASSERT_FLOAT_EQ(0, rune::angle(zero, zero));
+    ASSERT_FLOAT_EQ(0, rune::angle(zero, nonZero));
+    ASSERT_FLOAT_EQ(0, rune::angle(nonZero, zero));
+  }
+}
+
 TEST(Vector2, EqualityOperators)
 {
   const rune::float2 a{10, 20};
@@ -226,8 +324,8 @@ TEST(Vector2, AlmostEqual)
 {
   const rune::float2 a{123, 456};
   const rune::float2 b{34, 394};
-  const rune::float2 c{34 + (rune::default_epsilon / 2.0f),
-                       394 + (rune::default_epsilon / 2.0f)};
+  const rune::float2 c(34 + (rune::default_epsilon / 2.0f),
+                       394 + (rune::default_epsilon / 2.0f));
 
   ASSERT_TRUE(rune::almost_equal(a, a));
 
