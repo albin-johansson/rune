@@ -1,6 +1,7 @@
 #ifndef RUNE_CORE_GRAPHICS_HPP
 #define RUNE_CORE_GRAPHICS_HPP
 
+#include <cassert>        // assert
 #include <centurion.hpp>  // window, renderer, texture, font_cache, pixel_format
 #include <cstddef>        // size_t
 #include <string>         // string
@@ -10,6 +11,8 @@
 
 #include "../aliases/texture_id.hpp"
 #include "../aliases/texture_index.hpp"
+#include "compiler.hpp"
+
 namespace rune {
 
 /// \addtogroup core
@@ -33,6 +36,23 @@ namespace rune {
 
 /// \} End of configuration macros
 
+/**
+ * \class graphics
+ *
+ * \brief Provides the main graphics API.
+ *
+ * \details This class provides a renderer, efficient texture handling, font caches for
+ * efficient text rendering, pixel format information, etc.
+ *
+ * \details For reduced memory consumption and redundancy in loaded textures, this class
+ * manages a collection of textures that are given unique indices when loaded. These
+ * indices literally correspond to indices in an array of textures managed by this class,
+ * which results in very fast constant complexity lookup of textures.
+ *
+ * \details It is safe to derive your own custom graphics context classes from this class.
+ * However, you then need to supply your custom graphics type as a template parameter to
+ * `engine`.
+ */
 class graphics
 {
  public:
@@ -49,9 +69,30 @@ class graphics
 
   virtual ~graphics() noexcept = default;
 
-  /// \name Texture loading
+  /// \name Texture handling
   /// \{
 
+  /**
+   * \brief Reserves enough memory to store the specified amount of textures.
+   *
+   * \param capacity the new capacity of textures.
+   */
+  void reserve(const size_type capacity)
+  {
+    m_textures.reserve(capacity);
+  }
+
+  /**
+   * \brief Loads a texture and returns the associated index.
+   *
+   * \details If a texture with the specified ID has already been loaded, then this
+   * function does nothing, and just returns the existing texture index.
+   *
+   * \param id the unique ID of the texture.
+   * \param path the file path of the texture.
+   *
+   * \return the index of the loaded texture.
+   */
   auto load(const texture_id id, const std::string& path) -> texture_index
   {
     if (const auto it = m_indices.find(id); it != m_indices.end())
@@ -65,39 +106,141 @@ class graphics
       m_textures.emplace_back(m_renderer, path);
       m_indices.try_emplace(id, index);
 
-      return index;
+      return texture_index{index};
     }
   }
 
-  /// \} End of texture loading
-
-  void set_blend_mode(const cen::blend_mode mode)
+  /**
+   * \brief Returns the texture associated with the specified index.
+   *
+   * \details This function performs a very fast index lookup for finding the associated
+   * texture. This function is not bounds checked in optimized builds, but an assertion
+   * will abort the execution of the program in debug builds if an invalid index is used.
+   *
+   * \pre `index` must be associated with an existing texture.
+   *
+   * \param index the index of the desired texture.
+   *
+   * \return the texture associated with the index.
+   */
+  [[nodiscard]] auto at(const texture_index index) const noexcept(on_msvc())
+      -> const cen::texture&
   {
-    m_renderer.set_blend_mode(mode);
+    assert(index < m_textures.size());  // texture_index is unsigned
+    return m_textures[index];
   }
 
-  template <typename... Args>
-  void emplace_font(const size_type id, Args&&... args)
+  /// \copydoc at()
+  [[nodiscard]] auto operator[](const texture_index index) const noexcept(on_msvc())
+      -> const cen::texture&
   {
-    m_renderer.emplace_font(id, std::forward<Args>(args)...);
+    return at(index);
   }
 
+  /**
+   * \brief Indicates whether or not a texture index is associated with a texture.
+   *
+   * \param index the texture index that will be checked.
+   *
+   * \return `true` if the texture index is associated with a texture; `false` otherwise.
+   */
+  [[nodiscard]] auto contains(const texture_index index) const noexcept -> bool
+  {
+    return index < m_textures.size();
+  }
+
+  /**
+   * \brief Returns the texture index associated with the specified ID.
+   *
+   * \param id the ID associated with the texture.
+   *
+   * \return the index of the specified texture.
+   *
+   * \throws std::out_of_range if the supplied ID isn't associated with an index.
+   */
+  [[nodiscard]] auto to_index(const texture_id id) const -> texture_index
+  {
+    return m_indices.at(id);
+  }
+
+  /// \} End of texture handling
+
+  /// \name Font cache handling
+  /// \{
+
+  /**
+   * \brief Adds a font cache to the graphics context.
+   *
+   * \tparam Args the types of the font cache constructor arguments.
+   *
+   * \note Any previous font cache associated with the supplied ID is overwritten.
+   *
+   * \param id the unique ID that will be associated with the font cache.
+   * \param args the arguments that will be forwarded to an appropriate font cache
+   * constructor.
+   */
   template <typename... Args>
   void emplace_cache(const font_id id, Args&&... args)
   {
-    m_caches.try_emplace(id, std::forward<Args>(args)...);
+    m_caches.insert_or_assign(id, std::forward<Args>(args)...);
   }
 
+  /**
+   * \brief Returns the font cache associated with the specified ID.
+   *
+   * \param id the ID associated with the desired font cache.
+   *
+   * \return the found font cache.
+   *
+   * \throws std::out_of_range if there is no font cache associated with the ID.
+   */
+  [[nodiscard]] auto get_cache(const font_id id) -> cen::font_cache&
+  {
+    return m_caches.at(id);
+  }
+
+  /// \copydoc get_cache()
+  [[nodiscard]] auto get_cache(const font_id id) const -> const cen::font_cache&
+  {
+    return m_caches.at(id);
+  }
+
+  /**
+   * \brief Indicates whether or not the graphics context has a font cache associated with
+   * the specified ID.
+   *
+   * \param id the ID that will be checked.
+   *
+   * \return `true` if there is a font cache associated with the ID; `false` otherwise.
+   */
+  [[nodiscard]] auto contains_cache(const font_id id) const -> bool
+  {
+    return m_caches.contains(id);
+  }
+
+  /// \} End of font cache handling
+
+  /**
+   * \brief Returns the renderer associated with the graphics context.
+   *
+   * \return the associated renderer.
+   */
   [[nodiscard]] auto renderer() noexcept -> cen::renderer&
   {
     return m_renderer;
   }
 
+  /// \copydoc renderer()
   [[nodiscard]] auto renderer() const noexcept -> const cen::renderer&
   {
     return m_renderer;
   }
 
+  /**
+   * \brief Returns the pixel format used by the associated window.
+   *
+   * \return the associated pixel format.
+   */
   [[nodiscard]] auto format() const noexcept -> cen::pixel_format
   {
     return m_format;
