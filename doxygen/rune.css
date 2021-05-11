@@ -1,0 +1,39 @@
+:root 
+{
+  --primary-color: #678c9f;
+  --primary-dark-color: #4e8099;
+  --primary-light-color: #9ccae0;
+
+  --note-color: rgb(0, 132, 255);
+  --note-color-dark: rgb(0, 63, 122);
+
+  --invariant-color: #f8e8b7;
+  --invariant-color-dark: #baa600;
+  --invariant-color-darker: #865800;
+
+  --code-foreground: #f97583;
+
+  --fragment-keywordtype: #f97583; /* #e36dcb */
+  --fragment-keywordflow: #f97583;
+  --fragment-keyword: #f97583;
+  --fragment-token: #ffb97b;
+  --fragment-link: #b392f0;
+  --fragment-comment: #959da5;
+
+  --menu-focus-foreground: #184d68; /* Mirror --primary-dark-color */
+}
+
+.memtemplate
+{
+  color: #b2e1f9;
+}
+
+.memTemplParams 
+{
+	color: #b2e1f9;
+}
+
+.contents a:visited 
+{
+	color: #4f7ea8;
+}
