@@ -156,9 +156,9 @@ class aabb_tree final
     }
 
     std::vector<index_type> indices(m_nodeCount);
-    size_type count{0};
+    int count{0};
 
-    for (auto index = 0; index < m_nodeCapacity; ++index)
+    for (size_type index = 0; index < m_nodeCapacity; ++index)
     {
       auto& node = m_nodes.at(index);
 
@@ -170,7 +170,7 @@ class aabb_tree final
       if (is_leaf(node))
       {
         node.parent = std::nullopt;
-        indices.at(count) = index;
+        indices.at(static_cast<size_type>(count)) = index;
         ++count;
       }
       else
@@ -187,11 +187,11 @@ class aabb_tree final
 
       for (auto i = 0; i < count; ++i)
       {
-        const auto fstAabb = m_nodes.at(indices.at(i)).box;
+        const auto fstAabb = m_nodes.at(indices.at(static_cast<size_type>(i))).box;
 
         for (auto j = (i + 1); j < count; ++j)
         {
-          const auto sndAabb = m_nodes.at(indices.at(j)).box;
+          const auto sndAabb = m_nodes.at(indices.at(static_cast<size_type>(j))).box;
           const auto cost = merge(fstAabb, sndAabb).area;
 
           if (cost < minCost)
