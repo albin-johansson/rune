@@ -77,7 +77,7 @@ class aabb_tree final
 
   void insert(const key_type& key, const vector_type& lower, const vector_type& upper)
   {
-    assert(!m_indices.count(key));
+    assert(!m_indices.contains(key));
 
     const auto index = allocate_node();
 
