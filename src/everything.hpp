@@ -34,7 +34,6 @@
 #include "rune/containers/stack_resource.hpp"
 #include "rune/containers/static_vector.hpp"
 #include "rune/containers/vector_map.hpp"
-#include "rune/core/aabb_tree.hpp"
 #include "rune/core/compiler.hpp"
 #include "rune/core/concepts.hpp"
 #include "rune/core/engine.hpp"
