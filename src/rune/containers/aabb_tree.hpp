@@ -181,7 +181,7 @@ class aabb_tree final
 
     while (count > 1)
     {
-      auto minCost = std::numeric_limits<double>::max();
+      auto minCost = std::numeric_limits<precision_type>::max();
       int iMin{-1};
       int jMin{-1};
 
