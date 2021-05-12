@@ -29,10 +29,29 @@ namespace rune {
 /// \addtogroup containers
 /// \{
 
+/**
+ * \def RUNE_AABB_TREE_DEFAULT_CAPACITY
+ *
+ * \brief The default capacity of entries in AABB trees.
+ *
+ * \note This macro should be expand to an integer value.
+ *
+ * \see `aabb_tree`
+ */
 #ifndef RUNE_AABB_TREE_DEFAULT_CAPACITY
 #define RUNE_AABB_TREE_DEFAULT_CAPACITY 64
 #endif  // RUNE_AABB_TREE_DEFAULT_CAPACITY
 
+/**
+ * \def RUNE_AABB_TREE_QUERY_BUFFER_SIZE
+ *
+ * \brief The default stack buffer size when looking for collision candidates (with
+ * `aabb_tree::query()`), in bytes.
+ *
+ * \note This macro should be expand to an integer value.
+ *
+ * \see `aabb_tree`
+ */
 #ifndef RUNE_AABB_TREE_QUERY_BUFFER_SIZE
 #define RUNE_AABB_TREE_QUERY_BUFFER_SIZE 256
 #endif  // RUNE_AABB_TREE_QUERY_BUFFER_SIZE
@@ -42,6 +61,42 @@ inline constexpr std::size_t aabb_tree_default_capacity = RUNE_AABB_TREE_DEFAULT
 inline constexpr std::size_t aabb_tree_query_buffer_size = RUNE_AABB_TREE_QUERY_BUFFER_SIZE;
 // clang-format on
 
+/**
+ * \class aabb_tree
+ *
+ * \brief An implementation of an AABB tree, intended to be used for efficient collision
+ * detection.
+ *
+ * \details The usage of this class is relatively straight forward, register IDs with
+ * AABBs and update their positions (or even size) throughout the duration of your game.
+ * The following code illustrates the use of some of the core functions.
+ * \code{cpp}
+ * rune::aabb_tree<int> tree;  // AABB tree using integer keys
+ *
+ * // Add some AABB entries
+ * tree.insert(42, {10, 10}, {20, 20});
+ * tree.insert(123, {150, 125}, {192, 234});
+ * tree.insert(27, {59, 95}, {73, 106});
+ *
+ * // Update the position of an existing AABB
+ * tree.set_position(42, {27, 43});
+ *
+ * // Query the tree for collision candidates for a certain AABB
+ * tree.query(42, [](int id) {
+ *   // Invoked for each collision candidate (return true to stop query)
+ * });
+ *
+ * // Remove an AABB
+ * tree.erase(27);
+ *
+ * \endcode
+ *
+ * \tparam Key the type of the keys associated with tree entries.
+ * \tparam Precision the floating-point type used, e.g. by stored vectors.
+ *
+ * \see `RUNE_AABB_TREE_DEFAULT_CAPACITY`
+ * \see `RUNE_AABB_TREE_QUERY_BUFFER_SIZE`
+ */
 template <typename Key, std::floating_point Precision = float>
 class aabb_tree final
 {
