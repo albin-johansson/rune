@@ -13,42 +13,80 @@ namespace rune {
 /// \addtogroup containers
 /// \{
 
+/**
+ * \struct basic_aabb
+ *
+ * \brief Represents an axis-aligned bounding box (AABB).
+ *
+ * \details An AABB is really just a fancy rectangle, used to provide a rough
+ * approximation of the shape of game objects in order to speed up collision detection in
+ * combination with AABB trees.
+ *
+ * \see `aabb_tree`
+ * \see `make_aabb()`
+ */
 template <std::floating_point T>
 struct basic_aabb final
 {
-  using precision_type = T;
-  using vector_type = basic_vector2<precision_type>;
+  using precision_type = T;  ///< The type used as coordinates in the vectors, etc.
+  using vector_type = basic_vector2<precision_type>;  ///< The associated vector type.
 
-  vector_type min;
-  vector_type max;
-  precision_type area{};
+  vector_type min;  ///< The lower bound point, i.e. the upper left corner of the AABB.
+  vector_type max;  ///< The upper bound point, i.e. the lower right corner of the AABB.
+  precision_type area{};  ///< The area heuristic of the AABB.
 
+  /**
+   * \brief Indicates whether or not the AABB contains another AABB.
+   *
+   * \details The supplied AABB is still considered to be contained within the
+   * invoked AABB if the borders of the "inner" AABB are overlapping the borders
+   * of the "outer" AABB.
+   *
+   * \param other the AABB that will be checked.
+   *
+   * \return `true` if the AABB contains the supplied AABB; `false` otherwise.
+   */
   [[nodiscard]] constexpr auto contains(const basic_aabb& other) const noexcept -> bool
   {
     return (other.min.x >= min.x) && (other.min.y >= min.y) && (other.max.x <= max.x) &&
            (other.max.y <= max.y);
   }
 
+  /**
+   * \brief Returns the size (width and height) of the AABB, represented as a vector.
+   *
+   * \return the size of the AABB.
+   */
   [[nodiscard]] constexpr auto size() const noexcept -> vector_type
   {
     return max - min;
   }
 };
 
-/// \name Serialization
-/// \{
-
+/**
+ * \brief Serializes an AABB.
+ *
+ * \param archive the serialization archive that will be used.
+ *
+ * \param aabb the AABB that will be serialized.
+ */
 template <std::floating_point T>
 void serialize(auto& archive, basic_aabb<T>& aabb)
 {
   archive(aabb.min, aabb.max, aabb.area);
 }
 
-/// \} End of serialization
-
 /// \name AABB operators
 /// \{
 
+/**
+ * \brief Indicates whether or not two AABBs are equal.
+ *
+ * \param a the first AABB.
+ * \param b the second AABB.
+ *
+ * \return `true` if the AABBs are *exactly* equal; `false` otherwise.
+ */
 template <std::floating_point T>
 [[nodiscard]] constexpr auto operator==(const basic_aabb<T>& a,
                                         const basic_aabb<T>& b) noexcept -> bool
@@ -56,6 +94,14 @@ template <std::floating_point T>
   return a.min == b.min && a.max == b.max;
 }
 
+/**
+ * \brief Indicates whether or not two AABBs aren't equal.
+ *
+ * \param a the first AABB.
+ * \param b the second AABB.
+ *
+ * \return `true` if the AABBs aren't equal; `false` otherwise.
+ */
 template <std::floating_point T>
 [[nodiscard]] constexpr auto operator!=(const basic_aabb<T>& a,
                                         const basic_aabb<T>& b) noexcept -> bool
@@ -68,6 +114,13 @@ template <std::floating_point T>
 /// \name AABB functions
 /// \{
 
+/**
+ * \brief Computes the area heuristic of an AABB.
+ *
+ * \param aabb the AABB for which the area heuristic will be calculated.
+ *
+ * \return the area heuristic of the AABB.
+ */
 template <std::floating_point T>
 [[nodiscard]] constexpr auto compute_area(const basic_aabb<T>& aabb) noexcept -> T
 {
@@ -100,6 +153,19 @@ template <std::floating_point T>
   return T{2} * sum;
 }
 
+/**
+ * \brief Creates an AABB.
+ *
+ * \pre `lower` must have coordinates smaller than those of `upper`.
+ *
+ * \details Use of this function is the recommended way to create AABBs, since this
+ * function will compute the area heuristic for you.
+ *
+ * \param lower the lower bound point, i.e. the upper left corner of the AABB.
+ * \param upper the upper bound point, i.e. the lower right corner of the AABB.
+ *
+ * \return the created AABB.
+ */
 template <std::floating_point T>
 [[nodiscard]] constexpr auto make_aabb(const basic_vector2<T>& lower,
                                        const basic_vector2<T>& upper) noexcept
@@ -117,6 +183,14 @@ template <std::floating_point T>
   return aabb;
 }
 
+/**
+ * \brief Returns the union of two AABBs.
+ *
+ * \param a the first AABB.
+ * \param b the second AABB.
+ *
+ * \return an AABB that corresponds to the union of the two AABBs.
+ */
 template <std::floating_point T>
 [[nodiscard]] constexpr auto merge(const basic_aabb<T>& a,
                                    const basic_aabb<T>& b) noexcept -> basic_aabb<T>
@@ -133,6 +207,16 @@ template <std::floating_point T>
   return make_aabb(lower, upper);
 }
 
+/**
+ * \brief Indicates whether or not two AABBs are overlapping each other.
+ *
+ * \param a the first AABB.
+ * \param b the second AABB.
+ * \param touchIsOverlap `true` if two "touching" AABBs should be considered to overlap;
+ * `false` otherwise.
+ *
+ * \return `true` if the AABBs overlap; `false` otherwise.
+ */
 template <std::floating_point T>
 [[nodiscard]] constexpr auto overlaps(const basic_aabb<T>& a,
                                       const basic_aabb<T>& b,
@@ -150,13 +234,24 @@ template <std::floating_point T>
   }
 }
 
+/**
+ * \brief Fattens an AABB by the specified factor.
+ *
+ * \details The supplied AABB will be enlarged by having *each* coordinate (i.e. X- and
+ * Y-coordinates of both lower and upper bounds) widened by the specified percentage, e.g.
+ * an AABB with width 100 that is fattened with `percentage` specified as `0.05`, will end
+ * up with having width 110.
+ *
+ * \param aabb the AABB that will be fattened.
+ * \param percentage the percentage of the current size that each coordinate will be
+ * enlarged by.
+ */
 template <std::floating_point T>
-void fatten(basic_aabb<T>& aabb, const T factor) noexcept
+void fatten(basic_aabb<T>& aabb, const T percentage) noexcept
 {
   const auto size = aabb.size();
-
-  const auto dx = factor * size.x;
-  const auto dy = factor * size.y;
+  const auto dx = percentage * size.x;
+  const auto dy = percentage * size.y;
 
   aabb.min.x -= dx;
   aabb.min.y -= dy;
