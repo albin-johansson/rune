@@ -54,3 +54,6 @@
 
 /// \defgroup containers Containers
 /// \brief Contains performant generic data structures and utilities.
+/// \note The AABB framework was based on the <a
+/// href="https://github.com/lohedges/aabbcc">AABBCC</a> library, written by Lester
+/// Hedges, which uses the Zlib license.
