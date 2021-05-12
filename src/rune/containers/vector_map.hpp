@@ -179,6 +179,7 @@ class vector_map final
     });
   }
 
+  /// \copydoc find()
   template <transparent_to<key_type> T>
   [[nodiscard]] auto find(const T& key) const -> const_iterator
   {
