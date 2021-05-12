@@ -12,15 +12,25 @@ namespace rune {
 /// \addtogroup containers
 /// \{
 
+/**
+ * \class aabb_node
+ *
+ * \brief Represents a node in an AABB tree.
+ *
+ * \tparam Key the type of the associated key.
+ *
+ * \see `aabb_tree`
+ * \see `is_leaf()`
+ */
 template <typename Key, std::floating_point Precision>
 class aabb_node final
 {
  public:
-  using key_type = Key;
-  using precision_type = Precision;
-  using vector_type = basic_vector2<precision_type>;
-  using aabb_type = basic_aabb<precision_type>;
-  using index_type = std::size_t;
+  using key_type = Key;                               ///< The type of the associated key.
+  using precision_type = Precision;                   ///< The vector coordinate type.
+  using vector_type = basic_vector2<precision_type>;  ///< The associated vector type.
+  using aabb_type = basic_aabb<precision_type>;       ///< The associated AABB type.
+  using index_type = std::size_t;                     ///< The type used for node indices
 
   std::optional<key_type> id;        ///< The user-provided ID associated with the AABB.
   aabb_type box;                     ///< The associated AABB.
@@ -28,20 +38,28 @@ class aabb_node final
   std::optional<index_type> left;    ///< Index of left child.
   std::optional<index_type> right;   ///< Index of right child.
   std::optional<index_type> next;    ///< Index of next adjacent node.
-  int height{-1};                    ///< Amount of levels below the node. TODO check doc
+  int height{-1};                    ///< Amount of levels below the node (0 for leaves).
 };
 
-/// \name Serialization
-/// \{
-
+/**
+ * \brief Serializes an AABB node.
+ *
+ * \param archive the serialization archive that will be used.
+ * \param node the AABB node that will be serialized.
+ */
 template <typename Key, std::floating_point Precision>
 void serialize(auto& archive, aabb_node<Key, Precision>& node)
 {
   archive(node.id, node.box, node.parent, node.left, node.right, node.next, node.height);
 }
 
-/// \} End of serialization
-
+/**
+ * \brief Indicates whether or not an AABB node is a leaf in an AABB tree.
+ *
+ * \param node the node that will be checked.
+ *
+ * \return `true` if the node is a leaf; `false` otherwise.
+ */
 template <typename Key, std::floating_point Precision>
 [[nodiscard]] constexpr auto is_leaf(const aabb_node<Key, Precision>& node) noexcept
     -> bool
