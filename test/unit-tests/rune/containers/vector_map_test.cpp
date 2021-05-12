@@ -99,9 +99,6 @@ TEST(VectorMap, EmplaceVariadic)
   map.emplace(20, "B");
   ASSERT_EQ(2, map.size());
 
-  ASSERT_NO_THROW(map.emplace(20, "B"));
-  ASSERT_EQ(2, map.size());
-
   const auto& [key, value] = map.emplace(30, "C");
   ASSERT_EQ(3, map.size());
 
@@ -124,13 +121,55 @@ TEST(VectorMap, EmplaceValue)
   map.emplace(20, b);
   ASSERT_EQ(2, map.size());
 
-  ASSERT_NO_THROW(map.emplace(20, b));
-  ASSERT_EQ(2, map.size());
-
   const auto& [key, value] = map.emplace(30, c);
   ASSERT_EQ(3, map.size());
 
   ASSERT_EQ(30, key);
+  ASSERT_EQ("C", value);
+}
+
+TEST(VectorMap, EmplaceOrReplaceVariadic)
+{
+  map_type map;
+  ASSERT_EQ(0, map.size());
+
+  map.emplace_or_replace(10, "A");
+  ASSERT_EQ(1, map.size());
+
+  ASSERT_NO_THROW(map.emplace_or_replace(10, "B"));
+  ASSERT_EQ(1, map.size());
+  ASSERT_EQ("B", map.at(10));
+
+  map.emplace_or_replace(20, "C");
+  ASSERT_EQ(2, map.size());
+
+  const auto& [key, value] = map.emplace(30, "D");
+  ASSERT_EQ(3, map.size());
+
+  ASSERT_EQ(30, key);
+  ASSERT_EQ("D", value);
+}
+
+TEST(VectorMap, EmplaceOrReplaceValue)
+{
+  map_type map;
+  ASSERT_EQ(0, map.size());
+
+  const std::string a{"A"};
+  const std::string b{"B"};
+  const std::string c{"C"};
+
+  map.emplace_or_replace(10, a);
+  ASSERT_EQ(1, map.size());
+
+  ASSERT_NO_THROW(map.emplace_or_replace(10, b));
+  ASSERT_EQ(1, map.size());
+  ASSERT_EQ("B", map.at(10));
+
+  const auto& [key, value] = map.emplace_or_replace(20, c);
+  ASSERT_EQ(2, map.size());
+
+  ASSERT_EQ(20, key);
   ASSERT_EQ("C", value);
 }
 

@@ -88,8 +88,8 @@ class vector_map final
 
   /**
    * \brief Adds a key/value pair to the map.
-   *
-   * \note This function overwrites any previous entry associated with the specified key.
+   * 
+   * \pre `key` must not be associated with an existing entry.
    *
    * \tparam Args the types of the arguments that will be forwarded.
    *
@@ -101,24 +101,69 @@ class vector_map final
   template <typename... Args>
   auto emplace(const key_type& key, Args&&... args) -> value_type&
   {
-    erase(key);
+    assert(!contains(key));
     return m_data.emplace_back(key, mapped_type{std::forward<Args>(args)...});
   }
 
   /**
    * \brief Adds a key/value pair to the map.
    *
-   * \note This function overwrites any previous entry associated with the specified key.
+   * \pre `key` must not be associated with an existing entry.
    *
    * \param key the key that will be associated with the value.
    * \param value the value that will be moved into the map.
    *
    * \return a reference to the added key/value pair.
    */
-  auto emplace(const key_type& key, mapped_type&& value) -> value_type&
+  auto emplace(const key_type& key, mapped_type value) -> value_type&
   {
-    erase(key);
+    assert(!contains(key));
     return m_data.emplace_back(key, std::move(value));
+  }
+
+  /**
+   * \brief Adds or replaces a key/value pair in the map.
+   * 
+   * \tparam Args the types of the arguments that will be forwarded.
+   *
+   * \param key the key that will be associated with the value.
+   * \param args the arguments that will be forwarded to a `mapped_type` constructor.
+   *
+   * \return a reference to the added key/value pair.
+   */
+  template <typename... Args>
+  auto emplace_or_replace(const key_type& key, Args&&... args) -> value_type&
+  {
+    if (const auto it = find(key); it != end()) 
+    {
+      it->second = mapped_type{std::forward<Args>(args)...};
+      return *it;
+    } 
+    else
+    {
+      return emplace(key, std::forward<Args>(args)...);
+    }
+  }
+
+  /**
+   * \brief Adds or replaces a key/value pair in the map.
+   *
+   * \param key the key that will be associated with the value.
+   * \param value the value that will be moved into the map.
+   *
+   * \return a reference to the added key/value pair.
+   */
+  auto emplace_or_replace(const key_type& key, mapped_type value) -> value_type&
+  {
+    if (const auto it = find(key); it != end()) 
+    {
+      it->second = std::move(value);
+      return *it;
+    } 
+    else
+    {
+      return emplace(key, std::move(value));
+    }
   }
 
   /**
