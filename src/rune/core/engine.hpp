@@ -105,43 +105,67 @@ requires game_type<Game, Graphics> class engine
     return 0;
   }
 
+  /**
+   * \brief Returns the associated game window.
+   *
+   * \return the associated window.
+   */
   [[nodiscard]] auto get_window() noexcept -> cen::window&
   {
     return m_window;
   }
 
+  /// \copydoc get_window()
   [[nodiscard]] auto get_window() const noexcept -> const cen::window&
   {
     return m_window;
   }
 
+  /**
+   * \brief Returns the associated game instance.
+   *
+   * \return the game instance.
+   */
   [[nodiscard]] auto get_game() -> game_type&
   {
     assert(m_game);
     return *m_game;
   }
 
+  /// \copydoc get_game()
   [[nodiscard]] auto get_game() const -> const game_type&
   {
     assert(m_game);
     return *m_game;
   }
 
+  /**
+   * \brief Returns the associated graphics context.
+   *
+   * \return the graphics context.
+   */
   [[nodiscard]] auto get_graphics() noexcept -> graphics_type&
   {
     return m_graphics;
   }
 
+  /// \copydoc get_graphics()
   [[nodiscard]] auto get_graphics() const noexcept -> const graphics_type&
   {
     return m_graphics;
   }
 
+  /**
+   * \brief Returns the current input state.
+   *
+   * \return the input state.
+   */
   [[nodiscard]] auto get_input() noexcept -> input&
   {
     return m_input;
   }
 
+  /// \copydoc get_input()
   [[nodiscard]] auto get_input() const noexcept -> const input&
   {
     return m_input;
