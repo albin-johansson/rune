@@ -74,6 +74,11 @@ requires game_type<Game, Graphics> class engine
     return !m_game->should_quit() && !cen::event::in_queue(cen::event_type::quit);
   }
 
+  /**
+   * \brief Starts the game loop and runs the game.
+   *
+   * \return 0 on success.
+   */
   auto run() -> int
   {
     m_window.show();
