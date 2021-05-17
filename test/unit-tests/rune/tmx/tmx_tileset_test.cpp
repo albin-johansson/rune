@@ -21,7 +21,6 @@ TEST(TmxTileset, Defaults)
   ASSERT_EQ(0, tileset.image_height);
   ASSERT_EQ(0, tileset.margin);
   ASSERT_EQ(0, tileset.spacing);
-  ASSERT_EQ(0, tileset.json_version);
 
   ASSERT_FALSE(tileset.background);
   ASSERT_FALSE(tileset.transparent);
@@ -30,6 +29,7 @@ TEST(TmxTileset, Defaults)
   ASSERT_TRUE(tileset.image.empty());
   ASSERT_TRUE(tileset.external_source.empty());
   ASSERT_TRUE(tileset.tiled_version.empty());
+  ASSERT_TRUE(tileset.json_version.empty());
 
   ASSERT_TRUE(tileset.tiles.empty());
   ASSERT_TRUE(tileset.properties.empty());
@@ -48,11 +48,11 @@ TEST(TmxTileset, ParseEmbedded)
   ASSERT_EQ(63, tileset.tile_count);
   ASSERT_EQ(55, tileset.tile_width);
   ASSERT_EQ(27, tileset.tile_height);
-  ASSERT_FLOAT_EQ(1.2f, tileset.json_version);
 
   ASSERT_EQ("sam/is/the/hero.png", tileset.image);
   ASSERT_EQ("Took", tileset.name);
   ASSERT_EQ("1.3.4", tileset.tiled_version);
+  ASSERT_EQ("1.2", tileset.json_version);
 
   const rune::tmx_color background{0x34, 0x56, 0x78, 0x12};
   const rune::tmx_color transparent{0xCC, 0xDD, 0xEE};
@@ -114,10 +114,9 @@ TEST(TmxTileset, ParseExternal)
   ASSERT_EQ(64, tileset.tile_width);
   ASSERT_EQ(32, tileset.tile_height);
 
-  ASSERT_FLOAT_EQ(1.2f, tileset.json_version);
-
   ASSERT_EQ("Aragorn", tileset.name);
   ASSERT_EQ("../terrain.png", tileset.image);
   ASSERT_EQ("1.3.4", tileset.tiled_version);
+  ASSERT_EQ("1.2", tileset.json_version);
   ASSERT_EQ("external_tileset_data.json", tileset.external_source);
 }
