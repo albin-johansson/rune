@@ -7,6 +7,7 @@
 
 #include "../aliases/delta_time.hpp"
 #include "../math/min.hpp"
+#include "game.hpp"
 #include "rune_error.hpp"
 
 namespace rune {
@@ -74,7 +75,8 @@ inline constexpr int engine_max_frames_per_tick = RUNE_ENGINE_MAX_FRAMES_PER_TIC
 }
 
 // clang-format off
-template <typename Game, std::derived_from<graphics> Graphics> requires game_type<Game, Graphics>
+template <typename Game, std::derived_from<graphics> Graphics>
+    requires is_game_type<Game, Graphics>
 class engine;
 // clang-format on
 
@@ -94,7 +96,6 @@ class engine;
  * \see `tick_rate()`
  */
 template <typename Game, std::derived_from<graphics> Graphics>
-    requires game_type<Game, Graphics>
 class semi_fixed_game_loop
 {
  public:

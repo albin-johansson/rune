@@ -14,31 +14,50 @@ namespace rune {
 
 // clang-format off
 
-template <typename T, typename Graphics = graphics>
-concept game_type = requires (T game, const input& input, Graphics& graphics, delta_time dt)
+/**
+ * \brief Ensures that a type satisfies the requirements of a game class.
+ *
+ * \details This concept verifies that a game class has the required interface. However,
+ * there are optional "event" functions that you can define. These optional functions are
+ * `void init(graphics_type&)`, `void on_start()` and `void on_exit()`.
+ *
+ * \details `handle_input()` is where the game should respond to user input. Note, `
+ * handle_input()` is called before `tick()`.
+ *
+ * \details `tick()` should update the state of the game by one "tick".
+ *
+ * \details `render()` should render the current game state.
+ *
+ * \details `should_quit()` should indicate if the game should shut down.
+ *
+ * \tparam Game the game type.
+ * \tparam Graphics the graphics context type.
+ */
+template <typename Game, typename Graphics>
+concept is_game_type = requires (Game game, Graphics& gfx, const input& input, delta_time dt)
 {
   { game.handle_input(input) };
   { game.tick(dt) };
-  { game.render(graphics) };
+  { game.render(gfx) };
   { game.should_quit() } -> std::convertible_to<bool>;
 };
 
-template <typename T>
-concept has_on_start = requires (T game)
+template <typename Game, typename Graphics>
+concept has_init = requires (Game game, Graphics& gfx)
+{
+  { game.init(gfx) };
+};
+
+template <typename Game>
+concept has_on_start = requires (Game game)
 {
   { game.on_start() };
 };
 
-template <typename T>
-concept has_on_exit = requires (T game)
+template <typename Game>
+concept has_on_exit = requires (Game game)
 {
   { game.on_exit() };
-};
-
-template <typename T, typename Graphics>
-concept has_init = requires (T game, Graphics& graphics)
-{
-  { game.init(graphics) };
 };
 
 // clang-format on

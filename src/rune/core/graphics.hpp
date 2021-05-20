@@ -9,6 +9,7 @@
 #include <utility>        // forward
 #include <vector>         // vector
 
+#include "../aliases/integers.hpp"
 #include "../aliases/texture_id.hpp"
 #include "../aliases/texture_index.hpp"
 #include "compiler.hpp"
@@ -17,24 +18,6 @@ namespace rune {
 
 /// \addtogroup core
 /// \{
-
-/// \name Configuration macros
-/// \{
-
-/**
- * \def RUNE_GRAPHICS_RENDERER_FLAGS
- *
- * \brief The renderer flags used when creating `graphics` instances.
- *
- * \note This macro should expand to a `uint32` value.
- *
- * \details By default, this macro expands to `cen::renderer::default_flags()`.
- */
-#ifndef RUNE_GRAPHICS_RENDERER_FLAGS
-#define RUNE_GRAPHICS_RENDERER_FLAGS cen::renderer::default_flags()
-#endif  // RUNE_GRAPHICS_RENDERER_FLAGS
-
-/// \} End of configuration macros
 
 /**
  * \class graphics
@@ -61,9 +44,16 @@ class graphics
   // TODO strong types
   using font_id = size_type;
 
+  /**
+   * \brief Creates a graphics context.
+   *
+   * \tparam T the ownership semantics of the window.
+   * \param window the associated game window.
+   * \param flags the renderer flags supplied to the `cen::renderer` constructor.
+   */
   template <typename T>
-  explicit graphics(const cen::basic_window<T>& window)
-      : m_renderer{window, RUNE_GRAPHICS_RENDERER_FLAGS}
+  graphics(const cen::basic_window<T>& window, const uint32 flags)
+      : m_renderer{window, flags}
       , m_format{window.get_pixel_format()}
   {}
 

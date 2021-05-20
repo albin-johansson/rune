@@ -2,8 +2,8 @@
 #define RUNE_CORE_ENGINE_HPP
 
 #include <cassert>        // assert
-#include <centurion.hpp>  // window
-#include <concepts>       // derived_from
+#include <centurion.hpp>  // window, renderer, ...
+#include <concepts>       // derived_from, constructible_from
 #include <optional>       // optional
 
 #include "game.hpp"
@@ -16,62 +16,121 @@ namespace rune {
 /// \addtogroup core
 /// \{
 
+/**
+ * \struct configuration
+ *
+ * \brief Provides configuration options for different engine aspects.
+ *
+ * \note Members are initialized to their default values, meaning that you do not have to
+ * assign each member if you create custom configurations.
+ *
+ * \see `engine`
+ */
+struct configuration final
+{
+  uint32 renderer_flags = cen::renderer::default_flags();
+  cen::iarea window_size = cen::window::default_size();
+};
+
 // clang-format off
 
-// clang-format on
-
+/**
+ * \class engine
+ *
+ * \brief Represents the core engine in the framework.
+ *
+ * \details One instance of this should be created in your `main` function, and then
+ * call `engine::run()` to launch your game. The game class must either be
+ * default-constructible, or provide at least one constructor that accepts
+ * `graphics_type&`.
+ * \code{cpp}
+ * #include <centurion.hpp>
+ * #include <rune.hpp>
+ *
+ * class AwesomeGame
+ * {
+ *  public:
+ *   explicit AwesomeGame(rune::graphics& graphics)
+ *   {
+ *     // ...
+ *   }
+ *
+ *   void handle_input(const rune::input& input)
+ *   {
+ *     // ...
+ *   }
+ *
+ *   void tick(rune::delta_time dt)
+ *   {
+ *     // ...
+ *   }
+ *
+ *   void render(rune::graphics& graphics) const
+ *   {
+ *     // ...
+ *   }
+ *
+ *   [[nodiscard]] bool should_quit() const
+ *   {
+ *     // ...
+ *   }
+ * };
+ *
+ * int main(int, char**)
+ * {
+ *   cen::library centurion;  // Remember to initialize Centurion!
+ *   rune::engine<AwesomeGame> engine;
+ *   return engine.run();
+ * }
+ * \endcode
+ *
+ * \tparam Game the type of the game class.
+ *
+ * \see `is_game_type`
+ * \see `graphics`
+ */
 template <typename Game, std::derived_from<graphics> Graphics = graphics>
-requires game_type<Game, Graphics> class engine
+    requires is_game_type<Game, Graphics>
+class engine
 {
+  // clang-format on
+
+  // To be able to access update_logic and update_input
+  friend class semi_fixed_game_loop<Game, Graphics>;
+
  public:
-  using game_type = Game;
-  using graphics_type = Graphics;
-  using loop_type = semi_fixed_game_loop<game_type, graphics_type>;
+  using game_type = Game;                                   ///< Game class type.
+  using graphics_type = typename game_type::graphics_type;  ///< Graphics context type.
+  using loop_type = semi_fixed_game_loop<Game, graphics_type>;  ///< Game loop type.
 
   static_assert(std::constructible_from<game_type, graphics_type&> ||
                     std::default_initializable<game_type>,
                 "Game class must either be default constructible or provide a "
                 "constructor that accepts \"graphics_type&\"");
 
-  engine() : m_loop{this}, m_window{"Rune window"}, m_graphics{m_window}
+  /**
+   * \brief Creates an engine instance.
+   *
+   * \param cfg optional custom configuration of the engine.
+   */
+  explicit engine(const configuration& cfg = default_cfg())
+      : m_loop{this}
+      , m_window{"Rune window", cfg.window_size}
+      , m_graphics{m_window, cfg.renderer_flags}
   {
     if constexpr (std::constructible_from<game_type, graphics_type&>)
     {
       m_game.emplace(m_graphics);
-
-      if constexpr (has_init<game_type, graphics_type>)
-      {
-        CENTURION_LOG_WARN(
-            "%s",
-            "rune::engine > game_type::init(graphics_type&) is not called when "
-            "game_type has a constructor that accepts \"graphics_type&\"");
-      }
     }
-    else if constexpr (std::default_initializable<game_type>)
+    else
     {
       m_game.emplace();
-      if constexpr (has_init<game_type, graphics_type>)
-      {
-        m_game->init(m_graphics);
-      }
     }
-  }
 
-  void update_logic(const delta_time dt)
-  {
-    m_game->tick(dt);
-  }
-
-  auto update_input() -> bool
-  {
-    m_input.mouse.update(m_graphics.renderer().output_size());
-    m_input.keyboard.update();
-
-    cen::event::update();
-
-    m_game->handle_input(m_input);
-
-    return !m_game->should_quit() && !cen::event::in_queue(cen::event_type::quit);
+    if constexpr (has_init<game_type, graphics_type>)
+    {
+      m_game->init(m_graphics);
+    }
   }
 
   /**
@@ -81,11 +140,12 @@ requires game_type<Game, Graphics> class engine
    */
   auto run() -> int
   {
-    m_window.show();
+    assert(m_game);
 
+    m_window.show();
     m_loop.fetch_current_time();
 
-    if constexpr (has_on_start<Game>)
+    if constexpr (has_on_start<game_type>)
     {
       m_game->on_start();
     }
@@ -94,17 +154,13 @@ requires game_type<Game, Graphics> class engine
     while (m_loop.is_running())
     {
       m_loop.tick();
-
-      renderer.clear_with(cen::colors::black);
       m_game->render(m_graphics);
-      renderer.present();
     }
 
-    if constexpr (has_on_exit<Game>)
+    if constexpr (has_on_exit<game_type>)
     {
       m_game->on_exit();
     }
-
     m_window.hide();
 
     return 0;
@@ -176,14 +232,40 @@ requires game_type<Game, Graphics> class engine
     return m_input;
   }
 
+  /**
+   * \brief Returns the default configuration used by the engine, if no custom
+   * configuration is requested.
+   *
+   * \return the default engine configuration.
+   */
+  [[nodiscard]] constexpr static auto default_cfg() -> configuration
+  {
+    return configuration{};
+  }
+
  private:
-  loop_type m_loop;
+  loop_type m_loop;                 ///< The game loop.
+  cen::window m_window;             ///< The associated window.
+  graphics_type m_graphics;         ///< The graphics context.
+  input m_input;                    ///< The input state wrapper.
+  std::optional<game_type> m_game;  ///< The game instance, optional delays construction.
 
-  cen::window m_window;
-  graphics_type m_graphics;
-  input m_input;
+  void update_logic(const delta_time dt)
+  {
+    m_game->tick(dt);
+  }
 
-  std::optional<game_type> m_game;  // Optional to delay initialization
+  auto update_input() -> bool
+  {
+    m_input.mouse.update(m_graphics.renderer().output_size());
+    m_input.keyboard.update();
+
+    cen::event::update();
+
+    m_game->handle_input(m_input);
+
+    return !m_game->should_quit() && !cen::event::in_queue(cen::event_type::quit);
+  }
 };
 
 /// \} End of group core
