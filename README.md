@@ -32,25 +32,32 @@ is also closely tied to the [Centurion](https://github.com/albin-johansson/centu
 #include <rune.hpp>
 #include <centurion.hpp>
 
+/* Game classes must be either default-constructible or provide 
+   a constructor that accepts a reference to a graphics context. */
 class Game
 {
  public:
-  // Optional function, called just before the game starts running
+  explicit Game(rune::graphics& gfx);
+  
+  // [Optional] Called just after the game class has been constructed. 
+  void init(rune::graphics& gfx);
+  
+  // [Optional] Called just before the game starts running
   void on_start();
 
-  // Optional function, called just before the game quits
+  // [Optional] Called just before the game quits
   void on_exit();
 
-  // Mandatory function, handles user input
+  // [Mandatory] Handles user input
   void handle_input(const rune::input& input);
 
-  // Mandatory function, updates the game logic by one step
+  // [Mandatory] Updates the game logic by one step
   void tick(rune::delta_time dt);
 
-  // Mandatory function, renders the game
-  void render(rune::graphics& graphics);
+  // [Mandatory] Renders the game
+  void render(rune::graphics& gfx);
 
-  // Mandatory function, return true to quit the game
+  // [Mandatory] Return true to quit the game
   [[nodiscard]] auto should_quit() const -> bool;
 };
 
