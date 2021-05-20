@@ -7,15 +7,22 @@
 class Game final
 {
  public:
-  void on_start()
-  {
-    std::cout << "Game::on_start\n";
-  }
+  using graphics_type = rune::graphics;
 
-  void on_exit()
-  {
-    std::cout << "Game::on_exit\n";
-  }
+//  void init(graphics_type& gfx)
+//  {
+//    std::cout << "Game::init\n";
+//  }
+//
+//  void on_start()
+//  {
+//    std::cout << "Game::on_start\n";
+//  }
+//
+//  void on_exit()
+//  {
+//    std::cout << "Game::on_exit\n";
+//  }
 
   void handle_input(const rune::input& input)
   {
@@ -28,7 +35,7 @@ class Game final
   void tick(rune::delta_time dt)
   {}
 
-  void render(rune::graphics& graphics)
+  void render(rune::graphics& graphics) const
   {
     auto& renderer = graphics.renderer();
 
@@ -44,7 +51,5 @@ class Game final
  private:
   bool m_quit{};
 };
-
-static_assert(rune::game_type<Game>);
 
 using RuneEngine = rune::engine<Game>;
