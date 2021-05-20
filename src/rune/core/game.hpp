@@ -17,10 +17,6 @@ namespace rune {
 /**
  * \brief Ensures that a type satisfies the requirements of a game class.
  *
- * \details This concept verifies that a game class has the required interface. However,
- * there are optional "event" functions that you can define. These optional functions are
- * `void init(graphics_type&)`, `void on_start()` and `void on_exit()`.
- *
  * \details `handle_input()` is where the game should respond to user input. Note, `
  * handle_input()` is called before `tick()`.
  *
@@ -29,6 +25,9 @@ namespace rune {
  * \details `render()` should render the current game state.
  *
  * \details `should_quit()` should indicate if the game should shut down.
+ *
+ * \note There are a few optional "event" functions that you can define. These are
+ * `void init(graphics_type&)`, `void on_start()` and `void on_exit()`.
  *
  * \tparam Game the game type.
  * \tparam Graphics the graphics context type.
