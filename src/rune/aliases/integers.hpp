@@ -8,11 +8,16 @@ namespace rune {
 /// \addtogroup core
 /// \{
 
+using longlong = long long;
+
 /// Unsigned integer.
-using uint = cen::uint;
+using uint = unsigned;
+
+/// Unsigned long integer.
+using ulong = unsigned long;
 
 /// Used as the argument type to integral literal operators.
-using ulonglong = cen::ulonglong;
+using ulonglong = unsigned long long;
 
 /// 8-bit signed integer.
 using int8 = cen::i8;
