@@ -10,6 +10,8 @@ namespace rune {
 
 using longlong = long long;
 
+using ushort = unsigned short;
+
 /// Unsigned integer.
 using uint = unsigned;
 

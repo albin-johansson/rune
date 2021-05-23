@@ -15,6 +15,8 @@ set(SOURCE_FILES
     rune/core/game_test.cpp
     rune/core/to_string_test.cpp
 
+    rune/io/ini_test.cpp
+
     rune/math/almost_equal_test.cpp
     rune/math/index_to_matrix_test.cpp
     rune/math/min_test.cpp
@@ -36,7 +38,7 @@ set(SOURCE_FILES
     rune/tmx/tmx_wang_color_test.cpp
     rune/tmx/tmx_wang_set_test.cpp
     rune/tmx/tmx_wang_tile_test.cpp
-    )
+    rune/io/ini_value_test.cpp)
 
 add_executable(UnitTests ${SOURCE_FILES})
 set_compiler_options(UnitTests)

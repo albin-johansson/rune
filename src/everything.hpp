@@ -46,6 +46,7 @@
 #include "rune/core/to_string.hpp"
 #include "rune/doxygen.hpp"
 #include "rune/io/ini.hpp"
+#include "rune/io/ini_value.hpp"
 #include "rune/io/json_utils.hpp"
 #include "rune/math/almost_equal.hpp"
 #include "rune/math/index_to_matrix.hpp"
