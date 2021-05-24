@@ -115,7 +115,7 @@ class engine
    */
   explicit engine(const configuration& cfg = default_cfg())
       : m_loop{this}
-      , m_window{"Rune window", cfg.window_size}
+      , m_window{"Rune", cfg.window_size}
       , m_graphics{m_window, cfg.renderer_flags}
   {
     if constexpr (std::constructible_from<game_type, graphics_type&>)
