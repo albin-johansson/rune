@@ -72,9 +72,9 @@ class basic_ini_value final
                   "Invalid template type parameter to basic_ini_value::get!");
     // clang-format on
 
-    if constexpr (std::convertible_to<T, string_type>)
+    if constexpr (std::same_as<T, bool>)
     {
-      return std::get<string_type>(m_value);
+      return std::get<bool>(m_value);
     }
     else if constexpr (std::signed_integral<T>)
     {
@@ -88,9 +88,9 @@ class basic_ini_value final
     {
       return std::get<double>(m_value);
     }
-    else /*if constexpr (std::same_as<T, bool>)*/
+    else /*if constexpr (std::convertible_to<T, string_type>)*/
     {
-      return std::get<bool>(m_value);
+      return std::get<string_type>(m_value);
     }
   }
 
