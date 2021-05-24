@@ -1,8 +1,6 @@
 #ifndef RUNE_ALIASES_DELTA_TIME_HPP
 #define RUNE_ALIASES_DELTA_TIME_HPP
 
-#include <nenya.hpp>  // strong_type
-
 namespace rune {
 
 /// \cond FALSE
@@ -32,8 +30,7 @@ struct delta_time_tag;
  *
  * \see `RUNE_DELTA_TIME_UNDERLYING_TYPE`
  */
-using delta_time =
-    nenya::strong_type<RUNE_DELTA_TIME_UNDERLYING_TYPE, tags::delta_time_tag>;
+using delta_time = RUNE_DELTA_TIME_UNDERLYING_TYPE;
 
 /// \} End of group core
 

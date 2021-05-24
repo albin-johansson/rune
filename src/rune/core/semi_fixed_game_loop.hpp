@@ -141,7 +141,7 @@ class semi_fixed_game_loop
       }
 
       const auto dt = min(frameTime, m_delta);
-      m_engine->update_logic(delta_time{static_cast<delta_time::value_type>(dt.count())});
+      m_engine->update_logic(static_cast<delta_time>(dt.count()));
 
       frameTime -= dt;
 
