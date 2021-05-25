@@ -113,21 +113,33 @@ TEST(Ini, FromFile)
 
   {
     const auto& foo = file.at("foo");
-    ASSERT_EQ(2, foo.size());
+    ASSERT_EQ(4, foo.size());
 
     ASSERT_TRUE(foo.contains("abc"));
     ASSERT_EQ(rune::ini_value{"world"}, foo.at("abc"));
 
     ASSERT_TRUE(foo.contains("bar"));
     ASSERT_EQ(rune::ini_value{"hello"}, foo.at("bar"));
+
+    ASSERT_TRUE(foo.contains("health"));
+    ASSERT_EQ(rune::ini_value{87u}, foo.at("health"));
+
+    ASSERT_TRUE(foo.contains("offset"));
+    ASSERT_EQ(rune::ini_value{-42}, foo.at("offset"));
   }
 
   {
     const auto& bar = file.at("bar");
-    ASSERT_EQ(1, bar.size());
+    ASSERT_EQ(3, bar.size());
+
+    ASSERT_TRUE(bar.contains("isCool"));
+    ASSERT_EQ(rune::ini_value{true}, bar.at("isCool"));
+
+    ASSERT_TRUE(bar.contains("isFancy"));
+    ASSERT_EQ(rune::ini_value{false}, bar.at("isFancy"));
 
     ASSERT_TRUE(bar.contains("123"));
-    ASSERT_EQ("321", bar.at("123"));
+    ASSERT_EQ(rune::ini_value{321}, bar.at("123"));
   }
 }
 

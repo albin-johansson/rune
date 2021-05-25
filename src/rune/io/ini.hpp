@@ -1,14 +1,14 @@
 #ifndef RUNE_IO_INI_HPP
 #define RUNE_IO_INI_HPP
 
-#include <algorithm>    // find_if
+#include <algorithm>    // find_if, all_of
 #include <cassert>      // assert
 #include <cstddef>      // size_t
 #include <filesystem>   // path
 #include <fstream>      // ifstream
 #include <functional>   // less
 #include <istream>      // istream
-#include <locale>       // locale, isspace
+#include <locale>       // locale, isspace, isdigit
 #include <map>          // map
 #include <optional>     // optional
 #include <ostream>      // ostream
@@ -266,6 +266,31 @@ class basic_ini final
     line.erase(it.base(), line.end());
   }
 
+  [[nodiscard]] static auto is_unsigned(const string_type& str)
+  {
+    return !str.starts_with('-') && str.ends_with('u') &&
+           std::all_of(str.begin(), str.end() - 1, [](const char_type ch) {
+             return std::isdigit(ch, std::locale::classic());
+           });
+  }
+
+  [[nodiscard]] static auto is_signed(const string_type& str)
+  {
+    if (str.starts_with('-'))
+    {
+      // Ignore leading minus
+      return std::all_of(str.begin() + 1, str.end(), [](const char_type ch) {
+        return std::isdigit(ch, std::locale::classic());
+      });
+    }
+    else
+    {
+      return std::ranges::all_of(str, [](const char_type ch) {
+        return std::isdigit(ch, std::locale::classic());
+      });
+    }
+  }
+
   auto parse_variable(const string_type& line, const string_type& sectionName) -> bool
   {
     const auto assignment = std::ranges::find_if(line, [this](const char_type character) {
@@ -281,7 +306,27 @@ class basic_ini final
     auto& section = m_sections[sectionName];
     if (!section.contains(variable))
     {
-      section[std::move(variable)] = std::move(value);
+      if (value == "true")
+      {
+        section[std::move(variable)] = true;
+      }
+      else if (value == "false")
+      {
+        section[std::move(variable)] = false;
+      }
+      else if (is_unsigned(value))
+      {
+        section[std::move(variable)] = std::stoul(value);
+      }
+      else if (is_signed(value))
+      {
+        section[std::move(variable)] = std::stoll(value);
+      }
+      else
+      {
+        section[std::move(variable)] = std::move(value);
+      }
+
       return true;
     }
     else
