@@ -99,8 +99,8 @@ class engine
   friend class semi_fixed_game_loop<Game, Graphics>;
 
  public:
-  using game_type = Game;                                   ///< Game class type.
-  using graphics_type = typename game_type::graphics_type;  ///< Graphics context type.
+  using game_type = Game;          ///< Game class type.
+  using graphics_type = Graphics;  ///< Graphics context type.
   using loop_type = semi_fixed_game_loop<Game, graphics_type>;  ///< Game loop type.
 
   static_assert(std::constructible_from<game_type, graphics_type&> ||
