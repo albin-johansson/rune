@@ -5,7 +5,7 @@
 #include <cassert>      // assert
 #include <cstddef>      // size_t
 #include <filesystem>   // path
-#include <fstream>      // ifstream
+#include <fstream>      // ifstream, ofstream
 #include <functional>   // less
 #include <istream>      // istream
 #include <locale>       // locale, isspace, isdigit
@@ -386,7 +386,7 @@ using ini_file = basic_ini<char>;
 /**
  * \brief Writes a `basic_ini` instance to an output stream.
  *
- * \tparam Character the character type used.
+ * \tparam Char the character type used.
  *
  * \param stream the output stream that will be used.
  * \param ini the `basic_ini` instance that will be written to the stream.
@@ -395,8 +395,8 @@ using ini_file = basic_ini<char>;
  *
  * \see `basic_ini::write()`
  */
-template <typename Character>
-auto operator<<(std::ostream& stream, const basic_ini<Character>& ini) -> std::ostream&
+template <typename Char>
+auto operator<<(std::ostream& stream, const basic_ini<Char>& ini) -> std::ostream&
 {
   ini.write(stream);
   return stream;
@@ -405,7 +405,7 @@ auto operator<<(std::ostream& stream, const basic_ini<Character>& ini) -> std::o
 /**
  * \brief Parses an `.ini` file from an input stream.
  *
- * \tparam Character the character type used.
+ * \tparam Char the character type used.
  *
  * \param stream the input stream.
  * \param[out] ini the `basic_ini` instance that will be written to.
@@ -415,8 +415,8 @@ auto operator<<(std::ostream& stream, const basic_ini<Character>& ini) -> std::o
  * \see `basic_ini::read()`
  * \see `read_ini()`
  */
-template <typename Character>
-auto operator>>(std::istream& stream, basic_ini<Character>& ini) -> std::istream&
+template <typename Char>
+auto operator>>(std::istream& stream, basic_ini<Char>& ini) -> std::istream&
 {
   ini.read(stream);
   return stream;
@@ -425,16 +425,16 @@ auto operator>>(std::istream& stream, basic_ini<Character>& ini) -> std::istream
 /**
  * \brief Parses an `.ini` file and returns its contents.
  *
- * \pre `path` must refer to an `.ini` file.
+ * \pre `path` must feature the `.ini` extension.
  *
- * \tparam Character the character type used.
+ * \tparam Char the character type used.
  *
  * \param path the file path of the `.ini` file.
  *
  * \return the parsed contents of the `.ini` file.
  */
-template <typename Character = char>
-[[nodiscard]] auto read_ini(const std::filesystem::path& path) -> basic_ini<Character>
+template <typename Char = char>
+[[nodiscard]] auto read_ini(const std::filesystem::path& path) -> basic_ini<Char>
 {
   assert(path.extension() == ".ini");
   std::ifstream stream{path};
@@ -443,6 +443,24 @@ template <typename Character = char>
   stream >> file;
 
   return file;
+}
+
+/**
+ * \brief Saves an Ini file to the specified file path.
+ *
+ * \pre `path` must feature the `.ini` extension.
+ *
+ * \tparam Char the character type used.
+ *
+ * \param ini the Ini file that will be saved.
+ * \param path the file path of the ini file.
+ */
+template <typename Char>
+void write_ini(const basic_ini<Char>& ini, const std::filesystem::path& path)
+{
+  assert(path.extension() == ".ini");
+  std::ofstream stream{path};
+  stream << ini;
 }
 
 /// \} End of ini

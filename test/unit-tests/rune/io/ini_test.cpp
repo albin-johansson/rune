@@ -2,7 +2,6 @@
 
 #include <gtest/gtest.h>
 
-#include <fstream>   // ifstream, ofstream
 #include <iostream>  // cout
 
 TEST(Ini, Defaults)
