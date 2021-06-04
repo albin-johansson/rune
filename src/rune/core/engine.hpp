@@ -16,6 +16,19 @@ namespace rune {
 /// \addtogroup core
 /// \{
 
+// clang-format off
+
+template <typename T>
+concept is_configuration_type = requires
+{
+  typename T::graphics_type;
+  typename T::delta_type;
+  { T::renderer_flags } -> std::convertible_to<uint32>;
+  { T::window_size } -> std::convertible_to<cen::iarea>;
+};
+
+// clang-format on
+
 /**
  * \struct configuration
  *
@@ -26,11 +39,16 @@ namespace rune {
  *
  * \see `engine`
  */
-struct configuration final
+struct configuration
 {
+  using graphics_type = graphics;
+  using delta_type = float;
+
   uint32 renderer_flags = cen::renderer::default_flags();
   cen::iarea window_size = cen::window::default_size();
 };
+
+static_assert(is_configuration_type<configuration>);
 
 // clang-format off
 
