@@ -286,6 +286,22 @@ class engine
   }
 };
 
+#define RUNE_IMPLEMENT_MAIN_WITH_GAME(Game) \
+  int main(int, char**)                     \
+  {                                         \
+    cen::library centurion;                 \
+    rune::engine<Game> engine;              \
+    return engine.run();                    \
+  }
+
+#define RUNE_IMPLEMENT_MAIN_WITH_GAME_AND_GRAPHICS(Game, Graphics) \
+  int main(int, char**)                                            \
+  {                                                                \
+    cen::library centurion;                                        \
+    rune::engine<Game, Graphics> engine;                           \
+    return engine.run();                                           \
+  }
+
 /// \} End of group core
 
 }  // namespace rune
