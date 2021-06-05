@@ -9,7 +9,10 @@ class ui_example final : public rune::game_base
   explicit ui_example(rune::graphics& gfx)
   {
     gfx.emplace_cache(0, "resources/fonts/daniel.ttf", 36);
-    rune::make_button(m_registry, {.row = 10, .column = 10, .text = "foo"});
+
+    rune::make_button(m_registry,
+                      {.position = {10, 10}, .text = "foo", .fg = cen::colors::red});
+
     rune::make_line(m_registry, {.start = {14, 10}, .end = {16, 20}});
   }
 

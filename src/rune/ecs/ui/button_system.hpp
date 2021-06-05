@@ -12,6 +12,7 @@
 #include "ui_bounds.hpp"
 #include "ui_button.hpp"
 #include "ui_checkbox.hpp"
+#include "ui_foreground.hpp"
 #include "ui_label.hpp"
 #include "ui_position.hpp"
 
@@ -19,8 +20,7 @@ namespace rune {
 
 struct ui_button_cfg final
 {
-  float row{};
-  float column{};
+  ui_position position;
   std::string text;
   uint32 id{};
   cen::color fg{cen::colors::white};
@@ -30,16 +30,16 @@ inline auto make_button(entt::registry& registry, ui_button_cfg cfg) -> ui_butto
 {
   const auto entity = ui_button::entity{registry.create()};
 
+  registry.emplace<ui_position>(entity, cfg.position);
+
   auto& button = registry.emplace<ui_button>(entity);
   button.id = cfg.id;
 
   auto& label = registry.emplace<ui_label>(entity);
   label.text = std::move(cfg.text);
-  // TODO label color
 
-  auto& position = registry.emplace<ui_position>(entity);
-  position.row = cfg.row;
-  position.col = cfg.column;
+  auto& foreground = registry.emplace<ui_foreground>(entity);
+  foreground.color = cfg.fg;
 
   auto& bounds = registry.emplace<ui_bounds>(entity);
 
