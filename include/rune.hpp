@@ -81,16 +81,89 @@ using delta_time = RUNE_DELTA_TIME_UNDERLYING_TYPE;
 
 #endif  // RUNE_ALIASES_DELTA_TIME_HPP
 
-// #include "rune/aliases/integers.hpp"
+// #include "rune/aliases/font_id.hpp"
+#ifndef RUNE_ALIASES_FONT_ID_HPP
+#define RUNE_ALIASES_FONT_ID_HPP
+
+// #include "integers.hpp"
 #ifndef RUNE_ALIASES_INTEGERS_HPP
 #define RUNE_ALIASES_INTEGERS_HPP
 
 #include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
 
 namespace rune {
 
 /// \addtogroup core
 /// \{
+
+using usize = std::size_t;
+
+using longlong = long long;
+
+using ushort = unsigned short;
+
+/// Unsigned integer.
+using uint = unsigned;
+
+/// Unsigned long integer.
+using ulong = unsigned long;
+
+/// Used as the argument type to integral literal operators.
+using ulonglong = unsigned long long;
+
+/// 8-bit signed integer.
+using int8 = cen::i8;
+
+/// 16-bit signed integer.
+using int16 = cen::i16;
+
+/// 32-bit signed integer.
+using int32 = cen::i32;
+
+/// 64-bit signed integer.
+using int64 = cen::i64;
+
+/// 8-bit unsigned integer.
+using uint8 = cen::u8;
+
+/// 16-bit unsigned integer.
+using uint16 = cen::u16;
+
+/// 32-bit unsigned integer.
+using uint32 = cen::u32;
+
+/// 64-bit unsigned integer.
+using uint64 = cen::u64;
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_INTEGERS_HPP
+
+
+namespace rune {
+
+using font_id = usize;
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_FONT_ID_HPP
+
+// #include "rune/aliases/integers.hpp"
+#ifndef RUNE_ALIASES_INTEGERS_HPP
+#define RUNE_ALIASES_INTEGERS_HPP
+
+#include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+using usize = std::size_t;
 
 using longlong = long long;
 
@@ -153,8 +226,10 @@ using json_type = nlohmann::json;
 #ifndef RUNE_ALIASES_TEXTURE_ID_HPP
 #define RUNE_ALIASES_TEXTURE_ID_HPP
 
-#include <cstddef>    // size_t
 #include <nenya.hpp>  // strong_type
+
+// #include "integers.hpp"
+
 
 namespace rune {
 
@@ -172,12 +247,12 @@ struct texture_id_tag;
  *
  * \brief The underlying type of the `texture_id` strong type.
  *
- * \details By default, the underlying type is `std::size_t`.
+ * \details By default, the underlying type is `usize`.
  *
  * \note The value of this macro must be of a hashable type.
  */
 #ifndef RUNE_TEXTURE_ID_UNDERLYING_TYPE
-#define RUNE_TEXTURE_ID_UNDERLYING_TYPE std::size_t
+#define RUNE_TEXTURE_ID_UNDERLYING_TYPE usize
 #endif  // RUNE_TEXTURE_ID_UNDERLYING_TYPE
 
 /**
@@ -202,8 +277,10 @@ using texture_id =
 #ifndef RUNE_ALIASES_TEXTURE_INDEX_HPP
 #define RUNE_ALIASES_TEXTURE_INDEX_HPP
 
-#include <cstddef>    // size_t
 #include <nenya.hpp>  // strong_type
+
+// #include "integers.hpp"
+
 
 namespace rune {
 
@@ -221,7 +298,7 @@ struct texture_index_tag;
  *
  * \brief Strong type for texture indices, used by the `graphics` class.
  */
-using texture_index = nenya::strong_type<std::size_t, tags::texture_index_tag>;
+using texture_index = nenya::strong_type<usize, tags::texture_index_tag>;
 
 /// \} End of group core
 
@@ -358,10 +435,66 @@ template <has_less_than T>
 #include <array>         // array
 #include <charconv>      // to_chars
 #include <concepts>      // floating_point
-#include <cstddef>       // size_t
 #include <optional>      // optional
 #include <string>        // string, to_string
 #include <system_error>  // errc
+
+// #include "../aliases/integers.hpp"
+#ifndef RUNE_ALIASES_INTEGERS_HPP
+#define RUNE_ALIASES_INTEGERS_HPP
+
+#include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+using usize = std::size_t;
+
+using longlong = long long;
+
+using ushort = unsigned short;
+
+/// Unsigned integer.
+using uint = unsigned;
+
+/// Unsigned long integer.
+using ulong = unsigned long;
+
+/// Used as the argument type to integral literal operators.
+using ulonglong = unsigned long long;
+
+/// 8-bit signed integer.
+using int8 = cen::i8;
+
+/// 16-bit signed integer.
+using int16 = cen::i16;
+
+/// 32-bit signed integer.
+using int32 = cen::i32;
+
+/// 64-bit signed integer.
+using int64 = cen::i64;
+
+/// 8-bit unsigned integer.
+using uint8 = cen::u8;
+
+/// 16-bit unsigned integer.
+using uint16 = cen::u16;
+
+/// 32-bit unsigned integer.
+using uint32 = cen::u32;
+
+/// 64-bit unsigned integer.
+using uint64 = cen::u64;
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_INTEGERS_HPP
 
 // #include "compiler.hpp"
 #ifndef RUNE_CORE_COMPILER_HPP
@@ -477,7 +610,7 @@ namespace rune {
  * \return a string representation of the supplied value; `std::nullopt` if something goes
  * wrong.
  */
-template <numeric T, std::size_t BufferSize = 24>
+template <numeric T, usize BufferSize = 24>
 [[nodiscard]] auto to_string(const T number) -> std::optional<std::string>
 {
   if constexpr (on_gcc() || (on_clang() && std::floating_point<T>))
@@ -1273,8 +1406,64 @@ void fatten(basic_aabb<T>& aabb, const T percentage) noexcept
 #define RUNE_CONTAINERS_AABB_NODE_HPP
 
 #include <concepts>  // floating_point
-#include <cstddef>   // size_t
 #include <optional>  // optional
+
+// #include "../aliases/integers.hpp"
+#ifndef RUNE_ALIASES_INTEGERS_HPP
+#define RUNE_ALIASES_INTEGERS_HPP
+
+#include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+using usize = std::size_t;
+
+using longlong = long long;
+
+using ushort = unsigned short;
+
+/// Unsigned integer.
+using uint = unsigned;
+
+/// Unsigned long integer.
+using ulong = unsigned long;
+
+/// Used as the argument type to integral literal operators.
+using ulonglong = unsigned long long;
+
+/// 8-bit signed integer.
+using int8 = cen::i8;
+
+/// 16-bit signed integer.
+using int16 = cen::i16;
+
+/// 32-bit signed integer.
+using int32 = cen::i32;
+
+/// 64-bit signed integer.
+using int64 = cen::i64;
+
+/// 8-bit unsigned integer.
+using uint8 = cen::u8;
+
+/// 16-bit unsigned integer.
+using uint16 = cen::u16;
+
+/// 32-bit unsigned integer.
+using uint32 = cen::u32;
+
+/// 64-bit unsigned integer.
+using uint64 = cen::u64;
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_INTEGERS_HPP
 
 // #include "aabb.hpp"
 #ifndef RUNE_CONTAINERS_AABB_HPP
@@ -1576,7 +1765,7 @@ class aabb_node final
   using precision_type = Precision;                   ///< The vector coordinate type.
   using vector_type = basic_vector2<precision_type>;  ///< The associated vector type.
   using aabb_type = basic_aabb<precision_type>;       ///< The associated AABB type.
-  using index_type = std::size_t;                     ///< The type used for node indices
+  using index_type = usize;                           ///< The type used for node indices
 
   std::optional<key_type> id;        ///< The user-provided ID associated with the AABB.
   aabb_type box;                     ///< The associated AABB.
@@ -1627,7 +1816,7 @@ template <typename Key, std::floating_point Precision>
 #include <cassert>        // assert
 #include <cmath>          // abs
 #include <concepts>       // floating_point, invocable, same_as
-#include <cstddef>        // size_t, byte
+#include <cstddef>        // byte
 #include <deque>          // deque
 #include <iterator>       // output_iterator
 #include <limits>         // numeric_limits
@@ -1638,6 +1827,8 @@ template <typename Key, std::floating_point Precision>
 #include <type_traits>    // invoke_result_t
 #include <unordered_map>  // unordered_map
 #include <vector>         // vector
+
+// #include "../aliases/integers.hpp"
 
 // #include "../math/max.hpp"
 
@@ -1652,8 +1843,9 @@ template <typename Key, std::floating_point Precision>
 #define RUNE_CONTAINERS_AABB_NODE_HPP
 
 #include <concepts>  // floating_point
-#include <cstddef>   // size_t
 #include <optional>  // optional
+
+// #include "../aliases/integers.hpp"
 
 // #include "aabb.hpp"
 
@@ -1681,7 +1873,7 @@ class aabb_node final
   using precision_type = Precision;                   ///< The vector coordinate type.
   using vector_type = basic_vector2<precision_type>;  ///< The associated vector type.
   using aabb_type = basic_aabb<precision_type>;       ///< The associated AABB type.
-  using index_type = std::size_t;                     ///< The type used for node indices
+  using index_type = usize;                           ///< The type used for node indices
 
   std::optional<key_type> id;        ///< The user-provided ID associated with the AABB.
   aabb_type box;                     ///< The associated AABB.
@@ -1729,8 +1921,11 @@ template <typename Key, std::floating_point Precision>
 #define RUNE_CONTAINERS_STACK_RESOURCE_HPP
 
 #include <array>            // array
-#include <cstddef>          // size_t, byte
+#include <cstddef>          // byte
 #include <memory_resource>  // memory_resource, monotonic_buffer_resource
+
+// #include "../aliases/integers.hpp"
+
 
 namespace rune {
 
@@ -1748,7 +1943,7 @@ namespace rune {
  *
  * \tparam size the size of the stack buffer.
  */
-template <std::size_t Size>
+template <usize Size>
 class stack_resource final
 {
  public:
@@ -1809,8 +2004,8 @@ namespace rune {
 #endif  // RUNE_AABB_TREE_QUERY_BUFFER_SIZE
 
 // clang-format off
-inline constexpr std::size_t aabb_tree_default_capacity = RUNE_AABB_TREE_DEFAULT_CAPACITY;
-inline constexpr std::size_t aabb_tree_query_buffer_size = RUNE_AABB_TREE_QUERY_BUFFER_SIZE;
+inline constexpr usize aabb_tree_default_capacity = RUNE_AABB_TREE_DEFAULT_CAPACITY;
+inline constexpr usize aabb_tree_query_buffer_size = RUNE_AABB_TREE_QUERY_BUFFER_SIZE;
 // clang-format on
 
 /**
@@ -1858,8 +2053,8 @@ class aabb_tree final
   using vector_type = basic_vector2<precision_type>;
   using aabb_type = basic_aabb<precision_type>;
   using node_type = aabb_node<key_type, precision_type>;
-  using index_type = std::size_t;
-  using size_type = std::size_t;
+  using index_type = usize;
+  using size_type = usize;
 
   // TODO reserve()?
 
@@ -2965,8 +3160,11 @@ auto operator<<(std::ostream& stream, const aabb_tree<Key, Precision>& tree)
 #define RUNE_CONTAINERS_STACK_RESOURCE_HPP
 
 #include <array>            // array
-#include <cstddef>          // size_t, byte
+#include <cstddef>          // byte
 #include <memory_resource>  // memory_resource, monotonic_buffer_resource
+
+// #include "../aliases/integers.hpp"
+
 
 namespace rune {
 
@@ -2984,7 +3182,7 @@ namespace rune {
  *
  * \tparam size the size of the stack buffer.
  */
-template <std::size_t Size>
+template <usize Size>
 class stack_resource final
 {
  public:
@@ -3017,9 +3215,10 @@ class stack_resource final
 
 #include <array>             // array
 #include <cassert>           // assert
-#include <cstddef>           // size_t
 #include <initializer_list>  // initializer_list
 #include <utility>           // forward, move
+
+// #include "../aliases/integers.hpp"
 
 // #include "../core/concepts.hpp"
 #ifndef RUNE_CORE_CONCEPTS_HPP
@@ -3127,11 +3326,11 @@ namespace rune {
  * \tparam T the element type.
  * \tparam Capacity the maximum capacity of the vector.
  */
-template <default_constructible T, std::size_t Capacity>
+template <default_constructible T, usize Capacity>
 class static_vector final
 {
  public:
-  using size_type = std::size_t;
+  using size_type = usize;
   using value_type = T;
   using iterator = value_type*;
   using const_iterator = const value_type*;
@@ -3384,11 +3583,12 @@ static_vector(T, Rest...) -> static_vector<T, 1u + sizeof...(Rest)>;
 #include <algorithm>  // find_if
 #include <cassert>    // assert
 #include <concepts>   // convertible_to
-#include <cstddef>    // size_t
 #include <iterator>   // distance, iter_swap
 #include <optional>   // optional
 #include <utility>    // pair, move, forward
 #include <vector>     // vector
+
+// #include "../aliases/integers.hpp"
 
 // #include "../core/rune_error.hpp"
 
@@ -3430,7 +3630,7 @@ class vector_map final
   using key_type = K;
   using mapped_type = V;
   using value_type = std::pair<key_type, mapped_type>;
-  using size_type = std::size_t;
+  using size_type = usize;
   using iterator = typename std::vector<value_type>::iterator;
   using const_iterator = typename std::vector<value_type>::const_iterator;
 
@@ -3469,7 +3669,7 @@ class vector_map final
 
   /**
    * \brief Adds a key/value pair to the map.
-   * 
+   *
    * \pre `key` must not be associated with an existing entry.
    *
    * \tparam Args the types of the arguments that will be forwarded.
@@ -3504,7 +3704,7 @@ class vector_map final
 
   /**
    * \brief Adds or replaces a key/value pair in the map.
-   * 
+   *
    * \tparam Args the types of the arguments that will be forwarded.
    *
    * \param key the key that will be associated with the value.
@@ -3515,11 +3715,11 @@ class vector_map final
   template <typename... Args>
   auto emplace_or_replace(const key_type& key, Args&&... args) -> value_type&
   {
-    if (const auto it = find(key); it != end()) 
+    if (const auto it = find(key); it != end())
     {
       it->second = mapped_type{std::forward<Args>(args)...};
       return *it;
-    } 
+    }
     else
     {
       return emplace(key, std::forward<Args>(args)...);
@@ -3536,11 +3736,11 @@ class vector_map final
    */
   auto emplace_or_replace(const key_type& key, mapped_type value) -> value_type&
   {
-    if (const auto it = find(key); it != end()) 
+    if (const auto it = find(key); it != end())
     {
       it->second = std::move(value);
       return *it;
-    } 
+    }
     else
     {
       return emplace(key, std::move(value));
@@ -3953,22 +4153,94 @@ using delta_time = RUNE_DELTA_TIME_UNDERLYING_TYPE;
 
 #include <cassert>        // assert
 #include <centurion.hpp>  // window, renderer, texture, font_cache, pixel_format
-#include <cstddef>        // size_t
 #include <string>         // string
 #include <unordered_map>  // unordered_map
 #include <utility>        // forward
 #include <vector>         // vector
+
+// #include "../aliases/font_id.hpp"
+#ifndef RUNE_ALIASES_FONT_ID_HPP
+#define RUNE_ALIASES_FONT_ID_HPP
+
+// #include "integers.hpp"
+#ifndef RUNE_ALIASES_INTEGERS_HPP
+#define RUNE_ALIASES_INTEGERS_HPP
+
+#include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+using usize = std::size_t;
+
+using longlong = long long;
+
+using ushort = unsigned short;
+
+/// Unsigned integer.
+using uint = unsigned;
+
+/// Unsigned long integer.
+using ulong = unsigned long;
+
+/// Used as the argument type to integral literal operators.
+using ulonglong = unsigned long long;
+
+/// 8-bit signed integer.
+using int8 = cen::i8;
+
+/// 16-bit signed integer.
+using int16 = cen::i16;
+
+/// 32-bit signed integer.
+using int32 = cen::i32;
+
+/// 64-bit signed integer.
+using int64 = cen::i64;
+
+/// 8-bit unsigned integer.
+using uint8 = cen::u8;
+
+/// 16-bit unsigned integer.
+using uint16 = cen::u16;
+
+/// 32-bit unsigned integer.
+using uint32 = cen::u32;
+
+/// 64-bit unsigned integer.
+using uint64 = cen::u64;
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_INTEGERS_HPP
+
+
+namespace rune {
+
+using font_id = usize;
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_FONT_ID_HPP
 
 // #include "../aliases/integers.hpp"
 #ifndef RUNE_ALIASES_INTEGERS_HPP
 #define RUNE_ALIASES_INTEGERS_HPP
 
 #include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
 
 namespace rune {
 
 /// \addtogroup core
 /// \{
+
+using usize = std::size_t;
 
 using longlong = long long;
 
@@ -4017,8 +4289,10 @@ using uint64 = cen::u64;
 #ifndef RUNE_ALIASES_TEXTURE_ID_HPP
 #define RUNE_ALIASES_TEXTURE_ID_HPP
 
-#include <cstddef>    // size_t
 #include <nenya.hpp>  // strong_type
+
+// #include "integers.hpp"
+
 
 namespace rune {
 
@@ -4036,12 +4310,12 @@ struct texture_id_tag;
  *
  * \brief The underlying type of the `texture_id` strong type.
  *
- * \details By default, the underlying type is `std::size_t`.
+ * \details By default, the underlying type is `usize`.
  *
  * \note The value of this macro must be of a hashable type.
  */
 #ifndef RUNE_TEXTURE_ID_UNDERLYING_TYPE
-#define RUNE_TEXTURE_ID_UNDERLYING_TYPE std::size_t
+#define RUNE_TEXTURE_ID_UNDERLYING_TYPE usize
 #endif  // RUNE_TEXTURE_ID_UNDERLYING_TYPE
 
 /**
@@ -4066,8 +4340,10 @@ using texture_id =
 #ifndef RUNE_ALIASES_TEXTURE_INDEX_HPP
 #define RUNE_ALIASES_TEXTURE_INDEX_HPP
 
-#include <cstddef>    // size_t
 #include <nenya.hpp>  // strong_type
+
+// #include "integers.hpp"
+
 
 namespace rune {
 
@@ -4085,7 +4361,7 @@ struct texture_index_tag;
  *
  * \brief Strong type for texture indices, used by the `graphics` class.
  */
-using texture_index = nenya::strong_type<std::size_t, tags::texture_index_tag>;
+using texture_index = nenya::strong_type<usize, tags::texture_index_tag>;
 
 /// \} End of group core
 
@@ -4169,10 +4445,7 @@ namespace rune {
 class graphics
 {
  public:
-  using size_type = std::size_t;
-
-  // TODO strong types
-  using font_id = size_type;
+  using size_type = usize;
 
   /**
    * \brief Creates a graphics context.
@@ -4325,6 +4598,16 @@ class graphics
     return m_caches.at(id);
   }
 
+  [[nodiscard]] auto get_font(const font_id id) -> cen::font&
+  {
+    return get_cache(id).get_font();
+  }
+
+  [[nodiscard]] auto get_font(const font_id id) const -> const cen::font&
+  {
+    return get_cache(id).get_font();
+  }
+
   /**
    * \brief Indicates whether or not the graphics context has a font cache associated with
    * the specified ID.
@@ -4457,6 +4740,26 @@ concept has_on_exit = requires (Game game)
 };
 
 // clang-format on
+
+class game_base
+{
+ public:
+  virtual ~game_base() noexcept = default;
+
+  virtual void handle_input(const rune::input& input)
+  {}
+
+  virtual void tick(rune::delta_time dt)
+  {}
+
+  virtual void render(rune::graphics& gfx) const
+  {}
+
+  [[nodiscard]] virtual auto should_quit() const -> bool
+  {
+    return false;
+  }
+};
 
 /// \} End of group core
 
@@ -5034,6 +5337,22 @@ class engine
   }
 };
 
+#define RUNE_IMPLEMENT_MAIN_WITH_GAME(Game) \
+  int main(int, char**)                     \
+  {                                         \
+    cen::library centurion;                 \
+    rune::engine<Game> engine;              \
+    return engine.run();                    \
+  }
+
+#define RUNE_IMPLEMENT_MAIN_WITH_GAME_AND_GRAPHICS(Game, Graphics) \
+  int main(int, char**)                                            \
+  {                                                                \
+    cen::library centurion;                                        \
+    rune::engine<Game, Graphics> engine;                           \
+    return engine.run();                                           \
+  }
+
 /// \} End of group core
 
 }  // namespace rune
@@ -5139,6 +5458,26 @@ concept has_on_exit = requires (Game game)
 };
 
 // clang-format on
+
+class game_base
+{
+ public:
+  virtual ~game_base() noexcept = default;
+
+  virtual void handle_input(const rune::input& input)
+  {}
+
+  virtual void tick(rune::delta_time dt)
+  {}
+
+  virtual void render(rune::graphics& gfx) const
+  {}
+
+  [[nodiscard]] virtual auto should_quit() const -> bool
+  {
+    return false;
+  }
+};
 
 /// \} End of group core
 
@@ -5362,10 +5701,11 @@ class semi_fixed_game_loop
 #include <array>         // array
 #include <charconv>      // to_chars
 #include <concepts>      // floating_point
-#include <cstddef>       // size_t
 #include <optional>      // optional
 #include <string>        // string, to_string
 #include <system_error>  // errc
+
+// #include "../aliases/integers.hpp"
 
 // #include "compiler.hpp"
 
@@ -5433,7 +5773,7 @@ namespace rune {
  * \return a string representation of the supplied value; `std::nullopt` if something goes
  * wrong.
  */
-template <numeric T, std::size_t BufferSize = 24>
+template <numeric T, usize BufferSize = 24>
 [[nodiscard]] auto to_string(const T number) -> std::optional<std::string>
 {
   if constexpr (on_gcc() || (on_clang() && std::floating_point<T>))
@@ -5539,6 +5879,213 @@ using entity_type = nenya::strong_type<entt::entity, T>;
 
 #endif  // RUNE_ECS_ENTITY_TYPE_HPP
 
+// #include "rune/ecs/events/button_pressed_event.hpp"
+#ifndef RUNE_ECS_EVENTS_BUTTON_PRESSED_EVENT_HPP
+#define RUNE_ECS_EVENTS_BUTTON_PRESSED_EVENT_HPP
+
+// #include "../../aliases/integers.hpp"
+#ifndef RUNE_ALIASES_INTEGERS_HPP
+#define RUNE_ALIASES_INTEGERS_HPP
+
+#include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+using usize = std::size_t;
+
+using longlong = long long;
+
+using ushort = unsigned short;
+
+/// Unsigned integer.
+using uint = unsigned;
+
+/// Unsigned long integer.
+using ulong = unsigned long;
+
+/// Used as the argument type to integral literal operators.
+using ulonglong = unsigned long long;
+
+/// 8-bit signed integer.
+using int8 = cen::i8;
+
+/// 16-bit signed integer.
+using int16 = cen::i16;
+
+/// 32-bit signed integer.
+using int32 = cen::i32;
+
+/// 64-bit signed integer.
+using int64 = cen::i64;
+
+/// 8-bit unsigned integer.
+using uint8 = cen::u8;
+
+/// 16-bit unsigned integer.
+using uint16 = cen::u16;
+
+/// 32-bit unsigned integer.
+using uint32 = cen::u32;
+
+/// 64-bit unsigned integer.
+using uint64 = cen::u64;
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_INTEGERS_HPP
+
+// #include "../null_entity.hpp"
+#ifndef RUNE_ECS_NULL_ENTITY_HPP
+#define RUNE_ECS_NULL_ENTITY_HPP
+
+#include <concepts>  // constructible_from
+#include <entt.hpp>  // entity, null
+
+namespace rune {
+
+// clang-format off
+
+template <typename T>
+[[nodiscard]] constexpr auto null()
+    noexcept(noexcept(typename T::entity{entt::entity{entt::null}}))
+{
+  return typename T::entity{entt::entity{entt::null}};
+}
+
+// clang-format on
+
+template <std::constructible_from<entt::entity> T>
+void nullify(T& entity) noexcept(noexcept(T{entt::entity{entt::null}}))
+{
+  entity = T{entt::entity{entt::null}};
+}
+
+}  // namespace rune
+
+#endif  // RUNE_ECS_NULL_ENTITY_HPP
+
+// #include "../ui/ui_button.hpp"
+#ifndef RUNE_ECS_UI_UI_BUTTON_HPP
+#define RUNE_ECS_UI_UI_BUTTON_HPP
+
+// #include "../../aliases/integers.hpp"
+#ifndef RUNE_ALIASES_INTEGERS_HPP
+#define RUNE_ALIASES_INTEGERS_HPP
+
+#include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+using usize = std::size_t;
+
+using longlong = long long;
+
+using ushort = unsigned short;
+
+/// Unsigned integer.
+using uint = unsigned;
+
+/// Unsigned long integer.
+using ulong = unsigned long;
+
+/// Used as the argument type to integral literal operators.
+using ulonglong = unsigned long long;
+
+/// 8-bit signed integer.
+using int8 = cen::i8;
+
+/// 16-bit signed integer.
+using int16 = cen::i16;
+
+/// 32-bit signed integer.
+using int32 = cen::i32;
+
+/// 64-bit signed integer.
+using int64 = cen::i64;
+
+/// 8-bit unsigned integer.
+using uint8 = cen::u8;
+
+/// 16-bit unsigned integer.
+using uint16 = cen::u16;
+
+/// 32-bit unsigned integer.
+using uint32 = cen::u32;
+
+/// 64-bit unsigned integer.
+using uint64 = cen::u64;
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_INTEGERS_HPP
+
+// #include "../entity_type.hpp"
+#ifndef RUNE_ECS_ENTITY_TYPE_HPP
+#define RUNE_ECS_ENTITY_TYPE_HPP
+
+#include <entt.hpp>   // entity
+#include <nenya.hpp>  // strong_type
+
+namespace rune {
+
+template <typename T>
+using entity_type = nenya::strong_type<entt::entity, T>;
+
+}  // namespace rune
+
+#endif  // RUNE_ECS_ENTITY_TYPE_HPP
+
+
+namespace rune {
+
+namespace tags {
+struct ui_button_tag;
+}  // namespace tags
+
+struct ui_button final
+{
+  using entity = entity_type<tags::ui_button_tag>;
+
+  uint32 id{};
+  bool is_enabled{true};
+  bool is_visible{true};
+  bool is_hovered{false};
+};
+
+void serialize(auto& archive, ui_button& b)
+{
+  archive(b.id, b.is_enabled, b.is_visible, b.is_hovered);
+}
+
+}  // namespace rune
+
+#endif  // RUNE_ECS_UI_UI_BUTTON_HPP
+
+
+namespace rune {
+
+struct button_pressed_event final
+{
+  ui_button::entity button_entity{null<ui_button>()};  ///< The pressed button entity.
+  uint32 id{};  ///< The ID associated with the button.
+};
+
+}  // namespace rune
+
+#endif  // RUNE_ECS_EVENTS_BUTTON_PRESSED_EVENT_HPP
+
 // #include "rune/ecs/null_entity.hpp"
 #ifndef RUNE_ECS_NULL_ENTITY_HPP
 #define RUNE_ECS_NULL_ENTITY_HPP
@@ -5575,6 +6122,65 @@ void nullify(T& entity) noexcept(noexcept(T{entt::entity{entt::null}}))
 
 #include <centurion.hpp>  // mouse
 #include <entt.hpp>       // registry, dispatcher
+#include <string>         // string
+#include <utility>        // move
+
+// #include "../../aliases/integers.hpp"
+#ifndef RUNE_ALIASES_INTEGERS_HPP
+#define RUNE_ALIASES_INTEGERS_HPP
+
+#include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+using usize = std::size_t;
+
+using longlong = long long;
+
+using ushort = unsigned short;
+
+/// Unsigned integer.
+using uint = unsigned;
+
+/// Unsigned long integer.
+using ulong = unsigned long;
+
+/// Used as the argument type to integral literal operators.
+using ulonglong = unsigned long long;
+
+/// 8-bit signed integer.
+using int8 = cen::i8;
+
+/// 16-bit signed integer.
+using int16 = cen::i16;
+
+/// 32-bit signed integer.
+using int32 = cen::i32;
+
+/// 64-bit signed integer.
+using int64 = cen::i64;
+
+/// 8-bit unsigned integer.
+using uint8 = cen::u8;
+
+/// 16-bit unsigned integer.
+using uint16 = cen::u16;
+
+/// 32-bit unsigned integer.
+using uint32 = cen::u32;
+
+/// 64-bit unsigned integer.
+using uint64 = cen::u64;
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_INTEGERS_HPP
 
 // #include "../../aliases/maybe.hpp"
 #ifndef RUNE_ALIASES_MAYBE_HPP
@@ -5590,6 +6196,522 @@ using maybe = std::optional<T>;
 }  // namespace rune
 
 #endif  // RUNE_ALIASES_MAYBE_HPP
+
+// #include "../../core/graphics.hpp"
+#ifndef RUNE_CORE_GRAPHICS_HPP
+#define RUNE_CORE_GRAPHICS_HPP
+
+#include <cassert>        // assert
+#include <centurion.hpp>  // window, renderer, texture, font_cache, pixel_format
+#include <string>         // string
+#include <unordered_map>  // unordered_map
+#include <utility>        // forward
+#include <vector>         // vector
+
+// #include "../aliases/font_id.hpp"
+#ifndef RUNE_ALIASES_FONT_ID_HPP
+#define RUNE_ALIASES_FONT_ID_HPP
+
+// #include "integers.hpp"
+#ifndef RUNE_ALIASES_INTEGERS_HPP
+#define RUNE_ALIASES_INTEGERS_HPP
+
+#include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+using usize = std::size_t;
+
+using longlong = long long;
+
+using ushort = unsigned short;
+
+/// Unsigned integer.
+using uint = unsigned;
+
+/// Unsigned long integer.
+using ulong = unsigned long;
+
+/// Used as the argument type to integral literal operators.
+using ulonglong = unsigned long long;
+
+/// 8-bit signed integer.
+using int8 = cen::i8;
+
+/// 16-bit signed integer.
+using int16 = cen::i16;
+
+/// 32-bit signed integer.
+using int32 = cen::i32;
+
+/// 64-bit signed integer.
+using int64 = cen::i64;
+
+/// 8-bit unsigned integer.
+using uint8 = cen::u8;
+
+/// 16-bit unsigned integer.
+using uint16 = cen::u16;
+
+/// 32-bit unsigned integer.
+using uint32 = cen::u32;
+
+/// 64-bit unsigned integer.
+using uint64 = cen::u64;
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_INTEGERS_HPP
+
+
+namespace rune {
+
+using font_id = usize;
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_FONT_ID_HPP
+
+// #include "../aliases/integers.hpp"
+#ifndef RUNE_ALIASES_INTEGERS_HPP
+#define RUNE_ALIASES_INTEGERS_HPP
+
+#include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+using usize = std::size_t;
+
+using longlong = long long;
+
+using ushort = unsigned short;
+
+/// Unsigned integer.
+using uint = unsigned;
+
+/// Unsigned long integer.
+using ulong = unsigned long;
+
+/// Used as the argument type to integral literal operators.
+using ulonglong = unsigned long long;
+
+/// 8-bit signed integer.
+using int8 = cen::i8;
+
+/// 16-bit signed integer.
+using int16 = cen::i16;
+
+/// 32-bit signed integer.
+using int32 = cen::i32;
+
+/// 64-bit signed integer.
+using int64 = cen::i64;
+
+/// 8-bit unsigned integer.
+using uint8 = cen::u8;
+
+/// 16-bit unsigned integer.
+using uint16 = cen::u16;
+
+/// 32-bit unsigned integer.
+using uint32 = cen::u32;
+
+/// 64-bit unsigned integer.
+using uint64 = cen::u64;
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_INTEGERS_HPP
+
+// #include "../aliases/texture_id.hpp"
+#ifndef RUNE_ALIASES_TEXTURE_ID_HPP
+#define RUNE_ALIASES_TEXTURE_ID_HPP
+
+#include <nenya.hpp>  // strong_type
+
+// #include "integers.hpp"
+
+
+namespace rune {
+
+/// \cond FALSE
+namespace tags {
+struct texture_id_tag;
+}  // namespace tags
+/// \endcond
+
+/// \addtogroup core
+/// \{
+
+/**
+ * \def RUNE_TEXTURE_ID_UNDERLYING_TYPE
+ *
+ * \brief The underlying type of the `texture_id` strong type.
+ *
+ * \details By default, the underlying type is `usize`.
+ *
+ * \note The value of this macro must be of a hashable type.
+ */
+#ifndef RUNE_TEXTURE_ID_UNDERLYING_TYPE
+#define RUNE_TEXTURE_ID_UNDERLYING_TYPE usize
+#endif  // RUNE_TEXTURE_ID_UNDERLYING_TYPE
+
+/**
+ * \typedef texture_id
+ *
+ * \brief Used as unique identifiers for textures.
+ *
+ * \details This is used in order to avoid loading the same texture more than once.
+ *
+ * \see `RUNE_TEXTURE_ID_UNDERLYING_TYPE`
+ */
+using texture_id =
+    nenya::strong_type<RUNE_TEXTURE_ID_UNDERLYING_TYPE, tags::texture_id_tag>;
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_TEXTURE_ID_HPP
+
+// #include "../aliases/texture_index.hpp"
+#ifndef RUNE_ALIASES_TEXTURE_INDEX_HPP
+#define RUNE_ALIASES_TEXTURE_INDEX_HPP
+
+#include <nenya.hpp>  // strong_type
+
+// #include "integers.hpp"
+
+
+namespace rune {
+
+/// \cond FALSE
+namespace tags {
+struct texture_index_tag;
+}  // namespace tags
+/// \endcond
+
+/// \addtogroup core
+/// \{
+
+/**
+ * \typedef texture_index
+ *
+ * \brief Strong type for texture indices, used by the `graphics` class.
+ */
+using texture_index = nenya::strong_type<usize, tags::texture_index_tag>;
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_TEXTURE_INDEX_HPP
+
+// #include "compiler.hpp"
+#ifndef RUNE_CORE_COMPILER_HPP
+#define RUNE_CORE_COMPILER_HPP
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+/// \name Compiler checks
+/// \{
+
+/// Indicates whether or not the current compiler is MSVC
+[[nodiscard]] constexpr auto on_msvc() noexcept -> bool
+{
+#ifdef _MSC_VER
+  return true;
+#else
+  return false;
+#endif  // _MSC_VER
+}
+
+/// Indicates whether or not the current compiler is GCC
+[[nodiscard]] constexpr auto on_gcc() noexcept -> bool
+{
+#ifdef __GNUC__
+  return true;
+#else
+  return false;
+#endif  // __GNUC__
+}
+
+/// Indicates whether or not the current compiler is Clang
+[[nodiscard]] constexpr auto on_clang() noexcept -> bool
+{
+#ifdef __clang__
+  return true;
+#else
+  return false;
+#endif  // __clang__
+}
+
+/// \} End of compiler checks
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_CORE_COMPILER_HPP
+
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+/**
+ * \class graphics
+ *
+ * \brief Provides the main graphics API.
+ *
+ * \details This class provides a renderer, efficient texture handling, font caches for
+ * efficient text rendering, pixel format information, etc.
+ *
+ * \details For reduced memory consumption and redundancy in loaded textures, this class
+ * manages a collection of textures that are given unique indices when loaded. These
+ * indices literally correspond to indices in an array of textures managed by this class,
+ * which results in very fast constant complexity lookup of textures.
+ *
+ * \details It is safe to derive your own custom graphics context classes from this class.
+ * However, you then need to supply your custom graphics type as a template parameter to
+ * `engine`.
+ */
+class graphics
+{
+ public:
+  using size_type = usize;
+
+  /**
+   * \brief Creates a graphics context.
+   *
+   * \tparam T the ownership semantics of the window.
+   * \param window the associated game window.
+   * \param flags the renderer flags supplied to the `cen::renderer` constructor.
+   */
+  template <typename T>
+  graphics(const cen::basic_window<T>& window, const uint32 flags)
+      : m_renderer{window, flags}
+      , m_format{window.get_pixel_format()}
+  {}
+
+  virtual ~graphics() noexcept = default;
+
+  /// \name Texture handling
+  /// \{
+
+  /**
+   * \brief Reserves enough memory to store the specified amount of textures.
+   *
+   * \param capacity the new capacity of textures.
+   */
+  void reserve(const size_type capacity)
+  {
+    m_textures.reserve(capacity);
+  }
+
+  /**
+   * \brief Loads a texture and returns the associated index.
+   *
+   * \details If a texture with the specified ID has already been loaded, then this
+   * function does nothing, and just returns the existing texture index.
+   *
+   * \param id the unique ID of the texture.
+   * \param path the file path of the texture.
+   *
+   * \return the index of the loaded texture.
+   */
+  auto load(const texture_id id, const std::string& path) -> texture_index
+  {
+    if (const auto it = m_indices.find(id); it != m_indices.end())
+    {
+      return it->second;
+    }
+    else
+    {
+      const auto index = m_textures.size();
+
+      m_textures.emplace_back(m_renderer, path);
+      m_indices.try_emplace(id, index);
+
+      return texture_index{index};
+    }
+  }
+
+  /**
+   * \brief Returns the texture associated with the specified index.
+   *
+   * \details This function performs a very fast index lookup for finding the associated
+   * texture. This function is not bounds checked in optimized builds, but an assertion
+   * will abort the execution of the program in debug builds if an invalid index is used.
+   *
+   * \pre `index` must be associated with an existing texture.
+   *
+   * \param index the index of the desired texture.
+   *
+   * \return the texture associated with the index.
+   */
+  [[nodiscard]] auto at(const texture_index index) const noexcept(on_msvc())
+      -> const cen::texture&
+  {
+    assert(index < m_textures.size());  // texture_index is unsigned
+    return m_textures[index];
+  }
+
+  /// \copydoc at()
+  [[nodiscard]] auto operator[](const texture_index index) const noexcept(on_msvc())
+      -> const cen::texture&
+  {
+    return at(index);
+  }
+
+  /**
+   * \brief Indicates whether or not a texture index is associated with a texture.
+   *
+   * \param index the texture index that will be checked.
+   *
+   * \return `true` if the texture index is associated with a texture; `false` otherwise.
+   */
+  [[nodiscard]] auto contains(const texture_index index) const noexcept -> bool
+  {
+    return index < m_textures.size();
+  }
+
+  /**
+   * \brief Returns the texture index associated with the specified ID.
+   *
+   * \param id the ID associated with the texture.
+   *
+   * \return the index of the specified texture.
+   *
+   * \throws std::out_of_range if the supplied ID isn't associated with an index.
+   */
+  [[nodiscard]] auto to_index(const texture_id id) const -> texture_index
+  {
+    return m_indices.at(id);
+  }
+
+  /// \} End of texture handling
+
+  /// \name Font cache handling
+  /// \{
+
+  /**
+   * \brief Adds a font cache to the graphics context.
+   *
+   * \tparam Args the types of the font cache constructor arguments.
+   *
+   * \note Any previous font cache associated with the supplied ID is overwritten.
+   *
+   * \param id the unique ID that will be associated with the font cache.
+   * \param args the arguments that will be forwarded to an appropriate font cache
+   * constructor.
+   */
+  template <typename... Args>
+  void emplace_cache(const font_id id, Args&&... args)
+  {
+    m_caches.insert_or_assign(id, cen::font_cache{std::forward<Args>(args)...});
+  }
+
+  /**
+   * \brief Returns the font cache associated with the specified ID.
+   *
+   * \param id the ID associated with the desired font cache.
+   *
+   * \return the found font cache.
+   *
+   * \throws std::out_of_range if there is no font cache associated with the ID.
+   */
+  [[nodiscard]] auto get_cache(const font_id id) -> cen::font_cache&
+  {
+    return m_caches.at(id);
+  }
+
+  /// \copydoc get_cache()
+  [[nodiscard]] auto get_cache(const font_id id) const -> const cen::font_cache&
+  {
+    return m_caches.at(id);
+  }
+
+  [[nodiscard]] auto get_font(const font_id id) -> cen::font&
+  {
+    return get_cache(id).get_font();
+  }
+
+  [[nodiscard]] auto get_font(const font_id id) const -> const cen::font&
+  {
+    return get_cache(id).get_font();
+  }
+
+  /**
+   * \brief Indicates whether or not the graphics context has a font cache associated with
+   * the specified ID.
+   *
+   * \param id the ID that will be checked.
+   *
+   * \return `true` if there is a font cache associated with the ID; `false` otherwise.
+   */
+  [[nodiscard]] auto contains_cache(const font_id id) const -> bool
+  {
+    return m_caches.contains(id);
+  }
+
+  /// \} End of font cache handling
+
+  /**
+   * \brief Returns the renderer associated with the graphics context.
+   *
+   * \return the associated renderer.
+   */
+  [[nodiscard]] auto renderer() noexcept -> cen::renderer&
+  {
+    return m_renderer;
+  }
+
+  /// \copydoc renderer()
+  [[nodiscard]] auto renderer() const noexcept -> const cen::renderer&
+  {
+    return m_renderer;
+  }
+
+  /**
+   * \brief Returns the pixel format used by the associated window.
+   *
+   * \return the associated pixel format.
+   */
+  [[nodiscard]] auto format() const noexcept -> cen::pixel_format
+  {
+    return m_format;
+  }
+
+ private:
+  cen::renderer m_renderer;
+  cen::pixel_format m_format;
+  std::vector<cen::texture> m_textures;
+  std::unordered_map<texture_id, texture_index> m_indices;
+  std::unordered_map<size_type, cen::font_cache> m_caches;
+};
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_CORE_GRAPHICS_HPP
 
 // #include "ui_bounds.hpp"
 #ifndef RUNE_ECS_UI_UI_BOUNDS_HPP
@@ -5636,58 +6758,6 @@ struct ui_bounds final
 #define RUNE_ECS_UI_UI_BUTTON_HPP
 
 // #include "../../aliases/integers.hpp"
-#ifndef RUNE_ALIASES_INTEGERS_HPP
-#define RUNE_ALIASES_INTEGERS_HPP
-
-#include <centurion.hpp>  // ...
-
-namespace rune {
-
-/// \addtogroup core
-/// \{
-
-using longlong = long long;
-
-using ushort = unsigned short;
-
-/// Unsigned integer.
-using uint = unsigned;
-
-/// Unsigned long integer.
-using ulong = unsigned long;
-
-/// Used as the argument type to integral literal operators.
-using ulonglong = unsigned long long;
-
-/// 8-bit signed integer.
-using int8 = cen::i8;
-
-/// 16-bit signed integer.
-using int16 = cen::i16;
-
-/// 32-bit signed integer.
-using int32 = cen::i32;
-
-/// 64-bit signed integer.
-using int64 = cen::i64;
-
-/// 8-bit unsigned integer.
-using uint8 = cen::u8;
-
-/// 16-bit unsigned integer.
-using uint16 = cen::u16;
-
-/// 32-bit unsigned integer.
-using uint32 = cen::u32;
-
-/// 64-bit unsigned integer.
-using uint64 = cen::u64;
-
-/// \} End of group core
-
-}  // namespace rune
-
-#endif  // RUNE_ALIASES_INTEGERS_HPP
 
 // #include "../entity_type.hpp"
 
@@ -5746,16 +6816,172 @@ void serialize(auto& archive, ui_checkbox& cb)
 
 #endif  // RUNE_ECS_UI_CHECKBOX_HPP
 
+// #include "ui_label.hpp"
+#ifndef RUNE_ECS_UI_UI_LABEL_HPP
+#define RUNE_ECS_UI_UI_LABEL_HPP
+
+#include <centurion.hpp>  // texture
+#include <string>         // string
+
+// #include "../../aliases/font_id.hpp"
+#ifndef RUNE_ALIASES_FONT_ID_HPP
+#define RUNE_ALIASES_FONT_ID_HPP
+
+// #include "integers.hpp"
+#ifndef RUNE_ALIASES_INTEGERS_HPP
+#define RUNE_ALIASES_INTEGERS_HPP
+
+#include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
 
 namespace rune {
 
-inline auto make_button(entt::registry& registry) -> ui_button::entity
+/// \addtogroup core
+/// \{
+
+using usize = std::size_t;
+
+using longlong = long long;
+
+using ushort = unsigned short;
+
+/// Unsigned integer.
+using uint = unsigned;
+
+/// Unsigned long integer.
+using ulong = unsigned long;
+
+/// Used as the argument type to integral literal operators.
+using ulonglong = unsigned long long;
+
+/// 8-bit signed integer.
+using int8 = cen::i8;
+
+/// 16-bit signed integer.
+using int16 = cen::i16;
+
+/// 32-bit signed integer.
+using int32 = cen::i32;
+
+/// 64-bit signed integer.
+using int64 = cen::i64;
+
+/// 8-bit unsigned integer.
+using uint8 = cen::u8;
+
+/// 16-bit unsigned integer.
+using uint16 = cen::u16;
+
+/// 32-bit unsigned integer.
+using uint32 = cen::u32;
+
+/// 64-bit unsigned integer.
+using uint64 = cen::u64;
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_INTEGERS_HPP
+
+
+namespace rune {
+
+using font_id = usize;
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_FONT_ID_HPP
+
+// #include "../../aliases/maybe.hpp"
+
+// #include "../entity_type.hpp"
+
+
+namespace rune {
+
+namespace tags {
+struct ui_label_tag;
+}  // namespace tags
+
+struct ui_label final
+{
+  using entity = entity_type<tags::ui_label_tag>;
+
+  std::string text;
+  font_id font{};
+  mutable maybe<cen::texture> texture;
+};
+
+void serialize(auto& archive, ui_label& label)
+{
+  archive(label.text, label.font);
+}
+
+}  // namespace rune
+
+#endif  // RUNE_ECS_UI_UI_LABEL_HPP
+
+// #include "ui_position.hpp"
+#ifndef RUNE_ECS_UI_UI_POSITION_HPP
+#define RUNE_ECS_UI_UI_POSITION_HPP
+
+// #include "../entity_type.hpp"
+
+
+namespace rune {
+
+namespace tags {
+struct ui_position_tag;
+}  // namespace tags
+
+struct ui_position final
+{
+  using entity = entity_type<tags::ui_position_tag>;
+
+  float row{};
+  float col{};
+};
+
+void serialize(auto& archive, ui_position& position)
+{
+  archive(position.row, position.col);
+}
+
+}  // namespace rune
+
+#endif  // RUNE_ECS_UI_UI_POSITION_HPP
+
+
+namespace rune {
+
+struct ui_button_cfg final
+{
+  float row{};
+  float column{};
+  std::string text;
+  uint32 id{};
+  cen::color fg{cen::colors::white};
+};
+
+inline auto make_button(entt::registry& registry, ui_button_cfg cfg) -> ui_button::entity
 {
   const auto entity = ui_button::entity{registry.create()};
 
   auto& button = registry.emplace<ui_button>(entity);
+  button.id = cfg.id;
+
+  auto& label = registry.emplace<ui_label>(entity);
+  label.text = std::move(cfg.text);
+  // TODO label color
+
+  auto& position = registry.emplace<ui_position>(entity);
+  position.row = cfg.row;
+  position.col = cfg.column;
+
   auto& bounds = registry.emplace<ui_bounds>(entity);
-  // TODO ui_label
+
+  // TODO set bounds position
 
   return entity;
 }
@@ -5772,7 +6998,7 @@ inline auto make_button(entt::registry& registry) -> ui_button::entity
 
     if (mouse.was_left_button_released())
     {
-      dispatcher.trigger<button_pressed_event>(entity, b.id);
+      dispatcher.trigger<button_pressed_event>(entity, button.id);
       button.is_hovered = false;
 
       if (auto* checkbox = registry.try_get<ui_checkbox>(entity))
@@ -5789,19 +7015,20 @@ inline auto make_button(entt::registry& registry) -> ui_button::entity
   return false;
 }
 
-auto update_button_hover(entt::registry& registry, const cen::mouse& mouse)
+inline auto update_button_hover(entt::registry& registry, const cen::mouse& mouse)
     -> maybe<ui_button::entity>
 {
-  for (auto&& [entity, button] : registry.view<ui_button>().each())
+  const auto mousePos = cen::cast<cen::fpoint>(mouse.position());
+  for (auto&& [entity, button, bounds] :
+       registry.view<ui_button, const ui_bounds>().each())
   {
     if (button.is_visible)
     {
-      //      const auto& drawable = registry.get<comp::button_drawable>(entity);
-      //      button.hover = drawable.bounds.contains(mousePos);
-      //      if (button.hover)
-      //      {
-      //        return comp::button::entity{entity};
-      //      }
+      button.is_hovered = bounds.bounds.contains(mousePos);
+      if (button.is_hovered)
+      {
+        return ui_button::entity{entity};
+      }
     }
   }
 
@@ -5811,6 +7038,174 @@ auto update_button_hover(entt::registry& registry, const cen::mouse& mouse)
 }  // namespace rune
 
 #endif  // RUNE_ECS_UI_BUTTON_SYSTEM_HPP
+
+// #include "rune/ecs/ui/label_system.hpp"
+#ifndef RUNE_ECS_UI_LABEL_SYSTEM_HPP
+#define RUNE_ECS_UI_LABEL_SYSTEM_HPP
+
+#include <entt.hpp>  // registry
+
+// #include "../../core/graphics.hpp"
+
+// #include "ui_grid.hpp"
+#ifndef RUNE_ECS_UI_UI_GRID_HPP
+#define RUNE_ECS_UI_UI_GRID_HPP
+
+#include <centurion.hpp>  // fpoint
+
+// #include "ui_position.hpp"
+
+
+namespace rune {
+
+#ifndef RUNE_MENU_ROW_SIZE
+#define RUNE_MENU_ROW_SIZE 10.0f
+#endif  // RUNE_MENU_ROW_SIZE
+
+#ifndef RUNE_MENU_COLUMN_SIZE
+#define RUNE_MENU_COLUMN_SIZE 10.0f
+#endif  // RUNE_MENU_COLUMN_SIZE
+
+inline constexpr float menu_row_size = RUNE_MENU_ROW_SIZE;
+inline constexpr float menu_column_size = RUNE_MENU_COLUMN_SIZE;
+
+[[nodiscard]] constexpr auto row_to_y(const float row) noexcept -> float
+{
+  return row * menu_row_size;
+}
+
+[[nodiscard]] constexpr auto column_to_x(const float column) noexcept -> float
+{
+  return column * menu_column_size;
+}
+
+[[nodiscard]] constexpr auto from_grid(const float row, const float column) noexcept
+    -> cen::fpoint
+{
+  return {column_to_x(column), row_to_y(row)};
+}
+
+[[nodiscard]] constexpr auto from_grid(const ui_position position) noexcept -> cen::fpoint
+{
+  return {column_to_x(position.col), row_to_y(position.row)};
+}
+
+}  // namespace rune
+
+#endif  // RUNE_ECS_UI_UI_GRID_HPP
+
+// #include "ui_label.hpp"
+
+// #include "ui_position.hpp"
+
+
+namespace rune {
+
+inline void render_labels(const entt::registry& registry, graphics& gfx)
+{
+  auto& renderer = gfx.renderer();
+  for (auto&& [entity, label, position] :
+       registry.view<const ui_label, const ui_position>().each())
+  {
+    // TODO color
+    renderer.set_color(cen::colors::lime);
+
+    if (!label.texture)
+    {
+      const auto& font = gfx.get_font(label.font);
+      label.texture = renderer.render_blended_utf8(label.text, font);
+    }
+
+    renderer.render(*label.texture, from_grid(position));
+  }
+}
+
+}  // namespace rune
+
+#endif  // RUNE_ECS_UI_LABEL_SYSTEM_HPP
+
+// #include "rune/ecs/ui/line_system.hpp"
+#ifndef RUNE_ECS_UI_LINE_SYSTEM_HPP
+#define RUNE_ECS_UI_LINE_SYSTEM_HPP
+
+#include <centurion.hpp>  // color
+#include <entt.hpp>       // registry
+
+// #include "../../core/graphics.hpp"
+
+// #include "ui_grid.hpp"
+
+// #include "ui_line.hpp"
+#ifndef RUNE_ECS_UI_UI_LINE_HPP
+#define RUNE_ECS_UI_UI_LINE_HPP
+
+// #include "../entity_type.hpp"
+
+// #include "ui_position.hpp"
+
+
+namespace rune {
+
+namespace tags {
+struct ui_line_tag;
+}  // namespace tags
+
+struct ui_line final
+{
+  using entity = entity_type<tags::ui_line_tag>;
+
+  ui_position start;
+  ui_position end;
+};
+
+void serialize(auto& archive, ui_line& line)
+{
+  archive(line.start, line.end);
+}
+
+}  // namespace rune
+
+#endif  // RUNE_ECS_UI_UI_LINE_HPP
+
+// #include "ui_position.hpp"
+
+
+namespace rune {
+
+struct ui_line_cfg final
+{
+  ui_position start;
+  ui_position end;
+  cen::color color{cen::colors::white};
+};
+
+inline auto make_line(entt::registry& registry, ui_line_cfg cfg) -> ui_line::entity
+{
+  const auto entity = ui_line::entity{registry.create()};
+
+  auto& line = registry.emplace<ui_line>(entity);
+  line.start = cfg.start;
+  line.end = cfg.end;
+
+  // TODO color
+
+  return entity;
+}
+
+void render_lines(const entt::registry& registry, graphics& gfx)
+{
+  auto& renderer = gfx.renderer();
+  for (auto&& [entity, line] : registry.view<const ui_line>().each())
+  {
+    // TODO color
+    renderer.set_color(cen::colors::white);
+    renderer.draw_line(from_grid(line.start), from_grid(line.end));
+  }
+}
+
+}  // namespace rune
+
+#endif  // RUNE_ECS_UI_LINE_SYSTEM_HPP
 
 // #include "rune/ecs/ui/ui_button.hpp"
 #ifndef RUNE_ECS_UI_UI_BUTTON_HPP
@@ -5875,13 +7270,279 @@ void serialize(auto& archive, ui_checkbox& cb)
 
 #endif  // RUNE_ECS_UI_CHECKBOX_HPP
 
+// #include "rune/ecs/ui/ui_grid.hpp"
+#ifndef RUNE_ECS_UI_UI_GRID_HPP
+#define RUNE_ECS_UI_UI_GRID_HPP
+
+#include <centurion.hpp>  // fpoint
+
+// #include "ui_position.hpp"
+
+
+namespace rune {
+
+#ifndef RUNE_MENU_ROW_SIZE
+#define RUNE_MENU_ROW_SIZE 10.0f
+#endif  // RUNE_MENU_ROW_SIZE
+
+#ifndef RUNE_MENU_COLUMN_SIZE
+#define RUNE_MENU_COLUMN_SIZE 10.0f
+#endif  // RUNE_MENU_COLUMN_SIZE
+
+inline constexpr float menu_row_size = RUNE_MENU_ROW_SIZE;
+inline constexpr float menu_column_size = RUNE_MENU_COLUMN_SIZE;
+
+[[nodiscard]] constexpr auto row_to_y(const float row) noexcept -> float
+{
+  return row * menu_row_size;
+}
+
+[[nodiscard]] constexpr auto column_to_x(const float column) noexcept -> float
+{
+  return column * menu_column_size;
+}
+
+[[nodiscard]] constexpr auto from_grid(const float row, const float column) noexcept
+    -> cen::fpoint
+{
+  return {column_to_x(column), row_to_y(row)};
+}
+
+[[nodiscard]] constexpr auto from_grid(const ui_position position) noexcept -> cen::fpoint
+{
+  return {column_to_x(position.col), row_to_y(position.row)};
+}
+
+}  // namespace rune
+
+#endif  // RUNE_ECS_UI_UI_GRID_HPP
+
+// #include "rune/ecs/ui/ui_label.hpp"
+#ifndef RUNE_ECS_UI_UI_LABEL_HPP
+#define RUNE_ECS_UI_UI_LABEL_HPP
+
+#include <centurion.hpp>  // texture
+#include <string>         // string
+
+// #include "../../aliases/font_id.hpp"
+
+// #include "../../aliases/maybe.hpp"
+
+// #include "../entity_type.hpp"
+
+
+namespace rune {
+
+namespace tags {
+struct ui_label_tag;
+}  // namespace tags
+
+struct ui_label final
+{
+  using entity = entity_type<tags::ui_label_tag>;
+
+  std::string text;
+  font_id font{};
+  mutable maybe<cen::texture> texture;
+};
+
+void serialize(auto& archive, ui_label& label)
+{
+  archive(label.text, label.font);
+}
+
+}  // namespace rune
+
+#endif  // RUNE_ECS_UI_UI_LABEL_HPP
+
+// #include "rune/ecs/ui/ui_line.hpp"
+#ifndef RUNE_ECS_UI_UI_LINE_HPP
+#define RUNE_ECS_UI_UI_LINE_HPP
+
+// #include "../entity_type.hpp"
+
+// #include "ui_position.hpp"
+
+
+namespace rune {
+
+namespace tags {
+struct ui_line_tag;
+}  // namespace tags
+
+struct ui_line final
+{
+  using entity = entity_type<tags::ui_line_tag>;
+
+  ui_position start;
+  ui_position end;
+};
+
+void serialize(auto& archive, ui_line& line)
+{
+  archive(line.start, line.end);
+}
+
+}  // namespace rune
+
+#endif  // RUNE_ECS_UI_UI_LINE_HPP
+
+// #include "rune/ecs/ui/ui_position.hpp"
+#ifndef RUNE_ECS_UI_UI_POSITION_HPP
+#define RUNE_ECS_UI_UI_POSITION_HPP
+
+// #include "../entity_type.hpp"
+
+
+namespace rune {
+
+namespace tags {
+struct ui_position_tag;
+}  // namespace tags
+
+struct ui_position final
+{
+  using entity = entity_type<tags::ui_position_tag>;
+
+  float row{};
+  float col{};
+};
+
+void serialize(auto& archive, ui_position& position)
+{
+  archive(position.row, position.col);
+}
+
+}  // namespace rune
+
+#endif  // RUNE_ECS_UI_UI_POSITION_HPP
+
+// #include "rune/ecs/ui/ui_system.hpp"
+#ifndef RUNE_ECS_UI_UI_SYSTEM_HPP
+#define RUNE_ECS_UI_UI_SYSTEM_HPP
+
+#include <entt.hpp>  // registry, dispatcher
+
+// #include "../../core/graphics.hpp"
+
+// #include "label_system.hpp"
+#ifndef RUNE_ECS_UI_LABEL_SYSTEM_HPP
+#define RUNE_ECS_UI_LABEL_SYSTEM_HPP
+
+#include <entt.hpp>  // registry
+
+// #include "../../core/graphics.hpp"
+
+// #include "ui_grid.hpp"
+
+// #include "ui_label.hpp"
+
+// #include "ui_position.hpp"
+
+
+namespace rune {
+
+inline void render_labels(const entt::registry& registry, graphics& gfx)
+{
+  auto& renderer = gfx.renderer();
+  for (auto&& [entity, label, position] :
+       registry.view<const ui_label, const ui_position>().each())
+  {
+    // TODO color
+    renderer.set_color(cen::colors::lime);
+
+    if (!label.texture)
+    {
+      const auto& font = gfx.get_font(label.font);
+      label.texture = renderer.render_blended_utf8(label.text, font);
+    }
+
+    renderer.render(*label.texture, from_grid(position));
+  }
+}
+
+}  // namespace rune
+
+#endif  // RUNE_ECS_UI_LABEL_SYSTEM_HPP
+
+// #include "line_system.hpp"
+#ifndef RUNE_ECS_UI_LINE_SYSTEM_HPP
+#define RUNE_ECS_UI_LINE_SYSTEM_HPP
+
+#include <centurion.hpp>  // color
+#include <entt.hpp>       // registry
+
+// #include "../../core/graphics.hpp"
+
+// #include "ui_grid.hpp"
+
+// #include "ui_line.hpp"
+
+// #include "ui_position.hpp"
+
+
+namespace rune {
+
+struct ui_line_cfg final
+{
+  ui_position start;
+  ui_position end;
+  cen::color color{cen::colors::white};
+};
+
+inline auto make_line(entt::registry& registry, ui_line_cfg cfg) -> ui_line::entity
+{
+  const auto entity = ui_line::entity{registry.create()};
+
+  auto& line = registry.emplace<ui_line>(entity);
+  line.start = cfg.start;
+  line.end = cfg.end;
+
+  // TODO color
+
+  return entity;
+}
+
+void render_lines(const entt::registry& registry, graphics& gfx)
+{
+  auto& renderer = gfx.renderer();
+  for (auto&& [entity, line] : registry.view<const ui_line>().each())
+  {
+    // TODO color
+    renderer.set_color(cen::colors::white);
+    renderer.draw_line(from_grid(line.start), from_grid(line.end));
+  }
+}
+
+}  // namespace rune
+
+#endif  // RUNE_ECS_UI_LINE_SYSTEM_HPP
+
+
+namespace rune {
+
+inline void update_ui(entt::registry& registry, entt::dispatcher& dispatcher)
+{
+  // TODO check for button hover
+  // TODO key binds
+}
+
+inline void render_ui(const entt::registry& registry, graphics& gfx)
+{
+  render_lines(registry, gfx);
+  render_labels(registry, gfx);
+}
+
+}  // namespace rune
+
+#endif  // RUNE_ECS_UI_UI_SYSTEM_HPP
+
 // #include "rune/io/ini.hpp"
 #ifndef RUNE_IO_INI_HPP
 #define RUNE_IO_INI_HPP
 
 #include <algorithm>    // find_if, all_of
 #include <cassert>      // assert
-#include <cstddef>      // size_t
 #include <filesystem>   // path
 #include <fstream>      // ifstream, ofstream
 #include <functional>   // less
@@ -5900,11 +7561,14 @@ void serialize(auto& archive, ui_checkbox& cb)
 #define RUNE_ALIASES_INTEGERS_HPP
 
 #include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
 
 namespace rune {
 
 /// \addtogroup core
 /// \{
+
+using usize = std::size_t;
 
 using longlong = long long;
 
@@ -6002,12 +7666,13 @@ class rune_error final : public std::exception
 #ifndef RUNE_IO_INI_SECTION_HPP
 #define RUNE_IO_INI_SECTION_HPP
 
-#include <cstddef>      // size_t
 #include <functional>   // less
 #include <map>          // map
 #include <ostream>      // ostream
 #include <string>       // basic_string
 #include <string_view>  // basic_string_view
+
+// #include "../aliases/integers.hpp"
 
 // #include "../core/rune_error.hpp"
 
@@ -6367,7 +8032,7 @@ class basic_ini_section final
   using string_type = std::basic_string<char_type>;
   using string_view_type = std::basic_string_view<char_type>;
   using format_type = ini_format<char_type>;
-  using size_type = std::size_t;
+  using size_type = usize;
 
   void dump(std::ostream& stream, const format_type& format) const
   {
@@ -6459,7 +8124,7 @@ class basic_ini final
   using string_view_type = std::basic_string_view<char_type>;
   using section_type = basic_ini_section<char_type>;
   using format_type = ini_format<char_type>;
-  using size_type = std::size_t;
+  using size_type = usize;
   using iterator = typename std::map<string_type, section_type>::iterator;
   using const_iterator = typename std::map<string_type, section_type>::const_iterator;
 
@@ -7835,10 +9500,66 @@ template <numeric T>
 #include <array>         // array
 #include <charconv>      // to_chars
 #include <concepts>      // floating_point
-#include <cstddef>       // size_t
 #include <optional>      // optional
 #include <string>        // string, to_string
 #include <system_error>  // errc
+
+// #include "../aliases/integers.hpp"
+#ifndef RUNE_ALIASES_INTEGERS_HPP
+#define RUNE_ALIASES_INTEGERS_HPP
+
+#include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+using usize = std::size_t;
+
+using longlong = long long;
+
+using ushort = unsigned short;
+
+/// Unsigned integer.
+using uint = unsigned;
+
+/// Unsigned long integer.
+using ulong = unsigned long;
+
+/// Used as the argument type to integral literal operators.
+using ulonglong = unsigned long long;
+
+/// 8-bit signed integer.
+using int8 = cen::i8;
+
+/// 16-bit signed integer.
+using int16 = cen::i16;
+
+/// 32-bit signed integer.
+using int32 = cen::i32;
+
+/// 64-bit signed integer.
+using int64 = cen::i64;
+
+/// 8-bit unsigned integer.
+using uint8 = cen::u8;
+
+/// 16-bit unsigned integer.
+using uint16 = cen::u16;
+
+/// 32-bit unsigned integer.
+using uint32 = cen::u32;
+
+/// 64-bit unsigned integer.
+using uint64 = cen::u64;
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_INTEGERS_HPP
 
 // #include "compiler.hpp"
 #ifndef RUNE_CORE_COMPILER_HPP
@@ -7954,7 +9675,7 @@ namespace rune {
  * \return a string representation of the supplied value; `std::nullopt` if something goes
  * wrong.
  */
-template <numeric T, std::size_t BufferSize = 24>
+template <numeric T, usize BufferSize = 24>
 [[nodiscard]] auto to_string(const T number) -> std::optional<std::string>
 {
   if constexpr (on_gcc() || (on_clang() && std::floating_point<T>))
@@ -8834,11 +10555,14 @@ void fill_if_exists(const json_type& json,
 #define RUNE_ALIASES_INTEGERS_HPP
 
 #include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
 
 namespace rune {
 
 /// \addtogroup core
 /// \{
+
+using usize = std::size_t;
 
 using longlong = long long;
 
@@ -11778,9 +13502,10 @@ void from_json(const json_type& json, tmx_object_layer& layer);
 #define RUNE_TMX_PARSERS_HPP
 
 #include <cassert>  // assert
-#include <cstddef>  // size_t
 #include <memory>   // make_unique
 #include <string>   // string
+
+// #include "../aliases/integers.hpp"
 
 // #include "../aliases/json_type.hpp"
 
@@ -12129,7 +13854,7 @@ inline void from_json(const json_type& json, tmx_tile& tile)
     auto& terrain = tile.terrain.emplace();
     for (const auto& [key, value] : it->items())
     {
-      const auto index = from_string<std::size_t>(key).value();
+      const auto index = from_string<usize>(key).value();
       terrain.at(index) = value.get<int>();
     }
   }
