@@ -4,11 +4,11 @@
 #include <array>         // array
 #include <charconv>      // to_chars
 #include <concepts>      // floating_point
-#include <cstddef>       // size_t
 #include <optional>      // optional
 #include <string>        // string, to_string
 #include <system_error>  // errc
 
+#include "../aliases/integers.hpp"
 #include "compiler.hpp"
 #include "concepts.hpp"
 
@@ -35,7 +35,7 @@ namespace rune {
  * \return a string representation of the supplied value; `std::nullopt` if something goes
  * wrong.
  */
-template <numeric T, std::size_t BufferSize = 24>
+template <numeric T, usize BufferSize = 24>
 [[nodiscard]] auto to_string(const T number) -> std::optional<std::string>
 {
   if constexpr (on_gcc() || (on_clang() && std::floating_point<T>))

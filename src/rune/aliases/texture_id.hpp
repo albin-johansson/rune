@@ -1,8 +1,9 @@
 #ifndef RUNE_ALIASES_TEXTURE_ID_HPP
 #define RUNE_ALIASES_TEXTURE_ID_HPP
 
-#include <cstddef>    // size_t
 #include <nenya.hpp>  // strong_type
+
+#include "integers.hpp"
 
 namespace rune {
 
@@ -20,12 +21,12 @@ struct texture_id_tag;
  *
  * \brief The underlying type of the `texture_id` strong type.
  *
- * \details By default, the underlying type is `std::size_t`.
+ * \details By default, the underlying type is `usize`.
  *
  * \note The value of this macro must be of a hashable type.
  */
 #ifndef RUNE_TEXTURE_ID_UNDERLYING_TYPE
-#define RUNE_TEXTURE_ID_UNDERLYING_TYPE std::size_t
+#define RUNE_TEXTURE_ID_UNDERLYING_TYPE usize
 #endif  // RUNE_TEXTURE_ID_UNDERLYING_TYPE
 
 /**

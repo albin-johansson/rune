@@ -2,8 +2,10 @@
 #define RUNE_CONTAINERS_STACK_RESOURCE_HPP
 
 #include <array>            // array
-#include <cstddef>          // size_t, byte
+#include <cstddef>          // byte
 #include <memory_resource>  // memory_resource, monotonic_buffer_resource
+
+#include "../aliases/integers.hpp"
 
 namespace rune {
 
@@ -21,7 +23,7 @@ namespace rune {
  *
  * \tparam size the size of the stack buffer.
  */
-template <std::size_t Size>
+template <usize Size>
 class stack_resource final
 {
  public:

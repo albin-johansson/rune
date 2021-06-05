@@ -4,12 +4,12 @@
 #include <algorithm>  // find_if
 #include <cassert>    // assert
 #include <concepts>   // convertible_to
-#include <cstddef>    // size_t
 #include <iterator>   // distance, iter_swap
 #include <optional>   // optional
 #include <utility>    // pair, move, forward
 #include <vector>     // vector
 
+#include "../aliases/integers.hpp"
 #include "../core/rune_error.hpp"
 
 namespace rune {
@@ -49,7 +49,7 @@ class vector_map final
   using key_type = K;
   using mapped_type = V;
   using value_type = std::pair<key_type, mapped_type>;
-  using size_type = std::size_t;
+  using size_type = usize;
   using iterator = typename std::vector<value_type>::iterator;
   using const_iterator = typename std::vector<value_type>::const_iterator;
 
@@ -88,7 +88,7 @@ class vector_map final
 
   /**
    * \brief Adds a key/value pair to the map.
-   * 
+   *
    * \pre `key` must not be associated with an existing entry.
    *
    * \tparam Args the types of the arguments that will be forwarded.
@@ -123,7 +123,7 @@ class vector_map final
 
   /**
    * \brief Adds or replaces a key/value pair in the map.
-   * 
+   *
    * \tparam Args the types of the arguments that will be forwarded.
    *
    * \param key the key that will be associated with the value.
@@ -134,11 +134,11 @@ class vector_map final
   template <typename... Args>
   auto emplace_or_replace(const key_type& key, Args&&... args) -> value_type&
   {
-    if (const auto it = find(key); it != end()) 
+    if (const auto it = find(key); it != end())
     {
       it->second = mapped_type{std::forward<Args>(args)...};
       return *it;
-    } 
+    }
     else
     {
       return emplace(key, std::forward<Args>(args)...);
@@ -155,11 +155,11 @@ class vector_map final
    */
   auto emplace_or_replace(const key_type& key, mapped_type value) -> value_type&
   {
-    if (const auto it = find(key); it != end()) 
+    if (const auto it = find(key); it != end())
     {
       it->second = std::move(value);
       return *it;
-    } 
+    }
     else
     {
       return emplace(key, std::move(value));

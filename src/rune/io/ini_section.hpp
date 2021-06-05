@@ -1,13 +1,13 @@
 #ifndef RUNE_IO_INI_SECTION_HPP
 #define RUNE_IO_INI_SECTION_HPP
 
-#include <cstddef>      // size_t
 #include <functional>   // less
 #include <map>          // map
 #include <ostream>      // ostream
 #include <string>       // basic_string
 #include <string_view>  // basic_string_view
 
+#include "../aliases/integers.hpp"
 #include "../core/rune_error.hpp"
 #include "ini_value.hpp"
 
@@ -39,7 +39,7 @@ class basic_ini_section final
   using string_type = std::basic_string<char_type>;
   using string_view_type = std::basic_string_view<char_type>;
   using format_type = ini_format<char_type>;
-  using size_type = std::size_t;
+  using size_type = usize;
 
   void dump(std::ostream& stream, const format_type& format) const
   {

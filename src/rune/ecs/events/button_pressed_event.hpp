@@ -10,7 +10,7 @@ namespace rune {
 struct button_pressed_event final
 {
   ui_button::entity button_entity{null<ui_button>()};  ///< The pressed button entity.
-  uint32 id{};                                   ///< The ID associated with the button.
+  uint32 id{};  ///< The ID associated with the button.
 };
 
 }  // namespace rune

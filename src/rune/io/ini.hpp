@@ -3,7 +3,6 @@
 
 #include <algorithm>    // find_if, all_of
 #include <cassert>      // assert
-#include <cstddef>      // size_t
 #include <filesystem>   // path
 #include <fstream>      // ifstream, ofstream
 #include <functional>   // less
@@ -39,7 +38,7 @@ class basic_ini final
   using string_view_type = std::basic_string_view<char_type>;
   using section_type = basic_ini_section<char_type>;
   using format_type = ini_format<char_type>;
-  using size_type = std::size_t;
+  using size_type = usize;
   using iterator = typename std::map<string_type, section_type>::iterator;
   using const_iterator = typename std::map<string_type, section_type>::const_iterator;
 

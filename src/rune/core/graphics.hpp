@@ -3,7 +3,6 @@
 
 #include <cassert>        // assert
 #include <centurion.hpp>  // window, renderer, texture, font_cache, pixel_format
-#include <cstddef>        // size_t
 #include <string>         // string
 #include <unordered_map>  // unordered_map
 #include <utility>        // forward
@@ -40,7 +39,7 @@ namespace rune {
 class graphics
 {
  public:
-  using size_type = std::size_t;
+  using size_type = usize;
 
   /**
    * \brief Creates a graphics context.

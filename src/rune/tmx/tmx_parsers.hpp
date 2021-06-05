@@ -2,10 +2,10 @@
 #define RUNE_TMX_PARSERS_HPP
 
 #include <cassert>  // assert
-#include <cstddef>  // size_t
 #include <memory>   // make_unique
 #include <string>   // string
 
+#include "../aliases/integers.hpp"
 #include "../aliases/json_type.hpp"
 #include "../core/from_string.hpp"
 #include "../io/json_utils.hpp"
@@ -331,7 +331,7 @@ inline void from_json(const json_type& json, tmx_tile& tile)
     auto& terrain = tile.terrain.emplace();
     for (const auto& [key, value] : it->items())
     {
-      const auto index = from_string<std::size_t>(key).value();
+      const auto index = from_string<usize>(key).value();
       terrain.at(index) = value.get<int>();
     }
   }

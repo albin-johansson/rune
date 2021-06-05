@@ -5,7 +5,7 @@
 #include <cassert>        // assert
 #include <cmath>          // abs
 #include <concepts>       // floating_point, invocable, same_as
-#include <cstddef>        // size_t, byte
+#include <cstddef>        // byte
 #include <deque>          // deque
 #include <iterator>       // output_iterator
 #include <limits>         // numeric_limits
@@ -17,6 +17,7 @@
 #include <unordered_map>  // unordered_map
 #include <vector>         // vector
 
+#include "../aliases/integers.hpp"
 #include "../math/max.hpp"
 #include "../math/min.hpp"
 #include "../math/vector2.hpp"
@@ -57,8 +58,8 @@ namespace rune {
 #endif  // RUNE_AABB_TREE_QUERY_BUFFER_SIZE
 
 // clang-format off
-inline constexpr std::size_t aabb_tree_default_capacity = RUNE_AABB_TREE_DEFAULT_CAPACITY;
-inline constexpr std::size_t aabb_tree_query_buffer_size = RUNE_AABB_TREE_QUERY_BUFFER_SIZE;
+inline constexpr usize aabb_tree_default_capacity = RUNE_AABB_TREE_DEFAULT_CAPACITY;
+inline constexpr usize aabb_tree_query_buffer_size = RUNE_AABB_TREE_QUERY_BUFFER_SIZE;
 // clang-format on
 
 /**
@@ -106,8 +107,8 @@ class aabb_tree final
   using vector_type = basic_vector2<precision_type>;
   using aabb_type = basic_aabb<precision_type>;
   using node_type = aabb_node<key_type, precision_type>;
-  using index_type = std::size_t;
-  using size_type = std::size_t;
+  using index_type = usize;
+  using size_type = usize;
 
   // TODO reserve()?
 

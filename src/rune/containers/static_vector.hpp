@@ -3,10 +3,10 @@
 
 #include <array>             // array
 #include <cassert>           // assert
-#include <cstddef>           // size_t
 #include <initializer_list>  // initializer_list
 #include <utility>           // forward, move
 
+#include "../aliases/integers.hpp"
 #include "../core/concepts.hpp"
 #include "../core/rune_error.hpp"
 
@@ -26,11 +26,11 @@ namespace rune {
  * \tparam T the element type.
  * \tparam Capacity the maximum capacity of the vector.
  */
-template <default_constructible T, std::size_t Capacity>
+template <default_constructible T, usize Capacity>
 class static_vector final
 {
  public:
-  using size_type = std::size_t;
+  using size_type = usize;
   using value_type = T;
   using iterator = value_type*;
   using const_iterator = const value_type*;

@@ -2,11 +2,14 @@
 #define RUNE_ALIASES_INTEGERS_HPP
 
 #include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
 
 namespace rune {
 
 /// \addtogroup core
 /// \{
+
+using usize = std::size_t;
 
 using longlong = long long;
 
