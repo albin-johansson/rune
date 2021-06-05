@@ -3,6 +3,8 @@
 
 #include <centurion.hpp>  // fpoint
 
+#include "../entity_type.hpp"
+
 namespace rune {
 
 namespace tags {
@@ -11,6 +13,8 @@ struct ui_line_tag;
 
 struct ui_line final
 {
+  using entity = entity_type<tags::ui_line_tag>;
+
   cen::fpoint start;
   cen::fpoint end;
 };

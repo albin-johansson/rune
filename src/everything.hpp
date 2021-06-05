@@ -51,6 +51,7 @@
 #include "rune/ecs/null_entity.hpp"
 #include "rune/ecs/ui/button_system.hpp"
 #include "rune/ecs/ui/label_system.hpp"
+#include "rune/ecs/ui/line_system.hpp"
 #include "rune/ecs/ui/ui_button.hpp"
 #include "rune/ecs/ui/ui_checkbox.hpp"
 #include "rune/ecs/ui/ui_grid.hpp"
