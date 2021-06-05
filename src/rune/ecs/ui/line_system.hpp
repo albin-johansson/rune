@@ -5,14 +5,16 @@
 #include <entt.hpp>       // registry
 
 #include "../../core/graphics.hpp"
+#include "ui_grid.hpp"
 #include "ui_line.hpp"
+#include "ui_position.hpp"
 
 namespace rune {
 
 struct ui_line_cfg final
 {
-  cen::fpoint start;
-  cen::fpoint end;
+  ui_position start;
+  ui_position end;
   cen::color color{cen::colors::white};
 };
 
@@ -36,7 +38,7 @@ void render_lines(const entt::registry& registry, graphics& gfx)
   {
     // TODO color
     renderer.set_color(cen::colors::white);
-    renderer.draw_line(line.start, line.end);
+    renderer.draw_line(from_grid(line.start), from_grid(line.end));
   }
 }
 

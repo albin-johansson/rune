@@ -10,7 +10,7 @@ class ui_example final : public rune::game_base
   {
     gfx.emplace_cache(0, "resources/fonts/daniel.ttf", 36);
     rune::make_button(m_registry, {.row = 10, .column = 10, .text = "foo"});
-    rune::make_line(m_registry, {.start = {100, 100}, .end = {200, 200}});
+    rune::make_line(m_registry, {.start = {14, 10}, .end = {16, 20}});
   }
 
   void tick(const rune::delta_time dt) override
