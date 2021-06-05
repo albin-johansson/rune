@@ -61,6 +61,26 @@ concept has_on_exit = requires (Game game)
 
 // clang-format on
 
+class game_base
+{
+ public:
+  virtual ~game_base() noexcept = default;
+
+  virtual void handle_input(const rune::input& input)
+  {}
+
+  virtual void tick(rune::delta_time dt)
+  {}
+
+  virtual void render(rune::graphics& gfx) const
+  {}
+
+  [[nodiscard]] virtual auto should_quit() const -> bool
+  {
+    return false;
+  }
+};
+
 /// \} End of group core
 
 }  // namespace rune
