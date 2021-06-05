@@ -11,6 +11,8 @@ namespace rune {
 
 inline void update_ui(entt::registry& registry, entt::dispatcher& dispatcher)
 {
+  // TODO check for button hover
+  // TODO key binds
 }
 
 inline void render_ui(const entt::registry& registry, graphics& gfx)
