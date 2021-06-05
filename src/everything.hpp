@@ -52,6 +52,7 @@
 #include "rune/ecs/ui/button_system.hpp"
 #include "rune/ecs/ui/ui_button.hpp"
 #include "rune/ecs/ui/ui_checkbox.hpp"
+#include "rune/ecs/ui/ui_line.hpp"
 #include "rune/io/ini.hpp"
 #include "rune/io/ini_value.hpp"
 #include "rune/io/json_utils.hpp"
