@@ -58,6 +58,7 @@
 #include "rune/ecs/ui/ui_label.hpp"
 #include "rune/ecs/ui/ui_line.hpp"
 #include "rune/ecs/ui/ui_position.hpp"
+#include "rune/ecs/ui/ui_system.hpp"
 #include "rune/io/ini.hpp"
 #include "rune/io/ini_value.hpp"
 #include "rune/io/json_utils.hpp"

@@ -1,40 +1,36 @@
 #include <centurion.hpp>
 #include <rune.hpp>
 
-#define RUNE_IMPLEMENT_MAIN_WITH_GAME(Game) \
-  int main(int, char**)                     \
-  {                                         \
-    cen::library centurion;                 \
-    rune::engine<Game> engine;              \
-    return engine.run();                    \
-  }
-
 namespace {
 
-class ui_example final
+class ui_example final : public rune::game_base
 {
  public:
-  ui_example()
+  explicit ui_example(rune::graphics& gfx)
   {
-
+    gfx.emplace_cache(0, "resources/fonts/daniel.ttf", 36);
+    rune::make_button(m_registry, {.row = 10, .column = 10, .text = "foo"});
+    rune::make_line(m_registry, {.start = {100, 100}, .end = {200, 200}});
   }
 
-  void handle_input(const rune::input& input)
-  {}
-
-  void tick(rune::delta_time dt)
-  {}
-
-  void render(rune::graphics& gfx) const
-  {}
-
-  [[nodiscard]] auto should_quit() const -> bool
+  void tick(const rune::delta_time dt) override
   {
-    return false;
+    rune::update_ui(m_registry, m_dispatcher);
+  }
+
+  void render(rune::graphics& gfx) const override
+  {
+    auto& renderer = gfx.renderer();
+    renderer.clear_with(cen::colors::dark_gray);
+
+    rune::render_ui(m_registry, gfx);
+
+    renderer.present();
   }
 
  private:
   entt::registry m_registry;
+  entt::dispatcher m_dispatcher;
 };
 
 }  // namespace
