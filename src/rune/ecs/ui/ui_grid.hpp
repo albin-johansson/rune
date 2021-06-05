@@ -3,6 +3,8 @@
 
 #include <centurion.hpp>  // fpoint
 
+#include "ui_position.hpp"
+
 namespace rune {
 
 #ifndef RUNE_MENU_ROW_SIZE
@@ -30,6 +32,11 @@ inline constexpr float menu_column_size = RUNE_MENU_COLUMN_SIZE;
     -> cen::fpoint
 {
   return {column_to_x(column), row_to_y(row)};
+}
+
+[[nodiscard]] constexpr auto from_grid(const ui_position position) noexcept -> cen::fpoint
+{
+  return {column_to_x(position.col), row_to_y(position.row)};
 }
 
 }  // namespace rune
