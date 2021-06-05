@@ -21,7 +21,7 @@ class ui_example final : public rune::game_base
   void render(rune::graphics& gfx) const override
   {
     auto& renderer = gfx.renderer();
-    renderer.clear_with(cen::colors::dark_gray);
+    renderer.clear_with(cen::colors::black);
 
     rune::render_ui(m_registry, gfx);
 
