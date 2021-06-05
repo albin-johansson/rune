@@ -192,6 +192,16 @@ class graphics
     return m_caches.at(id);
   }
 
+  [[nodiscard]] auto get_font(const font_id id) -> cen::font&
+  {
+    return get_cache(id).get_font();
+  }
+
+  [[nodiscard]] auto get_font(const font_id id) const -> const cen::font&
+  {
+    return get_cache(id).get_font();
+  }
+
   /**
    * \brief Indicates whether or not the graphics context has a font cache associated with
    * the specified ID.
