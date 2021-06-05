@@ -47,6 +47,7 @@
 #include "rune/core/to_string.hpp"
 #include "rune/doxygen.hpp"
 #include "rune/ecs/entity_type.hpp"
+#include "rune/ecs/events/button_pressed_event.hpp"
 #include "rune/ecs/null_entity.hpp"
 #include "rune/ecs/ui/button_system.hpp"
 #include "rune/ecs/ui/ui_button.hpp"
