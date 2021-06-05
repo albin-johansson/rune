@@ -26,6 +26,7 @@
 
 #include "rune/aliases/czstring.hpp"
 #include "rune/aliases/delta_time.hpp"
+#include "rune/aliases/font_id.hpp"
 #include "rune/aliases/integers.hpp"
 #include "rune/aliases/json_type.hpp"
 #include "rune/aliases/texture_id.hpp"

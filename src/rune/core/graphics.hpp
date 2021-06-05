@@ -9,6 +9,7 @@
 #include <utility>        // forward
 #include <vector>         // vector
 
+#include "../aliases/font_id.hpp"
 #include "../aliases/integers.hpp"
 #include "../aliases/texture_id.hpp"
 #include "../aliases/texture_index.hpp"
@@ -40,9 +41,6 @@ class graphics
 {
  public:
   using size_type = std::size_t;
-
-  // TODO strong types
-  using font_id = size_type;
 
   /**
    * \brief Creates a graphics context.
