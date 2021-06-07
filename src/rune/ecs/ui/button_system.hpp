@@ -9,10 +9,11 @@
 #include "../../aliases/integers.hpp"
 #include "../../aliases/maybe.hpp"
 #include "../../core/graphics.hpp"
-#include "ui_bounds.hpp"
+#include "../events/button_pressed_event.hpp"
 #include "ui_button.hpp"
 #include "ui_checkbox.hpp"
 #include "ui_foreground.hpp"
+#include "ui_grid.hpp"
 #include "ui_label.hpp"
 #include "ui_position.hpp"
 
@@ -40,10 +41,6 @@ inline auto make_button(entt::registry& registry, ui_button_cfg cfg) -> ui_butto
 
   auto& foreground = registry.emplace<ui_foreground>(entity);
   foreground.color = cfg.fg;
-
-  auto& bounds = registry.emplace<ui_bounds>(entity);
-
-  // TODO set bounds position
 
   return entity;
 }
@@ -81,12 +78,13 @@ inline auto update_button_hover(entt::registry& registry, const cen::mouse& mous
     -> maybe<ui_button::entity>
 {
   const auto mousePos = cen::cast<cen::fpoint>(mouse.position());
-  for (auto&& [entity, button, bounds] :
-       registry.view<ui_button, const ui_bounds>().each())
+  for (auto&& [entity, button, position] :
+       registry.view<ui_button, const ui_position>().each())
   {
-    if (button.is_visible)
+    if (button.is_visible && button.size)
     {
-      button.is_hovered = bounds.bounds.contains(mousePos);
+      const auto bounds = cen::frect{from_grid(position), *button.size};
+      button.is_hovered = bounds.contains(mousePos);
       if (button.is_hovered)
       {
         return ui_button::entity{entity};
@@ -95,6 +93,23 @@ inline auto update_button_hover(entt::registry& registry, const cen::mouse& mous
   }
 
   return std::nullopt;
+}
+
+inline void render_buttons(const entt::registry& registry, graphics& gfx)
+{
+  auto& renderer = gfx.renderer();
+  for (auto&& [entity, button, label, position] :
+       registry.view<const ui_button, const ui_label, const ui_position>().each())
+  {
+    if (!button.size)
+    {
+      const auto& font = gfx.get_font(label.font);
+      button.size = cen::cast<cen::farea>(font.string_size(label.text).value());
+    }
+
+    renderer.set_color(cen::colors::white);
+    renderer.draw_rect(cen::frect{from_grid(position), button.size.value()});
+  }
 }
 
 }  // namespace rune
