@@ -16,9 +16,9 @@ class ui_example final : public rune::game_base
     rune::make_line(m_registry, {.start = {14, 10}, .end = {16, 20}});
   }
 
-  void tick(const rune::delta_time dt) override
+  void handle_input(const rune::input& input) override
   {
-    rune::update_ui(m_registry, m_dispatcher);
+    rune::update_ui(m_registry, m_dispatcher, input);
   }
 
   void render(rune::graphics& gfx) const override
