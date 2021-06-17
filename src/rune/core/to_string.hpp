@@ -9,6 +9,7 @@
 #include <system_error>  // errc
 
 #include "../aliases/integers.hpp"
+#include "../aliases/maybe.hpp"
 #include "compiler.hpp"
 #include "concepts.hpp"
 
@@ -36,7 +37,7 @@ namespace rune {
  * wrong.
  */
 template <cc::numeric T, usize BufferSize = 24>
-[[nodiscard]] auto to_string(const T number) -> std::optional<std::string>
+[[nodiscard]] auto to_string(const T number) -> maybe<std::string>
 {
   if constexpr (on_gcc() || (on_clang() && std::floating_point<T>))
   {

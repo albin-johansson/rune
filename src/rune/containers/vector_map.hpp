@@ -5,11 +5,11 @@
 #include <cassert>    // assert
 #include <concepts>   // convertible_to
 #include <iterator>   // distance, iter_swap
-#include <optional>   // optional
 #include <utility>    // pair, move, forward
 #include <vector>     // vector
 
 #include "../aliases/integers.hpp"
+#include "../aliases/maybe.hpp"
 #include "../core/rune_error.hpp"
 
 namespace rune {
@@ -316,7 +316,7 @@ class vector_map final
    * the key is unused.
    */
   template <transparent_to<key_type> T>
-  [[nodiscard]] auto index_of(const T& key) const -> std::optional<size_type>
+  [[nodiscard]] auto index_of(const T& key) const -> maybe<size_type>
   {
     if (const auto it = find(key); it != end())
     {

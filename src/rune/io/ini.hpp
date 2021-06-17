@@ -9,7 +9,6 @@
 #include <istream>      // istream
 #include <locale>       // locale, isspace, isdigit
 #include <map>          // map
-#include <optional>     // optional
 #include <ostream>      // ostream
 #include <string>       // basic_string, getline
 #include <string_view>  // basic_string_view
@@ -17,6 +16,7 @@
 #include <vector>       // vector
 
 #include "../aliases/integers.hpp"
+#include "../aliases/maybe.hpp"
 #include "../core/rune_error.hpp"
 #include "ini_section.hpp"
 #include "ini_value.hpp"
@@ -335,8 +335,7 @@ class basic_ini final
     }
   }
 
-  [[nodiscard]] auto parse_section_name(const string_type& line)
-      -> std::optional<string_type>
+  [[nodiscard]] auto parse_section_name(const string_type& line) -> maybe<string_type>
   {
     if (line.back() == m_format.section_end)
     {
