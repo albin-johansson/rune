@@ -29,6 +29,11 @@ struct active_menu final
   ui_menu::entity menu_entity{null<ui_menu>()};
 };
 
+struct in_menu final
+{
+  ui_menu::entity menu_entity{null<ui_menu>()};
+};
+
 }  // namespace rune
 
 #endif  // RUNE_ECS_UI_UI_MENU_HPP
