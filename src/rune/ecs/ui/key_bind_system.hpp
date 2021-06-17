@@ -23,7 +23,7 @@ inline auto make_key_bind(entt::registry& registry,
   return entity;
 }
 
-template <enum_type T>
+template <cc::enum_type T>
 auto make_key_bind(entt::registry& registry, const cen::scan_code key, const T id)
     -> ui_key_bind::entity
 {
