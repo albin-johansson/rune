@@ -2,7 +2,7 @@
 #define RUNE_CORE_CONCEPTS_HPP
 
 #include <concepts>     // convertible_to, same_as
-#include <type_traits>  // is_arithmetic_v, is_default_constructible_v
+#include <type_traits>  // is_arithmetic_v, is_default_constructible_v, is_enum_v
 
 namespace rune {
 
@@ -14,6 +14,9 @@ namespace rune {
 /// Concept for a type that is either integral or floating-point, but not `bool`.
 template <typename T>
 concept numeric = std::is_arithmetic_v<T> && !std::same_as<T, bool>;
+
+template <typename T>
+concept enum_type = std::is_enum_v<T>;
 
 template <typename T>
 concept default_constructible = std::is_default_constructible_v<T>;
