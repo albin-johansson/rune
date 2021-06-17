@@ -32,7 +32,7 @@ namespace rune {
  *
  * \param number the number that will be converted.
  *
- * \return a string representation of the supplied value; `std::nullopt` if something goes
+ * \return a string representation of the supplied value; `nothing` if something goes
  * wrong.
  */
 template <cc::numeric T, usize BufferSize = 24>
@@ -53,7 +53,7 @@ template <cc::numeric T, usize BufferSize = 24>
     }
     else
     {
-      return std::nullopt;
+      return nothing;
     }
   }
 }

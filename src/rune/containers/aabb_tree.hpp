@@ -225,7 +225,7 @@ class aabb_tree final
 
       if (is_leaf(node))
       {
-        node.parent = std::nullopt;
+        node.parent = nothing;
         indices.at(static_cast<size_type>(count)) = index;
         ++count;
       }
@@ -273,7 +273,7 @@ class aabb_tree final
         parentNode.right = index2;
         parentNode.height = 1 + max(index1Node.height, index2Node.height);
         parentNode.box = merge(index1Node.box, index2Node.box);
-        parentNode.parent = std::nullopt;
+        parentNode.parent = nothing;
 
         index1Node.parent = parentIndex;
         index2Node.parent = parentIndex;
@@ -597,7 +597,7 @@ class aabb_tree final
     }
 
     auto& node = m_nodes.at(end);
-    node.next = std::nullopt;
+    node.next = nothing;
     node.height = -1;
   }
 
@@ -635,9 +635,9 @@ class aabb_tree final
 
     m_nextFreeIndex = node.next;
 
-    node.parent = std::nullopt;
-    node.left = std::nullopt;
-    node.right = std::nullopt;
+    node.parent = nothing;
+    node.left = nothing;
+    node.right = nothing;
     node.height = 0;
 
     ++m_nodeCount;
@@ -964,7 +964,7 @@ class aabb_tree final
     if (!m_root)
     {
       m_root = leafIndex;
-      m_nodes.at(leafIndex).parent = std::nullopt;
+      m_nodes.at(leafIndex).parent = nothing;
       return;
     }
 
@@ -1015,7 +1015,7 @@ class aabb_tree final
   {
     if (leafIndex == m_root)
     {
-      m_root = std::nullopt;
+      m_root = nothing;
       return;
     }
 
@@ -1047,7 +1047,7 @@ class aabb_tree final
     else
     {
       m_root = siblingIndex;
-      m_nodes.at(siblingIndex.value()).parent = std::nullopt;
+      m_nodes.at(siblingIndex.value()).parent = nothing;
       free_node(parentIndex.value());
     }
   }
@@ -1095,7 +1095,7 @@ class aabb_tree final
 
   void validate_structure(const std::optional<index_type> nodeIndex) const
   {
-    if (nodeIndex == std::nullopt)
+    if (nodeIndex == nothing)
     {
       return;
     }

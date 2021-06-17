@@ -345,7 +345,7 @@ class basic_ini final
     else
     {
       m_errors.push_back(line);
-      return std::nullopt;
+      return nothing;
     }
   }
 

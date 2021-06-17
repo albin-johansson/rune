@@ -22,7 +22,7 @@ template <typename T>
   }
   else
   {
-    return std::nullopt;
+    return nothing;
   }
 }
 

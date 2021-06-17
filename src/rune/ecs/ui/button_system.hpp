@@ -92,7 +92,7 @@ inline auto update_button_hover(entt::registry& registry, const cen::mouse& mous
     }
   }
 
-  return std::nullopt;
+  return nothing;
 }
 
 inline void render_buttons(const entt::registry& registry, graphics& gfx)

@@ -312,7 +312,7 @@ class vector_map final
    *
    * \param key the key of the entry to look for.
    *
-   * \return the index of the specified entry in the underlying vector; `std::nullopt` if
+   * \return the index of the specified entry in the underlying vector; `nothing` if
    * the key is unused.
    */
   template <transparent_to<key_type> T>
@@ -324,7 +324,7 @@ class vector_map final
     }
     else
     {
-      return std::nullopt;
+      return nothing;
     }
   }
 
