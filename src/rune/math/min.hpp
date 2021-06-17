@@ -19,7 +19,7 @@ namespace rune {
  *
  * \return the smallest of the two values.
  */
-template <has_less_than T>
+template <cc::has_less_than T>
 [[nodiscard]] constexpr auto min(const T& a, const T& b) noexcept(noexcept(a < b)) -> T
 {
   return (a < b) ? a : b;

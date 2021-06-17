@@ -49,7 +49,7 @@ using random_engine = std::mt19937;
  *
  * \return a random value in the specified range.
  */
-template <numeric T>
+template <cc::numeric T>
 [[nodiscard]] auto next_random(const T min, const T max) -> T
 {
   static auto engine = make_random_engine();

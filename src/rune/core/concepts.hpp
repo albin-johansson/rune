@@ -4,7 +4,7 @@
 #include <concepts>     // convertible_to, same_as
 #include <type_traits>  // is_arithmetic_v, is_default_constructible_v, is_enum_v
 
-namespace rune {
+namespace rune::cc {
 
 /// \addtogroup core
 /// \{
@@ -37,6 +37,6 @@ concept has_less_than = requires (T value)
 
 /// \} End of group core
 
-}  // namespace rune
+}  // namespace rune::cc
 
 #endif  // RUNE_CORE_CONCEPTS_HPP

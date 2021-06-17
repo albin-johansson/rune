@@ -35,7 +35,7 @@ namespace rune {
  * \return a string representation of the supplied value; `std::nullopt` if something goes
  * wrong.
  */
-template <numeric T, usize BufferSize = 24>
+template <cc::numeric T, usize BufferSize = 24>
 [[nodiscard]] auto to_string(const T number) -> std::optional<std::string>
 {
   if constexpr (on_gcc() || (on_clang() && std::floating_point<T>))

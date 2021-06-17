@@ -26,7 +26,7 @@ namespace rune {
  * \tparam T the element type.
  * \tparam Capacity the maximum capacity of the vector.
  */
-template <default_constructible T, usize Capacity>
+template <cc::default_constructible T, usize Capacity>
 class static_vector final
 {
  public:

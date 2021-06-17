@@ -88,7 +88,7 @@ void get_if_exists(const json_type& json,
   }
 }
 
-template <has_value_type T>
+template <cc::has_value_type T>
 void emplace(const json_type& json, const std::string_view key, T& value)
 {
   static_assert(json_serializable_type<typename T::value_type>);
@@ -99,7 +99,7 @@ void emplace(const json_type& json, const std::string_view key, T& value)
   value = T{it->get<typename T::value_type>()};
 }
 
-template <has_value_type T>
+template <cc::has_value_type T>
 void emplace(const json_type& json, const std::string_view key, std::optional<T>& value)
 {
   static_assert(json_serializable_type<typename T::value_type>);
@@ -110,7 +110,7 @@ void emplace(const json_type& json, const std::string_view key, std::optional<T>
   value = T{it->get<typename T::value_type>()};
 }
 
-template <has_value_type T>
+template <cc::has_value_type T>
 void emplace_if_exists(const json_type& json, const std::string_view key, T& value)
 {
   static_assert(json_serializable_type<typename T::value_type>);
@@ -121,7 +121,7 @@ void emplace_if_exists(const json_type& json, const std::string_view key, T& val
   }
 }
 
-template <has_value_type T>
+template <cc::has_value_type T>
 void emplace_if_exists(const json_type& json,
                        const std::string_view key,
                        std::optional<T>& value)
@@ -176,7 +176,7 @@ void emplace_if_exists(const json_type& json,
  * \param array the JSON array that provides the source data.
  * \param[out] container the container that will be filled.
  */
-template <has_value_type Container>
+template <cc::has_value_type Container>
 void fill(const json_type& array, Container& container)
 {
   static_assert(json_serializable_type<typename Container::value_type>);
@@ -205,7 +205,7 @@ void fill(const json_type& array, Container& container)
  * \param key the key of the JSON array element.
  * \param[out] container the container that will be filled.
  */
-template <has_value_type Container>
+template <cc::has_value_type Container>
 void fill(const json_type& json, const std::string_view key, Container& container)
 {
   static_assert(json_serializable_type<typename Container::value_type>);
@@ -239,7 +239,7 @@ void fill(const json_type& json, const std::string_view key, Container& containe
  * \param key the key of the JSON array element.
  * \param[out] container the container that will be filled.
  */
-template <has_value_type Container>
+template <cc::has_value_type Container>
 void fill_if_exists(const json_type& json,
                     const std::string_view key,
                     Container& container)
