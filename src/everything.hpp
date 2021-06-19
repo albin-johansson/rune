@@ -54,6 +54,7 @@
 #include "rune/ecs/ui/key_bind_system.hpp"
 #include "rune/ecs/ui/label_system.hpp"
 #include "rune/ecs/ui/line_system.hpp"
+#include "rune/ecs/ui/ui_background.hpp"
 #include "rune/ecs/ui/ui_button.hpp"
 #include "rune/ecs/ui/ui_checkbox.hpp"
 #include "rune/ecs/ui/ui_foreground.hpp"
