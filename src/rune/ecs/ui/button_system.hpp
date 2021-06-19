@@ -10,11 +10,13 @@
 #include "../../aliases/maybe.hpp"
 #include "../../core/graphics.hpp"
 #include "../events/button_pressed_event.hpp"
+#include "../null_entity.hpp"
 #include "ui_button.hpp"
 #include "ui_checkbox.hpp"
 #include "ui_foreground.hpp"
 #include "ui_grid.hpp"
 #include "ui_label.hpp"
+#include "ui_menu.hpp"
 #include "ui_position.hpp"
 
 namespace rune {
@@ -24,6 +26,7 @@ struct ui_button_cfg final
   ui_position position;
   std::string text;
   uint32 id{};
+  ui_menu::entity menu{null<ui_menu>()};
   cen::color fg{cen::colors::white};
 };
 
@@ -39,8 +42,8 @@ inline auto make_button(entt::registry& registry, ui_button_cfg cfg) -> ui_butto
   auto& label = registry.emplace<ui_label>(entity);
   label.text = std::move(cfg.text);
 
-  auto& foreground = registry.emplace<ui_foreground>(entity);
-  foreground.color = cfg.fg;
+  registry.emplace<in_menu>(entity, cfg.menu);
+  registry.emplace<ui_foreground>(entity, cfg.fg);
 
   return entity;
 }
@@ -77,11 +80,13 @@ inline auto make_button(entt::registry& registry, ui_button_cfg cfg) -> ui_butto
 inline auto update_button_hover(entt::registry& registry, const cen::mouse& mouse)
     -> maybe<ui_button::entity>
 {
+  const auto menuEntity = registry.ctx<const active_menu>().menu_entity;
   const auto mousePos = cen::cast<cen::fpoint>(mouse.position());
-  for (auto&& [entity, button, position] :
-       registry.view<ui_button, const ui_position>().each())
+
+  for (auto&& [entity, button, position, inMenu] :
+       registry.view<ui_button, const ui_position, const in_menu>().each())
   {
-    if (button.is_visible && button.size)
+    if (inMenu.menu_entity == menuEntity && button.is_visible && button.size)
     {
       const auto bounds = cen::frect{from_grid(position), *button.size};
       button.is_hovered = bounds.contains(mousePos);
@@ -97,18 +102,24 @@ inline auto update_button_hover(entt::registry& registry, const cen::mouse& mous
 
 inline void render_buttons(const entt::registry& registry, graphics& gfx)
 {
+  const auto menuEntity = registry.ctx<const active_menu>().menu_entity;
   auto& renderer = gfx.renderer();
-  for (auto&& [entity, button, label, position] :
-       registry.view<const ui_button, const ui_label, const ui_position>().each())
-  {
-    if (!button.size)
-    {
-      const auto& font = gfx.get_font(label.font);
-      button.size = cen::cast<cen::farea>(font.string_size(label.text).value());
-    }
 
-    renderer.set_color(cen::colors::white);
-    renderer.draw_rect(cen::frect{from_grid(position), button.size.value()});
+  const auto view =
+      registry.view<const ui_button, const ui_label, const ui_position, const in_menu>();
+  for (auto&& [entity, button, label, position, inMenu] : view.each())
+  {
+    if (inMenu.menu_entity == menuEntity)
+    {
+      if (!button.size)
+      {
+        const auto& font = gfx.get_font(label.font);
+        button.size = cen::cast<cen::farea>(font.string_size(label.text).value());
+      }
+
+      renderer.set_color(cen::colors::white);
+      renderer.draw_rect(cen::frect{from_grid(position), button.size.value()});
+    }
   }
 }
 
