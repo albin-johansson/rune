@@ -21,6 +21,9 @@ namespace rune {
 inline constexpr float menu_row_size = RUNE_MENU_ROW_SIZE;
 inline constexpr float menu_column_size = RUNE_MENU_COLUMN_SIZE;
 
+/// \name Grid functions
+/// \{
+
 [[nodiscard]] constexpr auto row_to_y(const float row) noexcept -> float
 {
   return row * menu_row_size;
@@ -41,6 +44,8 @@ inline constexpr float menu_column_size = RUNE_MENU_COLUMN_SIZE;
 {
   return {column_to_x(position.col), row_to_y(position.row)};
 }
+
+/// \} End of grid functions
 
 /// \} End of group ecs
 

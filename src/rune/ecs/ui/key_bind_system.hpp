@@ -13,6 +13,9 @@ namespace rune {
 /// \addtogroup ecs
 /// \{
 
+/// \name Factory functions
+/// \{
+
 inline auto make_key_bind(entt::registry& registry,
                           const cen::scan_code key,
                           const uint32 id) -> ui_key_bind::entity
@@ -25,6 +28,11 @@ inline auto make_key_bind(entt::registry& registry,
 
   return entity;
 }
+
+/// \} End of factory functions
+
+/// \name Key bind system functions
+/// \{
 
 template <cc::enum_type T>
 auto make_key_bind(entt::registry& registry, const cen::scan_code key, const T id)
@@ -46,6 +54,8 @@ inline void update_key_binds(entt::registry& registry,
     }
   }
 }
+
+/// \} End of key bind system functions
 
 /// \} End of group ecs
 

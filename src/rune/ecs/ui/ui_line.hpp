@@ -21,10 +21,15 @@ struct ui_line final
   ui_position end;
 };
 
+/// \name Serialization
+/// \{
+
 void serialize(auto& archive, ui_line& line)
 {
   archive(line.start, line.end);
 }
+
+/// \} End of serialization
 
 /// \} End of group ecs
 

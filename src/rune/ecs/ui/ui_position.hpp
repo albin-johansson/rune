@@ -20,10 +20,15 @@ struct ui_position final
   float col{};
 };
 
+/// \name Serialization
+/// \{
+
 void serialize(auto& archive, ui_position& position)
 {
   archive(position.row, position.col);
 }
+
+/// \} End of serialization
 
 /// \} End of group ecs
 

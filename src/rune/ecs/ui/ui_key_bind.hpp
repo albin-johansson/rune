@@ -23,10 +23,15 @@ struct ui_key_bind final
   uint32 id{};
 };
 
+/// \name Serialization
+/// \{
+
 void serialize(auto& archive, ui_key_bind& bind)
 {
   archive(bind.key, bind.id);
 }
+
+/// \} End of serialization
 
 /// \} End of group ecs
 

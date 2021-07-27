@@ -22,11 +22,6 @@ struct ui_menu final
   bool is_blocking{};
 };
 
-void serialize(auto& archive, ui_menu& menu)
-{
-  archive(menu.id, menu.is_blocking);
-}
-
 struct active_menu final
 {
   ui_menu::entity menu_entity{null<ui_menu>()};
@@ -36,6 +31,16 @@ struct in_menu final
 {
   ui_menu::entity menu_entity{null<ui_menu>()};
 };
+
+/// \name Serialization
+/// \{
+
+void serialize(auto& archive, ui_menu& menu)
+{
+  archive(menu.id, menu.is_blocking);
+}
+
+/// \} End of serialization
 
 /// \} End of group ecs
 

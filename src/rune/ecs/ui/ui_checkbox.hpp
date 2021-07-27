@@ -19,10 +19,15 @@ struct ui_checkbox final
   bool is_checked{};
 };
 
+/// \name Serialization
+/// \{
+
 void serialize(auto& archive, ui_checkbox& cb)
 {
   archive(cb.is_checked);
 }
+
+/// \} End of serialization
 
 /// \} End of group ecs
 

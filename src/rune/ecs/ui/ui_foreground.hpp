@@ -21,10 +21,15 @@ struct ui_foreground final
   cen::color color;
 };
 
+/// \name Serialization
+/// \{
+
 void serialize(auto& archive, ui_foreground& fg)
 {
   archive(fg.color);
 }
+
+/// \} End of serialization
 
 /// \} End of group ecs
 
