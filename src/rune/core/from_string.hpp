@@ -9,6 +9,9 @@
 
 namespace rune {
 
+/// \addtogroup core
+/// \{
+
 template <typename T>
 [[nodiscard]] auto from_string(const std::string_view str, const int base = 10)
     -> maybe<T>
@@ -26,6 +29,8 @@ template <typename T>
     return nothing;
   }
 }
+
+/// \} End of group core
 
 }  // namespace rune
 
