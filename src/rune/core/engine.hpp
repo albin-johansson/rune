@@ -275,7 +275,9 @@ class engine
 
   auto update_input() -> bool
   {
-    m_input.mouse.update(m_graphics.renderer().output_size());
+    const auto& renderer = m_graphics.renderer();
+    m_input.mouse.set_logical_size(renderer.logical_size());
+    m_input.mouse.update(renderer.output_size());
     m_input.keyboard.update();
 
     cen::event::update();
