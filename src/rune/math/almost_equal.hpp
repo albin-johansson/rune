@@ -12,7 +12,7 @@ namespace rune {
 // clang-format off
 
 /// The default epsilon value used for floating point comparisons.
-inline constexpr double default_epsilon = 0.00001;
+inline constexpr float default_epsilon = 0.00001f;
 
 /**
  * \brief Indicates whether or not two floating-point values are almost equal.
