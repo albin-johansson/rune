@@ -5,6 +5,9 @@
 
 namespace rune {
 
+/// \addtogroup ecs
+/// \{
+
 namespace tags {
 struct ui_checkbox_tag;
 }  // namespace tags
@@ -20,6 +23,8 @@ void serialize(auto& archive, ui_checkbox& cb)
 {
   archive(cb.is_checked);
 }
+
+/// \} End of group ecs
 
 }  // namespace rune
 

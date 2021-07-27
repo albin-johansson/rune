@@ -8,6 +8,9 @@
 
 namespace rune {
 
+/// \addtogroup ecs
+/// \{
+
 namespace tags {
 struct ui_keybind_tag;
 }  // namespace tags
@@ -24,6 +27,8 @@ void serialize(auto& archive, ui_key_bind& bind)
 {
   archive(bind.key, bind.id);
 }
+
+/// \} End of group ecs
 
 }  // namespace rune
 

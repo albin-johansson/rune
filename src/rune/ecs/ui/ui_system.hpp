@@ -16,6 +16,9 @@
 
 namespace rune::ui {
 
+/// \addtogroup ecs
+/// \{
+
 /**
  * \brief Updates the state of the UI.
  *
@@ -45,9 +48,11 @@ inline void update(entt::registry& registry,
 
 inline void render(const entt::registry& registry, graphics& gfx)
 {
+  update_button_bounds(registry, gfx);
   render_lines(registry, gfx);
   render_buttons(registry, gfx);
   render_labels(registry, gfx);
+  render_button_labels(registry, gfx);
 }
 
 inline void debug(const entt::registry& registry, graphics& gfx)
@@ -83,6 +88,8 @@ inline void debug(const entt::registry& registry, graphics& gfx)
                        cen::point(logicalWidth - 1, logicalHeight));
   }
 }
+
+/// \} End of group ecs
 
 }  // namespace rune::ui
 

@@ -10,6 +10,9 @@
 
 namespace rune {
 
+/// \addtogroup ecs
+/// \{
+
 inline auto make_key_bind(entt::registry& registry,
                           const cen::scan_code key,
                           const uint32 id) -> ui_key_bind::entity
@@ -43,6 +46,8 @@ inline void update_key_binds(entt::registry& registry,
     }
   }
 }
+
+/// \} End of group ecs
 
 }  // namespace rune
 

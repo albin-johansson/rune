@@ -6,6 +6,9 @@
 
 namespace rune {
 
+/// \addtogroup ecs
+/// \{
+
 // clang-format off
 
 template <typename T>
@@ -22,6 +25,8 @@ void nullify(T& entity) noexcept(noexcept(T{entt::entity{entt::null}}))
 {
   entity = T{entt::entity{entt::null}};
 }
+
+/// \} End of group ecs
 
 }  // namespace rune
 

@@ -7,6 +7,9 @@
 
 namespace rune {
 
+/// \addtogroup ecs
+/// \{
+
 namespace tags {
 struct ui_menu_tag;
 }  // namespace tags
@@ -33,6 +36,8 @@ struct in_menu final
 {
   ui_menu::entity menu_entity{null<ui_menu>()};
 };
+
+/// \} End of group ecs
 
 }  // namespace rune
 

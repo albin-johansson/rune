@@ -7,11 +7,16 @@
 
 namespace rune {
 
+/// \addtogroup ecs
+/// \{
+
 struct key_bind_triggered_event final
 {
   ui_key_bind::entity entity{null<ui_key_bind>()};
   uint32 id{};
 };
+
+/// \} End of group ecs
 
 }  // namespace rune
 

@@ -7,6 +7,9 @@
 
 namespace rune {
 
+/// \addtogroup ecs
+/// \{
+
 #ifndef RUNE_MENU_ROW_SIZE
 #define RUNE_MENU_ROW_SIZE 10.0f
 #endif  // RUNE_MENU_ROW_SIZE
@@ -38,6 +41,8 @@ inline constexpr float menu_column_size = RUNE_MENU_COLUMN_SIZE;
 {
   return {column_to_x(position.col), row_to_y(position.row)};
 }
+
+/// \} End of group ecs
 
 }  // namespace rune
 

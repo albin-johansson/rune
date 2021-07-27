@@ -7,6 +7,9 @@
 
 namespace rune {
 
+/// \addtogroup ecs
+/// \{
+
 namespace tags {
 struct ui_foreground_tag;
 }  // namespace tags
@@ -22,6 +25,8 @@ void serialize(auto& archive, ui_foreground& fg)
 {
   archive(fg.color);
 }
+
+/// \} End of group ecs
 
 }  // namespace rune
 

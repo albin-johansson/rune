@@ -11,6 +11,9 @@
 
 namespace rune {
 
+/// \addtogroup ecs
+/// \{
+
 struct ui_line_cfg final
 {
   ui_position start;
@@ -41,6 +44,8 @@ void render_lines(const entt::registry& registry, graphics& gfx)
     renderer.draw_line(from_grid(line.start), from_grid(line.end));
   }
 }
+
+/// \} End of group ecs
 
 }  // namespace rune
 

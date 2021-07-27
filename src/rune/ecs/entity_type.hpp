@@ -6,8 +6,13 @@
 
 namespace rune {
 
+/// \addtogroup ecs
+/// \{
+
 template <typename T>
 using entity_type = nenya::strong_type<entt::entity, T>;
+
+/// \} End of group ecs
 
 }  // namespace rune
 

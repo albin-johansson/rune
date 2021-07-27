@@ -5,6 +5,9 @@
 
 namespace rune {
 
+/// \addtogroup ecs
+/// \{
+
 namespace tags {
 struct ui_position_tag;
 }  // namespace tags
@@ -21,6 +24,8 @@ void serialize(auto& archive, ui_position& position)
 {
   archive(position.row, position.col);
 }
+
+/// \} End of group ecs
 
 }  // namespace rune
 

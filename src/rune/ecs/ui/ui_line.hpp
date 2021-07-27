@@ -6,6 +6,9 @@
 
 namespace rune {
 
+/// \addtogroup ecs
+/// \{
+
 namespace tags {
 struct ui_line_tag;
 }  // namespace tags
@@ -22,6 +25,8 @@ void serialize(auto& archive, ui_line& line)
 {
   archive(line.start, line.end);
 }
+
+/// \} End of group ecs
 
 }  // namespace rune
 
