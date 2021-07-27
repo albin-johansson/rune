@@ -27,6 +27,7 @@ The following is a (non-exhaustive) list of the features of Rune.
 * [Tiled](https://github.com/mapeditor/tiled) JSON map parsing
 * `.ini` support.
 * Performant utilities and data structures, e.g. `static_vector`, `vector_map`, `stack_resource`, `from_string()`, etc
+* Random number generation utilities
 * Serialization support, based on the Cereal API
 
 ## Dependencies
