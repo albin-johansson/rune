@@ -57,3 +57,9 @@
 /// \note The AABB framework was based on the <a
 /// href="https://github.com/lohedges/aabbcc">AABBCC</a> library, written by Lester
 /// Hedges, which uses the Zlib license.
+
+/**
+ * \defgroup ecs ECS
+ *
+ * \brief Contains ECS related utilities and components.
+ */
