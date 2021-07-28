@@ -4,7 +4,7 @@
 #include <centurion.hpp>  // texture, surface
 #include <entt.hpp>       // registry
 
-#include "../../aliases/czstring.hpp"
+#include "../../aliases/str.hpp"
 #include "../../core/graphics.hpp"
 #include "ui_lazy_texture.hpp"
 
@@ -29,7 +29,7 @@ namespace rune::ui {
  *
  * \since 0.1.0
  */
-inline auto make_lazy_texture(entt::registry& registry, const czstring image)
+inline auto make_lazy_texture(entt::registry& registry, const str image)
     -> ui_lazy_texture::entity
 {
   const auto entity = ui_lazy_texture::entity{registry.create()};

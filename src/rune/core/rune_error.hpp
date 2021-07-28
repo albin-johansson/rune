@@ -3,7 +3,7 @@
 
 #include <exception>  // exception
 
-#include "../aliases/czstring.hpp"
+#include "../aliases/str.hpp"
 
 namespace rune {
 
@@ -13,16 +13,16 @@ namespace rune {
 class rune_error final : public std::exception
 {
  public:
-  explicit rune_error(const czstring what) noexcept : m_what{what}
+  explicit rune_error(const str what) noexcept : m_what{what}
   {}
 
-  [[nodiscard]] auto what() const noexcept -> czstring override
+  [[nodiscard]] auto what() const noexcept -> str override
   {
     return m_what;
   }
 
  private:
-  czstring m_what{"n/a"};
+  str m_what{"n/a"};
 };
 
 /// \} End of group core

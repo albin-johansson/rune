@@ -24,11 +24,11 @@
 #pragma once
 #endif  // RUNE_NO_PRAGMA_ONCE
 
-#include "rune/aliases/czstring.hpp"
 #include "rune/aliases/delta_time.hpp"
 #include "rune/aliases/font_id.hpp"
 #include "rune/aliases/integers.hpp"
 #include "rune/aliases/json_type.hpp"
+#include "rune/aliases/str.hpp"
 #include "rune/aliases/texture_id.hpp"
 #include "rune/aliases/texture_index.hpp"
 #include "rune/containers/aabb.hpp"
