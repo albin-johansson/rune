@@ -14,7 +14,7 @@ TEST(TmxProperty, TmxPropertyTypeEnum)
   )"_json;
 
   std::vector<rune::tmx_property_type> values;
-  rune::fill(json, values);
+  rune::io::get_to(json, values);
 
   ASSERT_EQ(7, values.size());
   ASSERT_EQ(rune::tmx_property_type::string, values.at(0));
@@ -86,7 +86,7 @@ inline const auto properties_json_array = R"(
 TEST(TmxProperty, Contains)
 {
   std::vector<rune::tmx_property> properties;
-  rune::fill(properties_json_array, properties);
+  rune::io::get_to(properties_json_array, properties);
 
   ASSERT_EQ(3, properties.size());
   ASSERT_EQ(3, properties.capacity());
@@ -105,7 +105,7 @@ TEST(TmxProperty, Contains)
 TEST(TmxProperty, At)
 {
   std::vector<rune::tmx_property> properties;
-  rune::fill(properties_json_array, properties);
+  rune::io::get_to(properties_json_array, properties);
 
   const auto& a = rune::tmx::at(properties, "A");
   ASSERT_TRUE(rune::tmx::is_int(a));
@@ -121,7 +121,7 @@ TEST(TmxProperty, At)
 TEST(TmxProperty, TryGet)
 {
   std::vector<rune::tmx_property> properties;
-  rune::fill(properties_json_array, properties);
+  rune::io::get_to(properties_json_array, properties);
 
   ASSERT_NE(rune::tmx::try_get(properties, "A"), properties.end());
   ASSERT_NE(rune::tmx::try_get(properties, "B"), properties.end());

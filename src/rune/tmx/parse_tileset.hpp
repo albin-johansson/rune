@@ -28,17 +28,17 @@ inline void parse_tileset(const json_type& json, tmx_tileset& tileset)
   json.at("image").get_to(tileset.image);
   json.at("name").get_to(tileset.name);
 
-  get_if_exists(json, "tiledversion", tileset.tiled_version);
-  get_if_exists(json, "version", tileset.json_version);
-  get_if_exists(json, "backgroundcolor", tileset.background);
-  get_if_exists(json, "transparentcolor", tileset.transparent);
-  get_if_exists(json, "tileoffset", tileset.tile_offset);
-  get_if_exists(json, "grid", tileset.grid);
+  io::try_get_to(json, "tiledversion", tileset.tiled_version);
+  io::try_get_to(json, "version", tileset.json_version);
+  io::try_get_to(json, "backgroundcolor", tileset.background);
+  io::try_get_to(json, "transparentcolor", tileset.transparent);
+  io::try_get_to(json, "tileoffset", tileset.tile_offset);
+  io::try_get_to(json, "grid", tileset.grid);
 
-  fill_if_exists(json, "tiles", tileset.tiles);
-  fill_if_exists(json, "terrains", tileset.terrains);
-  fill_if_exists(json, "wangsets", tileset.wang_sets);
-  fill_if_exists(json, "properties", tileset.properties);
+  io::try_get_to(json, "tiles", tileset.tiles);
+  io::try_get_to(json, "terrains", tileset.terrains);
+  io::try_get_to(json, "wangsets", tileset.wang_sets);
+  io::try_get_to(json, "properties", tileset.properties);
 }
 
 }  // namespace detail

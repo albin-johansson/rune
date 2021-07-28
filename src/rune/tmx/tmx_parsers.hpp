@@ -66,26 +66,26 @@ inline void from_json(const json_type& json, tmx_wang_color& color)
   json.at("name").get_to(color.name);
   json.at("color").get_to(color.color);
   json.at("probability").get_to(color.probability);
-  emplace(json, "tile", color.tile);
+  io::emplace_to(json, "tile", color.tile);
 
-  fill_if_exists(json, "properties", color.properties);
+  io::try_get_to(json, "properties", color.properties);
 }
 
 inline void from_json(const json_type& json, tmx_wang_tile& tile)
 {
-  emplace(json, "tileid", tile.tile);
+  io::emplace_to(json, "tileid", tile.tile);
   json.at("wangid").get_to(tile.indices);
 }
 
 inline void from_json(const json_type& json, tmx_wang_set& set)
 {
-  emplace(json, "tile", set.tile);
+  io::emplace_to(json, "tile", set.tile);
   json.at("name").get_to(set.name);
 
   // TODO check if colors or wangtiles are required
-  fill_if_exists(json, "colors", set.colors);
-  fill_if_exists(json, "wangtiles", set.wang_tiles);
-  fill_if_exists(json, "properties", set.properties);
+  io::try_get_to(json, "colors", set.colors);
+  io::try_get_to(json, "wangtiles", set.wang_tiles);
+  io::try_get_to(json, "properties", set.properties);
 }
 
 inline void from_json(const json_type& json, tmx_property& property)
@@ -132,23 +132,23 @@ inline void from_json(const json_type& json, tmx_terrain& terrain)
 {
   terrain.tile = tmx_local_id{json.at("tile").get<tmx_local_id::value_type>()};
   json.at("name").get_to(terrain.name);
-  fill_if_exists(json, "properties", terrain.properties);
+  io::try_get_to(json, "properties", terrain.properties);
 }
 
 inline void from_json(const json_type& json, tmx_text& text)
 {
   json.at("text").get_to(text.text);
 
-  get_if_exists(json, "fontfamily", text.family);
-  get_if_exists(json, "halign", text.horizontal_alignment);
-  get_if_exists(json, "valign", text.vertical_alignment);
-  get_if_exists(json, "pixelsize", text.pixel_size);
-  get_if_exists(json, "bold", text.bold);
-  get_if_exists(json, "italic", text.italic);
-  get_if_exists(json, "kerning", text.kerning);
-  get_if_exists(json, "strikeout", text.strikeout);
-  get_if_exists(json, "underline", text.underline);
-  get_if_exists(json, "wrap", text.wrap);
+  io::try_get_to(json, "fontfamily", text.family);
+  io::try_get_to(json, "halign", text.horizontal_alignment);
+  io::try_get_to(json, "valign", text.vertical_alignment);
+  io::try_get_to(json, "pixelsize", text.pixel_size);
+  io::try_get_to(json, "bold", text.bold);
+  io::try_get_to(json, "italic", text.italic);
+  io::try_get_to(json, "kerning", text.kerning);
+  io::try_get_to(json, "strikeout", text.strikeout);
+  io::try_get_to(json, "underline", text.underline);
+  io::try_get_to(json, "wrap", text.wrap);
 
   if (const auto it = json.find("color"); it != json.end())
   {
@@ -160,13 +160,13 @@ inline void from_json(const json_type& json, tmx_frame& frame)
 {
   using ms_t = std::chrono::milliseconds;
 
-  emplace(json, "tileid", frame.tile);
+  io::emplace_to(json, "tileid", frame.tile);
   frame.duration = ms_t{json.at("duration").get<ms_t::rep>()};
 }
 
 inline void from_json(const json_type& json, tmx_animation& animation)
 {
-  fill(json, animation.frames);
+  io::get_to(json, animation.frames);
 }
 
 inline void from_json(const json_type& json, tmx_data& data)
@@ -189,12 +189,12 @@ inline void from_json(const json_type& json, tmx_data& data)
 
 inline void from_json(const json_type& json, tmx_polygon& polygon)
 {
-  fill(json, polygon.points);
+  io::get_to(json, polygon.points);
 }
 
 inline void from_json(const json_type& json, tmx_polyline& line)
 {
-  fill(json, line.points);
+  io::get_to(json, line.points);
 }
 
 inline void from_json(const json_type& json, tmx_template_object& object)
@@ -204,7 +204,7 @@ inline void from_json(const json_type& json, tmx_template_object& object)
 
   if (const auto it = json.find("tileset"); it != json.end())
   {
-    emplace(json, "firstgid", object.tileset_first_id);
+    io::emplace_to(json, "firstgid", object.tileset_first_id);
     object.tileset_source = json.at("source").get<std::string>();
   }
 }
@@ -221,27 +221,27 @@ inline void from_json(const json_type& json, tmx_object& object)
   json.at("type").get_to(object.type);
   json.at("visible").get_to(object.visible);
 
-  get_if_exists(json, "ellipse", object.is_ellipse);
-  get_if_exists(json, "point", object.is_point);
+  io::try_get_to(json, "ellipse", object.is_ellipse);
+  io::try_get_to(json, "point", object.is_point);
 
-  fill_if_exists(json, "properties", object.properties);
+  io::try_get_to(json, "properties", object.properties);
 
   if (const auto it = json.find("gid"); it != json.end())
   {
     object.data.emplace<tmx_global_id>(it->get<tmx_global_id::value_type>());
   }
 
-  emplace_if_exists<tmx_text>(json, "text", object.data);
-  emplace_if_exists<tmx_polygon>(json, "polygon", object.data);
-  emplace_if_exists<tmx_polyline>(json, "polyline", object.data);
-  emplace_if_exists<tmx_template_object>(json, "template", object.data);
+  io::try_emplace_to<tmx_text>(json, "text", object.data);
+  io::try_emplace_to<tmx_polygon>(json, "polygon", object.data);
+  io::try_emplace_to<tmx_polyline>(json, "polyline", object.data);
+  io::try_emplace_to<tmx_template_object>(json, "template", object.data);
 }
 
 inline void from_json(const json_type& json, tmx_tile_layer& layer)
 {
-  get_if_exists(json, "compression", layer.compression);
-  get_if_exists(json, "encoding", layer.encoding);
-  get_if_exists(json, "data", layer.data);
+  io::try_get_to(json, "compression", layer.compression);
+  io::try_get_to(json, "encoding", layer.encoding);
+  io::try_get_to(json, "data", layer.data);
 
   // TODO
   //  if (json.contains("chunks")) {
@@ -252,33 +252,33 @@ inline void from_json(const json_type& json, tmx_tile_layer& layer)
 inline void from_json(const json_type& json, tmx_image_layer& layer)
 {
   json.at("image").get_to(layer.image);
-  get_if_exists(json, "transparentcolor", layer.transparent);
+  io::try_get_to(json, "transparentcolor", layer.transparent);
 }
 
 inline void from_json(const json_type& json, tmx_object_layer& layer)
 {
-  fill(json, "objects", layer.objects);
+  io::get_to(json, "objects", layer.objects);
 }
 
 inline void from_json(const json_type& json, tmx_layer& layer)
 {
   json.at("type").get_to(layer.type);
 
-  get_if_exists(json, "name", layer.name);
-  get_if_exists(json, "opacity", layer.opacity);
-  get_if_exists(json, "visible", layer.visible);
-  get_if_exists(json, "id", layer.id);
-  get_if_exists(json, "width", layer.width);
-  get_if_exists(json, "height", layer.height);
-  get_if_exists(json, "startx", layer.start_x);
-  get_if_exists(json, "starty", layer.start_y);
-  get_if_exists(json, "parallaxx", layer.parallax_x);
-  get_if_exists(json, "parallaxy", layer.parallax_y);
-  get_if_exists(json, "offsetx", layer.offset_x);
-  get_if_exists(json, "offsety", layer.offset_y);
-  get_if_exists(json, "tintcolor", layer.tint);
+  io::try_get_to(json, "name", layer.name);
+  io::try_get_to(json, "opacity", layer.opacity);
+  io::try_get_to(json, "visible", layer.visible);
+  io::try_get_to(json, "id", layer.id);
+  io::try_get_to(json, "width", layer.width);
+  io::try_get_to(json, "height", layer.height);
+  io::try_get_to(json, "startx", layer.start_x);
+  io::try_get_to(json, "starty", layer.start_y);
+  io::try_get_to(json, "parallaxx", layer.parallax_x);
+  io::try_get_to(json, "parallaxy", layer.parallax_y);
+  io::try_get_to(json, "offsetx", layer.offset_x);
+  io::try_get_to(json, "offsety", layer.offset_y);
+  io::try_get_to(json, "tintcolor", layer.tint);
 
-  fill_if_exists(json, "properties", layer.properties);
+  io::try_get_to(json, "properties", layer.properties);
 
   switch (layer.type)
   {
@@ -315,16 +315,16 @@ inline void from_json(const json_type& json, tmx_group& group)
 
 inline void from_json(const json_type& json, tmx_tile& tile)
 {
-  emplace(json, "id", tile.id);
+  io::emplace_to(json, "id", tile.id);
 
-  get_if_exists(json, "animation", tile.animation);
-  get_if_exists(json, "type", tile.type);
-  get_if_exists(json, "image", tile.image);
-  get_if_exists(json, "imagewidth", tile.image_width);
-  get_if_exists(json, "imageheight", tile.image_height);
-  get_if_exists(json, "probability", tile.probability);
-  get_if_exists(json, "objectgroup", tile.object_layer);
-  fill_if_exists(json, "properties", tile.properties);
+  io::try_get_to(json, "animation", tile.animation);
+  io::try_get_to(json, "type", tile.type);
+  io::try_get_to(json, "image", tile.image);
+  io::try_get_to(json, "imagewidth", tile.image_width);
+  io::try_get_to(json, "imageheight", tile.image_height);
+  io::try_get_to(json, "probability", tile.probability);
+  io::try_get_to(json, "objectgroup", tile.object_layer);
+  io::try_get_to(json, "properties", tile.properties);
 
   if (const auto it = json.find("terrain"); it != json.end())
   {

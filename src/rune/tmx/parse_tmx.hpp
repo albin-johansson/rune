@@ -53,14 +53,14 @@ namespace rune {
   json.at("tiledversion").get_to(map.tiled_version);
   json.at("version").get_to(map.json_version);
 
-  get_if_exists(json, "backgroundcolor", map.background);
-  get_if_exists(json, "compressionlevel", map.compression_level);
-  get_if_exists(json, "hexsidelength", map.hex_side_length);
-  get_if_exists(json, "staggeraxis", map.stagger_axis);
-  get_if_exists(json, "staggerindex", map.stagger_index);
+  io::try_get_to(json, "backgroundcolor", map.background);
+  io::try_get_to(json, "compressionlevel", map.compression_level);
+  io::try_get_to(json, "hexsidelength", map.hex_side_length);
+  io::try_get_to(json, "staggeraxis", map.stagger_axis);
+  io::try_get_to(json, "staggerindex", map.stagger_index);
 
-  fill_if_exists(json, "layers", map.layers);
-  fill_if_exists(json, "properties", map.properties);
+  io::try_get_to(json, "layers", map.layers);
+  io::try_get_to(json, "properties", map.properties);
 
   if (const auto it = json.find("tilesets"); it != json.end())
   {

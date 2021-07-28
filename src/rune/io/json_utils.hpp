@@ -2,15 +2,18 @@
 #define RUNE_IO_JSON_UTILS_HPP
 
 #include <cassert>      // assert
+#include <concepts>     // same_as
 #include <filesystem>   // path
 #include <fstream>      // ifstream
 #include <json.hpp>     // json
 #include <optional>     // optional
 #include <string_view>  // string_view
 #include <variant>      // variant
+#include <vector>       // vector
 
 #include "../aliases/json_type.hpp"
 #include "../core/concepts.hpp"
+#include "../core/rune_error.hpp"
 
 namespace rune {
 
@@ -23,7 +26,7 @@ namespace rune {
 // clang-format off
 
 template <typename T>
-concept json_serializable_type = requires (const json_type& json)
+concept json_serializable_type = requires (json_type json)
 {
   { json.get<T>() };
 };
@@ -50,216 +53,217 @@ concept json_serializable_type = requires (const json_type& json)
   return json;
 }
 
-/**
- * \brief Writes the data associated with the specified key to the specified value, as
- * long as the key exists in the JSON object.
- *
- * \details This function requires that values of type `T` can be obtained from JSON
- * objects, i.e. the type needs to provide an overload of the `from_json()` function.
- *
- * \note This function has no effect if there is no element associated with the specified
- * key.
- *
- * \tparam T the deduced the type of the value that might be assigned.
- *
- * \param json the JSON object.
- * \param key the element to look for.
- * \param[out] value a reference to the value that will be assigned with the data
- * associated with `key`, if it exists.
- */
-template <json_serializable_type T>
-void get_if_exists(const json_type& json, const std::string_view key, T& value)
-{
-  if (const auto it = json.find(key); it != json.end())
-  {
-    value = it->get<T>();
-  }
-}
+/// \} End of io
 
-/// \copydoc get_if_exists()
-template <json_serializable_type T>
-void get_if_exists(const json_type& json,
-                   const std::string_view key,
-                   std::optional<T>& value)
-{
-  if (const auto it = json.find(key); it != json.end())
-  {
-    value = it->get<T>();
-  }
-}
+namespace io {
 
-template <cc::has_value_type T>
-void emplace(const json_type& json, const std::string_view key, T& value)
-{
-  static_assert(json_serializable_type<typename T::value_type>);
-
-  const auto it = json.find(key);
-  assert(it != json.end());
-
-  value = T{it->get<typename T::value_type>()};
-}
-
-template <cc::has_value_type T>
-void emplace(const json_type& json, const std::string_view key, std::optional<T>& value)
-{
-  static_assert(json_serializable_type<typename T::value_type>);
-
-  const auto it = json.find(key);
-  assert(it != json.end());
-
-  value = T{it->get<typename T::value_type>()};
-}
-
-template <cc::has_value_type T>
-void emplace_if_exists(const json_type& json, const std::string_view key, T& value)
-{
-  static_assert(json_serializable_type<typename T::value_type>);
-
-  if (const auto it = json.find(key); it != json.end())
-  {
-    value = T{it->get<typename T::value_type>()};
-  }
-}
-
-template <cc::has_value_type T>
-void emplace_if_exists(const json_type& json,
-                       const std::string_view key,
-                       std::optional<T>& value)
-{
-  static_assert(json_serializable_type<typename T::value_type>);
-
-  if (const auto it = json.find(key); it != json.end())
-  {
-    value.emplace(it->get<typename T::value_type>());
-  }
-}
+/// \addtogroup io
+/// \{
 
 /**
- * \brief Writes the data associated with the specified key to the specified variant, as
- * long as the key exists in the JSON object.
- *
- * \details This function requires that values of type `T` can be obtained from JSON
- * objects, i.e. the type needs to provide an overload of the `from_json()` function.
- *
- * \note This function has no effect if there is no element associated with the specified
- * key.
- *
- * \tparam T the type of the data that will be extracted from the JSON object.
- * \tparam Types the types used by the variant.
- *
- * \param json the JSON object.
- * \param key the element to look for.
- * \param[out] variant the variant that the data will be written to.
- */
-template <json_serializable_type T, typename... Types>
-void emplace_if_exists(const json_type& json,
-                       const std::string_view key,
-                       std::variant<Types...>& variant)
-{
-  if (const auto it = json.find(key); it != json.end())
-  {
-    variant.template emplace<T>(it->get<T>());
-  }
-}
-
-/**
- * \brief Fills a container with values from a JSON array.
- *
- * \details This function requires that values of type `Container::value_type` can be
- * obtained from JSON objects, i.e. the type needs to provide an overload of the
- * `from_json()` function.
+ * \brief Fills a vector with values from a JSON array.
  *
  * \pre `array` must represent a JSON array.
  *
- * \tparam Container the container type, e.g. `std::vector` or `std::array`.
- *
  * \param array the JSON array that provides the source data.
- * \param[out] container the container that will be filled.
+ * \param[out] container the vector that will be filled.
+ *
+ * \see `try_get_to()`
+ *
+ * \since 0.1.0
  */
-template <cc::has_value_type Container>
-void fill(const json_type& array, Container& container)
+template <json_serializable_type T>
+void get_to(const json_type& array, std::vector<T>& container)
 {
-  static_assert(json_serializable_type<typename Container::value_type>);
   assert(array.is_array());
 
   container.reserve(array.size());
   for (const auto& [key, value] : array.items())
   {
-    container.push_back(value.template get<typename Container::value_type>());
+    container.push_back(value.template get<T>());
   }
 }
 
 /**
- * \brief Fills a container with values from a JSON array.
+ * \brief Fills a vector with values from a JSON array in a JSON object.
  *
- * \details This function requires that values of type `Container::value_type` can be
- * obtained from JSON objects, i.e. the type needs to provide an overload of the
- * `from_json()` function.
- *
- * \pre `json` must contain the specified key.
  * \pre The JSON element associated with the specified key must be an array.
  *
- * \tparam Container the container type, e.g. `std::vector` or `std::array`.
- *
  * \param json the JSON object that contains an array associated with the specified key.
- * \param key the key of the JSON array element.
- * \param[out] container the container that will be filled.
+ * \param key the key of the child JSON array element.
+ * \param[out] container the vector that will be filled.
+ *
+ * \see `try_get_to()`
+ *
+ * \throws rune_error if there is no key with the specified name.
+ *
+ * \since 0.1.0
  */
-template <cc::has_value_type Container>
-void fill(const json_type& json, const std::string_view key, Container& container)
+template <json_serializable_type T>
+void get_to(const json_type& json, const std::string_view key, std::vector<T>& container)
 {
-  static_assert(json_serializable_type<typename Container::value_type>);
-
   const auto it = json.find(key);
-  assert(it != json.end());
-  assert(it->is_array());
+  if (it == json.end())
+  {
+    throw rune_error{"io::get_to(): key does not exist"};
+  }
 
+  assert(it->is_array());
   container.reserve(it->size());
   for (const auto& [key, value] : it->items())
   {
-    container.push_back(value.template get<typename Container::value_type>());
+    container.push_back(value.template get<T>());
   }
 }
 
 /**
- * \brief Fills a container with values from a JSON array, if it exists.
+ * \brief Attempts to serialize and assign a value.
  *
- * \details This function requires that values of type `Container::value_type` can be
- * obtained from JSON objects, i.e. the type needs to provide an overload of the
- * `from_json()` function.
+ * \details This function has no effect if there is no element associated with the
+ * specified key.
+ *
+ * \tparam T the type of the serializable value.
+ *
+ * \param json the source JSON object.
+ * \param key the key associated with the desired JSON value.
+ * \param[out] value the value that will be assigned.
+ *
+ * \see `get_to()`
+ */
+template <json_serializable_type T>
+void try_get_to(const json_type& json, const std::string_view key, T& value)
+{
+  if (const auto it = json.find(key); it != json.end())
+  {
+    value = it->get<T>();
+  }
+}
+
+/// \copydoc try_get_to()
+template <json_serializable_type T>
+void try_get_to(const json_type& json,
+                const std::string_view key,
+                std::optional<T>& value)
+{
+  if (const auto it = json.find(key); it != json.end())
+  {
+    value = it->get<T>();
+  }
+}
+
+/**
+ * \brief Fills a vector with values from a JSON array, if it exists.
  *
  * \note This function has no effect if there is no element associated with the specified
  * key.
  *
  * \pre The JSON element associated with the specified key must be an array.
  *
- * \tparam Container the container type, e.g. `std::vector` or `std::array`.
- *
  * \param json the JSON object that contains an array associated with the specified key.
  * \param key the key of the JSON array element.
- * \param[out] container the container that will be filled.
+ * \param[out] container the vector that will be filled.
+ *
+ * \see `get_to()`
+ *
+ * \since 0.1.0
  */
-template <cc::has_value_type Container>
-void fill_if_exists(const json_type& json,
-                    const std::string_view key,
-                    Container& container)
+template <json_serializable_type T>
+void try_get_to(const json_type& json,
+                const std::string_view key,
+                std::vector<T>& container)
 {
-  static_assert(json_serializable_type<typename Container::value_type>);
-
   if (const auto it = json.find(key); it != json.end())
   {
     assert(it->is_array());
     container.reserve(it->size());
     for (const auto& [key, value] : it->items())
     {
-      container.push_back(value.template get<typename Container::value_type>());
+      container.push_back(value.template get<T>());
     }
+  }
+}
+
+/**
+ * \brief Assigns a wrapper from a serializable value.
+ *
+ * \tparam T the type of the wrapper.
+ *
+ * \param json the source JSON object.
+ * \param key the key associated with the desired JSON value.
+ * \param[out] value the value that will be assigned.
+ *
+ * \throws rune_error if there is no key with the specified name.
+ *
+ * \see `try_emplace_to()`
+ *
+ * \since 0.1.0
+ */
+template <typename T>
+  requires json_serializable_type<typename T::value_type>
+void emplace_to(const json_type& json, const std::string_view key, T& value)
+{
+  if (const auto it = json.find(key); it != json.end())
+  {
+    value = T{it->get<typename T::value_type>()};
+  }
+  else
+  {
+    throw rune_error{"io::emplace_to(): key does not exist"};
+  }
+}
+
+/// \copydoc emplace_to()
+template <typename T>
+  requires json_serializable_type<typename T::value_type>
+void emplace_to(const json_type& json,
+                const std::string_view key,
+                std::optional<T>& value)
+{
+  if (const auto it = json.find(key); it != json.end())
+  {
+    value = T{it->get<typename T::value_type>()};
+  }
+  else
+  {
+    throw rune_error{"io::emplace_to(): key does not exist"};
+  }
+}
+
+/**
+ * \brief Attempts to assign a wrapper from a serializable value.
+ *
+ * \details This function has no effect if there is no element associated with the
+ * specified key.
+ *
+ * \tparam T the type of the wrapper.
+ *
+ * \param json the source JSON object.
+ * \param key the key associated with the desired JSON value.
+ * \param[out] value the value that will be assigned.
+ *
+ * \see `emplace_to()`
+ *
+ * \since 0.1.0
+ */
+template <json_serializable_type T, typename... Types>
+void try_emplace_to(const json_type& json,
+                    const std::string_view key,
+                    std::variant<Types...>& value)
+{
+  static_assert((std::same_as<T, Types> || ...),
+                "Cannot emplace value of type that is not used by the variant!");
+
+  if (const auto it = json.find(key); it != json.end())
+  {
+    value.template emplace<T>(it->get<T>());
   }
 }
 
 /// \} End of JSON
 
 /// \} End of group io
+
+}  // namespace io
 
 }  // namespace rune
 
