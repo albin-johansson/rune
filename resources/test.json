@@ -1,0 +1,12 @@
+{
+  "string": "foo",
+  "integer": 123,
+  "float": 4.2,
+  "boolean": true,
+  "object": {},
+  "array": [
+    1,
+    2,
+    3
+  ]
+}
