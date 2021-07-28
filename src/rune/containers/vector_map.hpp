@@ -177,9 +177,7 @@ class vector_map final
   template <transparent_to<key_type> T>
   void erase(const T& key)
   {
-    std::erase_if(m_data, [&](const value_type& pair) {
-      return pair.first == key;
-    });
+    std::erase_if(m_data, [&](const value_type& pair) { return pair.first == key; });
   }
 
   /**
