@@ -1,6 +1,7 @@
 #include <centurion.hpp>  // library
 #include <entt.hpp>       // registry
-#include <rune.hpp>       // engine
+
+#include "../../src/everything.hpp"
 
 using rune::float2;
 
@@ -65,7 +66,7 @@ auto make_ball(entt::registry& registry) -> entt::entity
   return entity;
 }
 
-class pong_game final
+class pong_game final : public rune::game_base
 {
  public:
   explicit pong_game(rune::graphics& graphics)
@@ -84,7 +85,7 @@ class pong_game final
     //                  m_ball.position + float2{ball_radius, ball_radius});
   }
 
-  void handle_input(const rune::input& input)
+  void handle_input(const rune::input& input) override
   {
     if (input.keyboard.just_released(cen::keycodes::escape))
     {
@@ -124,7 +125,7 @@ class pong_game final
     }
   }
 
-  void tick(const rune::delta_time dt)
+  void tick(const rune::delta_time dt) override
   {
     for (auto&& [entity, movable] : m_registry.view<comp::movable>().each())
     {
@@ -168,9 +169,11 @@ class pong_game final
     }
   }
 
-  void render(rune::graphics& graphics)
+  void render(rune::graphics& graphics) const override
   {
     auto& renderer = graphics.renderer();
+    renderer.clear_with(cen::colors::teal);
+
     renderer.set_color(cen::colors::white);
 
     for (auto&& [entity, movable] : m_registry.view<comp::movable, comp::paddle>().each())
@@ -186,9 +189,11 @@ class pong_game final
       renderer.fill_circle({pos.x + ball_radius / 2.0f, pos.y + ball_radius / 2.0f},
                            ball_radius);
     }
+
+    renderer.present();
   }
 
-  [[nodiscard]] auto should_quit() const noexcept -> bool
+  [[nodiscard]] auto should_quit() const noexcept -> bool override
   {
     return m_quit;
   }
@@ -204,15 +209,15 @@ class pong_game final
   bool m_quit{};
 };
 
+class pong_engine final : public rune::engine<pong_game>
+{
+ public:
+  pong_engine() : rune::engine<pong_game>{}
+  {
+    get_window().set_size({400, 300});
+  }
+};
+
 }  // namespace
 
-int main(int, char**)
-{
-  cen::library centurion;
-  rune::engine<pong_game> engine;
-
-  auto& window = engine.get_window();
-  window.set_size({400, 300});
-
-  return engine.run();
-}
+RUNE_IMPLEMENT_MAIN_WITH_ENGINE(pong_engine)
