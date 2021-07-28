@@ -1,14 +1,40 @@
 #ifndef RUNE_ECS_UI_KEY_BIND_SYSTEM_HPP
 #define RUNE_ECS_UI_KEY_BIND_SYSTEM_HPP
 
-#include <entt.hpp>     // registry, dispatcher
-#include <type_traits>  // is_enum_v
+#include <centurion.hpp>  // scan_code, key_mod, to_underlying
+#include <entt.hpp>       // registry, dispatcher
+#include <type_traits>    // is_enum_v
 
+#include "../../aliases/integers.hpp"
 #include "../../core/input.hpp"
 #include "../events/key_bind_triggered_event.hpp"
 #include "ui_key_bind.hpp"
 
-namespace rune::ui {
+namespace rune {
+
+/// \addtogroup ecs
+/// \{
+
+/**
+ * \struct ui_key_bind_cfg
+ *
+ * \brief Configuration used when creating key bind entities.
+ *
+ * \see `ui_key_bind`
+ * \see `ui::make_key_bind()`
+ *
+ * \since 0.1.0
+ */
+struct ui_key_bind_cfg final
+{
+  uint32 id{};                                 ///< User-defined identifier.
+  cen::scan_code key;                          ///< The associated key.
+  cen::key_mod modifiers{cen::key_mod::none};  ///< The required key modifiers.
+};
+
+/// \} End of group ecs
+
+namespace ui {
 
 /// \addtogroup ecs
 /// \{
@@ -23,33 +49,23 @@ namespace rune::ui {
  * - `ui_key_bind`
  *
  * \param registry the registry to which a key bind entity will be added.
- * \param key the key that will trigger the bind.
- * \param id the identifier that will be associated with the bind.
+ * \param cfg the key bind configuration that will be used.
  *
  * \return the created key bind entity.
  *
  * \since 0.1.0
  */
-inline auto make_key_bind(entt::registry& registry,
-                          const cen::scan_code key,
-                          const uint32 id) -> ui_key_bind::entity
+inline auto make_key_bind(entt::registry& registry, const ui_key_bind_cfg cfg)
+    -> ui_key_bind::entity
 {
   const auto entity = ui_key_bind::entity{registry.create()};
 
   auto& bind = registry.emplace<ui_key_bind>(entity);
-  bind.key = key;
-  bind.id = id;
+  bind.id = cfg.id;
+  bind.key = cfg.key;
+  bind.modifiers = cfg.modifiers;
 
   return entity;
-}
-
-/// \copydoc make_key_bind()
-template <typename T>
-  requires std::is_enum_v<T>
-auto make_key_bind(entt::registry& registry, const cen::scan_code key, const T id)
-    -> ui_key_bind::entity
-{
-  return make_key_bind(registry, key, cen::to_underlying(id));
 }
 
 /// \} End of factory functions
@@ -64,20 +80,30 @@ inline void update_key_binds(entt::registry& registry,
                              entt::dispatcher& dispatcher,
                              const input& input)
 {
+  const auto state = cen::get_modifiers();
+
+  // We don't care about these modifiers (they're never used in key binds)
+  const auto subset = state & ~(cen::key_mod::num | cen::key_mod::caps);
+  cen::set_modifiers(subset);
+
   for (auto&& [entity, bind] : registry.view<const ui_key_bind>().each())
   {
-    if (input.keyboard.just_released(bind.key))
+    if (input.keyboard.just_released(bind.key) &&
+        cen::keyboard::is_only_active(bind.modifiers))
     {
       dispatcher.trigger<key_bind_triggered_event>(ui_key_bind::entity{entity}, bind.id);
       return;
     }
   }
+
+  cen::set_modifiers(state);
 }
 
 }  // namespace detail
 
 /// \endcond
 
-}  // namespace rune::ui
+}  // namespace ui
+}  // namespace rune
 
 #endif  // RUNE_ECS_UI_KEY_BIND_SYSTEM_HPP

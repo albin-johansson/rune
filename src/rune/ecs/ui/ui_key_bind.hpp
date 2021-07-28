@@ -29,10 +29,9 @@ struct ui_key_bind final
 {
   using entity = entity_type<tags::ui_keybind_tag>;
 
-  cen::scan_code key;  ///< The associated key.
-  uint32 id{};         ///< User-defined identifier.
-
-  // TODO modifiers?
+  uint32 id{};                                 ///< User-defined identifier.
+  cen::scan_code key;                          ///< The associated key.
+  cen::key_mod modifiers{cen::key_mod::none};  ///< The associated key modifiers.
 };
 
 /// \name Serialization
@@ -40,7 +39,7 @@ struct ui_key_bind final
 
 void serialize(auto& archive, ui_key_bind& bind)
 {
-  archive(bind.key, bind.id);
+  archive(bind.id, bind.key, bind.modifiers);
 }
 
 /// \} End of serialization

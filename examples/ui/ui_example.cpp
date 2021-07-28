@@ -26,7 +26,10 @@ class ui_example final : public rune::game_base
 
     init_dispatcher();
 
-    rune::ui::make_key_bind(m_registry, cen::scancodes::escape, action_id::quit);
+    rune::ui::make_key_bind(m_registry,
+                            {.id = cen::to_underlying(action_id::quit),
+                             .key = cen::scancodes::e,
+                             .modifiers = cen::key_mod::left_ctrl});
   }
 
   void handle_input(const rune::input& input) override
