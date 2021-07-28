@@ -82,7 +82,7 @@ inline auto make_line(entt::registry& registry,
 
 namespace detail {
 
-void render_lines(const entt::registry& registry, graphics& gfx)
+inline void render_lines(const entt::registry& registry, graphics& gfx)
 {
   const auto menuEntity = registry.ctx<active_menu>().menu_entity;
 
