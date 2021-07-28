@@ -19,7 +19,7 @@ This framework was originally developed from the custom engine built for the
 The following is a (non-exhaustive) list of the features of Rune.
 
 * Distributed as a single header file
-* Simple framework with little to no performance overhead, e.g. no virtual function calls
+* Simple framework with little to no performance overhead
 * Game loop implementation
 * Compile-time configuration
 * Efficient 2D vector implementation
