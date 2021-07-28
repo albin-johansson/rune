@@ -4,9 +4,8 @@
 #include <cmath>     // lerp, sqrt
 #include <concepts>  // floating_point
 #include <ostream>   // ostream
-#include <string>    // string
+#include <string>    // string, to_string
 
-#include "../core/to_string.hpp"
 #include "almost_equal.hpp"
 
 namespace rune {
@@ -445,8 +444,7 @@ template <std::floating_point T>
 template <std::floating_point T>
 [[nodiscard]] auto to_string(const basic_vector2<T> vec) -> std::string
 {
-  return "vector2{x: " + to_string(vec.x).value() + ", y: " + to_string(vec.y).value() +
-         "}";
+  return "vector2{x: " + std::to_string(vec.x) + ", y: " + std::to_string(vec.y) + "}";
 }
 
 template <std::floating_point T>

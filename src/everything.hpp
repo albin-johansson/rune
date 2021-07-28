@@ -44,7 +44,6 @@
 #include "rune/core/game.hpp"
 #include "rune/core/rune_error.hpp"
 #include "rune/core/semi_fixed_game_loop.hpp"
-#include "rune/core/to_string.hpp"
 #include "rune/ecs/entity_type.hpp"
 #include "rune/ecs/events/button_pressed_event.hpp"
 #include "rune/ecs/events/key_bind_triggered_event.hpp"
