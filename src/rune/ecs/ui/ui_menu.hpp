@@ -14,12 +14,22 @@ namespace tags {
 struct ui_menu_tag;
 }  // namespace tags
 
+/**
+ * \struct ui_menu
+ *
+ * \brief A component that represents a UI menu.
+ *
+ * \see `ui::make_menu()`
+ * \see `serialize(auto&, ui_menu&)`
+ *
+ * \since 0.1.0
+ */
 struct ui_menu final
 {
   using entity = entity_type<tags::ui_menu_tag>;
 
-  uint32 id{};
-  bool is_blocking{};
+  uint32 id{};         ///< User-defined identifier.
+  bool is_blocking{};  ///< Does the menu block game logic updates?
 };
 
 struct active_menu final
