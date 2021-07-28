@@ -40,7 +40,7 @@ TEST(TmxProperty, Defaults)
   ASSERT_FALSE(rune::tmx::is_object(property));
 
   ASSERT_EQ(rune::tmx_property_type::string, property.type);
-  ASSERT_TRUE(rune::tmx::try_get_string(property));
+  ASSERT_TRUE(rune::tmx::get_if_string(property));
 }
 
 TEST(TmxProperty, Parse)
@@ -60,7 +60,7 @@ TEST(TmxProperty, Parse)
   ASSERT_FALSE(rune::tmx::is_object(property));
 
   ASSERT_EQ(123, rune::tmx::get_int(property));
-  ASSERT_TRUE(rune::tmx::try_get_int(property));
+  ASSERT_TRUE(rune::tmx::get_if_int(property));
 }
 
 inline const auto properties_json_array = R"(
@@ -128,10 +128,10 @@ TEST(TmxProperty, TryGet)
   ASSERT_NE(rune::tmx::try_get(properties, "C"), properties.end());
   ASSERT_EQ(rune::tmx::try_get(properties, "D"), properties.end());
 
-  ASSERT_TRUE(rune::tmx::try_get_int(properties, "A"));
-  ASSERT_TRUE(rune::tmx::try_get_float(properties, "B"));
-  ASSERT_TRUE(rune::tmx::try_get_string(properties, "C"));
+  ASSERT_TRUE(rune::tmx::get_if_int(properties, "A"));
+  ASSERT_TRUE(rune::tmx::get_if_float(properties, "B"));
+  ASSERT_TRUE(rune::tmx::get_if_string(properties, "C"));
 
-  ASSERT_FALSE(rune::tmx::try_get_string(properties, "A"));
-  ASSERT_TRUE(rune::tmx::try_get_string(properties, "C"));
+  ASSERT_FALSE(rune::tmx::get_if_string(properties, "A"));
+  ASSERT_TRUE(rune::tmx::get_if_string(properties, "C"));
 }

@@ -80,8 +80,8 @@ concept property_value_type = std::same_as<T, int> ||
 }
 
 template <property_value_type T>
-[[nodiscard]] auto try_get_value(const tmx_properties& properties,
-                                 const std::string_view name) noexcept -> const T*
+[[nodiscard]] auto get_if(const tmx_properties& properties,
+                          const std::string_view name) noexcept -> const T*
 {
   if (const auto it = try_get(properties, name); it != properties.end())
   {
@@ -93,89 +93,88 @@ template <property_value_type T>
   }
 }
 
-[[nodiscard]] inline auto try_get_string(const tmx_property& property) noexcept
+[[nodiscard]] inline auto get_if_string(const tmx_property& property) noexcept
     -> const std::string*
 {
   return std::get_if<std::string>(&property.value);
 }
 
-[[nodiscard]] inline auto try_get_string(const tmx_properties& properties,
-                                         const std::string_view name)
-    -> const std::string*
+[[nodiscard]] inline auto get_if_string(const tmx_properties& properties,
+                                        const std::string_view name) -> const std::string*
 {
-  return try_get_value<std::string>(properties, name);
+  return get_if<std::string>(properties, name);
 }
 
-[[nodiscard]] inline auto try_get_int(const tmx_property& property) noexcept -> const int*
+[[nodiscard]] inline auto get_if_int(const tmx_property& property) noexcept -> const int*
 {
   return std::get_if<int>(&property.value);
 }
 
-[[nodiscard]] inline auto try_get_int(const tmx_properties& properties,
-                                      const std::string_view name) -> const int*
+[[nodiscard]] inline auto get_if_int(const tmx_properties& properties,
+                                     const std::string_view name) -> const int*
 {
-  return try_get_value<int>(properties, name);
+  return get_if<int>(properties, name);
 }
 
-[[nodiscard]] inline auto try_get_float(const tmx_property& property) noexcept -> const
+[[nodiscard]] inline auto get_if_float(const tmx_property& property) noexcept -> const
     float*
 {
   return std::get_if<float>(&property.value);
 }
 
-[[nodiscard]] inline auto try_get_float(const tmx_properties& properties,
-                                        const std::string_view name) -> const float*
+[[nodiscard]] inline auto get_if_float(const tmx_properties& properties,
+                                       const std::string_view name) -> const float*
 {
-  return try_get_value<float>(properties, name);
+  return get_if<float>(properties, name);
 }
 
-[[nodiscard]] inline auto try_get_bool(const tmx_property& property) noexcept -> const
+[[nodiscard]] inline auto get_if_bool(const tmx_property& property) noexcept -> const
     bool*
 {
   return std::get_if<bool>(&property.value);
 }
 
-[[nodiscard]] inline auto try_get_bool(const tmx_properties& properties,
-                                       const std::string_view name) -> const bool*
+[[nodiscard]] inline auto get_if_bool(const tmx_properties& properties,
+                                      const std::string_view name) -> const bool*
 {
-  return try_get_value<bool>(properties, name);
+  return get_if<bool>(properties, name);
 }
 
-[[nodiscard]] inline auto try_get_color(const tmx_property& property) noexcept
+[[nodiscard]] inline auto get_if_color(const tmx_property& property) noexcept
     -> const tmx_color*
 {
   return std::get_if<tmx_color>(&property.value);
 }
 
-[[nodiscard]] inline auto try_get_color(const tmx_properties& properties,
-                                        const std::string_view name) -> const tmx_color*
+[[nodiscard]] inline auto get_if_color(const tmx_properties& properties,
+                                       const std::string_view name) -> const tmx_color*
 {
-  return try_get_value<tmx_color>(properties, name);
+  return get_if<tmx_color>(properties, name);
 }
 
-[[nodiscard]] inline auto try_get_file(const tmx_property& property) noexcept
+[[nodiscard]] inline auto get_if_file(const tmx_property& property) noexcept
     -> const tmx_file*
 {
   return std::get_if<tmx_file>(&property.value);
 }
 
-[[nodiscard]] inline auto try_get_file(const tmx_properties& properties,
-                                       const std::string_view name) -> const tmx_file*
+[[nodiscard]] inline auto get_if_file(const tmx_properties& properties,
+                                      const std::string_view name) -> const tmx_file*
 {
-  return try_get_value<tmx_file>(properties, name);
+  return get_if<tmx_file>(properties, name);
 }
 
-[[nodiscard]] inline auto try_get_object(const tmx_property& property) noexcept
+[[nodiscard]] inline auto get_if_object(const tmx_property& property) noexcept
     -> const tmx_object_id*
 {
   return std::get_if<tmx_object_id>(&property.value);
 }
 
-[[nodiscard]] inline auto try_get_object(const tmx_properties& properties,
-                                         const std::string_view name)
+[[nodiscard]] inline auto get_if_object(const tmx_properties& properties,
+                                        const std::string_view name)
     -> const tmx_object_id*
 {
-  return try_get_value<tmx_object_id>(properties, name);
+  return get_if<tmx_object_id>(properties, name);
 }
 
 template <property_value_type T>

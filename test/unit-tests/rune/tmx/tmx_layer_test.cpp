@@ -93,14 +93,14 @@ TEST(TmxLayer, ParseTileLayer)
   ASSERT_EQ("hello", first.name);
   ASSERT_EQ(rune::tmx_property_type::integer, first.type);
   ASSERT_TRUE(rune::tmx::is_int(first));
-  ASSERT_TRUE(rune::tmx::try_get_int(first));
+  ASSERT_TRUE(rune::tmx::get_if_int(first));
   ASSERT_EQ(79, rune::tmx::get_int(first));
 
   auto& second = layer.properties.at(1);
   ASSERT_EQ("world", second.name);
   ASSERT_EQ(rune::tmx_property_type::boolean, second.type);
   ASSERT_TRUE(rune::tmx::is_bool(second));
-  ASSERT_TRUE(rune::tmx::try_get_bool(second));
+  ASSERT_TRUE(rune::tmx::get_if_bool(second));
   ASSERT_FALSE(rune::tmx::get_bool(second));
 }
 
