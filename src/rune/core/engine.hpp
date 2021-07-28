@@ -50,8 +50,6 @@ struct configuration
 
 static_assert(is_configuration_type<configuration>);
 
-// clang-format off
-
 /**
  * \class engine
  *
@@ -108,11 +106,9 @@ static_assert(is_configuration_type<configuration>);
  * \see `graphics`
  */
 template <typename Game, std::derived_from<graphics> Graphics = graphics>
-    requires is_game_type<Game, Graphics>
+  requires is_game_type<Game, Graphics>
 class engine
 {
-  // clang-format on
-
   // To be able to access update_logic and update_input
   friend class semi_fixed_game_loop<Game, Graphics>;
 
