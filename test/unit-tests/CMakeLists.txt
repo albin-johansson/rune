@@ -13,7 +13,6 @@ set(SOURCE_FILES
     rune/containers/vector_map_test.cpp
 
     rune/core/game_test.cpp
-    rune/core/to_string_test.cpp
 
     rune/ecs/ui/button_system_test.cpp
     rune/ecs/ui/label_system_test.cpp
