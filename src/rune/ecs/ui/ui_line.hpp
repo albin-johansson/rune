@@ -17,8 +17,8 @@ struct ui_line final
 {
   using entity = entity_type<tags::ui_line_tag>;
 
-  ui_position start;
-  ui_position end;
+  ui_position start;  ///< The start point.
+  ui_position end;    ///< The end point.
 };
 
 /// \name Serialization
