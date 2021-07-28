@@ -1,8 +1,6 @@
 #ifndef RUNE_MATH_MIN_HPP
 #define RUNE_MATH_MIN_HPP
 
-#include "../core/concepts.hpp"
-
 namespace rune {
 
 /**
@@ -19,7 +17,7 @@ namespace rune {
  *
  * \return the smallest of the two values.
  */
-template <cc::has_less_than T>
+template <typename T>
 [[nodiscard]] constexpr auto min(const T& a, const T& b) noexcept(noexcept(a < b)) -> T
 {
   return (a < b) ? a : b;

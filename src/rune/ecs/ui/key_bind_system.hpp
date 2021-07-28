@@ -1,9 +1,9 @@
 #ifndef RUNE_ECS_UI_KEY_BIND_SYSTEM_HPP
 #define RUNE_ECS_UI_KEY_BIND_SYSTEM_HPP
 
-#include <entt.hpp>  // registry, dispatcher
+#include <entt.hpp>     // registry, dispatcher
+#include <type_traits>  // is_enum_v
 
-#include "../../core/concepts.hpp"
 #include "../../core/input.hpp"
 #include "../events/key_bind_triggered_event.hpp"
 #include "ui_key_bind.hpp"
@@ -44,7 +44,8 @@ inline auto make_key_bind(entt::registry& registry,
 }
 
 /// \copydoc make_key_bind()
-template <cc::enum_type T>
+template <typename T>
+  requires std::is_enum_v<T>
 auto make_key_bind(entt::registry& registry, const cen::scan_code key, const T id)
     -> ui_key_bind::entity
 {

@@ -11,7 +11,6 @@
 
 #include "../aliases/json_type.hpp"
 #include "../aliases/maybe.hpp"
-#include "../core/concepts.hpp"
 #include "../core/rune_error.hpp"
 
 namespace rune {

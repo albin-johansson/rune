@@ -1,7 +1,6 @@
 #ifndef RUNE_CORE_SEMI_FIXED_GAME_LOOP_HPP
 #define RUNE_CORE_SEMI_FIXED_GAME_LOOP_HPP
 
-#include <algorithm>      // min
 #include <centurion.hpp>  // ...
 #include <concepts>       // floating_point, derived_from
 

@@ -1,7 +1,7 @@
 #ifndef RUNE_MATH_MAX_HPP
 #define RUNE_MATH_MAX_HPP
 
-#include "../core/concepts.hpp"
+#include <concepts>
 
 namespace rune {
 
@@ -21,7 +21,7 @@ namespace rune {
  *
  * \return the largest of the two values.
  */
-template <cc::has_less_than T>
+template <typename T>
 [[nodiscard]] constexpr auto max(const T& a, const T& b) noexcept(noexcept(a < b)) -> T
 {
   return (a < b) ? b : a;

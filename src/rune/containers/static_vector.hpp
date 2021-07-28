@@ -3,11 +3,11 @@
 
 #include <array>             // array
 #include <cassert>           // assert
+#include <concepts>          // default_initializable
 #include <initializer_list>  // initializer_list
 #include <utility>           // forward, move
 
 #include "../aliases/integers.hpp"
-#include "../core/concepts.hpp"
 #include "../core/rune_error.hpp"
 
 namespace rune {
@@ -26,7 +26,7 @@ namespace rune {
  * \tparam T the element type.
  * \tparam Capacity the maximum capacity of the vector.
  */
-template <cc::default_constructible T, usize Capacity>
+template <std::default_initializable T, usize Capacity>
 class static_vector final
 {
  public:

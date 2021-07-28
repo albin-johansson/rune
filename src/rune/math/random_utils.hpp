@@ -3,11 +3,9 @@
 
 #include <algorithm>   // generate
 #include <array>       // array
-#include <concepts>    // floating_point
+#include <concepts>    // floating_point, integral
 #include <functional>  // ref
 #include <random>      // mt19937, random_device, seed_seq, uniform_real_distribution, ...
-
-#include "../core/concepts.hpp"
 
 namespace rune {
 
@@ -41,15 +39,15 @@ using random_engine = std::mt19937;
 /**
  * \brief Returns a random value in the specified range [min, max].
  *
- * \tparam T the type of the value to be obtained, must be either integral or
- * floating-point.
+ * \tparam T the type of the value to be obtained.
  *
  * \param min the minimum possible value.
  * \param max the maximum possible value.
  *
  * \return a random value in the specified range.
  */
-template <cc::numeric T>
+template <typename T>
+  requires std::integral<T> || std::floating_point<T>
 [[nodiscard]] auto next_random(const T min, const T max) -> T
 {
   static auto engine = make_random_engine();
