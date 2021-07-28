@@ -38,7 +38,7 @@ The following table shows the dependencies of the Rune library. Note, SDL_ttf is
 | ------------------- | ---------------------------------------------------------------------------------------- | ------- |
 | Centurion           | [www.github.com/albin-johansson/centurion](https://github.com/albin-johansson/centurion) | 6.2.0   |
 | Nenya               | [www.github.com/albin-johansson/nenya](https://github.com/albin-johansson/nenya)         | 0.1.0   |
-| EnTT                | [www.github.com/skypjack/entt](https://github.com/skypjack/entt)                         | 3.8.0   |
+| EnTT                | [www.github.com/skypjack/entt](https://github.com/skypjack/entt)                         | 3.8.1   |
 | JSON for Modern C++ | [www.github.com/nlohmann/json](https://github.com/nlohmann/json)                         | 3.9.1   |
 
 ## Documentation
