@@ -34,7 +34,9 @@ namespace rune {
  *
  * \details It is safe to derive your own custom graphics context classes from this class.
  * However, you then need to supply your custom graphics type as a template parameter to
- * `engine`.
+ * your engine instance.
+ *
+ * \since 0.1.0
  */
 class graphics
 {
