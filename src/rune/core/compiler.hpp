@@ -10,7 +10,7 @@ namespace rune {
 /// \{
 
 /// Indicates whether or not the current compiler is MSVC
-[[nodiscard]] constexpr auto on_msvc() noexcept -> bool
+[[nodiscard]] consteval auto on_msvc() noexcept -> bool
 {
 #ifdef _MSC_VER
   return true;
@@ -20,7 +20,7 @@ namespace rune {
 }
 
 /// Indicates whether or not the current compiler is GCC
-[[nodiscard]] constexpr auto on_gcc() noexcept -> bool
+[[nodiscard]] consteval auto on_gcc() noexcept -> bool
 {
 #ifdef __GNUC__
   return true;
@@ -30,7 +30,7 @@ namespace rune {
 }
 
 /// Indicates whether or not the current compiler is Clang
-[[nodiscard]] constexpr auto on_clang() noexcept -> bool
+[[nodiscard]] consteval auto on_clang() noexcept -> bool
 {
 #ifdef __clang__
   return true;
