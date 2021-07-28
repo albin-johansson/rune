@@ -12,6 +12,7 @@ set(SOURCE_FILES
     rune/containers/static_vector_test.cpp
     rune/containers/vector_map_test.cpp
 
+    rune/core/compiler_test.cpp
     rune/core/game_test.cpp
 
     rune/ecs/ui/button_system_test.cpp
