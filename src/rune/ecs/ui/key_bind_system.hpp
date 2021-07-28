@@ -8,7 +8,7 @@
 #include "../events/key_bind_triggered_event.hpp"
 #include "ui_key_bind.hpp"
 
-namespace rune {
+namespace rune::ui {
 
 /// \addtogroup ecs
 /// \{
@@ -16,6 +16,20 @@ namespace rune {
 /// \name Factory functions
 /// \{
 
+/**
+ * \brief Creates a new key bind entity and returns it.
+ *
+ * \details The created entity will feature the following components.
+ * - `ui_key_bind`
+ *
+ * \param registry the registry to which a key bind entity will be added.
+ * \param key the key that will trigger the bind.
+ * \param id the identifier that will be associated with the bind.
+ *
+ * \return the created key bind entity.
+ *
+ * \since 0.1.0
+ */
 inline auto make_key_bind(entt::registry& registry,
                           const cen::scan_code key,
                           const uint32 id) -> ui_key_bind::entity
@@ -29,17 +43,21 @@ inline auto make_key_bind(entt::registry& registry,
   return entity;
 }
 
-/// \} End of factory functions
-
-/// \name Key bind system functions
-/// \{
-
+/// \copydoc make_key_bind()
 template <cc::enum_type T>
 auto make_key_bind(entt::registry& registry, const cen::scan_code key, const T id)
     -> ui_key_bind::entity
 {
   return make_key_bind(registry, key, cen::to_underlying(id));
 }
+
+/// \} End of factory functions
+
+/// \} End of group ecs
+
+/// \cond FALSE
+
+namespace detail {
 
 inline void update_key_binds(entt::registry& registry,
                              entt::dispatcher& dispatcher,
@@ -55,10 +73,10 @@ inline void update_key_binds(entt::registry& registry,
   }
 }
 
-/// \} End of key bind system functions
+}  // namespace detail
 
-/// \} End of group ecs
+/// \endcond
 
-}  // namespace rune
+}  // namespace rune::ui
 
 #endif  // RUNE_ECS_UI_KEY_BIND_SYSTEM_HPP
