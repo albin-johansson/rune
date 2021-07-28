@@ -10,6 +10,7 @@
 #include "button_system.hpp"
 #include "key_bind_system.hpp"
 #include "label_system.hpp"
+#include "lazy_texture_system.hpp"
 #include "line_system.hpp"
 #include "ui_key_bind.hpp"
 #include "ui_menu.hpp"
@@ -23,19 +24,21 @@ namespace rune::ui {
  * \brief Updates the state of the UI.
  *
  * \details This is the only UI-function you need to call in your `handle_input()`
- * function if you are using the UI framework.
+ * function in order to use the UI framework.
  *
  * \param registry the registry that contains all of the UI entities.
  * \param dispatcher the event dispatcher that will be used.
  * \param input the current input state.
+ *
+ * \since 0.1.0
  */
 inline void update(entt::registry& registry,
                    entt::dispatcher& dispatcher,
                    const input& input)
 {
-  if (const auto button = update_button_hover(registry, input.mouse))
+  if (const auto button = detail::update_button_hover(registry, input.mouse))
   {
-    if (query_button(registry, dispatcher, *button, input.mouse))
+    if (detail::query_button(registry, dispatcher, *button, input.mouse))
     {
       // TODO
 
@@ -43,18 +46,43 @@ inline void update(entt::registry& registry,
     }
   }
 
-  update_key_binds(registry, dispatcher, input);
+  detail::update_key_binds(registry, dispatcher, input);
 }
 
+/**
+ * \brief Renders the currently active UI components.
+ *
+ * \param registry the registry that contains all of the UI entities.
+ * \param gfx the graphics context that will be used for rendering.
+ *
+ * \see `debug()`
+ *
+ * \since 0.1.0
+ */
 inline void render(const entt::registry& registry, graphics& gfx)
 {
-  update_button_bounds(registry, gfx);
-  render_lines(registry, gfx);
-  render_buttons(registry, gfx);
-  render_labels(registry, gfx);
-  render_button_labels(registry, gfx);
+  detail::update_button_bounds(registry, gfx);
+  detail::update_lazy_textures(registry, gfx);
+
+  detail::render_lines(registry, gfx);
+  detail::render_buttons(registry, gfx);
+  detail::render_labels(registry, gfx);
+  detail::render_button_labels(registry, gfx);
 }
 
+/**
+ * \brief Renders debug information for the currently active UI components.
+ *
+ * \details This function is intended to be used to aid debugging UI aspects such as
+ * layouts or alignments.
+ *
+ * \param registry the registry that contains all of the UI entities.
+ * \param gfx the graphics context that will be used for rendering.
+ *
+ * \see `render()`
+ *
+ * \since 0.1.0
+ */
 inline void debug(const entt::registry& registry, graphics& gfx)
 {
   const auto menuEntity = registry.ctx<const active_menu>().menu_entity;
@@ -67,25 +95,7 @@ inline void debug(const entt::registry& registry, graphics& gfx)
 
     const auto [logicalWidth, logicalHeight] = renderer.logical_size();
 
-    for (int row = 0; row < static_cast<int>(menu_row_size); ++row)
-    {
-      const auto y = static_cast<float>(row) * menu_row_size;
-      renderer.draw_line(cen::point(0.0f, y),
-                         cen::point(static_cast<float>(logicalWidth), y));
-    }
-
-    for (int col = 0; col < static_cast<int>(menu_column_size); ++col)
-    {
-      const auto x = static_cast<float>(col) * menu_column_size;
-      renderer.draw_line(cen::point(x, 0.0f),
-                         cen::point(x, static_cast<float>(logicalHeight)));
-    }
-
-    renderer.draw_line(cen::point(0, logicalHeight - 1),
-                       cen::point(logicalWidth, logicalHeight - 1));
-
-    renderer.draw_line(cen::point(logicalWidth - 1, 0),
-                       cen::point(logicalWidth - 1, logicalHeight));
+    // TODO
   }
 }
 
