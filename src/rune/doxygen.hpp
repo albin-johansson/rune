@@ -90,9 +90,8 @@
  * The ECS UI framework provides components and systems for handling menus, buttons,
  * checkboxes, labels, etc. The most important functions in the UI framework are
  * `rune::ui::update()` and `rune::ui::render()`, which (unsurprisingly) update and render
- * all of the UI systems, respectively. Use these functions instead of managing the
- * different UI systems explicitly. Functions related to the UI framework reside in the
- * `rune::ui` namespace.
+ * all of the UI systems, respectively. Functions related to the UI framework reside in
+ * the `rune::ui` namespace.
  *
  * It's recommended to use the provided factory functions for creating UI entities, in
  * order to ensure that the entities feature the correct set of components. All UI
