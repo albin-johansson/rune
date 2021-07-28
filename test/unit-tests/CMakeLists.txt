@@ -16,6 +16,7 @@ set(SOURCE_FILES
     rune/core/to_string_test.cpp
 
     rune/ecs/ui/button_system_test.cpp
+    rune/ecs/ui/label_system_test.cpp
 
     rune/io/ini_test.cpp
     rune/io/ini_value_test.cpp
