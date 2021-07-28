@@ -1,10 +1,10 @@
 #ifndef RUNE_TMX_TILESET_HPP
 #define RUNE_TMX_TILESET_HPP
 
-#include <optional>  // optional
-#include <string>    // string
-#include <vector>    // vector
+#include <string>  // string
+#include <vector>  // vector
 
+#include "../aliases/maybe.hpp"
 #include "tmx_color.hpp"
 #include "tmx_global_id.hpp"
 #include "tmx_grid.hpp"
@@ -37,10 +37,10 @@ struct tmx_tileset final
   std::string tiled_version;
   std::string json_version;
 
-  std::optional<tmx_color> background;
-  std::optional<tmx_color> transparent;
-  std::optional<tmx_tile_offset> tile_offset;
-  std::optional<tmx_grid> grid;
+  maybe<tmx_color> background;
+  maybe<tmx_color> transparent;
+  maybe<tmx_tile_offset> tile_offset;
+  maybe<tmx_grid> grid;
 
   std::vector<tmx_tile> tiles;
   std::vector<tmx_terrain> terrains;

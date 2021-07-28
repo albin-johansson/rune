@@ -9,7 +9,6 @@
 #include <deque>          // deque
 #include <iterator>       // output_iterator
 #include <limits>         // numeric_limits
-#include <optional>       // optional
 #include <ostream>        // ostream
 #include <stack>          // stack
 #include <string>         // string
@@ -18,6 +17,7 @@
 #include <vector>         // vector
 
 #include "../aliases/integers.hpp"
+#include "../aliases/maybe.hpp"
 #include "../math/max.hpp"
 #include "../math/min.hpp"
 #include "../math/vector2.hpp"
@@ -472,7 +472,7 @@ class aabb_tree final
     m_thickness = factor;
   }
 
-  [[nodiscard]] auto thickness_factor() const noexcept -> std::optional<precision_type>
+  [[nodiscard]] auto thickness_factor() const noexcept -> maybe<precision_type>
   {
     return m_thickness;
   }
@@ -491,8 +491,8 @@ class aabb_tree final
       const auto index = it->second;
       const auto& sourceNode = m_nodes.at(index);
 
-      stack_resource<BufferSize * sizeof(std::optional<index_type>)> resource;
-      pmr_stack<std::optional<index_type>> stack{resource.get()};
+      stack_resource<BufferSize * sizeof(maybe<index_type>)> resource;
+      pmr_stack<maybe<index_type>> stack{resource.get()};
 
       stack.push(m_root);
 
@@ -568,11 +568,11 @@ class aabb_tree final
 
   std::vector<node_type> m_nodes;                      ///< The collection of nodes
   std::unordered_map<key_type, index_type> m_indices;  ///< User IDs -> Node indices
-  std::optional<index_type> m_root;                    ///< Root node index
-  std::optional<index_type> m_nextFreeIndex{0};        ///< Index of next free node
+  maybe<index_type> m_root;                            ///< Root node index
+  maybe<index_type> m_nextFreeIndex{0};                ///< Index of next free node
   size_type m_nodeCount{0};                            ///< Number of nodes in the tree
   size_type m_nodeCapacity{};                          ///< Current node capacity
-  std::optional<precision_type> m_thickness{def_thickness_factor};  ///< Thickness factor
+  maybe<precision_type> m_thickness{def_thickness_factor};  ///< Thickness factor
   bool m_touchIsOverlap{true};  ///< Overlap detection strategy
 
   /// \name Allocation
@@ -668,7 +668,7 @@ class aabb_tree final
 
   void print(std::ostream& stream,
              const std::string& prefix,
-             const std::optional<index_type> index,
+             const maybe<index_type> index,
              const bool isLeft) const
   {
     if (index)
@@ -936,7 +936,7 @@ class aabb_tree final
     return index;
   }
 
-  void fix_tree_upwards(std::optional<index_type> index)
+  void fix_tree_upwards(maybe<index_type> index)
   {
     while (index)
     {
@@ -1065,8 +1065,7 @@ class aabb_tree final
   /// \name Validation
   /// \{
 
-  [[nodiscard]] auto compute_height(const std::optional<index_type> nodeIndex) const
-      -> size_type
+  [[nodiscard]] auto compute_height(const maybe<index_type> nodeIndex) const -> size_type
   {
     if (!nodeIndex)
     {
@@ -1093,7 +1092,7 @@ class aabb_tree final
     return compute_height(m_root);
   }
 
-  void validate_structure(const std::optional<index_type> nodeIndex) const
+  void validate_structure(const maybe<index_type> nodeIndex) const
   {
     if (nodeIndex == nothing)
     {
@@ -1131,7 +1130,7 @@ class aabb_tree final
     }
   }
 
-  void validate_metrics(const std::optional<index_type> nodeIndex) const
+  void validate_metrics(const maybe<index_type> nodeIndex) const
   {
     if (!nodeIndex)
     {

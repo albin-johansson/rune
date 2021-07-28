@@ -1,9 +1,8 @@
 #ifndef RUNE_TMX_TILE_LAYER_HPP
 #define RUNE_TMX_TILE_LAYER_HPP
 
-#include <optional>  // optional
-
 #include "../aliases/json_type.hpp"
+#include "../aliases/maybe.hpp"
 #include "tmx_data.hpp"
 #include "tmx_tile_layer_compression.hpp"
 #include "tmx_tile_layer_encoding.hpp"
@@ -17,7 +16,7 @@ struct tmx_tile_layer final
 {
   tmx_tile_layer_compression compression{tmx_tile_layer_compression::none};
   tmx_tile_layer_encoding encoding{tmx_tile_layer_encoding::csv};
-  std::optional<tmx_data> data;
+  maybe<tmx_data> data;
   // TODO std::vector<chunk> m_chunks;
 };
 

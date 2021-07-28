@@ -1,14 +1,14 @@
 #ifndef RUNE_TMX_OBJECT_HPP
 #define RUNE_TMX_OBJECT_HPP
 
-#include <memory>    // unique_ptr
-#include <optional>  // optional
-#include <string>    // string
-#include <variant>   // variant, monostate
-#include <vector>    // vector
+#include <memory>   // unique_ptr
+#include <string>   // string
+#include <variant>  // variant, monostate
+#include <vector>   // vector
 
 #include "../aliases/integers.hpp"
 #include "../aliases/json_type.hpp"
+#include "../aliases/maybe.hpp"
 #include "../io/json_utils.hpp"
 #include "tmx_global_id.hpp"
 #include "tmx_point.hpp"
@@ -36,8 +36,8 @@ struct tmx_template_object final
 {
   std::string template_file;
   std::unique_ptr<tmx_object> object;
-  std::optional<std::string> tileset_source;
-  std::optional<tmx_global_id> tileset_first_id;
+  maybe<std::string> tileset_source;
+  maybe<tmx_global_id> tileset_first_id;
 };
 
 struct tmx_object final

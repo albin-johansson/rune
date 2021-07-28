@@ -2,9 +2,9 @@
 #define RUNE_CONTAINERS_AABB_NODE_HPP
 
 #include <concepts>  // floating_point
-#include <optional>  // optional
 
 #include "../aliases/integers.hpp"
+#include "../aliases/maybe.hpp"
 #include "aabb.hpp"
 
 namespace rune {
@@ -32,13 +32,13 @@ class aabb_node final
   using aabb_type = basic_aabb<precision_type>;       ///< The associated AABB type.
   using index_type = usize;                           ///< The type used for node indices
 
-  std::optional<key_type> id;        ///< The user-provided ID associated with the AABB.
-  aabb_type box;                     ///< The associated AABB.
-  std::optional<index_type> parent;  ///< Index of parent node.
-  std::optional<index_type> left;    ///< Index of left child.
-  std::optional<index_type> right;   ///< Index of right child.
-  std::optional<index_type> next;    ///< Index of next adjacent node.
-  int height{-1};                    ///< Amount of levels below the node (0 for leaves).
+  maybe<key_type> id;        ///< The user-provided ID associated with the AABB.
+  aabb_type box;             ///< The associated AABB.
+  maybe<index_type> parent;  ///< Index of parent node.
+  maybe<index_type> left;    ///< Index of left child.
+  maybe<index_type> right;   ///< Index of right child.
+  maybe<index_type> next;    ///< Index of next adjacent node.
+  int height{-1};            ///< Amount of levels below the node (0 for leaves).
 };
 
 /**

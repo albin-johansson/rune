@@ -4,8 +4,8 @@
 #include <cassert>        // assert
 #include <centurion.hpp>  // window, renderer, ...
 #include <concepts>       // derived_from, constructible_from
-#include <optional>       // optional
 
+#include "../aliases/maybe.hpp"
 #include "game.hpp"
 #include "graphics.hpp"
 #include "input.hpp"
@@ -262,11 +262,11 @@ class engine
   }
 
  private:
-  loop_type m_loop;                 ///< The game loop.
-  cen::window m_window;             ///< The associated window.
-  graphics_type m_graphics;         ///< The graphics context.
-  input m_input;                    ///< The input state wrapper.
-  std::optional<game_type> m_game;  ///< The game instance, optional delays construction.
+  loop_type m_loop;          ///< The game loop.
+  cen::window m_window;      ///< The associated window.
+  graphics_type m_graphics;  ///< The graphics context.
+  input m_input;             ///< The input state wrapper.
+  maybe<game_type> m_game;   ///< The game instance, optional delays construction.
 
   void update_logic(const delta_time dt)
   {

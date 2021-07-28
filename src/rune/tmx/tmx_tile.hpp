@@ -1,11 +1,11 @@
 #ifndef RUNE_TMX_TILE_HPP
 #define RUNE_TMX_TILE_HPP
 
-#include <array>     // array
-#include <optional>  // optional
-#include <string>    // string, stoi
+#include <array>   // array
+#include <string>  // string
 
 #include "../aliases/json_type.hpp"
+#include "../aliases/maybe.hpp"
 #include "tmx_animation.hpp"
 #include "tmx_layer.hpp"
 #include "tmx_local_id.hpp"
@@ -19,14 +19,14 @@ namespace rune {
 struct tmx_tile final
 {
   tmx_local_id id{};
-  std::optional<tmx_animation> animation;
-  std::optional<std::array<int, 4>> terrain;
-  std::optional<std::string> type;
-  std::optional<std::string> image;
-  std::optional<int> image_width;
-  std::optional<int> image_height;
-  std::optional<float> probability;
-  std::optional<tmx_layer> object_layer;
+  maybe<tmx_animation> animation;
+  maybe<std::array<int, 4>> terrain;
+  maybe<std::string> type;
+  maybe<std::string> image;
+  maybe<int> image_width;
+  maybe<int> image_height;
+  maybe<float> probability;
+  maybe<tmx_layer> object_layer;
   tmx_properties properties;
 };
 

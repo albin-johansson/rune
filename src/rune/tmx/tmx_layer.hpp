@@ -4,13 +4,13 @@
 #include <cassert>   // assert
 #include <concepts>  // same_as
 #include <memory>    // unique_ptr
-#include <optional>  // optional
 #include <string>    // string
 #include <variant>   // variant, monostate
 #include <vector>    // vector
 
 #include "../aliases/integers.hpp"
 #include "../aliases/json_type.hpp"
+#include "../aliases/maybe.hpp"
 #include "../io/json_utils.hpp"
 #include "tmx_color.hpp"
 #include "tmx_image_layer.hpp"
@@ -52,7 +52,7 @@ struct tmx_layer final
   float offset_y{};
   float opacity{1};
 
-  std::optional<tmx_color> tint;
+  maybe<tmx_color> tint;
   tmx_properties properties;
 
   data_type data;

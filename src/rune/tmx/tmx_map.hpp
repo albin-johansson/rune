@@ -1,9 +1,9 @@
 #ifndef RUNE_TMX_MAP_HPP
 #define RUNE_TMX_MAP_HPP
 
-#include <optional>  // optional
-#include <string>    // string
+#include <string>  // string
 
+#include "../aliases/maybe.hpp"
 #include "tmx_color.hpp"
 #include "tmx_layer.hpp"
 #include "tmx_map_orientation.hpp"
@@ -35,9 +35,9 @@ struct tmx_map final
   tmx_map_orientation orientation{tmx_map_orientation::orthogonal};
   tmx_map_render_order render_order{tmx_map_render_order::right_down};
 
-  std::optional<tmx_color> background;
-  std::optional<tmx_stagger_axis> stagger_axis;
-  std::optional<tmx_stagger_index> stagger_index;
+  maybe<tmx_color> background;
+  maybe<tmx_stagger_axis> stagger_axis;
+  maybe<tmx_stagger_index> stagger_index;
 
   tmx_layers layers;
   tmx_tilesets tilesets;

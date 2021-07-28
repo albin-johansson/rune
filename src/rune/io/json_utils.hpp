@@ -5,13 +5,12 @@
 #include <concepts>     // same_as
 #include <filesystem>   // path
 #include <fstream>      // ifstream
-#include <json.hpp>     // json
-#include <optional>     // optional
 #include <string_view>  // string_view
 #include <variant>      // variant
 #include <vector>       // vector
 
 #include "../aliases/json_type.hpp"
+#include "../aliases/maybe.hpp"
 #include "../core/concepts.hpp"
 #include "../core/rune_error.hpp"
 
@@ -141,9 +140,7 @@ void try_get_to(const json_type& json, const std::string_view key, T& value)
 
 /// \copydoc try_get_to()
 template <json_serializable_type T>
-void try_get_to(const json_type& json,
-                const std::string_view key,
-                std::optional<T>& value)
+void try_get_to(const json_type& json, const std::string_view key, maybe<T>& value)
 {
   if (const auto it = json.find(key); it != json.end())
   {
@@ -215,9 +212,7 @@ void emplace_to(const json_type& json, const std::string_view key, T& value)
 /// \copydoc emplace_to()
 template <typename T>
   requires json_serializable_type<typename T::value_type>
-void emplace_to(const json_type& json,
-                const std::string_view key,
-                std::optional<T>& value)
+void emplace_to(const json_type& json, const std::string_view key, maybe<T>& value)
 {
   if (const auto it = json.find(key); it != json.end())
   {
