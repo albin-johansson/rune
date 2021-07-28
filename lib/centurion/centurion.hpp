@@ -24397,6 +24397,34 @@ enum class key_modifier : u16
  */
 using key_mod = key_modifier;
 
+/**
+ * \brief Sets the current key modifier flags.
+ *
+ * \param mods the modifier flags that will be used.
+ *
+ * \see `get_modifiers()`
+ *
+ * \since 6.2.0
+ */
+inline void set_modifiers(const key_mod mods) noexcept
+{
+  SDL_SetModState(static_cast<SDL_Keymod>(mods));
+}
+
+/**
+ * \brief Returns the current key modifier state.
+ *
+ * \return the current key modifier flags.
+ *
+ * \see `set_modifiers()`
+ *
+ * \since 6.2.0
+ */
+[[nodiscard]] inline auto get_modifiers() noexcept -> key_mod
+{
+  return static_cast<key_mod>(SDL_GetModState());
+}
+
 /// \name Key modifier bitwise operators
 /// \{
 
@@ -56680,6 +56708,34 @@ enum class key_modifier : u16
  */
 using key_mod = key_modifier;
 
+/**
+ * \brief Sets the current key modifier flags.
+ *
+ * \param mods the modifier flags that will be used.
+ *
+ * \see `get_modifiers()`
+ *
+ * \since 6.2.0
+ */
+inline void set_modifiers(const key_mod mods) noexcept
+{
+  SDL_SetModState(static_cast<SDL_Keymod>(mods));
+}
+
+/**
+ * \brief Returns the current key modifier state.
+ *
+ * \return the current key modifier flags.
+ *
+ * \see `set_modifiers()`
+ *
+ * \since 6.2.0
+ */
+[[nodiscard]] inline auto get_modifiers() noexcept -> key_mod
+{
+  return static_cast<key_mod>(SDL_GetModState());
+}
+
 /// \name Key modifier bitwise operators
 /// \{
 
@@ -57534,6 +57590,34 @@ enum class key_modifier : u16
  * \since 6.2.0
  */
 using key_mod = key_modifier;
+
+/**
+ * \brief Sets the current key modifier flags.
+ *
+ * \param mods the modifier flags that will be used.
+ *
+ * \see `get_modifiers()`
+ *
+ * \since 6.2.0
+ */
+inline void set_modifiers(const key_mod mods) noexcept
+{
+  SDL_SetModState(static_cast<SDL_Keymod>(mods));
+}
+
+/**
+ * \brief Returns the current key modifier state.
+ *
+ * \return the current key modifier flags.
+ *
+ * \see `set_modifiers()`
+ *
+ * \since 6.2.0
+ */
+[[nodiscard]] inline auto get_modifiers() noexcept -> key_mod
+{
+  return static_cast<key_mod>(SDL_GetModState());
+}
 
 /// \name Key modifier bitwise operators
 /// \{
