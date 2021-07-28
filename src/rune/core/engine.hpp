@@ -266,7 +266,7 @@ class engine
   cen::window m_window;      ///< The associated window.
   graphics_type m_graphics;  ///< The graphics context.
   input m_input;             ///< The input state wrapper.
-  maybe<game_type> m_game;   ///< The game instance, optional delays construction.
+  maybe<game_type> m_game;   ///< The game instance, optional to delay construction.
 
   void update_logic(const delta_time dt)
   {
