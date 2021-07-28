@@ -14,11 +14,20 @@ namespace tags {
 struct ui_foreground_tag;
 }  // namespace tags
 
+/**
+ * \struct ui_foreground
+ *
+ * \brief A component that represents a foreground color.
+ *
+ * \see `serialize(auto&, ui_foreground&)`
+ *
+ * \since 0.1.0
+ */
 struct ui_foreground final
 {
   using entity = entity_type<tags::ui_foreground_tag>;
 
-  cen::color color;
+  cen::color color;  ///< The foreground color.
 };
 
 /// \name Serialization
