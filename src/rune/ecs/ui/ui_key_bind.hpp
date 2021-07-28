@@ -20,7 +20,7 @@ struct ui_keybind_tag;
  *
  * \brief A component that represents a key bind, that emits an event when triggered.
  *
- * \see `make_key_bind()`
+ * \see `ui::make_key_bind()`
  * \see `serialize(auto&, ui_key_bind&)`
  *
  * \since 0.1.0
