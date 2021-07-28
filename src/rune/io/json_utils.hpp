@@ -52,11 +52,16 @@ concept json_serializable_type = requires (json_type json)
   return json;
 }
 
-/// \} End of io
+/// \} End of JSON
+
+/// \} End of group io
 
 namespace io {
 
 /// \addtogroup io
+/// \{
+
+/// \name JSON
 /// \{
 
 /**
