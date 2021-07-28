@@ -5,7 +5,7 @@
 
 #include "ui_position.hpp"
 
-namespace rune {
+namespace rune::ui {
 
 /// \addtogroup ecs
 /// \{
@@ -49,6 +49,6 @@ inline constexpr float menu_column_size = RUNE_MENU_COLUMN_SIZE;
 
 /// \} End of group ecs
 
-}  // namespace rune
+}  // namespace rune::ui
 
 #endif  // RUNE_ECS_UI_UI_GRID_HPP
