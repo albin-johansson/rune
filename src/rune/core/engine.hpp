@@ -55,58 +55,33 @@ static_assert(is_configuration_type<configuration>);
  *
  * \brief Represents the core engine in the framework.
  *
- * \details One instance of this should be created in your `main` function, and then
- * call `engine::run()` to launch your game. The game class must either be
- * default-constructible, or provide at least one constructor that accepts
- * `graphics_type&`.
- * \code{cpp}
- * #include <centurion.hpp>
- * #include <rune.hpp>
+ * \details The easiest way to set up your game is to use either of
+ * `RUNE_IMPLEMENT_MAIN_WITH_GAME` or `RUNE_IMPLEMENT_MAIN_WITH_GAME_AND_GRAPHICS` to
+ * automatically generate a correct definition of the `main` function.
  *
- * class AwesomeGame
- * {
- *  public:
- *   explicit AwesomeGame(rune::graphics& graphics)
- *   {
- *     // ...
- *   }
+ * \details Alternatively, you could manually initialize an `engine` instance with your
+ * game and graphics types and call the `engine::run()` function to start your game.
+ * However, remember to initialize Centurion _before_ creating your engine instance!
  *
- *   void handle_input(const rune::input& input)
- *   {
- *     // ...
- *   }
+ * \details It is perfectly valid to derive from this class, which enables easy access to
+ * the game window, graphics context, input state, etc.
  *
- *   void tick(rune::delta_time dt)
- *   {
- *     // ...
- *   }
- *
- *   void render(rune::graphics& graphics) const
- *   {
- *     // ...
- *   }
- *
- *   [[nodiscard]] bool should_quit() const
- *   {
- *     // ...
- *   }
- * };
- *
- * int main(int, char**)
- * {
- *   cen::library centurion;  // Remember to initialize Centurion!
- *   rune::engine<AwesomeGame> engine;
- *   return engine.run();
- * }
- * \endcode
+ * \details The game class must either be default-constructible or provide a constructor
+ * that accepts `graphics_type&`.
  *
  * \tparam Game the type of the game class.
+ * \tparam Graphics the type of the graphics context.
  *
- * \see `is_game_type`
+ * \see `game_base`
  * \see `graphics`
+ * \see `RUNE_IMPLEMENT_MAIN_WITH_ENGINE`
+ * \see `RUNE_IMPLEMENT_MAIN_WITH_GAME`
+ * \see `RUNE_IMPLEMENT_MAIN_WITH_GAME_AND_GRAPHICS`
+ *
+ * \since 0.1.0
  */
-template <typename Game, std::derived_from<graphics> Graphics = graphics>
-  requires is_game_type<Game, Graphics>
+template <std::derived_from<game_base> Game,
+          std::derived_from<graphics> Graphics = graphics>
 class engine
 {
   // To be able to access update_logic and update_input
@@ -141,16 +116,13 @@ class engine
       m_game.emplace();
     }
 
-    if constexpr (has_init<game_type, graphics_type>)
-    {
-      m_game->init(m_graphics);
-    }
+    m_game->init(m_graphics);
   }
 
   /**
    * \brief Starts the game loop and runs the game.
    *
-   * \return 0 on success.
+   * \return always `0`.
    */
   auto run() -> int
   {
@@ -159,10 +131,7 @@ class engine
     m_window.show();
     m_loop.fetch_current_time();
 
-    if constexpr (has_on_start<game_type>)
-    {
-      m_game->on_start();
-    }
+    m_game->on_start();
 
     auto& renderer = m_graphics.renderer();
     while (m_loop.is_running())
@@ -171,10 +140,7 @@ class engine
       m_game->render(m_graphics);
     }
 
-    if constexpr (has_on_exit<game_type>)
-    {
-      m_game->on_exit();
-    }
+    m_game->on_exit();
     m_window.hide();
 
     return 0;
@@ -283,6 +249,14 @@ class engine
     return !m_game->should_quit() && !cen::event::in_queue(cen::event_type::quit);
   }
 };
+
+#define RUNE_IMPLEMENT_MAIN_WITH_ENGINE(Engine) \
+  int main(int, char**)                         \
+  {                                             \
+    cen::library centurion;                     \
+    Engine engine;                              \
+    return engine.run();                        \
+  }
 
 #define RUNE_IMPLEMENT_MAIN_WITH_GAME(Game) \
   int main(int, char**)                     \

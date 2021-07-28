@@ -1,8 +1,6 @@
 #ifndef RUNE_CORE_GAME_HPP
 #define RUNE_CORE_GAME_HPP
 
-#include <concepts>  // convertible_to
-
 #include "../aliases/delta_time.hpp"
 #include "graphics.hpp"
 #include "input.hpp"
@@ -12,69 +10,166 @@ namespace rune {
 /// \addtogroup core
 /// \{
 
-// clang-format off
-
 /**
- * \brief Ensures that a type satisfies the requirements of a game class.
+ * \class game_base
  *
- * \details `handle_input()` is where the game should respond to user input. Note, `
- * handle_input()` is called before `tick()`.
+ * \brief The base class for all game class implementations.
  *
- * \details `tick()` should update the state of the game by one "tick".
+ * \details You should derive your game class from this class, which you then supply to
+ * your engine instance.
  *
- * \details `render()` should render the current game state.
+ * \details The following example illustrates a skeleton for a game using the Rune
+ * framework. Note, no virtual functions are pure, i.e. you only have to override the
+ * functions that you need in your own game class.
  *
- * \details `should_quit()` should indicate if the game should shut down.
+ * \note Whilst this class is stateless and default-constructible, the `engine` class
+ * expects game classes to be either default-constructible or constructible from a
+ * reference to a graphics context.
  *
- * \note There are a few optional "event" functions that you can define. These are
- * `void init(graphics_type&)`, `void on_start()` and `void on_exit()`.
+ * \code{cpp}
+ * #include <rune.hpp>
  *
- * \tparam Game the game type.
- * \tparam Graphics the graphics context type.
+ * class AwesomeGame final : public rune::game_base
+ * {
+ *  public:
+ *   explicit AwesomeGame(rune::graphics& graphics)
+ *   {
+ *     // ...
+ *   }
+ *
+ *   void handle_input(const rune::input& input) override
+ *   {
+ *     // ...
+ *   }
+ *
+ *   void tick(rune::delta_time dt) override
+ *   {
+ *     // ...
+ *   }
+ *
+ *   void render(rune::graphics& graphics) const override
+ *   {
+ *     // ...
+ *   }
+ *
+ *   [[nodiscard]] bool should_quit() const override
+ *   {
+ *     // ...
+ *   }
+ * };
+ *
+ * RUNE_IMPLEMENT_MAIN_WITH_GAME(AwesomeGame)
+ * \endcode
+ *
+ * \see `engine`
+ * \see `graphics`
+ * \see `input`
+ * \see `RUNE_IMPLEMENT_MAIN_WITH_GAME`
+ * \see `RUNE_IMPLEMENT_MAIN_WITH_GAME_AND_GRAPHICS`
+ * \see `RUNE_IMPLEMENT_MAIN_WITH_ENGINE`
+ *
+ * \since 0.1.0
  */
-template <typename Game, typename Graphics>
-concept is_game_type = requires (Game game, Graphics& gfx, const input& input, delta_time dt)
-{
-  { game.handle_input(input) };
-  { game.tick(dt) };
-  { game.render(gfx) };
-  { game.should_quit() } -> std::convertible_to<bool>;
-};
-
-template <typename Game, typename Graphics>
-concept has_init = requires (Game game, Graphics& gfx)
-{
-  { game.init(gfx) };
-};
-
-template <typename Game>
-concept has_on_start = requires (Game game)
-{
-  { game.on_start() };
-};
-
-template <typename Game>
-concept has_on_exit = requires (Game game)
-{
-  { game.on_exit() };
-};
-
-// clang-format on
-
 class game_base
 {
  public:
   virtual ~game_base() noexcept = default;
 
+  /**
+   * \brief Initializes the game state.
+   *
+   * \details This function is called just after the game class is constructed. A use case
+   * for this function could be if you do not want to provide a constructor in your game
+   * class that accepts a graphics context by reference.
+   *
+   * \param gfx the associated graphics context.
+   *
+   * \since 0.1.0
+   */
+  virtual void init(rune::graphics& gfx)
+  {}
+
+  /**
+   * \brief Invoked just before the game starts running.
+   *
+   * \details This function is guaranteed to only be called once just before the game loop
+   * starts running.
+   *
+   * \since 0.1.0
+   */
+  virtual void on_start()
+  {}
+
+  /**
+   * \brief Invoked just before the game stops running.
+   *
+   * \details This function is guaranteed to only be called once just after the game loop
+   * has finished running, i.e. just before the game shuts down.
+   *
+   * \since 0.1.0
+   */
+  virtual void on_exit()
+  {}
+
+  /**
+   * \brief Handles the current input state.
+   *
+   * \details This function is called each frame and is meant to handle user input.
+   *
+   * \details This function is called each frame _before_ both `tick()` and `render()`.
+   *
+   * \param input the current input state.
+   *
+   * \since 0.1.0
+   */
   virtual void handle_input(const rune::input& input)
   {}
 
+  /**
+   * \brief Updates the state of the game by one frame according to the delta.
+   *
+   * \details This function updates the core logic of the game.
+   *
+   * \details This function is called each frame _after_ `handle_input()` and _before_
+   * `render()`.
+   *
+   * \param dt the current delta time, in seconds.
+   *
+   * \since 0.1.0
+   */
   virtual void tick(rune::delta_time dt)
   {}
 
+  /**
+   * \brief Renders the current game state.
+   *
+   * \details This function is called each frame _after_ both `handle_input()` and
+   * `tick()`.
+   *
+   * \details If you've specified a custom graphics context type (that must derive from
+   * `graphics`), then you can safely downcast the supplied graphics context using
+   * `dynamic_cast` (or even `static_cast`, the engine is guaranteed to use your graphics
+   * context type if specified).
+   *
+   * \note Remember to clear the rendering target and present your draw commands at the
+   * beginning and end of your rendering function, respectively.
+   *
+   * \param gfx the graphics context used for rendering.
+   *
+   * \since 0.1.0
+   */
   virtual void render(rune::graphics& gfx) const
   {}
 
+  /**
+   * \brief Indicates whether or not the game should stop running.
+   *
+   * \details By default, this function returns `true`.
+   *
+   * \return `true` if the game should stop running; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
   [[nodiscard]] virtual auto should_quit() const -> bool
   {
     return false;
