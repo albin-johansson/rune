@@ -4,7 +4,6 @@
 #include <cassert>      // assert
 #include <concepts>     // same_as
 #include <filesystem>   // path
-#include <fstream>      // ifstream
 #include <string_view>  // string_view
 #include <variant>      // variant
 #include <vector>       // vector
@@ -12,6 +11,7 @@
 #include "../aliases/json_type.hpp"
 #include "../aliases/maybe.hpp"
 #include "../core/rune_error.hpp"
+#include "rune_api.hpp"
 
 namespace rune {
 
@@ -40,16 +40,7 @@ concept json_serializable_type = requires (json_type json)
  *
  * \return the parsed JSON data.
  */
-[[nodiscard]] inline auto read_json(const std::filesystem::path& file) -> json_type
-{
-  assert(file.extension() == ".json");
-  std::ifstream stream{file};
-
-  json_type json;
-  stream >> json;
-
-  return json;
-}
+RUNE_FUNCTION auto read_json(const std::filesystem::path& file) -> json_type;
 
 /// \} End of JSON
 

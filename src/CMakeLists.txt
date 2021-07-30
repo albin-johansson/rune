@@ -84,9 +84,6 @@ set(SOURCE_FILES
     ${RUNE_INCLUDE_DIR}/tmx/tmx_map_render_order.hpp
     ${RUNE_INCLUDE_DIR}/tmx/tmx_object.hpp
     ${RUNE_INCLUDE_DIR}/tmx/tmx_object_layer.hpp
-    ${RUNE_INCLUDE_DIR}/tmx/tmx_parsers.hpp
-    tmx/tmx_parsers.cpp
-
     ${RUNE_INCLUDE_DIR}/tmx/tmx_point.hpp
     ${RUNE_INCLUDE_DIR}/tmx/tmx_property.hpp
     ${RUNE_INCLUDE_DIR}/tmx/tmx_property_type.hpp
@@ -99,14 +96,18 @@ set(SOURCE_FILES
     ${RUNE_INCLUDE_DIR}/tmx/tmx_tile_layer_compression.hpp
     ${RUNE_INCLUDE_DIR}/tmx/tmx_tile_layer_encoding.hpp
     ${RUNE_INCLUDE_DIR}/tmx/tmx_tile_offset.hpp
-
     ${RUNE_INCLUDE_DIR}/tmx/tmx_tileset.hpp
-    tmx/parse_tileset.cpp
-
     ${RUNE_INCLUDE_DIR}/tmx/tmx_valign.hpp
     ${RUNE_INCLUDE_DIR}/tmx/tmx_wang_color.hpp
     ${RUNE_INCLUDE_DIR}/tmx/tmx_wang_set.hpp
-    ${RUNE_INCLUDE_DIR}/tmx/tmx_wang_tile.hpp tmx/parse_tmx.cpp)
+    ${RUNE_INCLUDE_DIR}/tmx/tmx_wang_tile.hpp
+
+    io/json_utils.cpp
+
+    tmx/parse_tmx.cpp
+    tmx/parse_tileset.cpp
+    tmx/tmx_parsers.cpp
+    )
 
 add_library(${RUNE_LIBRARY_TARGET} SHARED ${SOURCE_FILES})
 
