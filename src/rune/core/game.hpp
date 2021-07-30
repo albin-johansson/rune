@@ -122,7 +122,7 @@ class game_base
    *
    * \since 0.1.0
    */
-  virtual void handle_input(const rune::input& input)
+  virtual void handle_input(const input& input)
   {}
 
   /**
@@ -137,7 +137,7 @@ class game_base
    *
    * \since 0.1.0
    */
-  virtual void tick(rune::delta_time dt)
+  virtual void tick(delta_time dt)
   {}
 
   /**
