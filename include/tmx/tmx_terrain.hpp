@@ -4,6 +4,7 @@
 #include <string>  // string
 
 #include "../aliases/json_type.hpp"
+#include "rune_api.hpp"
 #include "tmx_local_id.hpp"
 #include "tmx_property.hpp"
 
@@ -19,7 +20,7 @@ struct tmx_terrain final
   tmx_properties properties;
 };
 
-void from_json(const json_type& json, tmx_terrain& terrain);
+RUNE_API void from_json(const json_type& json, tmx_terrain& terrain);
 
 /// \} End of group tmx
 

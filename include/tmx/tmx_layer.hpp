@@ -12,6 +12,7 @@
 #include "../aliases/json_type.hpp"
 #include "../aliases/maybe.hpp"
 #include "../io/json_utils.hpp"
+#include "rune_api.hpp"
 #include "tmx_color.hpp"
 #include "tmx_image_layer.hpp"
 #include "tmx_layer_type.hpp"
@@ -63,8 +64,8 @@ struct tmx_layer final
 
 using tmx_layers = std::vector<tmx_layer>;
 
-void from_json(const json_type& json, tmx_group& group);
-void from_json(const json_type& json, tmx_layer& layer);
+RUNE_API void from_json(const json_type& json, tmx_group& group);
+RUNE_API void from_json(const json_type& json, tmx_layer& layer);
 
 /// \} End of group tmx
 

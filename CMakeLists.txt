@@ -8,10 +8,14 @@ set(CXX_STANDARD_REQUIRED ON)
 set(CXX_EXTENSIONS OFF)
 
 set(RUNE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
-set(RUNE_SOURCE_DIR ${PROJECT_SOURCE_DIR}/src/rune)
+set(RUNE_SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
 set(RUNE_BINARY_DIR ${PROJECT_SOURCE_DIR}/bin)
 set(RUNE_LIBRARY_DIR ${PROJECT_SOURCE_DIR}/lib)
 set(RUNE_RESOURCES_DIR ${PROJECT_SOURCE_DIR}/resources)
+
+set(RUNE_LIBRARY_TARGET Rune)
+set(RUNE_SHARED_LIBRARY_FILE ${CMAKE_BINARY_DIR}/src/Rune${CMAKE_SHARED_LIBRARY_SUFFIX})
+set(RUNE_IMPORT_LIBRARY_FILE ${CMAKE_BINARY_DIR}/src/Rune${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
 option(RUNE_BUILD_EXAMPLES "Build the example programs" ON)
 set(RUNE_BUILD_EXAMPLES ON)
@@ -28,6 +32,7 @@ add_header_only_lib(Centurion ${RUNE_LIBRARY_DIR}/centurion ${RUNE_LIBRARY_DIR}/
 add_header_only_lib(JSON ${RUNE_LIBRARY_DIR}/json ${RUNE_LIBRARY_DIR}/json/json.hpp)
 add_header_only_lib(Nenya ${RUNE_LIBRARY_DIR}/nenya ${RUNE_LIBRARY_DIR}/nenya/nenya.hpp)
 
+add_subdirectory(src)
 add_subdirectory(test)
 
 if (RUNE_BUILD_EXAMPLES)

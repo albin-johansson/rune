@@ -2,6 +2,7 @@
 #define RUNE_TMX_TILE_OFFSET_HPP
 
 #include "../aliases/json_type.hpp"
+#include "rune_api.hpp"
 
 namespace rune {
 
@@ -14,7 +15,7 @@ struct tmx_tile_offset final
   int y{};
 };
 
-void from_json(const json_type& json, tmx_tile_offset& offset);
+RUNE_API void from_json(const json_type& json, tmx_tile_offset& offset);
 
 /// \} End of group tmx
 

@@ -12,6 +12,7 @@
 
 #include "../aliases/json_type.hpp"
 #include "../core/rune_error.hpp"
+#include "rune_api.hpp"
 #include "tmx_color.hpp"
 #include "tmx_property_type.hpp"
 
@@ -45,7 +46,7 @@ struct tmx_property final
 
 using tmx_properties = std::vector<tmx_property>;
 
-void from_json(const json_type& json, tmx_property& property);
+RUNE_API void from_json(const json_type& json, tmx_property& property);
 
 /// \} End of group tmx
 

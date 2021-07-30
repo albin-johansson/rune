@@ -7,6 +7,7 @@
 #include "../aliases/integers.hpp"
 #include "../aliases/json_type.hpp"
 #include "../core/from_string.hpp"
+#include "rune_api.hpp"
 
 namespace rune {
 
@@ -23,7 +24,7 @@ struct tmx_color final
   [[nodiscard]] constexpr bool operator==(const tmx_color&) const noexcept = default;
 };
 
-void from_json(const json_type& json, tmx_color& color);
+RUNE_API void from_json(const json_type& json, tmx_color& color);
 
 /// \} End of group tmx
 

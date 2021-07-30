@@ -10,6 +10,7 @@
 #include "../aliases/json_type.hpp"
 #include "../aliases/maybe.hpp"
 #include "../io/json_utils.hpp"
+#include "rune_api.hpp"
 #include "tmx_global_id.hpp"
 #include "tmx_point.hpp"
 #include "tmx_property.hpp"
@@ -64,10 +65,10 @@ struct tmx_object final
   bool visible{true};
 };
 
-void from_json(const json_type& json, tmx_polygon& polygon);
-void from_json(const json_type& json, tmx_polyline& line);
-void from_json(const json_type& json, tmx_template_object& object);
-void from_json(const json_type& json, tmx_object& object);
+RUNE_API void from_json(const json_type& json, tmx_polygon& polygon);
+RUNE_API void from_json(const json_type& json, tmx_polyline& line);
+RUNE_API void from_json(const json_type& json, tmx_template_object& object);
+RUNE_API void from_json(const json_type& json, tmx_object& object);
 
 /// \} End of group tmx
 

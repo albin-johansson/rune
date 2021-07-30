@@ -2,8 +2,6 @@
 
 #include <gtest/gtest.h>
 
-#include "tmx/tmx_parsers.hpp"
-
 TEST(TmxLayer, Defaults)
 {
   const rune::tmx_layer layer;

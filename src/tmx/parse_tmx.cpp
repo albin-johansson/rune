@@ -1,39 +1,17 @@
-#ifndef RUNE_TMX_PARSE_TMX_HPP
-#define RUNE_TMX_PARSE_TMX_HPP
+#include "tmx/parse_tmx.hpp"
 
-#include <cassert>     // assert
-#include <filesystem>  // path
-#include <string>      // string
+#include <cassert>  // assert
+#include <string>   // string
 
-#include "../aliases/integers.hpp"
-#include "../io/json_utils.hpp"
-#include "parse_tileset.hpp"
-#include "tmx_global_id.hpp"
-#include "tmx_local_id.hpp"
-#include "tmx_map.hpp"
+#include "aliases/integers.hpp"
+#include "io/json_utils.hpp"
+#include "tmx/parse_tileset.hpp"
+#include "tmx/tmx_global_id.hpp"
+#include "tmx/tmx_local_id.hpp"
 
 namespace rune {
 
-/// \addtogroup tmx
-/// \{
-
-/**
- * \brief Parses a Tiled JSON map file, and returns the contents.
- *
- * \details This function will not validate the specified JSON file. An invalid map file
- * will likely result in an exception being thrown due to parsing errors. However, there
- * are debug assertions that try to make it easier to detect errors and their cause,
- * compared to the generic exceptions from the JSON parser.
- *
- * \note The Tiled XML format is not supported.
- *
- * \todo Support all versions of the JSON format.
- *
- * \param path the file path to the Tiled JSON map file.
- *
- * \return the parsed Tiled map.
- */
-[[nodiscard]] inline auto parse_tmx(const std::filesystem::path& path) -> tmx_map
+auto parse_tmx(const std::filesystem::path& path) -> tmx_map
 {
   const auto json = read_json(path);
   assert(json.contains("type") && "Map file requires \"type\" element!");
@@ -76,8 +54,4 @@ namespace rune {
   return map;
 }
 
-/// \} End of group tmx
-
 }  // namespace rune
-
-#endif  // RUNE_TMX_PARSE_TMX_HPP

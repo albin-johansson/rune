@@ -5,6 +5,7 @@
 
 #include "../aliases/json_type.hpp"
 #include "../aliases/maybe.hpp"
+#include "rune_api.hpp"
 #include "tmx_color.hpp"
 
 namespace rune {
@@ -18,7 +19,7 @@ struct tmx_image_layer final
   maybe<tmx_color> transparent;
 };
 
-void from_json(const json_type& json, tmx_image_layer& layer);
+RUNE_API void from_json(const json_type& json, tmx_image_layer& layer);
 
 /// \} End of group tmx
 

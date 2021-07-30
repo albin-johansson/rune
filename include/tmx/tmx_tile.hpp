@@ -6,6 +6,7 @@
 
 #include "../aliases/json_type.hpp"
 #include "../aliases/maybe.hpp"
+#include "rune_api.hpp"
 #include "tmx_animation.hpp"
 #include "tmx_layer.hpp"
 #include "tmx_local_id.hpp"
@@ -30,7 +31,7 @@ struct tmx_tile final
   tmx_properties properties;
 };
 
-void from_json(const json_type& json, tmx_tile& tile);
+RUNE_API void from_json(const json_type& json, tmx_tile& tile);
 
 /// \} End of group tmx
 

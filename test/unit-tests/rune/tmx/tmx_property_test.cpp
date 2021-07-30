@@ -5,7 +5,6 @@
 #include <vector>  // vector
 
 #include "io/json_utils.hpp"
-#include "tmx/tmx_parsers.hpp"
 
 TEST(TmxProperty, TmxPropertyTypeEnum)
 {

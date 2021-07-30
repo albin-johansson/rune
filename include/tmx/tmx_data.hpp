@@ -8,6 +8,7 @@
 
 #include "../aliases/integers.hpp"
 #include "../aliases/json_type.hpp"
+#include "rune_api.hpp"
 #include "tmx_global_id.hpp"
 
 namespace rune {
@@ -21,7 +22,7 @@ struct tmx_data final
   data_type tile_data;
 };
 
-void from_json(const json_type& json, tmx_data& data);
+RUNE_API void from_json(const json_type& json, tmx_data& data);
 
 }  // namespace rune
 

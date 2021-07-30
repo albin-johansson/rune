@@ -2,8 +2,6 @@
 
 #include <gtest/gtest.h>
 
-#include "tmx/tmx_parsers.hpp"
-
 TEST(TmxTileOffset, Defaults)
 {
   const rune::tmx_tile_offset offset;

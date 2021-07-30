@@ -6,6 +6,7 @@
 #include <vector>    // vector
 
 #include "../aliases/json_type.hpp"
+#include "rune_api.hpp"
 #include "tmx_object.hpp"
 
 namespace rune {
@@ -29,7 +30,7 @@ struct tmx_object_layer final  // Note, referred to as "object group" by tiled
   std::vector<tmx_object> objects;
 };
 
-void from_json(const json_type& json, tmx_object_layer& layer);
+RUNE_API void from_json(const json_type& json, tmx_object_layer& layer);
 
 /// \} End of group tmx
 

@@ -1,21 +1,15 @@
-#ifndef RUNE_TMX_PARSE_TILESET_HPP
-#define RUNE_TMX_PARSE_TILESET_HPP
+#include "tmx/parse_tileset.hpp"
 
 #include <filesystem>  // path
 #include <string>      // string
 
-#include "../aliases/json_type.hpp"
-#include "../io/json_utils.hpp"
-#include "tmx_global_id.hpp"
-#include "tmx_tileset.hpp"
+#include "io/json_utils.hpp"
+#include "tmx/tmx_global_id.hpp"
 
-namespace rune::tmx {
+namespace rune {
+namespace {
 
-/// \cond FALSE
-
-namespace detail {
-
-inline void parse_tileset(const json_type& json, tmx_tileset& tileset)
+void parse_tileset_common(const json_type& json, tmx_tileset& tileset)
 {
   json.at("tilewidth").get_to(tileset.tile_width);
   json.at("tileheight").get_to(tileset.tile_height);
@@ -41,15 +35,10 @@ inline void parse_tileset(const json_type& json, tmx_tileset& tileset)
   io::try_get_to(json, "properties", tileset.properties);
 }
 
-}  // namespace detail
+}  // namespace
 
-/// \endcond
-
-/// \addtogroup tmx
-/// \{
-
-[[nodiscard]] inline auto parse_tileset(const std::filesystem::path& directory,
-                                        const json_type& json) -> tmx_tileset
+auto tmx::parse_tileset(const std::filesystem::path& directory, const json_type& json)
+    -> tmx_tileset
 {
   tmx_tileset tileset;
 
@@ -62,19 +51,15 @@ inline void parse_tileset(const json_type& json, tmx_tileset& tileset)
     const auto source = directory / tileset.external_source;
     const auto external = read_json(source);
 
-    detail::parse_tileset(external, tileset);
+    parse_tileset_common(external, tileset);
   }
   else
   {
     // Embedded
-    detail::parse_tileset(json, tileset);
+    parse_tileset_common(json, tileset);
   }
 
   return tileset;
 }
 
-/// \} End of group tmx
-
-}  // namespace rune::tmx
-
-#endif  // RUNE_TMX_PARSE_TILESET_HPP
+}  // namespace rune

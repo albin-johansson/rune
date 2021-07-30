@@ -5,6 +5,7 @@
 #include <vector>  // vector
 
 #include "../aliases/json_type.hpp"
+#include "rune_api.hpp"
 #include "tmx_local_id.hpp"
 
 namespace rune {
@@ -23,8 +24,8 @@ struct tmx_animation final
   std::vector<tmx_frame> frames;
 };
 
-void from_json(const json_type& json, tmx_frame& frame);
-void from_json(const json_type& json, tmx_animation& animation);
+RUNE_API void from_json(const json_type& json, tmx_frame& frame);
+RUNE_API void from_json(const json_type& json, tmx_animation& animation);
 
 /// \} End of group tmx
 

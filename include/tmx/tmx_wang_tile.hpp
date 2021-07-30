@@ -5,6 +5,7 @@
 
 #include "../aliases/integers.hpp"
 #include "../aliases/json_type.hpp"
+#include "rune_api.hpp"
 #include "tmx_local_id.hpp"
 
 namespace rune {
@@ -18,7 +19,7 @@ struct tmx_wang_tile final
   std::array<uint8, 8> indices{};
 };
 
-void from_json(const json_type& json, tmx_wang_tile& tile);
+RUNE_API void from_json(const json_type& json, tmx_wang_tile& tile);
 
 /// \} End of group tmx
 

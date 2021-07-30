@@ -5,6 +5,7 @@
 #include <vector>  // vector
 
 #include "../aliases/maybe.hpp"
+#include "rune_api.hpp"
 #include "tmx_color.hpp"
 #include "tmx_global_id.hpp"
 #include "tmx_grid.hpp"

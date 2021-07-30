@@ -5,6 +5,7 @@
 #include <vector>  // vector
 
 #include "../aliases/json_type.hpp"
+#include "rune_api.hpp"
 #include "tmx_local_id.hpp"
 #include "tmx_property.hpp"
 #include "tmx_wang_color.hpp"
@@ -24,7 +25,7 @@ struct tmx_wang_set final
   tmx_properties properties;
 };
 
-void from_json(const json_type& json, tmx_wang_set& set);
+RUNE_API void from_json(const json_type& json, tmx_wang_set& set);
 
 /// \} End of group tmx
 

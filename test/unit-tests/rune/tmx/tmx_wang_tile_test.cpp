@@ -2,8 +2,6 @@
 
 #include <gtest/gtest.h>
 
-#include "tmx/tmx_parsers.hpp"
-
 TEST(TmxWangTile, Defaults)
 {
   const rune::tmx_wang_tile tile;

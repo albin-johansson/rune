@@ -4,6 +4,7 @@
 #include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
 
 #include "../aliases/json_type.hpp"
+#include "rune_api.hpp"
 
 namespace rune {
 
@@ -27,7 +28,7 @@ struct tmx_grid final
   tmx_grid_orientation orientation{tmx_grid_orientation::orthogonal};
 };
 
-void from_json(const json_type& json, tmx_grid& grid);
+RUNE_API void from_json(const json_type& json, tmx_grid& grid);
 
 /// \} End of group tmx
 

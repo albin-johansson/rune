@@ -4,6 +4,7 @@
 #include <string>  // string
 
 #include "../aliases/json_type.hpp"
+#include "rune_api.hpp"
 #include "tmx_color.hpp"
 #include "tmx_halign.hpp"
 #include "tmx_valign.hpp"
@@ -29,7 +30,7 @@ struct tmx_text final
   bool wrap{};
 };
 
-void from_json(const json_type& json, tmx_text& text);
+RUNE_API void from_json(const json_type& json, tmx_text& text);
 
 /// \} End of group tmx
 

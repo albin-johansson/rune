@@ -1,33 +1,30 @@
-#ifndef RUNE_TMX_PARSERS_HPP
-#define RUNE_TMX_PARSERS_HPP
-
 #include <cassert>  // assert
 #include <memory>   // make_unique
 #include <string>   // string
 
-#include "../aliases/integers.hpp"
-#include "../aliases/json_type.hpp"
-#include "../core/from_string.hpp"
-#include "../io/json_utils.hpp"
-#include "tmx_animation.hpp"
-#include "tmx_color.hpp"
-#include "tmx_data.hpp"
-#include "tmx_grid.hpp"
-#include "tmx_image_layer.hpp"
-#include "tmx_layer.hpp"
-#include "tmx_local_id.hpp"
-#include "tmx_object.hpp"
-#include "tmx_object_layer.hpp"
-#include "tmx_point.hpp"
-#include "tmx_terrain.hpp"
-#include "tmx_text.hpp"
-#include "tmx_tile.hpp"
-#include "tmx_tile_layer.hpp"
-#include "tmx_tile_offset.hpp"
-#include "tmx_tileset.hpp"
-#include "tmx_wang_color.hpp"
-#include "tmx_wang_set.hpp"
-#include "tmx_wang_tile.hpp"
+#include "aliases/integers.hpp"
+#include "aliases/json_type.hpp"
+#include "core/from_string.hpp"
+#include "io/json_utils.hpp"
+#include "tmx/tmx_animation.hpp"
+#include "tmx/tmx_color.hpp"
+#include "tmx/tmx_data.hpp"
+#include "tmx/tmx_grid.hpp"
+#include "tmx/tmx_image_layer.hpp"
+#include "tmx/tmx_layer.hpp"
+#include "tmx/tmx_local_id.hpp"
+#include "tmx/tmx_object.hpp"
+#include "tmx/tmx_object_layer.hpp"
+#include "tmx/tmx_point.hpp"
+#include "tmx/tmx_terrain.hpp"
+#include "tmx/tmx_text.hpp"
+#include "tmx/tmx_tile.hpp"
+#include "tmx/tmx_tile_layer.hpp"
+#include "tmx/tmx_tile_offset.hpp"
+#include "tmx/tmx_tileset.hpp"
+#include "tmx/tmx_wang_color.hpp"
+#include "tmx/tmx_wang_set.hpp"
+#include "tmx/tmx_wang_tile.hpp"
 
 namespace rune {
 
@@ -37,31 +34,31 @@ namespace rune {
 /// \name JSON conversions
 /// \{
 
-inline void from_json(const json_type& json, tmx_point& point)
+void from_json(const json_type& json, tmx_point& point)
 {
   json.at("x").get_to(point.x);
   json.at("y").get_to(point.y);
 }
 
-inline void from_json(const json_type& json, tmx_color& color)
+void from_json(const json_type& json, tmx_color& color)
 {
   color = tmx::make_color(json.get<std::string>());
 }
 
-inline void from_json(const json_type& json, tmx_grid& grid)
+void from_json(const json_type& json, tmx_grid& grid)
 {
   json.at("width").get_to(grid.cell_width);
   json.at("height").get_to(grid.cell_height);
   json.at("orientation").get_to(grid.orientation);
 }
 
-inline void from_json(const json_type& json, tmx_tile_offset& offset)
+void from_json(const json_type& json, tmx_tile_offset& offset)
 {
   json.at("x").get_to(offset.x);
   json.at("y").get_to(offset.y);
 }
 
-inline void from_json(const json_type& json, tmx_wang_color& color)
+void from_json(const json_type& json, tmx_wang_color& color)
 {
   json.at("name").get_to(color.name);
   json.at("color").get_to(color.color);
@@ -71,13 +68,13 @@ inline void from_json(const json_type& json, tmx_wang_color& color)
   io::try_get_to(json, "properties", color.properties);
 }
 
-inline void from_json(const json_type& json, tmx_wang_tile& tile)
+void from_json(const json_type& json, tmx_wang_tile& tile)
 {
   io::emplace_to(json, "tileid", tile.tile);
   json.at("wangid").get_to(tile.indices);
 }
 
-inline void from_json(const json_type& json, tmx_wang_set& set)
+void from_json(const json_type& json, tmx_wang_set& set)
 {
   io::emplace_to(json, "tile", set.tile);
   json.at("name").get_to(set.name);
@@ -88,7 +85,7 @@ inline void from_json(const json_type& json, tmx_wang_set& set)
   io::try_get_to(json, "properties", set.properties);
 }
 
-inline void from_json(const json_type& json, tmx_property& property)
+void from_json(const json_type& json, tmx_property& property)
 {
   json.at("name").get_to(property.name);
   json.at("type").get_to(property.type);
@@ -128,14 +125,14 @@ inline void from_json(const json_type& json, tmx_property& property)
   }
 }
 
-inline void from_json(const json_type& json, tmx_terrain& terrain)
+void from_json(const json_type& json, tmx_terrain& terrain)
 {
   terrain.tile = tmx_local_id{json.at("tile").get<tmx_local_id::value_type>()};
   json.at("name").get_to(terrain.name);
   io::try_get_to(json, "properties", terrain.properties);
 }
 
-inline void from_json(const json_type& json, tmx_text& text)
+void from_json(const json_type& json, tmx_text& text)
 {
   json.at("text").get_to(text.text);
 
@@ -156,7 +153,7 @@ inline void from_json(const json_type& json, tmx_text& text)
   }
 }
 
-inline void from_json(const json_type& json, tmx_frame& frame)
+void from_json(const json_type& json, tmx_frame& frame)
 {
   using ms_t = std::chrono::milliseconds;
 
@@ -164,12 +161,12 @@ inline void from_json(const json_type& json, tmx_frame& frame)
   frame.duration = ms_t{json.at("duration").get<ms_t::rep>()};
 }
 
-inline void from_json(const json_type& json, tmx_animation& animation)
+void from_json(const json_type& json, tmx_animation& animation)
 {
   io::get_to(json, animation.frames);
 }
 
-inline void from_json(const json_type& json, tmx_data& data)
+void from_json(const json_type& json, tmx_data& data)
 {
   assert(json.is_array() || json.is_string());
 
@@ -187,17 +184,17 @@ inline void from_json(const json_type& json, tmx_data& data)
   }
 }
 
-inline void from_json(const json_type& json, tmx_polygon& polygon)
+void from_json(const json_type& json, tmx_polygon& polygon)
 {
   io::get_to(json, polygon.points);
 }
 
-inline void from_json(const json_type& json, tmx_polyline& line)
+void from_json(const json_type& json, tmx_polyline& line)
 {
   io::get_to(json, line.points);
 }
 
-inline void from_json(const json_type& json, tmx_template_object& object)
+void from_json(const json_type& json, tmx_template_object& object)
 {
   json.at("template").get_to(object.template_file);
   object.object = std::make_unique<tmx_object>(json.at("object").get<tmx_object>());
@@ -209,7 +206,7 @@ inline void from_json(const json_type& json, tmx_template_object& object)
   }
 }
 
-inline void from_json(const json_type& json, tmx_object& object)
+void from_json(const json_type& json, tmx_object& object)
 {
   json.at("id").get_to(object.id);
   json.at("x").get_to(object.x);
@@ -237,7 +234,7 @@ inline void from_json(const json_type& json, tmx_object& object)
   io::try_emplace_to<tmx_template_object>(json, "template", object.data);
 }
 
-inline void from_json(const json_type& json, tmx_tile_layer& layer)
+void from_json(const json_type& json, tmx_tile_layer& layer)
 {
   io::try_get_to(json, "compression", layer.compression);
   io::try_get_to(json, "encoding", layer.encoding);
@@ -249,18 +246,18 @@ inline void from_json(const json_type& json, tmx_tile_layer& layer)
   //  }
 }
 
-inline void from_json(const json_type& json, tmx_image_layer& layer)
+void from_json(const json_type& json, tmx_image_layer& layer)
 {
   json.at("image").get_to(layer.image);
   io::try_get_to(json, "transparentcolor", layer.transparent);
 }
 
-inline void from_json(const json_type& json, tmx_object_layer& layer)
+void from_json(const json_type& json, tmx_object_layer& layer)
 {
   io::get_to(json, "objects", layer.objects);
 }
 
-inline void from_json(const json_type& json, tmx_layer& layer)
+void from_json(const json_type& json, tmx_layer& layer)
 {
   json.at("type").get_to(layer.type);
 
@@ -303,7 +300,7 @@ inline void from_json(const json_type& json, tmx_layer& layer)
   }
 }
 
-inline void from_json(const json_type& json, tmx_group& group)
+void from_json(const json_type& json, tmx_group& group)
 {
   const auto& layers = json.at("layers");
   group.layers.reserve(layers.size());
@@ -313,7 +310,7 @@ inline void from_json(const json_type& json, tmx_group& group)
   }
 }
 
-inline void from_json(const json_type& json, tmx_tile& tile)
+void from_json(const json_type& json, tmx_tile& tile)
 {
   io::emplace_to(json, "id", tile.id);
 
@@ -342,5 +339,3 @@ inline void from_json(const json_type& json, tmx_tile& tile)
 /// \} End of group tmx
 
 }  // namespace rune
-
-#endif  // RUNE_TMX_PARSERS_HPP

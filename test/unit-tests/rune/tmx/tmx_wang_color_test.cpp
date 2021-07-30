@@ -3,7 +3,6 @@
 #include <gtest/gtest.h>
 
 #include "tmx/parse_tmx.hpp"
-#include "tmx/tmx_parsers.hpp"
 
 using namespace rune::tmx_literals;
 
