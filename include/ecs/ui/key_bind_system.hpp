@@ -54,7 +54,7 @@ namespace ui {
  *
  * \since 0.1.0
  */
-RUNE_FUNCTION auto make_key_bind(entt::registry& registry, const ui_key_bind_cfg cfg)
+RUNE_API auto make_key_bind(entt::registry& registry, const ui_key_bind_cfg cfg)
     -> ui_key_bind::entity;
 
 /// \} End of factory functions
