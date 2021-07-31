@@ -140,6 +140,11 @@ set(SOURCE_FILES
 
 add_library(${RUNE_LIBRARY_TARGET} SHARED ${SOURCE_FILES})
 
+set_target_properties(${RUNE_LIBRARY_TARGET} PROPERTIES
+    VERSION ${CMAKE_PROJECT_VERSION}
+    PREFIX lib
+    IMPORT_PREFIX lib)
+
 if (WIN32)
   target_compile_definitions(${RUNE_LIBRARY_TARGET}
       PRIVATE RUNE_EXPORT
