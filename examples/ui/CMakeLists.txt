@@ -5,30 +5,4 @@ project(rune-examples-ui CXX)
 add_executable(UIExample ui_example.cpp)
 set_compiler_options(UIExample)
 
-target_compile_definitions(UIExample PRIVATE ENTT_API_IMPORT)
-
-target_include_directories(UIExample
-    SYSTEM PUBLIC ${RUNE_INCLUDE_DIR}
-    SYSTEM PUBLIC ${SDL2_INCLUDE_DIR}
-    SYSTEM PUBLIC ${SDL2_IMAGE_INCLUDE_DIRS}
-    SYSTEM PUBLIC ${SDL2_MIXER_INCLUDE_DIRS}
-    SYSTEM PUBLIC ${SDL2_TTF_INCLUDE_DIRS})
-
-target_link_libraries(UIExample
-    PUBLIC ${SDL2_IMAGE_LIBRARIES}
-    PUBLIC ${SDL2_MIXER_LIBRARIES}
-    PUBLIC ${SDL2_TTF_LIBRARIES}
-    PUBLIC ${SDL2_LIBRARY}
-    PUBLIC Centurion
-    PUBLIC EnTT
-    PUBLIC JSON
-    PUBLIC Nenya
-    PUBLIC ${RUNE_IMPORT_LIBRARY_FILE}
-    )
-
-if (WIN32)
-  copy_directory_post_build(UIExample ${RUNE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
-  copy_file_post_build(UIExample ${RUNE_SHARED_LIBRARY_FILE} ${CMAKE_CURRENT_BINARY_DIR})
-endif ()
-
-copy_directory_post_build(UIExample ${RUNE_RESOURCES_DIR} ${CMAKE_CURRENT_BINARY_DIR}/resources)
+configure_example(UIExample)

@@ -5,23 +5,4 @@ project(rune-examples-pong CXX)
 add_executable(Pong pong.cpp)
 set_compiler_options(Pong)
 
-target_include_directories(Pong
-    SYSTEM PUBLIC ${RUNE_INCLUDE_DIR}
-    SYSTEM PUBLIC ${SDL2_INCLUDE_DIR}
-    SYSTEM PUBLIC ${SDL2_IMAGE_INCLUDE_DIRS}
-    SYSTEM PUBLIC ${SDL2_MIXER_INCLUDE_DIRS}
-    SYSTEM PUBLIC ${SDL2_TTF_INCLUDE_DIRS})
-
-target_link_libraries(Pong
-    PUBLIC ${SDL2_IMAGE_LIBRARIES}
-    PUBLIC ${SDL2_MIXER_LIBRARIES}
-    PUBLIC ${SDL2_TTF_LIBRARIES}
-    PUBLIC ${SDL2_LIBRARY}
-    PUBLIC Centurion
-    PUBLIC EnTT
-    PUBLIC JSON
-    PUBLIC Nenya)
-
-if (WIN32)
-  copy_directory_post_build(Pong ${RUNE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
-endif ()
+configure_example(Pong)

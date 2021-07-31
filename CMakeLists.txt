@@ -36,6 +36,5 @@ add_subdirectory(src)
 add_subdirectory(test)
 
 if (RUNE_BUILD_EXAMPLES)
-  add_subdirectory(examples/pong)
-  add_subdirectory(examples/ui)
+  add_subdirectory(examples)
 endif ()
