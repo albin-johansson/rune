@@ -112,6 +112,8 @@ set(SOURCE_FILES
 
     io/json_utils.cpp
 
+    math/random_utils.cpp
+
     tmx/parse_tmx.cpp
     tmx/parse_tileset.cpp
     tmx/tmx_parsers.cpp)

@@ -1,11 +1,10 @@
 #ifndef RUNE_MATH_RANDOM_UTILS_HPP
 #define RUNE_MATH_RANDOM_UTILS_HPP
 
-#include <algorithm>   // generate
-#include <array>       // array
 #include <concepts>    // floating_point, integral
-#include <functional>  // ref
-#include <random>      // mt19937, random_device, seed_seq, uniform_real_distribution, ...
+#include <random>      // mt19937, uniform_real_distribution, uniform_int_distribution
+
+#include "rune_api.hpp"
 
 namespace rune {
 
@@ -23,18 +22,7 @@ using random_engine = std::mt19937;
  *
  * \return a seeded random engine.
  */
-[[nodiscard]] inline auto make_random_engine() -> random_engine
-{
-  constexpr auto n = random_engine::state_size;
-
-  std::random_device device;
-  std::array<std::random_device::result_type, (n - 1) / sizeof(device()) + 1> data{};
-
-  std::ranges::generate(data, std::ref(device));
-  std::seed_seq seeds(data.begin(), data.end());
-
-  return random_engine(seeds);
-}
+RUNE_FUNCTION auto make_random_engine() -> random_engine;
 
 /**
  * \brief Returns a random value in the specified range [min, max].
