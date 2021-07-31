@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "ecs/ui/menu_system.hpp"
+#include "ecs/ui/ui_foreground.hpp"
 
 TEST(LabelSystem, UiLabelCfg)
 {
