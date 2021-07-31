@@ -3,6 +3,8 @@
 #include <gtest/gtest.h>
 
 #include "ecs/ui/menu_system.hpp"
+#include "ecs/ui/ui_foreground.hpp"
+#include "ecs/ui/ui_label.hpp"
 
 TEST(ButtonSystem, UiButtonCfg)
 {
