@@ -116,9 +116,27 @@ set(SOURCE_FILES
 
     math/random_utils.cpp
 
-    tmx/parse_tmx.cpp
     tmx/parse_tileset.cpp
-    tmx/tmx_parsers.cpp)
+    tmx/parse_tmx.cpp
+    tmx/tmx_animation.cpp
+    tmx/tmx_color.cpp
+    tmx/tmx_data.cpp
+    tmx/tmx_grid.cpp
+    tmx/tmx_image_layer.cpp
+    tmx/tmx_layer.cpp
+    tmx/tmx_object.cpp
+    tmx/tmx_object_layer.cpp
+    tmx/tmx_point.cpp
+    tmx/tmx_property.cpp
+    tmx/tmx_terrain.cpp
+    tmx/tmx_text.cpp
+    tmx/tmx_tile.cpp
+    tmx/tmx_tile_layer.cpp
+    tmx/tmx_tile_offset.cpp
+    tmx/tmx_wang_color.cpp
+    tmx/tmx_wang_set.cpp
+    tmx/tmx_wang_tile.cpp
+    )
 
 add_library(${RUNE_LIBRARY_TARGET} SHARED ${SOURCE_FILES})
 
