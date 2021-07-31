@@ -1,12 +1,12 @@
 #ifndef RUNE_ECS_UI_LAZY_TEXTURE_SYSTEM_HPP
 #define RUNE_ECS_UI_LAZY_TEXTURE_SYSTEM_HPP
 
-#include <centurion.hpp>  // texture, surface
-#include <entt.hpp>       // registry
+#include <entt.hpp>  // registry
 
-#include "../../aliases/str.hpp"
-#include "../../core/graphics.hpp"
-#include "ui_lazy_texture.hpp"
+#include "aliases/str.hpp"
+#include "core/graphics.hpp"
+#include "ecs/ui/ui_lazy_texture.hpp"
+#include "rune_api.hpp"
 
 namespace rune::ui {
 
@@ -29,15 +29,8 @@ namespace rune::ui {
  *
  * \since 0.1.0
  */
-inline auto make_lazy_texture(entt::registry& registry, const str image)
-    -> ui_lazy_texture::entity
-{
-  const auto entity = ui_lazy_texture::entity{registry.create()};
-
-  registry.emplace<ui_lazy_texture>(entity, cen::surface{image});
-
-  return entity;
-}
+RUNE_FUNCTION auto make_lazy_texture(entt::registry& registry, str image)
+    -> ui_lazy_texture::entity;
 
 /// \} End of factory functions
 
@@ -47,16 +40,7 @@ inline auto make_lazy_texture(entt::registry& registry, const str image)
 
 namespace detail {
 
-inline void update_lazy_textures(const entt::registry& registry, graphics& gfx)
-{
-  for (auto&& [entity, lazy] : registry.view<ui_lazy_texture>().each())
-  {
-    if (!lazy.texture)
-    {
-      lazy.texture = cen::texture{gfx.renderer(), lazy.source};
-    }
-  }
-}
+RUNE_API void update_lazy_textures(const entt::registry& registry, graphics& gfx);
 
 }  // namespace detail
 

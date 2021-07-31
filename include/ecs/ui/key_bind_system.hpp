@@ -1,13 +1,12 @@
 #ifndef RUNE_ECS_UI_KEY_BIND_SYSTEM_HPP
 #define RUNE_ECS_UI_KEY_BIND_SYSTEM_HPP
 
-#include <centurion.hpp>  // scan_code, key_mod, to_underlying
+#include <centurion.hpp>  // scan_code, key_mod
 #include <entt.hpp>       // registry, dispatcher
-#include <type_traits>    // is_enum_v
 
-#include "../../aliases/integers.hpp"
-#include "../../core/input.hpp"
-#include "../events/key_bind_triggered_event.hpp"
+#include "aliases/integers.hpp"
+#include "core/input.hpp"
+#include "rune_api.hpp"
 #include "ui_key_bind.hpp"
 
 namespace rune {
@@ -55,18 +54,8 @@ namespace ui {
  *
  * \since 0.1.0
  */
-inline auto make_key_bind(entt::registry& registry, const ui_key_bind_cfg cfg)
-    -> ui_key_bind::entity
-{
-  const auto entity = ui_key_bind::entity{registry.create()};
-
-  auto& bind = registry.emplace<ui_key_bind>(entity);
-  bind.id = cfg.id;
-  bind.key = cfg.key;
-  bind.modifiers = cfg.modifiers;
-
-  return entity;
-}
+RUNE_FUNCTION auto make_key_bind(entt::registry& registry, const ui_key_bind_cfg cfg)
+    -> ui_key_bind::entity;
 
 /// \} End of factory functions
 
@@ -76,28 +65,9 @@ inline auto make_key_bind(entt::registry& registry, const ui_key_bind_cfg cfg)
 
 namespace detail {
 
-inline void update_key_binds(entt::registry& registry,
-                             entt::dispatcher& dispatcher,
-                             const input& input)
-{
-  const auto state = cen::get_modifiers();
-
-  // We don't care about these modifiers (they're never used in key binds)
-  const auto subset = state & ~(cen::key_mod::num | cen::key_mod::caps);
-  cen::set_modifiers(subset);
-
-  for (auto&& [entity, bind] : registry.view<const ui_key_bind>().each())
-  {
-    if (input.keyboard.just_released(bind.key) &&
-        cen::keyboard::is_only_active(bind.modifiers))
-    {
-      dispatcher.trigger<key_bind_triggered_event>(ui_key_bind::entity{entity}, bind.id);
-      return;
-    }
-  }
-
-  cen::set_modifiers(state);
-}
+RUNE_API void update_key_binds(entt::registry& registry,
+                               entt::dispatcher& dispatcher,
+                               const input& input);
 
 }  // namespace detail
 

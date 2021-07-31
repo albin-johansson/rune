@@ -1,6 +1,6 @@
 #include <centurion.hpp>
 
-#include "../../src/everything.hpp"
+#include "../../include/everything.hpp"
 
 namespace {
 

@@ -53,7 +53,10 @@ add_executable(UnitTests ${SOURCE_FILES})
 set_compiler_options(UnitTests)
 
 add_dependencies(UnitTests ${RUNE_LIBRARY_TARGET})
-target_compile_definitions(UnitTests PUBLIC RUNE_DEBUG_CONTAINERS)
+
+target_compile_definitions(UnitTests
+    PRIVATE RUNE_DEBUG_CONTAINERS
+    PRIVATE ENTT_API_IMPORT)
 
 target_include_directories(UnitTests
     PUBLIC .

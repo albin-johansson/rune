@@ -3,17 +3,9 @@
 
 #include <entt.hpp>  // registry, dispatcher
 
-#include "../../core/graphics.hpp"
-#include "../../core/input.hpp"
-#include "../events/button_pressed_event.hpp"
-#include "../events/key_bind_triggered_event.hpp"
-#include "button_system.hpp"
-#include "key_bind_system.hpp"
-#include "label_system.hpp"
-#include "lazy_texture_system.hpp"
-#include "line_system.hpp"
-#include "ui_key_bind.hpp"
-#include "ui_menu.hpp"
+#include "core/graphics.hpp"
+#include "core/input.hpp"
+#include "rune_api.hpp"
 
 namespace rune::ui {
 
@@ -32,22 +24,9 @@ namespace rune::ui {
  *
  * \since 0.1.0
  */
-inline void update(entt::registry& registry,
-                   entt::dispatcher& dispatcher,
-                   const input& input)
-{
-  if (const auto button = detail::update_button_hover(registry, input.mouse))
-  {
-    if (detail::query_button(registry, dispatcher, *button, input.mouse))
-    {
-      // TODO
-
-      return;
-    }
-  }
-
-  detail::update_key_binds(registry, dispatcher, input);
-}
+RUNE_API void update(entt::registry& registry,
+                     entt::dispatcher& dispatcher,
+                     const input& input);
 
 /**
  * \brief Renders the currently active UI components.
@@ -59,16 +38,7 @@ inline void update(entt::registry& registry,
  *
  * \since 0.1.0
  */
-inline void render(const entt::registry& registry, graphics& gfx)
-{
-  detail::update_button_bounds(registry, gfx);
-  detail::update_lazy_textures(registry, gfx);
-
-  detail::render_lines(registry, gfx);
-  detail::render_buttons(registry, gfx);
-  detail::render_labels(registry, gfx);
-  detail::render_button_labels(registry, gfx);
-}
+RUNE_API void render(const entt::registry& registry, graphics& gfx);
 
 /**
  * \brief Renders debug information for the currently active UI components.
@@ -83,21 +53,7 @@ inline void render(const entt::registry& registry, graphics& gfx)
  *
  * \since 0.1.0
  */
-inline void debug(const entt::registry& registry, graphics& gfx)
-{
-  const auto menuEntity = registry.ctx<const active_menu>().menu_entity;
-  const auto& menu = registry.get<ui_menu>(menuEntity);
-
-  if (menu.is_blocking)
-  {
-    auto& renderer = gfx.renderer();
-    renderer.set_color(cen::colors::light_gray.with_alpha(50));
-
-    const auto [logicalWidth, logicalHeight] = renderer.logical_size();
-
-    // TODO
-  }
-}
+RUNE_API void debug(const entt::registry& registry, graphics& gfx);
 
 /// \} End of group ecs
 

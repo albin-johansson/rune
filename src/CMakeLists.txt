@@ -102,28 +102,37 @@ set(SOURCE_FILES
     ${RUNE_INCLUDE_DIR}/tmx/tmx_wang_set.hpp
     ${RUNE_INCLUDE_DIR}/tmx/tmx_wang_tile.hpp
 
+    ecs/ui/button_system.cpp
+    ecs/ui/key_bind_system.cpp
+    ecs/ui/label_system.cpp
+    ecs/ui/lazy_texture_system.cpp
+    ecs/ui/line_system.cpp
+    ecs/ui/menu_system.cpp
+    ecs/ui/ui_system.cpp
+
     io/json_utils.cpp
 
     tmx/parse_tmx.cpp
     tmx/parse_tileset.cpp
-    tmx/tmx_parsers.cpp
-    )
+    tmx/tmx_parsers.cpp)
 
 add_library(${RUNE_LIBRARY_TARGET} SHARED ${SOURCE_FILES})
 
 if (WIN32)
-  add_definitions(-DRUNE_EXPORT)
+  target_compile_definitions(${RUNE_LIBRARY_TARGET}
+      PRIVATE RUNE_EXPORT
+      PRIVATE ENTT_API_EXPORT)
 endif ()
 
 set_compiler_options(${RUNE_LIBRARY_TARGET})
 
 target_include_directories(${RUNE_LIBRARY_TARGET}
-    PRIVATE ${RUNE_INCLUDE_DIR}
-    PRIVATE ${RUNE_SOURCE_DIR}
-    SYSTEM PRIVATE ${SDL2_INCLUDE_DIR}
-    SYSTEM PRIVATE ${SDL2_IMAGE_INCLUDE_DIRS}
-    SYSTEM PRIVATE ${SDL2_MIXER_INCLUDE_DIRS}
-    SYSTEM PRIVATE ${SDL2_TTF_INCLUDE_DIRS})
+    PUBLIC ${RUNE_INCLUDE_DIR}
+    PUBLIC ${RUNE_SOURCE_DIR}
+    SYSTEM PUBLIC ${SDL2_INCLUDE_DIR}
+    SYSTEM PUBLIC ${SDL2_IMAGE_INCLUDE_DIRS}
+    SYSTEM PUBLIC ${SDL2_MIXER_INCLUDE_DIRS}
+    SYSTEM PUBLIC ${SDL2_TTF_INCLUDE_DIRS})
 
 target_link_libraries(${RUNE_LIBRARY_TARGET}
     PUBLIC ${SDL2_IMAGE_LIBRARIES}

@@ -10,8 +10,8 @@ namespace rune::tmx {
 /// \addtogroup tmx
 /// \{
 
-[[nodiscard]] RUNE_API auto parse_tileset(const std::filesystem::path& directory,
-                                          const json_type& json) -> tmx_tileset;
+RUNE_FUNCTION auto parse_tileset(const std::filesystem::path& directory,
+                                 const json_type& json) -> tmx_tileset;
 
 /// \} End of group tmx
 

@@ -20,9 +20,12 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef RUNE_NO_PRAGMA_ONCE
-#pragma once
-#endif  // RUNE_NO_PRAGMA_ONCE
+#ifndef RUNE_EVERYTHING_HPP
+#define RUNE_EVERYTHING_HPP
+
+// clang-format off
+#include "rune_api.hpp"
+// clang-format on
 
 #include "aliases/delta_time.hpp"
 #include "aliases/font_id.hpp"
@@ -107,3 +110,5 @@
 #include "tmx/tmx_wang_color.hpp"
 #include "tmx/tmx_wang_set.hpp"
 #include "tmx/tmx_wang_tile.hpp"
+
+#endif  // RUNE_EVERYTHING_HPP
