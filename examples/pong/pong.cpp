@@ -1,7 +1,4 @@
-#include <centurion.hpp>  // library
-#include <entt.hpp>       // registry
-
-#include "../../src/everything.hpp"
+#include "../../include/everything.hpp"
 
 using rune::float2;
 
