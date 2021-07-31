@@ -23,6 +23,7 @@ set(SOURCE_FILES
     rune/ecs/ui/button_system_test.cpp
     rune/ecs/ui/label_system_test.cpp
 
+    rune/io/csv_test.cpp
     rune/io/ini_test.cpp
     rune/io/ini_value_test.cpp
     rune/io/json_utils_test.cpp

@@ -55,6 +55,7 @@ set(SOURCE_FILES
     ${RUNE_INCLUDE_DIR}/ecs/ui/ui_position.hpp
     ${RUNE_INCLUDE_DIR}/ecs/ui/ui_system.hpp
 
+    ${RUNE_INCLUDE_DIR}/io/csv.hpp
     ${RUNE_INCLUDE_DIR}/io/ini.hpp
     ${RUNE_INCLUDE_DIR}/io/ini_section.hpp
     ${RUNE_INCLUDE_DIR}/io/ini_value.hpp
@@ -110,6 +111,7 @@ set(SOURCE_FILES
     ecs/ui/menu_system.cpp
     ecs/ui/ui_system.cpp
 
+    io/csv.cpp
     io/json_utils.cpp
 
     math/random_utils.cpp
