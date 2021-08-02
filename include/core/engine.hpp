@@ -75,8 +75,7 @@ static_assert(is_configuration_type<configuration>);
  *
  * \since 0.1.0
  */
-template <std::derived_from<game_base> Game,
-          std::derived_from<graphics> Graphics = graphics>
+template <typename Game, typename Graphics>
 class engine
 {
   // To be able to access update_logic and update_input
@@ -85,7 +84,7 @@ class engine
  public:
   using game_type = Game;          ///< Game class type.
   using graphics_type = Graphics;  ///< Graphics context type.
-  using loop_type = semi_fixed_game_loop<Game, graphics_type>;  ///< Game loop type.
+  using loop_type = semi_fixed_game_loop<game_type, graphics_type>;  ///< Game loop type.
 
   static_assert(std::constructible_from<game_type, graphics_type&> ||
                     std::default_initializable<game_type>,
@@ -253,12 +252,12 @@ class engine
     return engine.run();                        \
   }
 
-#define RUNE_IMPLEMENT_MAIN_WITH_GAME(Game) \
-  int main(int, char**)                     \
-  {                                         \
-    cen::library centurion;                 \
-    rune::engine<Game> engine;              \
-    return engine.run();                    \
+#define RUNE_IMPLEMENT_MAIN_WITH_GAME(Game)    \
+  int main(int, char**)                        \
+  {                                            \
+    cen::library centurion;                    \
+    rune::engine<Game, rune::graphics> engine; \
+    return engine.run();                       \
   }
 
 #define RUNE_IMPLEMENT_MAIN_WITH_GAME_AND_GRAPHICS(Game, Graphics) \

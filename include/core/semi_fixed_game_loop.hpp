@@ -73,7 +73,7 @@ inline constexpr int engine_max_frames_per_tick = RUNE_ENGINE_MAX_FRAMES_PER_TIC
   return min(max_tick_rate, static_cast<double>(cen::screen::refresh_rate().value()));
 }
 
-template <std::derived_from<game_base> Game, std::derived_from<graphics> Graphics>
+template <typename Game, typename Graphics>
 class engine;
 
 /**
@@ -95,11 +95,13 @@ class engine;
  *
  * \since 0.1.0
  */
-template <std::derived_from<game_base> Game, std::derived_from<graphics> Graphics>
+template <typename Game, typename Graphics>
 class semi_fixed_game_loop
 {
  public:
-  using engine_type = engine<Game, Graphics>;
+  using game_type = Game;
+  using graphics_type = Graphics;
+  using engine_type = engine<game_type, graphics_type>;
   using seconds_type = cen::seconds<double>;
 
   explicit semi_fixed_game_loop(engine_type* engine)

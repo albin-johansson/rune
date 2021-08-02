@@ -1,9 +1,11 @@
 #ifndef RUNE_CORE_GAME_HPP
 #define RUNE_CORE_GAME_HPP
 
-#include "../aliases/delta_time.hpp"
-#include "graphics.hpp"
-#include "input.hpp"
+#include <concepts>  // derived_from
+
+#include "aliases/delta_time.hpp"
+#include "core/graphics.hpp"
+#include "core/input.hpp"
 
 namespace rune {
 
@@ -32,7 +34,7 @@ namespace rune {
  * class AwesomeGame final : public rune::game_base
  * {
  *  public:
- *   explicit AwesomeGame(rune::graphics& graphics)
+ *   explicit AwesomeGame(graphics_type& graphics)
  *   {
  *     // ...
  *   }
@@ -47,7 +49,7 @@ namespace rune {
  *     // ...
  *   }
  *
- *   void render(rune::graphics& graphics) const override
+ *   void render(graphics_type& graphics) const override
  *   {
  *     // ...
  *   }
@@ -61,19 +63,22 @@ namespace rune {
  * RUNE_IMPLEMENT_MAIN_WITH_GAME(AwesomeGame)
  * \endcode
  *
+ * \see `game_base`
  * \see `engine`
  * \see `graphics`
  * \see `input`
  * \see `RUNE_IMPLEMENT_MAIN_WITH_GAME`
- * \see `RUNE_IMPLEMENT_MAIN_WITH_GAME_AND_GRAPHICS`
  * \see `RUNE_IMPLEMENT_MAIN_WITH_ENGINE`
  *
  * \since 0.1.0
  */
-class game_base
+template <std::derived_from<graphics> Graphics>
+class basic_game
 {
  public:
-  virtual ~game_base() noexcept = default;
+  using graphics_type = Graphics;
+
+  virtual ~basic_game() noexcept = default;
 
   /**
    * \brief Initializes the game state.
@@ -86,7 +91,7 @@ class game_base
    *
    * \since 0.1.0
    */
-  virtual void init(rune::graphics& gfx)
+  virtual void init(graphics_type& gfx)
   {}
 
   /**
@@ -158,7 +163,7 @@ class game_base
    *
    * \since 0.1.0
    */
-  virtual void render(rune::graphics& gfx) const
+  virtual void render(graphics_type& gfx) const
   {}
 
   /**
@@ -175,6 +180,8 @@ class game_base
     return false;
   }
 };
+
+using game_base = basic_game<graphics>;
 
 /// \} End of group core
 
