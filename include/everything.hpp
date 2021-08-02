@@ -44,6 +44,7 @@
 #include "core/engine.hpp"
 #include "core/from_string.hpp"
 #include "core/game.hpp"
+#include "core/iterable.hpp"
 #include "core/rune_error.hpp"
 #include "core/semi_fixed_game_loop.hpp"
 #include "ecs/entity_type.hpp"

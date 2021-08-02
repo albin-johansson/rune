@@ -16,6 +16,7 @@ set(SOURCE_FILES
 
     rune/core/compiler_test.cpp
     rune/core/game_test.cpp
+    rune/core/iterable_test.cpp
 
     rune/ecs/entity_type_test.cpp
     rune/ecs/null_entity_test.cpp

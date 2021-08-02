@@ -27,6 +27,7 @@ set(SOURCE_FILES
     ${RUNE_INCLUDE_DIR}/core/game.hpp
     ${RUNE_INCLUDE_DIR}/core/graphics.hpp
     ${RUNE_INCLUDE_DIR}/core/input.hpp
+    ${RUNE_INCLUDE_DIR}/core/iterable.hpp
     ${RUNE_INCLUDE_DIR}/core/rune_error.hpp
     ${RUNE_INCLUDE_DIR}/core/semi_fixed_game_loop.hpp
 
