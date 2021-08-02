@@ -51,8 +51,8 @@ static_assert(is_configuration_type<configuration>);
  * \brief Represents the core engine in the framework.
  *
  * \details The easiest way to set up your game is to use either of
- * `RUNE_IMPLEMENT_MAIN_WITH_GAME` or `RUNE_IMPLEMENT_MAIN_WITH_GAME_AND_GRAPHICS` to
- * automatically generate a correct definition of the `main` function.
+ * `RUNE_IMPLEMENT_MAIN_WITH_GAME` or `RUNE_IMPLEMENT_MAIN_WITH_ENGINE` to automatically
+ * generate a correct definition of the `main` function.
  *
  * \details Alternatively, you could manually initialize an `engine` instance with your
  * game and graphics types and call the `engine::run()` function to start your game.
