@@ -116,8 +116,6 @@ set(SOURCE_FILES
     io/csv.cpp
     io/json_utils.cpp
 
-    math/random_utils.cpp
-
     tmx/parse_tileset.cpp
     tmx/parse_tmx.cpp
     tmx/tmx_animation.cpp
