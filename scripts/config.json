@@ -1,10 +1,10 @@
 {
   "project": "rune",
-  "target": "include/rune.hpp",
+  "target": "single-include/rune.hpp",
   "sources": [
-    "src/everything.hpp"
+    "include/everything.hpp"
   ],
   "include_paths": [
-    "src"
+    "include"
   ]
 }
