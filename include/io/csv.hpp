@@ -1,10 +1,10 @@
 #ifndef RUNE_IO_CSV_HPP
 #define RUNE_IO_CSV_HPP
 
-#include <string>  // string
-#include <vector>  // vector
-
-#include "rune_api.hpp"
+#include <sstream>  // istringstream
+#include <string>   // string, getline
+#include <utility>  // move
+#include <vector>   // vector
 
 namespace rune {
 
@@ -20,7 +20,21 @@ namespace rune {
  *
  * \since 0.1.0
  */
-RUNE_FUNCTION auto parse_csv(const std::string& csv) -> std::vector<std::string>;
+[[nodiscard]] inline auto parse_csv(const std::string& csv) -> std::vector<std::string>
+{
+  std::vector<std::string> tokens;
+
+  std::istringstream stream{csv};
+  std::string token;
+
+  while (std::getline(stream, token, ','))
+  {
+    tokens.push_back(std::move(token));
+    token.clear();
+  }
+
+  return tokens;
+}
 
 /// \} End of group io
 
