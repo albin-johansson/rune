@@ -110,6 +110,37 @@ class basic_ini_value final
   /// \} End of construction
 
   /**
+   * \brief Outputs the value to an output stream.
+   *
+   * \param stream the output stream that will be used.
+   *
+   * \since 0.1.0
+   */
+  void dump(std::ostream& stream) const
+  {
+    if (const auto* str = try_get_string())
+    {
+      stream << *str;
+    }
+    else if (const auto* i = try_get_int())
+    {
+      stream << std::to_string(*i);
+    }
+    else if (const auto* u = try_get_uint())
+    {
+      stream << std::to_string(*u) << 'u';
+    }
+    else if (const auto* f = try_get_float())
+    {
+      stream << std::to_string(*f);
+    }
+    else if (const auto* b = try_get_bool())
+    {
+      stream << ((*b) ? "true" : "false");
+    }
+  }
+
+  /**
    * \brief Returns the underlying representation.
    *
    * \return the underlying variant value.
@@ -493,27 +524,7 @@ using ini_value = basic_ini_value<char>;
 template <typename Char>
 auto operator<<(std::ostream& stream, const basic_ini_value<Char>& value) -> std::ostream&
 {
-  if (const auto* str = value.try_get_string())
-  {
-    stream << *str;
-  }
-  else if (const auto* i = value.try_get_int())
-  {
-    stream << std::to_string(*i);
-  }
-  else if (const auto* u = value.try_get_uint())
-  {
-    stream << std::to_string(*u) << 'u';
-  }
-  else if (const auto* f = value.try_get_float())
-  {
-    stream << std::to_string(*f);
-  }
-  else if (const auto* b = value.try_get_bool())
-  {
-    stream << ((*b) ? "true" : "false");
-  }
-
+  value.dump(stream);
   return stream;
 }
 
