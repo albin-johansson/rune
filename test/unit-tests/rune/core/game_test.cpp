@@ -37,7 +37,7 @@ class Game final : public rune::game_base
 
   void render(rune::graphics& graphics) const override
   {
-    auto& renderer = graphics.renderer();
+    auto& renderer = graphics.get_renderer();
     renderer.clear_with(cen::colors::black);
 
     renderer.set_color(cen::colors::red);

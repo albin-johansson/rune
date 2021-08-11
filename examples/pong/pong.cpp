@@ -72,7 +72,7 @@ class pong_game final : public rune::game_base
                             float2{logical_width - paddle_width - 10, paddle_y})}
       , m_ball{make_ball(m_registry)}
   {
-    graphics.renderer().set_logical_size({logical_width, logical_height});
+    graphics.get_renderer().set_logical_size({logical_width, logical_height});
 
     m_tree.disable_thickness_factor();
     //    m_tree.insert(left_paddle_id, m_left.position, m_left.position + paddle_size);
@@ -168,7 +168,7 @@ class pong_game final : public rune::game_base
 
   void render(rune::graphics& graphics) const override
   {
-    auto& renderer = graphics.renderer();
+    auto& renderer = graphics.get_renderer();
     renderer.clear_with(cen::colors::teal);
 
     renderer.set_color(cen::colors::white);

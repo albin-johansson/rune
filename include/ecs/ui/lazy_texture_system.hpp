@@ -53,7 +53,7 @@ inline void update_lazy_textures(const entt::registry& registry, graphics& gfx)
   {
     if (!lazy.texture)
     {
-      lazy.texture = cen::texture{gfx.renderer(), lazy.source};
+      lazy.texture = cen::texture{gfx.get_renderer(), lazy.source};
     }
   }
 }

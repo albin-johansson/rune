@@ -31,7 +31,7 @@ class ui_example final : public rune::game_base
   {
     gfx.emplace_cache(0, "resources/fonts/daniel.ttf", 36);
     gfx.emplace_cache(1, "resources/fonts/type_writer.ttf", 36);
-    gfx.renderer().set_logical_size(cen::window::default_size());
+    gfx.get_renderer().set_logical_size(cen::window::default_size());
 
     init_dispatcher();
 
@@ -48,7 +48,7 @@ class ui_example final : public rune::game_base
 
   void render(graphics_type& gfx) const override
   {
-    auto& renderer = gfx.renderer();
+    auto& renderer = gfx.get_renderer();
     renderer.clear_with(cen::colors::teal);
 
     rune::ui::render(m_registry, gfx);

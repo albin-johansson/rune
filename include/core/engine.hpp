@@ -127,7 +127,7 @@ class engine
 
     m_game->on_start();
 
-    auto& renderer = m_graphics.renderer();
+    auto& renderer = m_graphics.get_renderer();
     while (m_loop.is_running())
     {
       m_loop.tick();
@@ -231,7 +231,7 @@ class engine
 
   auto update_input() -> bool
   {
-    const auto& renderer = m_graphics.renderer();
+    const auto& renderer = m_graphics.get_renderer();
     m_input.mouse.set_logical_size(renderer.logical_size());
     m_input.mouse.update(renderer.output_size());
     m_input.keyboard.update();

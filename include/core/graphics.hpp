@@ -224,13 +224,13 @@ class graphics
    *
    * \return the associated renderer.
    */
-  [[nodiscard]] auto renderer() noexcept -> cen::renderer&
+  [[nodiscard]] auto get_renderer() noexcept -> cen::renderer&
   {
     return m_renderer;
   }
 
   /// \copydoc renderer()
-  [[nodiscard]] auto renderer() const noexcept -> const cen::renderer&
+  [[nodiscard]] auto get_renderer() const noexcept -> const cen::renderer&
   {
     return m_renderer;
   }

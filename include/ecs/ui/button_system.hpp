@@ -189,7 +189,7 @@ namespace detail {
 
 inline void update_button_bounds(const entt::registry& registry, graphics& gfx)
 {
-  auto& renderer = gfx.renderer();
+  auto& renderer = gfx.get_renderer();
   for (auto&& [entity, button, label] : registry.view<ui_button, ui_label>().each())
   {
     if (!button.size)
@@ -212,7 +212,7 @@ inline void update_button_bounds(const entt::registry& registry, graphics& gfx)
 inline void render_buttons(const entt::registry& registry, graphics& gfx)
 {
   const auto menuEntity = registry.ctx<active_menu>().menu_entity;
-  auto& renderer = gfx.renderer();
+  auto& renderer = gfx.get_renderer();
 
   const auto view = registry.view<ui_button, ui_position, in_menu>();
   for (auto&& [entity, button, position, inMenu] : view.each())

@@ -86,7 +86,7 @@ inline void render_lines(const entt::registry& registry, graphics& gfx)
 {
   const auto menuEntity = registry.ctx<active_menu>().menu_entity;
 
-  auto& renderer = gfx.renderer();
+  auto& renderer = gfx.get_renderer();
   for (auto&& [entity, line, fg, inMenu] :
        registry.view<ui_line, ui_foreground, in_menu>().each())
   {

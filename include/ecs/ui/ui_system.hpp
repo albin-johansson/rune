@@ -88,7 +88,7 @@ inline void debug(const entt::registry& registry, graphics& gfx)
 
   if (menu.is_blocking)
   {
-    auto& renderer = gfx.renderer();
+    auto& renderer = gfx.get_renderer();
     renderer.set_color(cen::colors::light_gray.with_alpha(50));
 
     const auto [logicalWidth, logicalHeight] = renderer.logical_size();
