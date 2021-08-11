@@ -2,19 +2,30 @@
 
 namespace {
 
-enum class action_id
+using rune::uint32;
+
+struct action_id final
 {
-  quit
+  enum value : uint32
+  {
+    quit = 1
+  };
+};
+
+struct button_id final
+{
+  enum value : uint32
+  {
+    goto_home = 1,
+    goto_settings = 2,
+    quit = 3
+  };
 };
 
 class ui_example final : public rune::game_base
 {
-  inline constexpr static rune::uint32 btn_goto_home = 1;
-  inline constexpr static rune::uint32 btn_goto_settings = 2;
-  inline constexpr static rune::uint32 btn_quit = 3;
-
  public:
-  explicit ui_example(rune::graphics& gfx)
+  explicit ui_example(graphics_type& gfx)
       : m_home{make_home_menu()}
       , m_settings{make_settings_menu()}
   {
@@ -25,7 +36,7 @@ class ui_example final : public rune::game_base
     init_dispatcher();
 
     rune::ui::make_key_bind(m_registry,
-                            {.id = cen::to_underlying(action_id::quit),
+                            {.id = action_id::quit,
                              .key = cen::scancodes::e,
                              .modifiers = cen::key_mod::left_ctrl});
   }
@@ -35,7 +46,7 @@ class ui_example final : public rune::game_base
     rune::ui::update(m_registry, m_dispatcher, input);
   }
 
-  void render(rune::graphics& gfx) const override
+  void render(graphics_type& gfx) const override
   {
     auto& renderer = gfx.renderer();
     renderer.clear_with(cen::colors::teal);
@@ -84,13 +95,13 @@ class ui_example final : public rune::game_base
     rune::ui::make_button(
         m_registry,
         home,
-        {.position = {10, 4}, .text = "Settings", .id = btn_goto_settings});
+        {.position = {10, 4}, .text = "Settings", .id = button_id::goto_settings});
 
     rune::ui::make_button(m_registry,
                           home,
                           {.position = {20, 4},
                            .text = "Quit",
-                           .id = btn_quit,
+                           .id = button_id::quit,
                            .fg = cen::colors::aquamarine,
                            .shadow = true});
 
@@ -106,24 +117,25 @@ class ui_example final : public rune::game_base
     const auto settings =
         rune::ui::make_menu(m_registry,
                             {.id = 2, .title = "Settings", .is_blocking = true});
-    rune::ui::make_button(m_registry,
-                          settings,
-                          {.position = {10, 4}, .text = "Return", .id = btn_goto_home});
+    rune::ui::make_button(
+        m_registry,
+        settings,
+        {.position = {10, 4}, .text = "Return", .id = button_id::goto_home});
 
     return settings;
   }
 
   void on_button_pressed(const rune::button_pressed_event& event)
   {
-    if (event.id == btn_goto_home)
+    if (event.id == button_id::goto_home)
     {
       m_registry.set<rune::active_menu>(m_home);
     }
-    else if (event.id == btn_goto_settings)
+    else if (event.id == button_id::goto_settings)
     {
       m_registry.set<rune::active_menu>(m_settings);
     }
-    else if (event.id == btn_quit)
+    else if (event.id == button_id::quit)
     {
       m_quit = true;
     }
@@ -131,7 +143,7 @@ class ui_example final : public rune::game_base
 
   void on_key_bind_triggered(const rune::key_bind_triggered_event& event)
   {
-    switch (static_cast<action_id>(event.id))
+    switch (event.id)
     {
       case action_id::quit:
         m_quit = true;
