@@ -43,7 +43,7 @@ namespace rune {
  *     // ...
  *   }
  *
- *   void tick(rune::delta_time dt) override
+ *   void tick(float dt) override
  *   {
  *     // ...
  *   }
