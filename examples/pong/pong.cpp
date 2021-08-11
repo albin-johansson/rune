@@ -206,10 +206,12 @@ class pong_game final : public rune::game_base
   bool m_quit{};
 };
 
-class pong_engine final : public rune::engine<pong_game>
+using engine_base = rune::engine<pong_game>;
+
+class pong_engine final : public engine_base
 {
  public:
-  pong_engine() : rune::engine<pong_game>{}
+  pong_engine() : engine_base{}
   {
     get_window().set_size({400, 300});
   }
