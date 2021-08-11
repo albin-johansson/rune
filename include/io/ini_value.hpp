@@ -285,7 +285,7 @@ auto operator<<(std::ostream& stream, const basic_ini_value<Char>& value) -> std
   }
   else if (const auto* u = value.try_get_uint())
   {
-    stream << std::to_string(*u);
+    stream << std::to_string(*u) << 'u';
   }
   else if (const auto* f = value.try_get_float())
   {
