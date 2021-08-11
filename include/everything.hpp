@@ -47,6 +47,7 @@
 #include "core/iterable.hpp"
 #include "core/rune_error.hpp"
 #include "core/semi_fixed_game_loop.hpp"
+#include "ecs/ecs_utils.hpp"
 #include "ecs/entity_type.hpp"
 #include "ecs/events/button_pressed_event.hpp"
 #include "ecs/events/key_bind_triggered_event.hpp"

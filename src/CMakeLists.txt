@@ -31,6 +31,7 @@ set(SOURCE_FILES
     ${RUNE_INCLUDE_DIR}/core/rune_error.hpp
     ${RUNE_INCLUDE_DIR}/core/semi_fixed_game_loop.hpp
 
+    ${RUNE_INCLUDE_DIR}/ecs/ecs_utils.hpp
     ${RUNE_INCLUDE_DIR}/ecs/entity_type.hpp
     ${RUNE_INCLUDE_DIR}/ecs/null_entity.hpp
 
