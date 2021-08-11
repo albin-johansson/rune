@@ -75,7 +75,7 @@ static_assert(is_configuration_type<configuration>);
  *
  * \since 0.1.0
  */
-template <typename Game, typename Graphics>
+template <typename Game, typename Graphics = graphics>
 class engine
 {
   // To be able to access update_logic and update_input
