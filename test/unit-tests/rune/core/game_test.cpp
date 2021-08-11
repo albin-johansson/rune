@@ -32,7 +32,7 @@ class Game final : public rune::game_base
     }
   }
 
-  void tick(rune::delta_time dt) override
+  void tick(float dt) override
   {}
 
   void render(rune::graphics& graphics) const override

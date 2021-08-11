@@ -122,7 +122,7 @@ class pong_game final : public rune::game_base
     }
   }
 
-  void tick(const rune::delta_time dt) override
+  void tick(const float dt) override
   {
     for (auto&& [entity, movable] : m_registry.view<comp::movable>().each())
     {

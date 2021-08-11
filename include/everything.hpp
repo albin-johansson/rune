@@ -23,7 +23,6 @@
 #ifndef RUNE_EVERYTHING_HPP
 #define RUNE_EVERYTHING_HPP
 
-#include "aliases/delta_time.hpp"
 #include "aliases/font_id.hpp"
 #include "aliases/integers.hpp"
 #include "aliases/json_type.hpp"
