@@ -64,6 +64,9 @@ TEST(IniValue, GetToBool)
 {
   const rune::ini_value value{true};
 
+  int i{};
+  ASSERT_THROW(value.get_to(i), std::bad_variant_access);
+
   bool b{};
   value.get_to(b);
 
@@ -73,6 +76,9 @@ TEST(IniValue, GetToBool)
 TEST(IniValue, GetToInt8)
 {
   const rune::ini_value value = 105;
+
+  bool b{};
+  ASSERT_THROW(value.get_to(b), std::bad_variant_access);
 
   rune::int8 i{};
   value.get_to(i);
@@ -84,6 +90,9 @@ TEST(IniValue, GetToInt16)
 {
   const rune::ini_value value = 1'234;
 
+  std::string s;
+  ASSERT_THROW(value.get_to(s), std::bad_variant_access);
+
   rune::int16 i{};
   value.get_to(i);
 
@@ -93,6 +102,9 @@ TEST(IniValue, GetToInt16)
 TEST(IniValue, GetToInt32)
 {
   const rune::ini_value value = -5'721;
+
+  rune::uint8 u{};
+  ASSERT_THROW(value.get_to(u), std::bad_variant_access);
 
   rune::int32 i{};
   value.get_to(i);
@@ -104,6 +116,9 @@ TEST(IniValue, GetToInt64)
 {
   const rune::ini_value value = 284'482;
 
+  float f{};
+  ASSERT_THROW(value.get_to(f), std::bad_variant_access);
+
   rune::int64 i{};
   value.get_to(i);
 
@@ -113,6 +128,9 @@ TEST(IniValue, GetToInt64)
 TEST(IniValue, GetToUint8)
 {
   const rune::ini_value value = 12u;
+
+  double d{};
+  ASSERT_THROW(value.get_to(d), std::bad_variant_access);
 
   rune::uint8 u{};
   value.get_to(u);
@@ -124,6 +142,9 @@ TEST(IniValue, GetToUint16)
 {
   const rune::ini_value value = 468u;
 
+  bool b{};
+  ASSERT_THROW(value.get_to(b), std::bad_variant_access);
+
   rune::uint16 u{};
   value.get_to(u);
 
@@ -133,6 +154,9 @@ TEST(IniValue, GetToUint16)
 TEST(IniValue, GetToUint32)
 {
   const rune::ini_value value = 1'395u;
+
+  rune::int32 i{};
+  ASSERT_THROW(value.get_to(i), std::bad_variant_access);
 
   rune::uint32 u{};
   value.get_to(u);
@@ -144,6 +168,9 @@ TEST(IniValue, GetToUint64)
 {
   const rune::ini_value value = 92'564u;
 
+  std::string s;
+  ASSERT_THROW(value.get_to(s), std::bad_variant_access);
+
   rune::uint64 u{};
   value.get_to(u);
 
@@ -154,6 +181,9 @@ TEST(IniValue, GetToFloat)
 {
   const rune::ini_value value = 54.3f;
 
+  int i{};
+  ASSERT_THROW(value.get_to(i), std::bad_variant_access);
+
   float f{};
   value.get_to(f);
 
@@ -163,6 +193,9 @@ TEST(IniValue, GetToFloat)
 TEST(IniValue, GetToDouble)
 {
   const rune::ini_value value = 164.8;
+
+  int i{};
+  ASSERT_THROW(value.get_to(i), std::bad_variant_access);
 
   double d{};
   value.get_to(d);
