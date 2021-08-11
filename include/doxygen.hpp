@@ -5,6 +5,15 @@
  */
 
 /**
+ * \defgroup io IO
+ *
+ * \brief Filesystem utilities related to JSON, Ini, etc.
+ */
+
+/// \addtogroup io
+/// \{
+
+/**
  * \defgroup tmx TMX
  *
  * \brief Responsible for parsing Tiled JSON map files.
@@ -52,16 +61,12 @@
  * \endcode
  */
 
+/// \} End of group io
+
 /**
  * \defgroup math Math
  *
  * \brief Contains numeric and mathematical components.
- */
-
-/**
- * \defgroup io IO
- *
- * \brief Filesystem utilities related to JSON, Ini, etc.
  */
 
 /**
@@ -109,7 +114,7 @@
  *   // ...
  * }
  *
- * void render(rune::graphics& gfx) const override
+ * void render(graphics_type& gfx) const override
  * {
  *    // ...
  *

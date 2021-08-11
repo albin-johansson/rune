@@ -36,20 +36,20 @@ set(SOURCE_FILES
     rune/math/random_utils_test.cpp
     rune/math/vector2_test.cpp
 
-    rune/tmx/tmx_animation_test.cpp
-    rune/tmx/tmx_color_test.cpp
-    rune/tmx/tmx_grid_test.cpp
-    rune/tmx/tmx_layer_test.cpp
-    rune/tmx/tmx_map_test.cpp
-    rune/tmx/tmx_object_test.cpp
-    rune/tmx/tmx_point_test.cpp
-    rune/tmx/tmx_property_test.cpp
-    rune/tmx/tmx_text_test.cpp
-    rune/tmx/tmx_tile_offset_test.cpp
-    rune/tmx/tmx_tileset_test.cpp
-    rune/tmx/tmx_wang_color_test.cpp
-    rune/tmx/tmx_wang_set_test.cpp
-    rune/tmx/tmx_wang_tile_test.cpp)
+    rune/io/tmx/tmx_animation_test.cpp
+    rune/io/tmx/tmx_color_test.cpp
+    rune/io/tmx/tmx_grid_test.cpp
+    rune/io/tmx/tmx_layer_test.cpp
+    rune/io/tmx/tmx_map_test.cpp
+    rune/io/tmx/tmx_object_test.cpp
+    rune/io/tmx/tmx_point_test.cpp
+    rune/io/tmx/tmx_property_test.cpp
+    rune/io/tmx/tmx_text_test.cpp
+    rune/io/tmx/tmx_tile_offset_test.cpp
+    rune/io/tmx/tmx_tileset_test.cpp
+    rune/io/tmx/tmx_wang_color_test.cpp
+    rune/io/tmx/tmx_wang_set_test.cpp
+    rune/io/tmx/tmx_wang_tile_test.cpp)
 
 add_executable(UnitTests ${SOURCE_FILES})
 set_compiler_options(UnitTests)
