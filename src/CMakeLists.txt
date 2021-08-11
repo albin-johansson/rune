@@ -111,7 +111,6 @@ set(SOURCE_FILES
     ecs/ui/lazy_texture_system.cpp
     ecs/ui/line_system.cpp
     ecs/ui/menu_system.cpp
-    ecs/ui/ui_system.cpp
 
     tmx/parse_tileset.cpp
     tmx/parse_tmx.cpp
