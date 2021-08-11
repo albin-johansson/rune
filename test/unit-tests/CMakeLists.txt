@@ -25,16 +25,10 @@ set(SOURCE_FILES
     rune/ecs/ui/label_system_test.cpp
 
     rune/io/csv_test.cpp
+    rune/io/ini_section_test.cpp
     rune/io/ini_test.cpp
     rune/io/ini_value_test.cpp
     rune/io/json_utils_test.cpp
-
-    rune/math/almost_equal_test.cpp
-    rune/math/index_to_matrix_test.cpp
-    rune/math/min_test.cpp
-    rune/math/max_test.cpp
-    rune/math/random_utils_test.cpp
-    rune/math/vector2_test.cpp
 
     rune/io/tmx/tmx_animation_test.cpp
     rune/io/tmx/tmx_color_test.cpp
@@ -49,7 +43,15 @@ set(SOURCE_FILES
     rune/io/tmx/tmx_tileset_test.cpp
     rune/io/tmx/tmx_wang_color_test.cpp
     rune/io/tmx/tmx_wang_set_test.cpp
-    rune/io/tmx/tmx_wang_tile_test.cpp)
+    rune/io/tmx/tmx_wang_tile_test.cpp
+
+    rune/math/almost_equal_test.cpp
+    rune/math/index_to_matrix_test.cpp
+    rune/math/min_test.cpp
+    rune/math/max_test.cpp
+    rune/math/random_utils_test.cpp
+    rune/math/vector2_test.cpp
+    )
 
 add_executable(UnitTests ${SOURCE_FILES})
 set_compiler_options(UnitTests)
