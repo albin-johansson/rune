@@ -3,7 +3,7 @@
 
 #include "../aliases/json_type.hpp"
 #include "../aliases/maybe.hpp"
-#include "rune_api.hpp"
+#include "../io/json_utils.hpp"
 #include "tmx_data.hpp"
 #include "tmx_tile_layer_compression.hpp"
 #include "tmx_tile_layer_encoding.hpp"
@@ -21,7 +21,17 @@ struct tmx_tile_layer final
   // TODO std::vector<chunk> m_chunks;
 };
 
-RUNE_API void from_json(const json_type& json, tmx_tile_layer& layer);
+inline void from_json(const json_type& json, tmx_tile_layer& layer)
+{
+  io::try_get_to(json, "compression", layer.compression);
+  io::try_get_to(json, "encoding", layer.encoding);
+  io::try_get_to(json, "data", layer.data);
+
+  // TODO
+  //  if (json.contains("chunks")) {
+  //    m_chunks = detail::fill<std::vector<chunk>>(json, "chunks");
+  //  }
+}
 
 /// \} End of group tmx
 

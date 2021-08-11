@@ -5,6 +5,7 @@
 #include <vector>  // vector
 
 #include "../aliases/json_type.hpp"
+#include "../io/json_utils.hpp"
 #include "rune_api.hpp"
 #include "tmx_local_id.hpp"
 
@@ -24,8 +25,18 @@ struct tmx_animation final
   std::vector<tmx_frame> frames;
 };
 
-RUNE_API void from_json(const json_type& json, tmx_frame& frame);
-RUNE_API void from_json(const json_type& json, tmx_animation& animation);
+inline void from_json(const json_type& json, tmx_frame& frame)
+{
+  using ms_t = std::chrono::milliseconds;
+
+  io::emplace_to(json, "tileid", frame.tile);
+  frame.duration = ms_t{json.at("duration").get<ms_t::rep>()};
+}
+
+inline void from_json(const json_type& json, tmx_animation& animation)
+{
+  io::get_to(json, animation.frames);
+}
 
 /// \} End of group tmx
 

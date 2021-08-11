@@ -54,11 +54,7 @@ set(SOURCE_FILES
 add_executable(UnitTests ${SOURCE_FILES})
 set_compiler_options(UnitTests)
 
-add_dependencies(UnitTests ${RUNE_LIBRARY_TARGET})
-
-target_compile_definitions(UnitTests
-    PRIVATE RUNE_DEBUG_CONTAINERS
-    PRIVATE ENTT_API_IMPORT)
+target_compile_definitions(UnitTests PRIVATE RUNE_DEBUG_CONTAINERS)
 
 target_include_directories(UnitTests
     PUBLIC .
@@ -82,14 +78,12 @@ target_link_libraries(UnitTests
     PUBLIC EnTT
     PUBLIC JSON
     PUBLIC Nenya
-    PUBLIC ${RUNE_IMPORT_LIBRARY_FILE}
     PUBLIC gtest)
 
 add_test(NAME UnitTests COMMAND UnitTests)
 
 if (WIN32)
   copy_directory_post_build(UnitTests ${RUNE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
-  copy_file_post_build(UnitTests ${RUNE_SHARED_LIBRARY_FILE} ${CMAKE_CURRENT_BINARY_DIR})
 endif ()
 
 copy_directory_post_build(UnitTests ${RUNE_RESOURCES_DIR} ${CMAKE_CURRENT_BINARY_DIR}/resources)

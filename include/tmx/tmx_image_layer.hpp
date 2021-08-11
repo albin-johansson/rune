@@ -5,7 +5,7 @@
 
 #include "../aliases/json_type.hpp"
 #include "../aliases/maybe.hpp"
-#include "rune_api.hpp"
+#include "../io/json_utils.hpp"
 #include "tmx_color.hpp"
 
 namespace rune {
@@ -19,7 +19,11 @@ struct tmx_image_layer final
   maybe<tmx_color> transparent;
 };
 
-RUNE_API void from_json(const json_type& json, tmx_image_layer& layer);
+inline void from_json(const json_type& json, tmx_image_layer& layer)
+{
+  json.at("image").get_to(layer.image);
+  io::try_get_to(json, "transparentcolor", layer.transparent);
+}
 
 /// \} End of group tmx
 

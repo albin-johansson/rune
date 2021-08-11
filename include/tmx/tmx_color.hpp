@@ -2,12 +2,12 @@
 #define RUNE_TMX_COLOR_HPP
 
 #include <cassert>      // assert
+#include <string>       // string
 #include <string_view>  // string_view
 
 #include "../aliases/integers.hpp"
 #include "../aliases/json_type.hpp"
 #include "../core/from_string.hpp"
-#include "rune_api.hpp"
 
 namespace rune {
 
@@ -23,8 +23,6 @@ struct tmx_color final
 
   [[nodiscard]] constexpr bool operator==(const tmx_color&) const noexcept = default;
 };
-
-RUNE_API void from_json(const json_type& json, tmx_color& color);
 
 /// \} End of group tmx
 
@@ -73,6 +71,12 @@ inline constexpr tmx_color black{0, 0, 0, 0xFF};
 /// \} End of group tmx
 
 }  // namespace tmx
+
+inline void from_json(const json_type& json, tmx_color& color)
+{
+  color = tmx::make_color(json.get<std::string>());
+}
+
 }  // namespace rune
 
 #endif  // RUNE_TMX_COLOR_TEST

@@ -3,7 +3,7 @@
 
 #include <entt.hpp>  // registry, entity
 
-#include "core/iterable.hpp"
+#include "../core/iterable.hpp"
 
 namespace rune {
 

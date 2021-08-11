@@ -1,17 +1,24 @@
 #ifndef RUNE_ECS_UI_BUTTON_SYSTEM_HPP
 #define RUNE_ECS_UI_BUTTON_SYSTEM_HPP
 
+#include <cassert>        // assert
 #include <centurion.hpp>  // mouse, color
 #include <entt.hpp>       // registry, dispatcher
 #include <string>         // string
+#include <utility>        // move
 
-#include "aliases/font_id.hpp"
-#include "aliases/integers.hpp"
-#include "aliases/maybe.hpp"
-#include "core/graphics.hpp"
-#include "ecs/events/button_pressed_event.hpp"
-#include "rune_api.hpp"
+#include "../../aliases/font_id.hpp"
+#include "../../aliases/integers.hpp"
+#include "../../aliases/maybe.hpp"
+#include "../../core/graphics.hpp"
+#include "../events/button_pressed_event.hpp"
+#include "../null_entity.hpp"
+#include "label_system.hpp"
 #include "ui_button.hpp"
+#include "ui_checkbox.hpp"
+#include "ui_foreground.hpp"
+#include "ui_grid.hpp"
+#include "ui_label.hpp"
 #include "ui_menu.hpp"
 #include "ui_position.hpp"
 
@@ -69,10 +76,23 @@ namespace ui {
  *
  * \since 0.1.0
  */
-RUNE_API void add_button(entt::registry& registry,
-                         ui_menu::entity menu,
-                         entt::entity entity,
-                         ui_button_cfg cfg);
+inline void add_button(entt::registry& registry,
+                       ui_menu::entity menu,
+                       entt::entity entity,
+                       ui_button_cfg cfg)
+{
+  auto& button = registry.emplace<ui_button>(entity);
+  button.id = cfg.id;
+
+  add_label(registry,
+            menu,
+            entity,
+            {.position = cfg.position,
+             .text = std::move(cfg.text),
+             .font = cfg.font,
+             .color = cfg.fg,
+             .shadow = cfg.shadow});
+}
 
 /**
  * \brief Creates a new button entity and returns it.
@@ -96,9 +116,15 @@ RUNE_API void add_button(entt::registry& registry,
  *
  * \since 0.1.0
  */
-RUNE_FUNCTION auto make_button(entt::registry& registry,
-                               ui_menu::entity menu,
-                               ui_button_cfg cfg) -> ui_button::entity;
+inline auto make_button(entt::registry& registry, ui_menu::entity menu, ui_button_cfg cfg)
+    -> ui_button::entity
+{
+  const auto entity = ui_button::entity{registry.create()};
+
+  add_button(registry, menu, entity, std::move(cfg));
+
+  return entity;
+}
 
 /// \} End of factory functions
 
@@ -108,17 +134,105 @@ RUNE_FUNCTION auto make_button(entt::registry& registry,
 
 namespace detail {
 
-RUNE_FUNCTION auto query_button(entt::registry& registry,
-                                entt::dispatcher& dispatcher,
-                                ui_button::entity entity,
-                                const cen::mouse& mouse) -> bool;
+[[nodiscard]] inline auto query_button(entt::registry& registry,
+                                       entt::dispatcher& dispatcher,
+                                       ui_button::entity entity,
+                                       const cen::mouse& mouse) -> bool
+{
+  auto& button = registry.get<ui_button>(entity);
+  if (button.is_enabled && button.is_hovered)
+  {
+    // TODO enable_cursor
 
-RUNE_FUNCTION auto update_button_hover(entt::registry& registry, const cen::mouse& mouse)
-    -> maybe<ui_button::entity>;
+    if (mouse.was_left_button_released())
+    {
+      dispatcher.trigger<button_pressed_event>(entity, button.id);
+      button.is_hovered = false;
 
-RUNE_API void update_button_bounds(const entt::registry& registry, graphics& gfx);
+      if (auto* checkbox = registry.try_get<ui_checkbox>(entity))
+      {
+        checkbox->is_checked = !checkbox->is_checked;
+      }
 
-RUNE_API void render_buttons(const entt::registry& registry, graphics& gfx);
+      // TODO reset cursor
+
+      return true;
+    }
+  }
+
+  return false;
+}
+
+[[nodiscard]] inline auto update_button_hover(entt::registry& registry,
+                                              const cen::mouse& mouse)
+    -> maybe<ui_button::entity>
+{
+  const auto menuEntity = registry.ctx<const active_menu>().menu_entity;
+  const auto mousePos = cen::cast<cen::fpoint>(mouse.position());
+
+  for (auto&& [entity, button, position, inMenu] :
+       registry.view<ui_button, const ui_position, const in_menu>().each())
+  {
+    if (inMenu.menu_entity == menuEntity && button.is_visible && button.size)
+    {
+      const auto bounds = cen::frect{from_grid(position), *button.size};
+      button.is_hovered = bounds.contains(mousePos);
+      if (button.is_hovered)
+      {
+        return ui_button::entity{entity};
+      }
+    }
+  }
+
+  return nothing;
+}
+
+inline void update_button_bounds(const entt::registry& registry, graphics& gfx)
+{
+  auto& renderer = gfx.renderer();
+  for (auto&& [entity, button, label] : registry.view<ui_button, ui_label>().each())
+  {
+    if (!button.size)
+    {
+      const auto& font = gfx.get_font(label.font);
+      auto size = cen::cast<cen::farea>(font.string_size(label.text).value());
+
+      const auto widthPadding = size.width * 0.5f;
+      const auto heightPadding = size.height * 0.5f;
+
+      size.width += widthPadding;
+      size.height += heightPadding;
+
+      button.size = size;
+      button.text_offset = cen::fpoint{widthPadding / 2.0f, heightPadding / 2.0f};
+    }
+  }
+}
+
+inline void render_buttons(const entt::registry& registry, graphics& gfx)
+{
+  const auto menuEntity = registry.ctx<active_menu>().menu_entity;
+  auto& renderer = gfx.renderer();
+
+  const auto view = registry.view<ui_button, ui_position, in_menu>();
+  for (auto&& [entity, button, position, inMenu] : view.each())
+  {
+    if (menuEntity == inMenu.menu_entity)
+    {
+      assert(button.size);
+      const auto rect = cen::frect{from_grid(position), *button.size};
+
+      renderer.set_color(cen::colors::white);
+      renderer.draw_rect(rect);
+
+      if (button.is_hovered)
+      {
+        renderer.set_color(cen::colors::lime);
+        renderer.draw_rect(rect);
+      }
+    }
+  }
+}
 
 }  // namespace detail
 

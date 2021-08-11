@@ -3,11 +3,12 @@
 
 #include <entt.hpp>  // registry
 #include <string>    // string
+#include <utility>   // move
 
-#include "aliases/font_id.hpp"
-#include "aliases/integers.hpp"
-#include "ecs/ui/ui_menu.hpp"
-#include "rune_api.hpp"
+#include "../../aliases/font_id.hpp"
+#include "../../aliases/integers.hpp"
+#include "ui_label.hpp"
+#include "ui_menu.hpp"
 
 namespace rune {
 
@@ -58,8 +59,20 @@ namespace ui {
  *
  * \since 0.1.0
  */
-RUNE_FUNCTION auto make_menu(entt::registry& registry, ui_menu_cfg cfg)
-    -> ui_menu::entity;
+inline auto make_menu(entt::registry& registry, ui_menu_cfg cfg) -> ui_menu::entity
+{
+  const auto entity = ui_menu::entity{registry.create()};
+
+  auto& menu = registry.emplace<ui_menu>(entity);
+  menu.id = cfg.id;
+  menu.is_blocking = cfg.is_blocking;
+
+  auto& label = registry.emplace<ui_label>(entity);
+  label.text = std::move(cfg.title);
+  label.font = cfg.font;
+
+  return entity;
+}
 
 /// \} End of factory functions
 

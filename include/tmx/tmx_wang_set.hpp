@@ -5,7 +5,7 @@
 #include <vector>  // vector
 
 #include "../aliases/json_type.hpp"
-#include "rune_api.hpp"
+#include "../io/json_utils.hpp"
 #include "tmx_local_id.hpp"
 #include "tmx_property.hpp"
 #include "tmx_wang_color.hpp"
@@ -25,7 +25,16 @@ struct tmx_wang_set final
   tmx_properties properties;
 };
 
-RUNE_API void from_json(const json_type& json, tmx_wang_set& set);
+inline void from_json(const json_type& json, tmx_wang_set& set)
+{
+  io::emplace_to(json, "tile", set.tile);
+  json.at("name").get_to(set.name);
+
+  // TODO check if colors or wangtiles are required
+  io::try_get_to(json, "colors", set.colors);
+  io::try_get_to(json, "wangtiles", set.wang_tiles);
+  io::try_get_to(json, "properties", set.properties);
+}
 
 /// \} End of group tmx
 

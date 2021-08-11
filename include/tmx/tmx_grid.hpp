@@ -28,7 +28,12 @@ struct tmx_grid final
   tmx_grid_orientation orientation{tmx_grid_orientation::orthogonal};
 };
 
-RUNE_API void from_json(const json_type& json, tmx_grid& grid);
+inline void from_json(const json_type& json, tmx_grid& grid)
+{
+  json.at("width").get_to(grid.cell_width);
+  json.at("height").get_to(grid.cell_height);
+  json.at("orientation").get_to(grid.orientation);
+}
 
 /// \} End of group tmx
 
