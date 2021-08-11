@@ -113,8 +113,6 @@ set(SOURCE_FILES
     ecs/ui/menu_system.cpp
     ecs/ui/ui_system.cpp
 
-    io/json_utils.cpp
-
     tmx/parse_tileset.cpp
     tmx/parse_tmx.cpp
     tmx/tmx_animation.cpp

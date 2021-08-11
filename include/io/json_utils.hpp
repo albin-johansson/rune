@@ -4,6 +4,7 @@
 #include <cassert>      // assert
 #include <concepts>     // same_as
 #include <filesystem>   // path
+#include <fstream>      // ifstream
 #include <string_view>  // string_view
 #include <variant>      // variant
 #include <vector>       // vector
@@ -40,7 +41,16 @@ concept json_serializable_type = requires (json_type json)
  *
  * \return the parsed JSON data.
  */
-RUNE_FUNCTION auto read_json(const std::filesystem::path& file) -> json_type;
+[[nodiscard]] inline auto read_json(const std::filesystem::path& file) -> json_type
+{
+  assert(file.extension() == ".json");
+  std::ifstream stream{file};
+
+  json_type json;
+  stream >> json;
+
+  return json;
+}
 
 /// \} End of JSON
 
