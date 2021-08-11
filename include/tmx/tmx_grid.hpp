@@ -4,7 +4,6 @@
 #include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
 
 #include "../aliases/json_type.hpp"
-#include "rune_api.hpp"
 
 namespace rune {
 

@@ -6,7 +6,6 @@
 
 #include "../aliases/json_type.hpp"
 #include "../io/json_utils.hpp"
-#include "rune_api.hpp"
 #include "tmx_local_id.hpp"
 
 namespace rune {

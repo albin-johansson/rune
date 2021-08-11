@@ -12,7 +12,6 @@
 
 #include "../aliases/json_type.hpp"
 #include "../core/rune_error.hpp"
-#include "rune_api.hpp"
 #include "tmx_color.hpp"
 #include "tmx_property_type.hpp"
 

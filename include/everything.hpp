@@ -23,10 +23,6 @@
 #ifndef RUNE_EVERYTHING_HPP
 #define RUNE_EVERYTHING_HPP
 
-// clang-format off
-#include "rune_api.hpp"
-// clang-format on
-
 #include "aliases/delta_time.hpp"
 #include "aliases/font_id.hpp"
 #include "aliases/integers.hpp"
