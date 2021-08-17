@@ -206,17 +206,14 @@ class pong_game final : public rune::game_base
   bool m_quit{};
 };
 
-using engine_base = rune::engine<pong_game>;
-
-class pong_engine final : public engine_base
-{
- public:
-  pong_engine() : engine_base{}
-  {
-    get_window().set_size({400, 300});
-  }
-};
-
 }  // namespace
 
-RUNE_IMPLEMENT_MAIN_WITH_ENGINE(pong_engine)
+int main(int, char**)
+{
+  cen::library centurion;
+
+  rune::load_configuration("pong.ini");
+  rune::engine<pong_game> engine;
+
+  return engine.run();
+}
