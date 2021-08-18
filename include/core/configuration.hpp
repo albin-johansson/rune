@@ -26,11 +26,15 @@ namespace rune {
  */
 struct configuration final
 {
-  uint32 renderer_flags;
+  std::string window_title;
   cen::iarea window_size;
+
+  uint32 renderer_flags;
+  cen::iarea logical_size;
 
   double engine_max_tick_rate;
   int engine_max_frames_per_tick;
+  // TODO game_loop engine_loop;
 
   usize aabb_default_capacity;
 
@@ -43,8 +47,10 @@ struct configuration final
 
 [[nodiscard]] inline auto get_default_cfg() -> configuration
 {
-  return {.renderer_flags = cen::renderer::default_flags(),
+  return {.window_title = "Rune",
           .window_size = cen::window::default_size(),
+          .renderer_flags = cen::renderer::default_flags(),
+          .logical_size = {0, 0},
           .engine_max_tick_rate = 120.0,
           .engine_max_frames_per_tick = 5,
           .aabb_default_capacity = 64u,
@@ -56,6 +62,26 @@ struct configuration final
 {
   static auto cfg = get_default_cfg();
   return cfg;
+}
+
+[[nodiscard]] inline auto get_window_title() -> const std::string&
+{
+  return get_cfg().window_title;
+}
+
+[[nodiscard]] inline auto get_window_size() -> cen::iarea
+{
+  return get_cfg().window_size;
+}
+
+[[nodiscard]] inline auto get_logical_size() -> cen::iarea
+{
+  return get_cfg().logical_size;
+}
+
+[[nodiscard]] inline auto get_renderer_flags() -> uint32
+{
+  return get_cfg().renderer_flags;
 }
 
 [[nodiscard]] inline auto get_engine_max_tick_rate() -> double
@@ -109,6 +135,26 @@ struct configuration final
     }
   }
 
+  if (ini->contains("Window"))
+  {
+    const auto& window = ini->at("Window");
+
+    if (window.contains("WindowTitle"))
+    {
+      window.at("WindowTitle").get_to(cfg.window_title);
+    }
+
+    if (window.contains("WindowWidth"))
+    {
+      window.at("WindowWidth").get_to(cfg.window_size.width);
+    }
+
+    if (window.contains("WindowHeight"))
+    {
+      window.at("WindowHeight").get_to(cfg.window_size.height);
+    }
+  }
+
   if (ini->contains("Graphics"))
   {
     const auto& graphics = ini->at("Graphics");
@@ -145,14 +191,14 @@ struct configuration final
       }
     }
 
-    if (graphics.contains("WindowWidth"))
+    if (graphics.contains("LogicalWidth"))
     {
-      graphics.at("WindowWidth").get_to(cfg.window_size.width);
+      graphics.at("LogicalWidth").get_to(cfg.logical_size.width);
     }
 
-    if (graphics.contains("WindowHeight"))
+    if (graphics.contains("LogicalHeight"))
     {
-      graphics.at("WindowHeight").get_to(cfg.window_size.height);
+      graphics.at("LogicalHeight").get_to(cfg.logical_size.height);
     }
   }
 
@@ -187,6 +233,26 @@ struct configuration final
 inline void load_configuration(const std::filesystem::path& path)
 {
   get_cfg() = parse_configuration(path);
+}
+
+inline void save_configuration(const std::filesystem::path& path)
+{
+  const auto& cfg = get_cfg();
+
+  ini_file ini;
+  ini["Graphics"]["RendererFlags"] = cfg.renderer_flags;
+  ini["Graphics"]["LogicalWidth"] = cfg.logical_size.width;
+  ini["Graphics"]["LogicalHeight"] = cfg.logical_size.height;
+  ini["Window"]["WindowTitle"] = cfg.window_title;
+  ini["Window"]["WindowWidth"] = cfg.window_size.width;
+  ini["Window"]["WindowHeight"] = cfg.window_size.height;
+  ini["Engine"]["MaxTickRate"] = cfg.engine_max_tick_rate;
+  ini["Engine"]["MaxFramesPerTick"] = cfg.engine_max_frames_per_tick;
+  ini["AABB"]["TreeDefaultCapacity"] = cfg.aabb_default_capacity;
+  ini["UI"]["RowSize"] = cfg.ui_row_size;
+  ini["UI"]["ColumnSize"] = cfg.ui_column_size;
+
+  write_ini(ini, path);
 }
 
 /// \} End of configuration

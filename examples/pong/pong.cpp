@@ -1,9 +1,11 @@
+#include <iterator>  // back_inserter
+#include <vector>    // vector
+
 #include "../../include/everything.hpp"
 
 using rune::float2;
 
 namespace {
-
 namespace comp {
 
 struct movable final
@@ -22,20 +24,25 @@ struct ball final
 
 }  // namespace comp
 
-inline constexpr int logical_width = 800;
-inline constexpr int logical_height = 600;
-inline constexpr float half_height = logical_height / 2.0f;
+constexpr int logical_width = 800;
+constexpr int logical_height = 600;
+constexpr float half_height = logical_height / 2.0f;
 
-inline constexpr float paddle_speed = 250;
-inline constexpr float ball_speed = 300;
+constexpr float paddle_speed = 250;
+constexpr float ball_speed = 300;
 
-inline constexpr float paddle_width = 30;
-inline constexpr float paddle_height = 100;
-inline constexpr float2 paddle_size = {paddle_width, paddle_height};
+constexpr float paddle_width = 30;
+constexpr float paddle_height = 100;
+constexpr float2 paddle_size = {paddle_width, paddle_height};
 
-inline constexpr float ball_radius = 30;
+constexpr float ball_radius = 30;
+constexpr float2 ball_size = {2.0f * ball_radius, 2.0f * ball_radius};
 
-inline constexpr float paddle_y = (logical_height - paddle_height) / 2.0f;
+constexpr float paddle_y = (logical_height - paddle_height) / 2.0f;
+
+constexpr float2 initial_ball_pos = {logical_width / 2.0f, half_height};
+constexpr float2 initial_left_paddle_pos = {10, paddle_y};
+constexpr float2 initial_right_paddle_pos = {logical_width - paddle_width - 10, paddle_y};
 
 auto make_paddle(entt::registry& registry, const float2 position) -> entt::entity
 {
@@ -65,61 +72,57 @@ auto make_ball(entt::registry& registry) -> entt::entity
 
 class pong_game final : public rune::game_base
 {
+  constexpr static auto key_left_up = cen::scancodes::w;
+  constexpr static auto key_left_down = cen::scancodes::s;
+  constexpr static auto key_right_up = cen::scancodes::up;
+  constexpr static auto key_right_down = cen::scancodes::down;
+
  public:
-  explicit pong_game(rune::graphics& graphics)
-      : m_left{make_paddle(m_registry, float2{10, paddle_y})}
-      , m_right{make_paddle(m_registry,
-                            float2{logical_width - paddle_width - 10, paddle_y})}
+  pong_game()
+      : m_left{make_paddle(m_registry, initial_left_paddle_pos)}
+      , m_right{make_paddle(m_registry, initial_right_paddle_pos)}
       , m_ball{make_ball(m_registry)}
   {
-    graphics.get_renderer().set_logical_size({logical_width, logical_height});
-
     m_tree.disable_thickness_factor();
-    //    m_tree.insert(left_paddle_id, m_left.position, m_left.position + paddle_size);
-    //    m_tree.insert(right_paddle_id, m_right.position, m_right.position +
-    //    paddle_size); m_tree.insert(ball_id,
-    //                  m_ball.position,
-    //                  m_ball.position + float2{ball_radius, ball_radius});
+    m_tree.insert(m_left, initial_left_paddle_pos, initial_left_paddle_pos + paddle_size);
+    m_tree.insert(m_right,
+                  initial_right_paddle_pos,
+                  initial_right_paddle_pos + paddle_size);
+    m_tree.insert(m_ball, initial_ball_pos, initial_ball_pos + ball_size);
   }
 
   void handle_input(const rune::input& input) override
   {
-    if (input.keyboard.just_released(cen::keycodes::escape))
+    const auto& keyboard = input.keyboard;
+
+    if (keyboard.just_released(cen::keycodes::escape))
     {
       m_quit = true;
       return;
     }
 
-    const auto leftUp = input.keyboard.is_pressed(cen::scancodes::w);
-    const auto leftDown = input.keyboard.is_pressed(cen::scancodes::s);
-    const auto rightUp = input.keyboard.is_pressed(cen::scancodes::up);
-    const auto rightDown = input.keyboard.is_pressed(cen::scancodes::down);
+    auto updateMovable = [](comp::movable& movable, const bool up, const bool down) {
+      if (up && down || !up && !down)
+      {
+        movable.velocity.reset();
+      }
+      else if (up)
+      {
+        movable.velocity.y = -paddle_speed;
+      }
+      else
+      {
+        movable.velocity.y = paddle_speed;
+      }
+    };
 
-    if (leftUp && leftDown || !leftUp && !leftDown)
-    {
-      //      m_left.velocity.reset();
-    }
-    else if (leftUp)
-    {
-      //      m_left.velocity.y = -paddle_speed;
-    }
-    else /*if (leftDown)*/
-    {
-      //      m_left.velocity.y = paddle_speed;
-    }
+    updateMovable(m_registry.get<comp::movable>(m_left),
+                  keyboard.is_pressed(key_left_up),
+                  keyboard.is_pressed(key_left_down));
 
-    if (rightUp && rightDown || !rightUp && !rightDown)
-    {
-      //      m_right.velocity.reset();
-    }
-    else if (rightUp)
-    {
-      //      m_right.velocity.y = -paddle_speed;
-    }
-    else /*if (rightDown)*/
-    {
-      //      m_right.velocity.y = paddle_speed;
-    }
+    updateMovable(m_registry.get<comp::movable>(m_right),
+                  keyboard.is_pressed(key_right_up),
+                  keyboard.is_pressed(key_right_down));
   }
 
   void tick(const float dt) override
@@ -130,6 +133,47 @@ class pong_game final : public rune::game_base
       m_tree.set_position(entity, movable.position);
     }
 
+    update_ball();
+  }
+
+  void render(rune::graphics& graphics) const override
+  {
+    auto& renderer = graphics.get_renderer();
+    renderer.clear_with(cen::colors::teal);
+
+    renderer.set_color(cen::colors::white);
+    for (auto&& [entity, movable] : m_registry.view<comp::movable, comp::paddle>().each())
+    {
+      const auto& pos = movable.position;
+      renderer.fill_rect(cen::rect(pos.x, pos.y, paddle_width, paddle_height));
+    }
+
+    for (auto&& [entity, movable, ball] :
+         m_registry.view<comp::movable, comp::ball>().each())
+    {
+      const auto& pos = movable.position;
+      renderer.fill_circle({pos.x + ball_radius / 2.0f, pos.y + ball_radius / 2.0f},
+                           ball_radius);
+    }
+
+    renderer.present();
+  }
+
+  [[nodiscard]] auto should_quit() const noexcept -> bool override
+  {
+    return m_quit;
+  }
+
+ private:
+  entt::registry m_registry;
+  rune::aabb_tree<entt::entity> m_tree;
+  entt::entity m_left{entt::null};
+  entt::entity m_right{entt::null};
+  entt::entity m_ball{entt::null};
+  bool m_quit{};
+
+  void update_ball()
+  {
     for (auto&& [entity, movable, ball] :
          m_registry.view<comp::movable, comp::ball>().each())
     {
@@ -165,45 +209,6 @@ class pong_game final : public rune::game_base
       }
     }
   }
-
-  void render(rune::graphics& graphics) const override
-  {
-    auto& renderer = graphics.get_renderer();
-    renderer.clear_with(cen::colors::teal);
-
-    renderer.set_color(cen::colors::white);
-
-    for (auto&& [entity, movable] : m_registry.view<comp::movable, comp::paddle>().each())
-    {
-      const auto& pos = movable.position;
-      renderer.fill_rect(cen::rect(pos.x, pos.y, paddle_width, paddle_height));
-    }
-
-    for (auto&& [entity, movable, ball] :
-         m_registry.view<comp::movable, comp::ball>().each())
-    {
-      const auto& pos = movable.position;
-      renderer.fill_circle({pos.x + ball_radius / 2.0f, pos.y + ball_radius / 2.0f},
-                           ball_radius);
-    }
-
-    renderer.present();
-  }
-
-  [[nodiscard]] auto should_quit() const noexcept -> bool override
-  {
-    return m_quit;
-  }
-
- private:
-  entt::registry m_registry;
-  rune::aabb_tree<entt::entity> m_tree;
-
-  entt::entity m_left{entt::null};
-  entt::entity m_right{entt::null};
-  entt::entity m_ball{entt::null};
-
-  bool m_quit{};
 };
 
 }  // namespace
@@ -211,6 +216,12 @@ class pong_game final : public rune::game_base
 int main(int, char**)
 {
   cen::library centurion;
+  cen::log::use_preset_output_function();
+
+  if constexpr (cen::is_debug_build())
+  {
+    cen::log::set_priority(cen::log_priority::debug);
+  }
 
   rune::load_configuration("pong.ini");
   rune::engine<pong_game> engine;

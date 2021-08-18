@@ -65,8 +65,8 @@ class engine
 
   explicit engine()
       : m_loop{this}
-      , m_window{"Rune", get_cfg().window_size}
-      , m_graphics{m_window, get_cfg().renderer_flags}  // TODO remove flags arg
+      , m_window{get_window_title(), get_window_size()}
+      , m_graphics{m_window}
   {
     if constexpr (std::constructible_from<game_type, graphics_type&>)
     {
