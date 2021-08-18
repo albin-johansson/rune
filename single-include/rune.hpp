@@ -23,72 +23,6 @@
 #ifndef RUNE_EVERYTHING_HPP
 #define RUNE_EVERYTHING_HPP
 
-// clang-format off
-// #include "rune_api.hpp"
-#ifndef RUNE_API_HPP
-#define RUNE_API_HPP
-
-#include <centurion.hpp>
-
-#if CENTURION_VERSION_NUMBER != CENTURION_MAKE_VERSION_NUMBER(6, 2, 0)
-#error "Incompatible Centurion version!"
-#endif  // CENTURION_VERSION_NUMBER != CENTURION_MAKE_VERSION_NUMBER(6, 2, 0)
-
-#ifdef _WIN32
-#ifdef RUNE_EXPORT
-#define RUNE_API __declspec(dllexport)
-#else
-#define RUNE_API __declspec(dllimport)
-#endif  // RUNE_EXPORT
-#endif  // _WIN32
-
-#define RUNE_FUNCTION [[nodiscard]] RUNE_API
-
-#endif  // RUNE_API_HPP
-
-// clang-format on
-
-// #include "aliases/delta_time.hpp"
-#ifndef RUNE_ALIASES_DELTA_TIME_HPP
-#define RUNE_ALIASES_DELTA_TIME_HPP
-
-namespace rune {
-
-/// \cond FALSE
-namespace tags {
-struct delta_time_tag;
-}  // namespace tags
-/// \endcond
-
-/// \addtogroup core
-/// \{
-
-/**
- * \def RUNE_DELTA_TIME_UNDERLYING_TYPE
- *
- * \brief The underlying type of the `delta_time` strong type.
- *
- * \note The underlying should be a floating-point type, i.e. `float`, `double` or
- * possibly `long double`.
- */
-#ifndef RUNE_DELTA_TIME_UNDERLYING_TYPE
-#define RUNE_DELTA_TIME_UNDERLYING_TYPE float
-#endif  // RUNE_DELTA_TIME_UNDERLYING_TYPE
-
-/**
- * \brief The type used for delta time values, e.g. in the `tick()` function of game class
- * implementations.
- *
- * \see `RUNE_DELTA_TIME_UNDERLYING_TYPE`
- */
-using delta_time = RUNE_DELTA_TIME_UNDERLYING_TYPE;
-
-/// \} End of group core
-
-}  // namespace rune
-
-#endif  // RUNE_ALIASES_DELTA_TIME_HPP
-
 // #include "aliases/font_id.hpp"
 #ifndef RUNE_ALIASES_FONT_ID_HPP
 #define RUNE_ALIASES_FONT_ID_HPP
@@ -1617,6 +1551,1865 @@ template <typename Key, std::floating_point Precision>
 
 // #include "../aliases/maybe.hpp"
 
+// #include "../core/configuration.hpp"
+#ifndef RUNE_CORE_CONFIGURATION_HPP
+#define RUNE_CORE_CONFIGURATION_HPP
+
+#include <centurion.hpp>  // window, renderer, iarea
+#include <concepts>       // convertible_to
+#include <filesystem>     // path
+#include <string>         // string
+
+// #include "../aliases/integers.hpp"
+#ifndef RUNE_ALIASES_INTEGERS_HPP
+#define RUNE_ALIASES_INTEGERS_HPP
+
+#include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+using usize = std::size_t;
+
+using longlong = long long;
+
+using ushort = unsigned short;
+
+/// Unsigned integer.
+using uint = unsigned;
+
+/// Unsigned long integer.
+using ulong = unsigned long;
+
+/// Used as the argument type to integral literal operators.
+using ulonglong = unsigned long long;
+
+/// 8-bit signed integer.
+using int8 = cen::i8;
+
+/// 16-bit signed integer.
+using int16 = cen::i16;
+
+/// 32-bit signed integer.
+using int32 = cen::i32;
+
+/// 64-bit signed integer.
+using int64 = cen::i64;
+
+/// 8-bit unsigned integer.
+using uint8 = cen::u8;
+
+/// 16-bit unsigned integer.
+using uint16 = cen::u16;
+
+/// 32-bit unsigned integer.
+using uint32 = cen::u32;
+
+/// 64-bit unsigned integer.
+using uint64 = cen::u64;
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_INTEGERS_HPP
+
+// #include "../io/csv.hpp"
+#ifndef RUNE_IO_CSV_HPP
+#define RUNE_IO_CSV_HPP
+
+#include <sstream>  // istringstream
+#include <string>   // string, getline
+#include <utility>  // move
+#include <vector>   // vector
+
+namespace rune {
+
+/**
+ * \brief Parses a string of comma-separated values (CSV).
+ *
+ * \ingroup io
+ *
+ * \param csv the string that holds the comma separated values.
+ *
+ * \return the parsed tokens.
+ *
+ * \since 0.1.0
+ */
+[[nodiscard]] inline auto parse_csv(const std::string& csv) -> std::vector<std::string>
+{
+  std::vector<std::string> tokens;
+
+  std::istringstream stream{csv};
+  std::string token;
+
+  while (std::getline(stream, token, ','))
+  {
+    tokens.push_back(std::move(token));
+    token.clear();
+  }
+
+  return tokens;
+}
+
+}  // namespace rune
+
+#endif  // RUNE_IO_CSV_HPP
+
+// #include "../io/ini.hpp"
+#ifndef RUNE_IO_INI_HPP
+#define RUNE_IO_INI_HPP
+
+#include <algorithm>    // find_if, all_of
+#include <cassert>      // assert
+#include <filesystem>   // path
+#include <fstream>      // ifstream, ofstream
+#include <functional>   // less
+#include <istream>      // istream
+#include <locale>       // locale, isspace, isdigit
+#include <map>          // map
+#include <ostream>      // ostream
+#include <sstream>      // istringstream
+#include <string>       // basic_string, getline, stod, stoul, stoll
+#include <string_view>  // basic_string_view
+#include <utility>      // move
+#include <vector>       // vector
+
+// #include "../aliases/integers.hpp"
+#ifndef RUNE_ALIASES_INTEGERS_HPP
+#define RUNE_ALIASES_INTEGERS_HPP
+
+#include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+using usize = std::size_t;
+
+using longlong = long long;
+
+using ushort = unsigned short;
+
+/// Unsigned integer.
+using uint = unsigned;
+
+/// Unsigned long integer.
+using ulong = unsigned long;
+
+/// Used as the argument type to integral literal operators.
+using ulonglong = unsigned long long;
+
+/// 8-bit signed integer.
+using int8 = cen::i8;
+
+/// 16-bit signed integer.
+using int16 = cen::i16;
+
+/// 32-bit signed integer.
+using int32 = cen::i32;
+
+/// 64-bit signed integer.
+using int64 = cen::i64;
+
+/// 8-bit unsigned integer.
+using uint8 = cen::u8;
+
+/// 16-bit unsigned integer.
+using uint16 = cen::u16;
+
+/// 32-bit unsigned integer.
+using uint32 = cen::u32;
+
+/// 64-bit unsigned integer.
+using uint64 = cen::u64;
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_INTEGERS_HPP
+
+// #include "../aliases/maybe.hpp"
+#ifndef RUNE_ALIASES_MAYBE_HPP
+#define RUNE_ALIASES_MAYBE_HPP
+
+#include <optional>  // optional
+
+namespace rune {
+
+template <typename T>
+using maybe = std::optional<T>;
+
+inline constexpr std::nullopt_t nothing = std::nullopt;
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_MAYBE_HPP
+
+// #include "../core/rune_error.hpp"
+#ifndef RUNE_CORE_RUNE_ERROR_HPP
+#define RUNE_CORE_RUNE_ERROR_HPP
+
+#include <exception>  // exception
+
+// #include "../aliases/str.hpp"
+
+
+namespace rune {
+
+/**
+ * \typedef str
+ *
+ * \brief An alias for a C-style null-terminated string.
+ *
+ * \ingroup core
+ */
+using str = const char*;
+
+}  // namespace rune
+
+
+namespace rune {
+
+/**
+ * \brief The main exception thrown in the library.
+ *
+ * \ingroup core
+ *
+ * \since 0.1.0
+ */
+class rune_error final : public std::exception
+{
+ public:
+  explicit rune_error(const str what) noexcept : m_what{what}
+  {}
+
+  [[nodiscard]] auto what() const noexcept -> str override
+  {
+    return m_what;
+  }
+
+ private:
+  str m_what{"n/a"};
+};
+
+}  // namespace rune
+
+#endif  // RUNE_CORE_RUNE_ERROR_HPP
+
+// #include "ini_section.hpp"
+#ifndef RUNE_IO_INI_SECTION_HPP
+#define RUNE_IO_INI_SECTION_HPP
+
+#include <functional>   // less
+#include <map>          // map
+#include <ostream>      // ostream
+#include <string>       // basic_string
+#include <string_view>  // basic_string_view
+
+// #include "../aliases/integers.hpp"
+
+// #include "../core/rune_error.hpp"
+
+// #include "ini_value.hpp"
+#ifndef RUNE_IO_INI_VALUE_HPP
+#define RUNE_IO_INI_VALUE_HPP
+
+#include <concepts>   // convertible_to, integral, floating_point, same_as
+#include <nenya.hpp>  // strong_type
+#include <ostream>    // ostream
+#include <string>     // basic_string, to_string
+#include <utility>    // move
+#include <variant>    // variant, get, get_if, holds_alternative
+
+// #include "../aliases/integers.hpp"
+
+
+namespace rune {
+
+/// \addtogroup io
+/// \{
+
+/// \name Ini
+/// \{
+
+// clang-format off
+
+/**
+ * \brief Requires that a type is either a signed integer, unsigned integer,
+ * floating-point number or a string.
+ *
+ * \tparam T the type that will be checked.
+ * \tparam Char the character type.
+ *
+ * \since 0.1.0
+ */
+template <typename T, typename Char>
+concept is_ini_value = std::integral<T> ||
+                       std::floating_point<T> ||
+                       std::constructible_from<std::basic_string<Char>, T>;
+
+// clang-format on
+
+/**
+ * \brief Represents a value of an individual ini element.
+ *
+ * \tparam Char the character type that will be used.
+ *
+ * \see `ini_value`
+ * \see `basic_ini`
+ * \see `basic_ini_section`
+ *
+ * \since 0.1.0
+ */
+template <typename Char>
+class basic_ini_value final
+{
+ public:
+  using char_type = Char;
+  using string_type = std::basic_string<char_type>;
+  using int_type = int64;
+  using uint_type = uint64;
+  using float_type = double;
+  using value_type = std::variant<string_type, bool, int_type, uint_type, float_type>;
+
+  /// \name Construction
+  /// \{
+
+  /**
+   * \brief Creates a `basic_ini_value` with an empty string as its value.
+   *
+   * \since 0.1.0
+   */
+  basic_ini_value() = default;
+
+  basic_ini_value(const basic_ini_value&) = default;
+  basic_ini_value(basic_ini_value&&) noexcept = default;
+
+  basic_ini_value& operator=(const basic_ini_value&) = default;
+  basic_ini_value& operator=(basic_ini_value&&) noexcept = default;
+
+  /**
+   * \brief Creates a `basic_ini_value` instance.
+   *
+   * \tparam T the type of the value.
+   *
+   * \param value the value that will be stored.
+   *
+   * \since 0.1.0
+   */
+  template <is_ini_value<char_type> T>
+  /*implicit*/ basic_ini_value(T value)  // NOLINT
+  {
+    assign(std::move(value));
+  }
+
+  /**
+   * \brief Assigns a new value to the instance.
+   *
+   * \tparam T the type of the new value.
+   *
+   * \param value the new value of the `basic_ini_value`.
+   *
+   * \return the `basic_ini_value` instance.
+   *
+   * \since 0.1.0
+   */
+  template <is_ini_value<char_type> T>
+  auto operator=(T value) -> basic_ini_value&
+  {
+    assign(std::move(value));
+    return *this;
+  }
+
+  /// \} End of construction
+
+  /**
+   * \brief Outputs the value to an output stream.
+   *
+   * \param stream the output stream that will be used.
+   *
+   * \since 0.1.0
+   */
+  void dump(std::ostream& stream) const
+  {
+    if (const auto* str = try_get_string())
+    {
+      stream << *str;
+    }
+    else if (const auto* i = try_get_int())
+    {
+      stream << std::to_string(*i);
+    }
+    else if (const auto* u = try_get_uint())
+    {
+      stream << std::to_string(*u) << 'u';
+    }
+    else if (const auto* f = try_get_float())
+    {
+      stream << std::to_string(*f);
+    }
+    else if (const auto* b = try_get_bool())
+    {
+      stream << ((*b) ? "true" : "false");
+    }
+  }
+
+  /**
+   * \brief Returns the underlying representation.
+   *
+   * \return the underlying variant value.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto get() const -> const value_type&
+  {
+    return m_value;
+  }
+
+  /// \name Checked getters
+  /// \{
+
+  /**
+   * \brief Returns the underlying value as the specified type.
+   *
+   * \details This function can be used to safely cast the underlying value to the
+   * specified type, as long as the types are in the same "family". In other words, where
+   * the only difference between the types is the representation range. For example, if
+   * the underlying value is a 64-bit signed integer, it is perfectly valid to cast it to
+   * an `int`, since they are both signed integer types.
+   *
+   * \code{cpp}
+   * rune::ini_value value = 42;  // Signed integer value (stored as 64-bit integer)
+   *
+   * auto i = value.as<int>();  // Fine, underlying type is a signed integer
+   *
+   * auto u = value.as<unsigned>();  // Error, no implicit signed to unsigned conversion
+   * auto f = value.as<float>();     // Error, no implicit integer to float conversion
+   * auto s = value.as<std::string>();  // Error, completely unrelated types
+   * \endcode
+   *
+   * \tparam T the type of the returned value.
+   *
+   * \return the internal value casted to the specified type.
+   *
+   * \throws bad_variant_access if the underlying and specified types aren't related.
+   *
+   * \since 0.1.0
+   */
+  template <is_ini_value<char_type> T>
+  [[nodiscard]] auto as() const -> T
+  {
+    if constexpr (std::same_as<T, bool>)
+    {
+      return std::get<bool>(m_value);
+    }
+    else if constexpr (std::signed_integral<T>)
+    {
+      return static_cast<T>(std::get<int64>(m_value));
+    }
+    else if constexpr (std::unsigned_integral<T>)
+    {
+      return static_cast<T>(std::get<uint64>(m_value));
+    }
+    else if constexpr (std::floating_point<T>)
+    {
+      return static_cast<T>(std::get<double>(m_value));
+    }
+    else
+    {
+      return std::get<string_type>(m_value);
+    }
+  }
+
+  /**
+   * \brief Assigns a value with the underlying value.
+   *
+   * \details The value conversion behavior of this function is identical to those of
+   * the `as()` function.
+   *
+   * \code{cpp}
+   * rune::ini_value value = "foo";
+   *
+   * std::string str;
+   * value.get_to(str);  // Fine, the underlying type is a string
+   *
+   * int i{};
+   * value.get_to(i);  // Error, cannot assign integer with string
+   * \endcode
+   *
+   * \param[out] value a reference to the value that will be assigned.
+   *
+   * \throws bad_variant_access if there is a type mismatch.
+   *
+   * \since 0.1.0
+   */
+  void get_to(string_type& value) const
+  {
+    value = std::get<string_type>(m_value);
+  }
+
+  /// \copydoc get_to()
+  void get_to(bool& value) const
+  {
+    value = std::get<bool>(m_value);
+  }
+
+  /// \copydoc get_to()
+  void get_to(int8& value) const
+  {
+    value = static_cast<int8>(std::get<int_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(int16& value) const
+  {
+    value = static_cast<int16>(std::get<int_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(int32& value) const
+  {
+    value = static_cast<int32>(std::get<int_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(int64& value) const
+  {
+    value = std::get<int64>(m_value);
+  }
+
+  /// \copydoc get_to()
+  void get_to(uint8& value) const
+  {
+    value = static_cast<uint8>(std::get<uint_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(uint16& value) const
+  {
+    value = static_cast<uint16>(std::get<uint_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(uint32& value) const
+  {
+    value = static_cast<uint32>(std::get<uint_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(uint64& value) const
+  {
+    value = static_cast<uint64>(std::get<uint_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(float& value) const
+  {
+    value = static_cast<float>(std::get<float_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(double& value) const
+  {
+    value = static_cast<double>(std::get<float_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(long double& value) const
+  {
+    value = static_cast<long double>(std::get<float_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  template <is_ini_value<char_type> T, typename Tag, nenya::conversion Conv>
+  void get_to(nenya::strong_type<T, Tag, Conv>& value) const
+  {
+    using strong_type = nenya::strong_type<T, Tag, Conv>;
+
+    if constexpr (std::same_as<T, bool>)
+    {
+      value = strong_type{static_cast<T>(std::get<bool>(m_value))};
+    }
+    else if constexpr (std::signed_integral<T>)
+    {
+      value = strong_type{static_cast<T>(std::get<int_type>(m_value))};
+    }
+    else if constexpr (std::unsigned_integral<T>)
+    {
+      value = strong_type{static_cast<T>(std::get<uint_type>(m_value))};
+    }
+    else if constexpr (std::floating_point<T>)
+    {
+      value = strong_type{static_cast<T>(std::get<float_type>(m_value))};
+    }
+    else /*if constexpr (std::convertible_to<T, string_type>)*/
+    {
+      value = strong_type{static_cast<T>(std::get<string_type>(m_value))};
+    }
+  }
+
+  /// \} End of checked getters
+
+  /// \name Unchecked getters
+  /// \{
+
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying value; null if the underlying value isn't a
+   * string.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_string() const noexcept -> const string_type*
+  {
+    return std::get_if<string_type>(&m_value);
+  }
+
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying value; null if the underlying value isn't an
+   * integer.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_int() const noexcept -> const int_type*
+  {
+    return std::get_if<int_type>(&m_value);
+  }
+
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying value; null if the underlying value isn't an
+   * unsigned integer.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_uint() const noexcept -> const uint_type*
+  {
+    return std::get_if<uint_type>(&m_value);
+  }
+
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying value; null if the underlying value isn't a
+   * floating-point number.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_float() const noexcept -> const float_type*
+  {
+    return std::get_if<float_type>(&m_value);
+  }
+
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying boolean value; null if the underlying value isn't
+   * a boolean.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_bool() const noexcept -> const bool*
+  {
+    return std::get_if<bool>(&m_value);
+  }
+
+  /// \} End of unchecked getters
+
+  /// \name Type indicators
+  /// \{
+
+  /**
+   * \brief Indicates whether or not the value is a string.
+   *
+   * \return `true` if the value is a string; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto is_string() const noexcept -> bool
+  {
+    return std::holds_alternative<string_type>(m_value);
+  }
+
+  /**
+   * \brief Indicates whether or not the value is a signed integer.
+   *
+   * \return `true` if the value is a signed integer; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto is_int() const noexcept -> bool
+  {
+    return std::holds_alternative<int_type>(m_value);
+  }
+
+  /**
+   * \brief Indicates whether or not the value is an unsigned integer.
+   *
+   * \return `true` if the value is an unsigned integer; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto is_uint() const noexcept -> bool
+  {
+    return std::holds_alternative<uint_type>(m_value);
+  }
+
+  /**
+   * \brief Indicates whether or not the value is a floating-point number.
+   *
+   * \return `true` if the value is a floating-point number; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto is_float() const noexcept -> bool
+  {
+    return std::holds_alternative<float_type>(m_value);
+  }
+
+  /**
+   * \brief Indicates whether or not the value is a boolean.
+   *
+   * \return `true` if the value is a boolean; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto is_bool() const noexcept -> bool
+  {
+    return std::holds_alternative<bool>(m_value);
+  }
+
+  /// \} End of type indicators
+
+  [[nodiscard]] bool operator==(const basic_ini_value&) const = default;
+
+ private:
+  value_type m_value;
+
+  template <is_ini_value<char_type> T>
+  void assign(T value)
+  {
+    if constexpr (std::same_as<T, bool>)
+    {
+      m_value.template emplace<bool>(std::move(value));
+    }
+    else if constexpr (std::signed_integral<T>)
+    {
+      m_value.template emplace<int_type>(std::move(value));
+    }
+    else if constexpr (std::unsigned_integral<T>)
+    {
+      m_value.template emplace<uint_type>(std::move(value));
+    }
+    else if constexpr (std::floating_point<T>)
+    {
+      m_value.template emplace<float_type>(std::move(value));
+    }
+    else
+    {
+      m_value.template emplace<string_type>(std::move(value));
+    }
+  }
+};
+
+/**
+ * \brief Alias for the most common use case of `basic_ini_value`.
+ *
+ * \since 0.1.0
+ */
+using ini_value = basic_ini_value<char>;
+
+/**
+ * \brief Prints a textual representation of an ini value.
+ *
+ * \tparam Char the used character type.
+ *
+ * \param stream the output stream that will be used.
+ * \param value the ini value that will be printed.
+ *
+ * \return the used stream.
+ *
+ * \since 0.1.0
+ */
+template <typename Char>
+auto operator<<(std::ostream& stream, const basic_ini_value<Char>& value) -> std::ostream&
+{
+  value.dump(stream);
+  return stream;
+}
+
+/// \} End of ini
+
+/// \} End of group io
+
+}  // namespace rune
+
+#endif  // RUNE_IO_INI_VALUE_HPP
+
+
+namespace rune {
+
+/// \addtogroup io
+/// \{
+
+/// \name Ini
+/// \{
+
+/**
+ * \brief Represents the syntax used by an ini file.
+ *
+ * \tparam Char the character type that is used.
+ *
+ * \since 0.1.0
+ */
+template <typename Char>
+struct ini_format final
+{
+  using value_type = Char;
+
+  value_type section_start = '[';  ///< Token introducing a section name.
+  value_type section_end = ']';    ///< Token that ends a section name.
+  value_type assign = '=';         ///< Assignment operator token.
+  value_type comment = ';';        ///< Line comment token.
+};
+
+/**
+ * \brief Represents a section in an ini file.
+ *
+ * \tparam Char the character type that is used.
+ *
+ * \see `ini_section`
+ * \see `basic_ini`
+ * \see `basic_ini_value`
+ *
+ * \since 0.1.0
+ */
+template <typename Char>
+class basic_ini_section final
+{
+ public:
+  using char_type = Char;
+  using elem_type = basic_ini_value<char_type>;
+  using string_type = std::basic_string<char_type>;
+  using string_view_type = std::basic_string_view<char_type>;
+  using format_type = ini_format<char_type>;
+  using storage_type = std::map<string_type, elem_type, std::less<>>;
+  using value_type = typename storage_type::value_type;
+  using iterator = typename storage_type::iterator;
+  using const_iterator = typename storage_type::const_iterator;
+  using size_type = usize;
+
+  /**
+   * \brief Outputs the contents of the section to an output stream.
+   *
+   * \param stream the output stream that will be used.
+   * \param format the syntax that will be used.
+   *
+   * \since 0.1.0
+   */
+  void dump(std::ostream& stream, const format_type& format) const
+  {
+    for (const auto& [key, value] : m_entries)
+    {
+      stream << key << format.assign << value << '\n';
+    }
+
+    stream << '\n';
+  }
+
+  /**
+   * \brief Removes an element from the section, if it exists.
+   *
+   * \param element the name of the element that will be removed.
+   *
+   * \return `true` if an element was removed; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  auto erase(const string_view_type element) -> bool
+  {
+    if (const auto it = m_entries.find(element); it != m_entries.end())
+    {
+      m_entries.erase(it);
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  /**
+   * \brief Retrieves an element from the section or default-constructs one if it doesn't
+   * already exist.
+   *
+   * \param element the name of the element that will be retrieved.
+   *
+   * \return the value that was either found or created.
+   *
+   * \since 0.1.0
+   */
+  auto get_or_emplace(const string_view_type element) -> elem_type&
+  {
+    if (const auto it = m_entries.find(element); it != m_entries.end())
+    {
+      return it->second;
+    }
+    else
+    {
+      return m_entries[string_type{element}];
+    }
+  }
+
+  /// \copydoc get_or_emplace()
+  auto operator[](const string_view_type element) -> elem_type&
+  {
+    return get_or_emplace(element);
+  }
+
+  /**
+   * \brief Returns the value associated with the specified name.
+   *
+   * \param element the name of the value to obtain.
+   *
+   * \return the ini value associated with the specified name.
+   *
+   * \throws rune_error if the section doesn't contain the specified value.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto at(const string_view_type element) -> elem_type&
+  {
+    if (const auto it = m_entries.find(element); it != m_entries.end())
+    {
+      return it->second;
+    }
+    else
+    {
+      throw rune_error{"basic_ini_section::at(): element does not exist!"};
+    }
+  }
+
+  /// \copydoc at()
+  [[nodiscard]] auto at(const string_view_type element) const -> const elem_type&
+  {
+    if (const auto it = m_entries.find(element); it != m_entries.end())
+    {
+      return it->second;
+    }
+    else
+    {
+      throw rune_error{"basic_ini_section::at(): element does not exist!"};
+    }
+  }
+
+  /**
+   * \brief Indicates whether or not the section contains a value with the specified name.
+   *
+   * \param element the name of the element to look for.
+   *
+   * \return `true` if the section contains a value with the specified name; `false`
+   * otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto contains(const string_view_type element) const -> bool
+  {
+    return m_entries.find(element) != m_entries.end();
+  }
+
+  /**
+   * \brief Returns the amount of values present in the section.
+   *
+   * \return the amount of values in the section.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto size() const noexcept -> size_type
+  {
+    return m_entries.size();
+  }
+
+  /**
+   * \brief Indicates whether or not the section is empty.
+   *
+   * \return `true` if the section is empty; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto empty() const noexcept -> bool
+  {
+    return m_entries.empty();
+  }
+
+  /**
+   * \brief Returns an iterator to the beginning of the section.
+   *
+   * \return an iterator to the beginning.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto begin() noexcept -> iterator
+  {
+    return m_entries.begin();
+  }
+
+  /**
+   * \brief Returns a const iterator to the beginning of the section.
+   *
+   * \return a const iterator to the beginning.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto begin() const noexcept -> const_iterator
+  {
+    return m_entries.begin();
+  }
+
+  /**
+   * \brief Returns an iterator to the end of the section.
+   *
+   * \return an iterator to the end.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto end() noexcept -> iterator
+  {
+    return m_entries.end();
+  }
+
+  /**
+   * \brief Returns a const iterator to the end of the section.
+   *
+   * \return a const iterator to the end.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto end() const noexcept -> const_iterator
+  {
+    return m_entries.end();
+  }
+
+ private:
+  storage_type m_entries;
+};
+
+/**
+ * \brief Alias for the most common use case of `basic_ini_section`.
+ *
+ * \since 0.1.0
+ */
+using ini_section = basic_ini_section<char>;
+
+/// \} End of ini
+
+/// \} End of group IO
+
+}  // namespace rune
+
+#endif  // RUNE_IO_INI_SECTION_HPP
+
+// #include "ini_value.hpp"
+
+
+namespace rune {
+
+/// \addtogroup io
+/// \{
+
+/// \name Ini
+/// \{
+
+/**
+ * \brief Represents an ini file.
+ *
+ * \see `ini_file`
+ * \see `basic_ini_section`
+ * \see `basic_ini_value`
+ * \see `write_ini()`
+ * \see `read_ini()`
+ * \see `operator<<(std::ostream&, const basic_ini&)`
+ * \see `operator>>(std::istream&, basic_ini&)`
+ *
+ * \since 0.1.0
+ */
+template <typename Char>
+class basic_ini final
+{
+ public:
+  using char_type = Char;
+  using string_type = std::basic_string<char_type>;
+  using string_view_type = std::basic_string_view<char_type>;
+  using section_type = basic_ini_section<char_type>;
+  using format_type = ini_format<char_type>;
+  using storage_type = std::map<string_type, section_type, std::less<>>;
+  using iterator = typename storage_type::iterator;
+  using const_iterator = typename storage_type::const_iterator;
+  using size_type = usize;
+
+  /**
+   * \brief Creates an empty ini file.
+   *
+   * \param format optional custom format.
+   *
+   * \since 0.1.0
+   */
+  explicit basic_ini(const format_type format = format_type{}) : m_format{format}
+  {}
+
+  /**
+   * \brief Writes the contents of the file to a stream.
+   *
+   * \param stream the output stream that will be used.
+   *
+   * \since 0.1.0
+   */
+  void dump(std::ostream& stream) const
+  {
+    for (const auto& [name, section] : m_sections)
+    {
+      stream << m_format.section_start << name << m_format.section_end << '\n';
+      section.dump(stream, m_format);
+    }
+  }
+
+  /**
+   * \brief Parses an ini file based on an input stream.
+   *
+   * \param stream the input stream that will be used.
+   *
+   * \since 0.1.0
+   */
+  void read(std::istream& stream)
+  {
+    string_type line;
+    string_type section;
+
+    line.reserve(32);
+    section.reserve(32);
+
+    while (std::getline(stream, line))
+    {
+      trim_left(line);
+      trim_right(line);
+      parse_line(line, section);
+    }
+  }
+
+  /**
+   * \brief Adds or replaces a section.
+   *
+   * \param section the name of the section that will be added or replaced.
+   *
+   * \return the new section.
+   *
+   * \since 0.1.0
+   */
+  auto emplace_or_replace(string_type section) -> section_type&
+  {
+    const auto [it, inserted] =
+        m_sections.insert_or_assign(std::move(section), section_type{});
+    return it->second;
+  }
+
+  /**
+   * \brief Retrieves a section from the file or default-constructs one if it doesn't
+   * already exist.
+   *
+   * \param section the name of the section that will be retrieved.
+   *
+   * \return the section that was either found or created.
+   *
+   * \since 0.1.0
+   */
+  auto get_or_emplace(const string_view_type section) -> section_type&
+  {
+    if (const auto it = m_sections.find(section); it != m_sections.end())
+    {
+      return it->second;
+    }
+    else
+    {
+      auto [iterator, inserted] = m_sections.try_emplace(string_type{section});
+      assert(inserted);
+
+      return iterator->second;
+    }
+  }
+
+  /// \copydoc get_or_emplace()
+  auto operator[](const string_view_type section) -> section_type&
+  {
+    return get_or_emplace(section);
+  }
+
+  /**
+   * \brief Removes a section from the file, if it exists.
+   *
+   * \param section the name of the section that will be removed.
+   *
+   * \return `true` if a section was removed; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  auto erase(const string_view_type section) -> bool
+  {
+    if (const auto it = m_sections.find(section); it != m_sections.end())
+    {
+      m_sections.erase(it);
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  /**
+   * \brief Returns the section associated with the specified name.
+   *
+   * \param section the name of the section to retrieve.
+   *
+   * \return the found section.
+   *
+   * \throws rune_error if there is no section with the specified name.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto at(const string_view_type section) -> section_type&
+  {
+    if (const auto it = m_sections.find(section); it != m_sections.end())
+    {
+      return it->second;
+    }
+    else
+    {
+      throw rune_error{"basic_ini::at(): section does not exist!"};
+    }
+  }
+
+  /// \copydoc at()
+  [[nodiscard]] auto at(const string_view_type section) const -> const section_type&
+  {
+    if (const auto it = m_sections.find(section); it != m_sections.end())
+    {
+      return it->second;
+    }
+    else
+    {
+      throw rune_error{"basic_ini::at(): section does not exist!"};
+    }
+  }
+
+  /**
+   * \brief Indicates whether or not the specified section exists.
+   *
+   * \param section the name of the section to look for.
+   *
+   * \return `true` if the specified section exists; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto contains(const string_view_type section) const -> bool
+  {
+    return m_sections.find(section) != m_sections.end();
+  }
+
+  /**
+   * \brief Returns the number of sections stored in the ini file.
+   *
+   * \return the number of sections.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto size() const noexcept -> size_type
+  {
+    return m_sections.size();
+  }
+
+  /**
+   * \brief Indicates whether or not there are no sections.
+   *
+   * \return `true` if there are no sections; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto empty() const noexcept -> bool
+  {
+    return m_sections.empty();
+  }
+
+  /**
+   * \brief Indicates whether or not the parsed contents are valid.
+   *
+   * \return `true` if there are no errors associated with the file; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] explicit operator bool() const noexcept
+  {
+    return m_errors.empty();
+  }
+
+  /**
+   * \brief Returns an iterator to the beginning of the instance.
+   *
+   * \return an iterator to the beginning.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto begin() noexcept -> iterator
+  {
+    return m_sections.begin();
+  }
+
+  /// \copydoc begin()
+  [[nodiscard]] auto begin() const noexcept -> const_iterator
+  {
+    return m_sections.begin();
+  }
+
+  /**
+   * \brief Returns an iterator to the end of the instance.
+   *
+   * \return an iterator to the end.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto end() noexcept -> iterator
+  {
+    return m_sections.end();
+  }
+
+  /// \copydoc end()
+  [[nodiscard]] auto end() const noexcept -> const_iterator
+  {
+    return m_sections.end();
+  }
+
+ private:
+  storage_type m_sections;
+  std::vector<string_type> m_errors;
+  format_type m_format;
+
+  template <typename T>
+  [[nodiscard]] static auto find_first_non_space(const T begin, const T end)
+  {
+    return std::find_if(begin, end, [](const char_type ch) {
+      return !std::isspace(ch, std::locale::classic());
+    });
+  }
+
+  // Remove leading whitespace
+  void trim_left(string_type& line)
+  {
+    line.erase(line.begin(), find_first_non_space(line.begin(), line.end()));
+  }
+
+  // Remove any trailing whitespace
+  void trim_right(string_type& line)
+  {
+    const auto it = find_first_non_space(line.rbegin(), line.rend());
+    line.erase(it.base(), line.end());
+  }
+
+  [[nodiscard]] static auto is_float(const string_type& str) -> bool
+  {
+    // Require float values to feature dot
+    if (str.find('.') == string_type::npos)
+    {
+      return false;
+    }
+
+    std::istringstream stream{str};
+
+    double value{};
+    stream >> value;
+
+    return stream.eof() && !stream.fail();
+  }
+
+  [[nodiscard]] static auto is_unsigned(const string_type& str) -> bool
+  {
+    return !str.starts_with('-') && str.ends_with('u') &&
+           std::all_of(str.begin(), str.end() - 1, [](const char_type ch) {
+             return std::isdigit(ch, std::locale::classic());
+           });
+  }
+
+  [[nodiscard]] static auto is_signed(const string_type& str) -> bool
+  {
+    if (str.starts_with('-'))
+    {
+      // Ignore leading minus
+      return std::all_of(str.begin() + 1, str.end(), [](const char_type ch) {
+        return std::isdigit(ch, std::locale::classic());
+      });
+    }
+    else
+    {
+      return std::ranges::all_of(str, [](const char_type ch) {
+        return std::isdigit(ch, std::locale::classic());
+      });
+    }
+  }
+
+  auto parse_variable(const string_type& line, const string_type& sectionName) -> bool
+  {
+    const auto assignment = std::ranges::find_if(line, [this](const char_type character) {
+      return character == m_format.assign;
+    });
+
+    string_type variable{line.begin(), assignment};
+    string_type value{assignment + 1, line.end()};
+
+    trim_right(variable);
+    trim_left(variable);
+
+    auto& section = m_sections[sectionName];
+    if (!section.contains(variable))
+    {
+      if (value == "true")
+      {
+        section[std::move(variable)] = true;
+      }
+      else if (value == "false")
+      {
+        section[std::move(variable)] = false;
+      }
+      else if (is_float(value))
+      {
+        section[std::move(variable)] = std::stod(value);
+      }
+      else if (is_unsigned(value))
+      {
+        section[std::move(variable)] = std::stoul(value);
+      }
+      else if (is_signed(value))
+      {
+        section[std::move(variable)] = std::stoll(value);
+      }
+      else
+      {
+        section[std::move(variable)] = std::move(value);
+      }
+
+      return true;
+    }
+    else
+    {
+      m_errors.push_back(line);
+      return false;
+    }
+  }
+
+  [[nodiscard]] auto parse_section_name(const string_type& line) -> maybe<string_type>
+  {
+    if (line.back() == m_format.section_end)
+    {
+      return line.substr(1, line.length() - 2);
+    }
+    else
+    {
+      m_errors.push_back(line);
+      return nothing;
+    }
+  }
+
+  void parse_line(const string_type& line, string_type& section)
+  {
+    if (line.empty())
+    {
+      return;
+    }
+
+    const auto& character = line.front();
+
+    if (character == m_format.comment)
+    {
+      return;
+    }
+
+    if (character == m_format.section_start)
+    {
+      if (const auto name = parse_section_name(line))
+      {
+        section = *name;
+      }
+    }
+    else if (parse_variable(line, section))
+    {}
+    else
+    {
+      m_errors.push_back(line);
+    }
+  }
+};
+
+/**
+ * \brief Alias for the most common use case of `basic_ini`.
+ *
+ * \since 0.1.0
+ */
+using ini_file = basic_ini<char>;
+
+/**
+ * \brief Writes a `basic_ini` instance to an output stream.
+ *
+ * \tparam Char the character type used.
+ *
+ * \param stream the output stream that will be used.
+ * \param ini the `basic_ini` instance that will be written to the stream.
+ *
+ * \return the used stream.
+ *
+ * \see `basic_ini::dump()`
+ */
+template <typename Char>
+auto operator<<(std::ostream& stream, const basic_ini<Char>& ini) -> std::ostream&
+{
+  ini.dump(stream);
+  return stream;
+}
+
+/**
+ * \brief Parses an ini file from an input stream.
+ *
+ * \tparam Char the character type used.
+ *
+ * \param stream the input stream.
+ * \param[out] ini the `basic_ini` instance that will be written to.
+ *
+ * \return the read input stream.
+ *
+ * \see `basic_ini::read()`
+ * \see `read_ini()`
+ */
+template <typename Char>
+auto operator>>(std::istream& stream, basic_ini<Char>& ini) -> std::istream&
+{
+  ini.read(stream);
+  return stream;
+}
+
+/**
+ * \brief Saves an Ini file to the specified file path.
+ *
+ * \tparam Char the character type used.
+ *
+ * \param ini the Ini file that will be saved.
+ * \param path the file path of the ini file.
+ *
+ * \since 0.1.0
+ */
+template <typename Char>
+void write_ini(const basic_ini<Char>& ini, const std::filesystem::path& path)
+{
+  std::ofstream stream{path};
+  stream << ini;
+}
+
+/**
+ * \brief Parses an ini file and returns its contents.
+ *
+ * \tparam Char the character type used.
+ *
+ * \param path the file path of the ini file.
+ *
+ * \return the parsed ini file; `nothing` if there were parsing errors.
+ *
+ * \since 0.1.0
+ */
+template <typename Char = char>
+[[nodiscard]] auto read_ini(const std::filesystem::path& path) -> maybe<basic_ini<Char>>
+{
+  std::ifstream stream{path};
+
+  ini_file file;
+  stream >> file;
+
+  if (file)
+  {
+    return file;
+  }
+  else
+  {
+    return nothing;
+  }
+}
+
+/// \} End of ini
+
+/// \} End of group io
+
+}  // namespace rune
+
+#endif  // RUNE_IO_INI_HPP
+
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+/**
+ * \struct configuration
+ *
+ * \brief Provides configuration options for different engine aspects.
+ *
+ * \see `engine`
+ *
+ * \since 0.1.0
+ */
+struct configuration final
+{
+  std::string window_title;
+  cen::iarea window_size;
+
+  uint32 renderer_flags;
+  cen::iarea logical_size;
+
+  double engine_max_tick_rate;
+  int engine_max_frames_per_tick;
+
+  usize aabb_default_capacity;
+
+  float ui_row_size;
+  float ui_column_size;
+};
+
+/// \name Configuration
+/// \{
+
+[[nodiscard]] inline auto get_default_cfg() -> configuration
+{
+  return {.window_title = "Rune",
+          .window_size = cen::window::default_size(),
+          .renderer_flags = cen::renderer::default_flags(),
+          .logical_size = {0, 0},
+          .engine_max_tick_rate = 120.0,
+          .engine_max_frames_per_tick = 5,
+          .aabb_default_capacity = 64u,
+          .ui_row_size = 10.0f,
+          .ui_column_size = 10.0f};
+}
+
+[[nodiscard]] inline auto get_cfg() -> configuration&
+{
+  static auto cfg = get_default_cfg();
+  return cfg;
+}
+
+[[nodiscard]] inline auto get_window_title() -> const std::string&
+{
+  return get_cfg().window_title;
+}
+
+[[nodiscard]] inline auto get_window_size() -> cen::iarea
+{
+  return get_cfg().window_size;
+}
+
+[[nodiscard]] inline auto get_logical_size() -> cen::iarea
+{
+  return get_cfg().logical_size;
+}
+
+[[nodiscard]] inline auto get_renderer_flags() -> uint32
+{
+  return get_cfg().renderer_flags;
+}
+
+[[nodiscard]] inline auto get_engine_max_tick_rate() -> double
+{
+  return get_cfg().engine_max_tick_rate;
+}
+
+[[nodiscard]] inline auto get_engine_max_frames_per_tick() -> int
+{
+  return get_cfg().engine_max_frames_per_tick;
+}
+
+[[nodiscard]] inline auto get_aabb_default_capacity() -> usize
+{
+  return get_cfg().aabb_default_capacity;
+}
+
+[[nodiscard]] inline auto get_ui_row_size() -> float
+{
+  return get_cfg().ui_row_size;
+}
+
+[[nodiscard]] inline auto get_ui_column_size() -> float
+{
+  return get_cfg().ui_column_size;
+}
+
+[[nodiscard]] inline auto parse_configuration(const std::filesystem::path& path)
+    -> configuration
+{
+  auto cfg = get_default_cfg();
+
+  const auto ini = read_ini(path);
+  if (!ini)
+  {
+    return cfg;
+  }
+
+  if (ini->contains("Engine"))
+  {
+    const auto engine = ini->at("Engine");
+
+    if (engine.contains("MaxTickRate"))
+    {
+      engine.at("MaxTickRate").get_to(cfg.engine_max_tick_rate);
+    }
+
+    if (engine.contains("MaxFramesPerTick"))
+    {
+      engine.at("MaxFramesPerTick").get_to(cfg.engine_max_frames_per_tick);
+    }
+  }
+
+  if (ini->contains("Window"))
+  {
+    const auto& window = ini->at("Window");
+
+    if (window.contains("WindowTitle"))
+    {
+      window.at("WindowTitle").get_to(cfg.window_title);
+    }
+
+    if (window.contains("WindowWidth"))
+    {
+      window.at("WindowWidth").get_to(cfg.window_size.width);
+    }
+
+    if (window.contains("WindowHeight"))
+    {
+      window.at("WindowHeight").get_to(cfg.window_size.height);
+    }
+  }
+
+  if (ini->contains("Graphics"))
+  {
+    const auto& graphics = ini->at("Graphics");
+
+    if (graphics.contains("RendererFlags"))
+    {
+      if (const auto flags = graphics.at("RendererFlags").as<std::string>();
+          flags == "default")
+      {
+        cfg.renderer_flags = cen::renderer::default_flags();
+      }
+      else
+      {
+        cfg.renderer_flags = 0;
+        for (const auto& token : parse_csv(flags))
+        {
+          if (token == "accelerated")
+          {
+            cfg.renderer_flags |= cen::renderer::accelerated;
+          }
+          else if (token == "vsync")
+          {
+            cfg.renderer_flags |= cen::renderer::vsync;
+          }
+          else if (token == "target_textures")
+          {
+            cfg.renderer_flags |= cen::renderer::target_textures;
+          }
+          else if (token == "software")
+          {
+            cfg.renderer_flags |= cen::renderer::software;
+          }
+        }
+      }
+    }
+
+    if (graphics.contains("LogicalWidth"))
+    {
+      graphics.at("LogicalWidth").get_to(cfg.logical_size.width);
+    }
+
+    if (graphics.contains("LogicalHeight"))
+    {
+      graphics.at("LogicalHeight").get_to(cfg.logical_size.height);
+    }
+  }
+
+  if (ini->contains("AABB"))
+  {
+    const auto& aabb = ini->at("AABB");
+
+    if (aabb.contains("TreeDefaultCapacity"))
+    {
+      aabb.at("TreeDefaultCapacity").get_to(cfg.aabb_default_capacity);
+    }
+  }
+
+  if (ini->contains("UI"))
+  {
+    const auto& ui = ini->at("UI");
+
+    if (ui.contains("MenuRowSize"))
+    {
+      ui.at("MenuRowSize").get_to(cfg.ui_row_size);
+    }
+
+    if (ui.contains("MenuColumnSize"))
+    {
+      ui.at("MenuColumnSize").get_to(cfg.ui_column_size);
+    }
+  }
+
+  return cfg;
+}
+
+inline void load_configuration(const std::filesystem::path& path)
+{
+  get_cfg() = parse_configuration(path);
+}
+
+inline void save_configuration(const std::filesystem::path& path)
+{
+  const auto& cfg = get_cfg();
+
+  ini_file ini;
+  ini["Graphics"]["RendererFlags"] = cfg.renderer_flags;
+  ini["Graphics"]["LogicalWidth"] = cfg.logical_size.width;
+  ini["Graphics"]["LogicalHeight"] = cfg.logical_size.height;
+  ini["Window"]["WindowTitle"] = cfg.window_title;
+  ini["Window"]["WindowWidth"] = cfg.window_size.width;
+  ini["Window"]["WindowHeight"] = cfg.window_size.height;
+  ini["Engine"]["MaxTickRate"] = cfg.engine_max_tick_rate;
+  ini["Engine"]["MaxFramesPerTick"] = cfg.engine_max_frames_per_tick;
+  ini["AABB"]["TreeDefaultCapacity"] = cfg.aabb_default_capacity;
+  ini["UI"]["RowSize"] = cfg.ui_row_size;
+  ini["UI"]["ColumnSize"] = cfg.ui_column_size;
+
+  write_ini(ini, path);
+}
+
+/// \} End of configuration
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_CORE_CONFIGURATION_HPP
+
 // #include "../math/max.hpp"
 
 // #include "../math/min.hpp"
@@ -1765,38 +3558,6 @@ namespace rune {
 /// \{
 
 /**
- * \def RUNE_AABB_TREE_DEFAULT_CAPACITY
- *
- * \brief The default capacity of entries in AABB trees.
- *
- * \note This macro should be expand to an integer value.
- *
- * \see `aabb_tree`
- */
-#ifndef RUNE_AABB_TREE_DEFAULT_CAPACITY
-#define RUNE_AABB_TREE_DEFAULT_CAPACITY 64
-#endif  // RUNE_AABB_TREE_DEFAULT_CAPACITY
-
-/**
- * \def RUNE_AABB_TREE_QUERY_BUFFER_SIZE
- *
- * \brief The default stack buffer size when looking for collision candidates (with
- * `aabb_tree::query()`), in bytes.
- *
- * \note This macro should be expand to an integer value.
- *
- * \see `aabb_tree`
- */
-#ifndef RUNE_AABB_TREE_QUERY_BUFFER_SIZE
-#define RUNE_AABB_TREE_QUERY_BUFFER_SIZE 256
-#endif  // RUNE_AABB_TREE_QUERY_BUFFER_SIZE
-
-// clang-format off
-inline constexpr usize aabb_tree_default_capacity = RUNE_AABB_TREE_DEFAULT_CAPACITY;
-inline constexpr usize aabb_tree_query_buffer_size = RUNE_AABB_TREE_QUERY_BUFFER_SIZE;
-// clang-format on
-
-/**
  * \class aabb_tree
  *
  * \brief An implementation of an AABB tree, intended to be used for efficient collision
@@ -1829,8 +3590,7 @@ inline constexpr usize aabb_tree_query_buffer_size = RUNE_AABB_TREE_QUERY_BUFFER
  * \tparam Key the type of the keys associated with tree entries.
  * \tparam Precision the floating-point type used, e.g. by stored vectors.
  *
- * \see `RUNE_AABB_TREE_DEFAULT_CAPACITY`
- * \see `RUNE_AABB_TREE_QUERY_BUFFER_SIZE`
+ * \since 0.1.0
  */
 template <typename Key, std::floating_point Precision = float>
 class aabb_tree final
@@ -1849,8 +3609,7 @@ class aabb_tree final
   /// \name Construction
   /// \{
 
-  explicit aabb_tree(const size_type capacity = aabb_tree_default_capacity)
-      : m_nodeCapacity{capacity}
+  explicit aabb_tree(const size_type capacity) : m_nodeCapacity{capacity}
   {
     assert(!m_root);
     assert(m_nodeCount == 0);
@@ -1859,6 +3618,9 @@ class aabb_tree final
     resize_to_match_node_capacity(0);
     assert(m_nextFreeIndex == 0);
   }
+
+  explicit aabb_tree() : aabb_tree{get_aabb_default_capacity()}
+  {}
 
   /// \} End of construction
 
@@ -2216,8 +3978,7 @@ class aabb_tree final
   /// \name Collision queries
   /// \{
 
-  template <size_type BufferSize = aabb_tree_query_buffer_size,
-            std::invocable<key_type> T>
+  template <size_type BufferSize = 256, std::invocable<key_type> T>
   void query(const key_type& key, T&& callable) const
   {
     if (const auto it = m_indices.find(key); it != m_indices.end())
@@ -2268,8 +4029,7 @@ class aabb_tree final
     }
   }
 
-  template <size_type BufferSize = aabb_tree_query_buffer_size,
-            std::output_iterator<key_type> T>
+  template <size_type BufferSize = 256, std::output_iterator<key_type> T>
   void query(const key_type& key, T iterator) const
   {
     query<BufferSize>(key, [&](const key_type& key) {
@@ -3033,9 +4793,13 @@ using str = const char*;
 
 namespace rune {
 
-/// \addtogroup core
-/// \{
-
+/**
+ * \brief The main exception thrown in the library.
+ *
+ * \ingroup core
+ *
+ * \since 0.1.0
+ */
 class rune_error final : public std::exception
 {
  public:
@@ -3050,8 +4814,6 @@ class rune_error final : public std::exception
  private:
   str m_what{"n/a"};
 };
-
-/// \} End of group core
 
 }  // namespace rune
 
@@ -3798,6 +5560,1865 @@ namespace rune {
 
 #endif  // RUNE_CORE_COMPILER_HPP
 
+// #include "core/configuration.hpp"
+#ifndef RUNE_CORE_CONFIGURATION_HPP
+#define RUNE_CORE_CONFIGURATION_HPP
+
+#include <centurion.hpp>  // window, renderer, iarea
+#include <concepts>       // convertible_to
+#include <filesystem>     // path
+#include <string>         // string
+
+// #include "../aliases/integers.hpp"
+#ifndef RUNE_ALIASES_INTEGERS_HPP
+#define RUNE_ALIASES_INTEGERS_HPP
+
+#include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+using usize = std::size_t;
+
+using longlong = long long;
+
+using ushort = unsigned short;
+
+/// Unsigned integer.
+using uint = unsigned;
+
+/// Unsigned long integer.
+using ulong = unsigned long;
+
+/// Used as the argument type to integral literal operators.
+using ulonglong = unsigned long long;
+
+/// 8-bit signed integer.
+using int8 = cen::i8;
+
+/// 16-bit signed integer.
+using int16 = cen::i16;
+
+/// 32-bit signed integer.
+using int32 = cen::i32;
+
+/// 64-bit signed integer.
+using int64 = cen::i64;
+
+/// 8-bit unsigned integer.
+using uint8 = cen::u8;
+
+/// 16-bit unsigned integer.
+using uint16 = cen::u16;
+
+/// 32-bit unsigned integer.
+using uint32 = cen::u32;
+
+/// 64-bit unsigned integer.
+using uint64 = cen::u64;
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_INTEGERS_HPP
+
+// #include "../io/csv.hpp"
+#ifndef RUNE_IO_CSV_HPP
+#define RUNE_IO_CSV_HPP
+
+#include <sstream>  // istringstream
+#include <string>   // string, getline
+#include <utility>  // move
+#include <vector>   // vector
+
+namespace rune {
+
+/**
+ * \brief Parses a string of comma-separated values (CSV).
+ *
+ * \ingroup io
+ *
+ * \param csv the string that holds the comma separated values.
+ *
+ * \return the parsed tokens.
+ *
+ * \since 0.1.0
+ */
+[[nodiscard]] inline auto parse_csv(const std::string& csv) -> std::vector<std::string>
+{
+  std::vector<std::string> tokens;
+
+  std::istringstream stream{csv};
+  std::string token;
+
+  while (std::getline(stream, token, ','))
+  {
+    tokens.push_back(std::move(token));
+    token.clear();
+  }
+
+  return tokens;
+}
+
+}  // namespace rune
+
+#endif  // RUNE_IO_CSV_HPP
+
+// #include "../io/ini.hpp"
+#ifndef RUNE_IO_INI_HPP
+#define RUNE_IO_INI_HPP
+
+#include <algorithm>    // find_if, all_of
+#include <cassert>      // assert
+#include <filesystem>   // path
+#include <fstream>      // ifstream, ofstream
+#include <functional>   // less
+#include <istream>      // istream
+#include <locale>       // locale, isspace, isdigit
+#include <map>          // map
+#include <ostream>      // ostream
+#include <sstream>      // istringstream
+#include <string>       // basic_string, getline, stod, stoul, stoll
+#include <string_view>  // basic_string_view
+#include <utility>      // move
+#include <vector>       // vector
+
+// #include "../aliases/integers.hpp"
+#ifndef RUNE_ALIASES_INTEGERS_HPP
+#define RUNE_ALIASES_INTEGERS_HPP
+
+#include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+using usize = std::size_t;
+
+using longlong = long long;
+
+using ushort = unsigned short;
+
+/// Unsigned integer.
+using uint = unsigned;
+
+/// Unsigned long integer.
+using ulong = unsigned long;
+
+/// Used as the argument type to integral literal operators.
+using ulonglong = unsigned long long;
+
+/// 8-bit signed integer.
+using int8 = cen::i8;
+
+/// 16-bit signed integer.
+using int16 = cen::i16;
+
+/// 32-bit signed integer.
+using int32 = cen::i32;
+
+/// 64-bit signed integer.
+using int64 = cen::i64;
+
+/// 8-bit unsigned integer.
+using uint8 = cen::u8;
+
+/// 16-bit unsigned integer.
+using uint16 = cen::u16;
+
+/// 32-bit unsigned integer.
+using uint32 = cen::u32;
+
+/// 64-bit unsigned integer.
+using uint64 = cen::u64;
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_INTEGERS_HPP
+
+// #include "../aliases/maybe.hpp"
+#ifndef RUNE_ALIASES_MAYBE_HPP
+#define RUNE_ALIASES_MAYBE_HPP
+
+#include <optional>  // optional
+
+namespace rune {
+
+template <typename T>
+using maybe = std::optional<T>;
+
+inline constexpr std::nullopt_t nothing = std::nullopt;
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_MAYBE_HPP
+
+// #include "../core/rune_error.hpp"
+#ifndef RUNE_CORE_RUNE_ERROR_HPP
+#define RUNE_CORE_RUNE_ERROR_HPP
+
+#include <exception>  // exception
+
+// #include "../aliases/str.hpp"
+
+
+namespace rune {
+
+/**
+ * \typedef str
+ *
+ * \brief An alias for a C-style null-terminated string.
+ *
+ * \ingroup core
+ */
+using str = const char*;
+
+}  // namespace rune
+
+
+namespace rune {
+
+/**
+ * \brief The main exception thrown in the library.
+ *
+ * \ingroup core
+ *
+ * \since 0.1.0
+ */
+class rune_error final : public std::exception
+{
+ public:
+  explicit rune_error(const str what) noexcept : m_what{what}
+  {}
+
+  [[nodiscard]] auto what() const noexcept -> str override
+  {
+    return m_what;
+  }
+
+ private:
+  str m_what{"n/a"};
+};
+
+}  // namespace rune
+
+#endif  // RUNE_CORE_RUNE_ERROR_HPP
+
+// #include "ini_section.hpp"
+#ifndef RUNE_IO_INI_SECTION_HPP
+#define RUNE_IO_INI_SECTION_HPP
+
+#include <functional>   // less
+#include <map>          // map
+#include <ostream>      // ostream
+#include <string>       // basic_string
+#include <string_view>  // basic_string_view
+
+// #include "../aliases/integers.hpp"
+
+// #include "../core/rune_error.hpp"
+
+// #include "ini_value.hpp"
+#ifndef RUNE_IO_INI_VALUE_HPP
+#define RUNE_IO_INI_VALUE_HPP
+
+#include <concepts>   // convertible_to, integral, floating_point, same_as
+#include <nenya.hpp>  // strong_type
+#include <ostream>    // ostream
+#include <string>     // basic_string, to_string
+#include <utility>    // move
+#include <variant>    // variant, get, get_if, holds_alternative
+
+// #include "../aliases/integers.hpp"
+
+
+namespace rune {
+
+/// \addtogroup io
+/// \{
+
+/// \name Ini
+/// \{
+
+// clang-format off
+
+/**
+ * \brief Requires that a type is either a signed integer, unsigned integer,
+ * floating-point number or a string.
+ *
+ * \tparam T the type that will be checked.
+ * \tparam Char the character type.
+ *
+ * \since 0.1.0
+ */
+template <typename T, typename Char>
+concept is_ini_value = std::integral<T> ||
+                       std::floating_point<T> ||
+                       std::constructible_from<std::basic_string<Char>, T>;
+
+// clang-format on
+
+/**
+ * \brief Represents a value of an individual ini element.
+ *
+ * \tparam Char the character type that will be used.
+ *
+ * \see `ini_value`
+ * \see `basic_ini`
+ * \see `basic_ini_section`
+ *
+ * \since 0.1.0
+ */
+template <typename Char>
+class basic_ini_value final
+{
+ public:
+  using char_type = Char;
+  using string_type = std::basic_string<char_type>;
+  using int_type = int64;
+  using uint_type = uint64;
+  using float_type = double;
+  using value_type = std::variant<string_type, bool, int_type, uint_type, float_type>;
+
+  /// \name Construction
+  /// \{
+
+  /**
+   * \brief Creates a `basic_ini_value` with an empty string as its value.
+   *
+   * \since 0.1.0
+   */
+  basic_ini_value() = default;
+
+  basic_ini_value(const basic_ini_value&) = default;
+  basic_ini_value(basic_ini_value&&) noexcept = default;
+
+  basic_ini_value& operator=(const basic_ini_value&) = default;
+  basic_ini_value& operator=(basic_ini_value&&) noexcept = default;
+
+  /**
+   * \brief Creates a `basic_ini_value` instance.
+   *
+   * \tparam T the type of the value.
+   *
+   * \param value the value that will be stored.
+   *
+   * \since 0.1.0
+   */
+  template <is_ini_value<char_type> T>
+  /*implicit*/ basic_ini_value(T value)  // NOLINT
+  {
+    assign(std::move(value));
+  }
+
+  /**
+   * \brief Assigns a new value to the instance.
+   *
+   * \tparam T the type of the new value.
+   *
+   * \param value the new value of the `basic_ini_value`.
+   *
+   * \return the `basic_ini_value` instance.
+   *
+   * \since 0.1.0
+   */
+  template <is_ini_value<char_type> T>
+  auto operator=(T value) -> basic_ini_value&
+  {
+    assign(std::move(value));
+    return *this;
+  }
+
+  /// \} End of construction
+
+  /**
+   * \brief Outputs the value to an output stream.
+   *
+   * \param stream the output stream that will be used.
+   *
+   * \since 0.1.0
+   */
+  void dump(std::ostream& stream) const
+  {
+    if (const auto* str = try_get_string())
+    {
+      stream << *str;
+    }
+    else if (const auto* i = try_get_int())
+    {
+      stream << std::to_string(*i);
+    }
+    else if (const auto* u = try_get_uint())
+    {
+      stream << std::to_string(*u) << 'u';
+    }
+    else if (const auto* f = try_get_float())
+    {
+      stream << std::to_string(*f);
+    }
+    else if (const auto* b = try_get_bool())
+    {
+      stream << ((*b) ? "true" : "false");
+    }
+  }
+
+  /**
+   * \brief Returns the underlying representation.
+   *
+   * \return the underlying variant value.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto get() const -> const value_type&
+  {
+    return m_value;
+  }
+
+  /// \name Checked getters
+  /// \{
+
+  /**
+   * \brief Returns the underlying value as the specified type.
+   *
+   * \details This function can be used to safely cast the underlying value to the
+   * specified type, as long as the types are in the same "family". In other words, where
+   * the only difference between the types is the representation range. For example, if
+   * the underlying value is a 64-bit signed integer, it is perfectly valid to cast it to
+   * an `int`, since they are both signed integer types.
+   *
+   * \code{cpp}
+   * rune::ini_value value = 42;  // Signed integer value (stored as 64-bit integer)
+   *
+   * auto i = value.as<int>();  // Fine, underlying type is a signed integer
+   *
+   * auto u = value.as<unsigned>();  // Error, no implicit signed to unsigned conversion
+   * auto f = value.as<float>();     // Error, no implicit integer to float conversion
+   * auto s = value.as<std::string>();  // Error, completely unrelated types
+   * \endcode
+   *
+   * \tparam T the type of the returned value.
+   *
+   * \return the internal value casted to the specified type.
+   *
+   * \throws bad_variant_access if the underlying and specified types aren't related.
+   *
+   * \since 0.1.0
+   */
+  template <is_ini_value<char_type> T>
+  [[nodiscard]] auto as() const -> T
+  {
+    if constexpr (std::same_as<T, bool>)
+    {
+      return std::get<bool>(m_value);
+    }
+    else if constexpr (std::signed_integral<T>)
+    {
+      return static_cast<T>(std::get<int64>(m_value));
+    }
+    else if constexpr (std::unsigned_integral<T>)
+    {
+      return static_cast<T>(std::get<uint64>(m_value));
+    }
+    else if constexpr (std::floating_point<T>)
+    {
+      return static_cast<T>(std::get<double>(m_value));
+    }
+    else
+    {
+      return std::get<string_type>(m_value);
+    }
+  }
+
+  /**
+   * \brief Assigns a value with the underlying value.
+   *
+   * \details The value conversion behavior of this function is identical to those of
+   * the `as()` function.
+   *
+   * \code{cpp}
+   * rune::ini_value value = "foo";
+   *
+   * std::string str;
+   * value.get_to(str);  // Fine, the underlying type is a string
+   *
+   * int i{};
+   * value.get_to(i);  // Error, cannot assign integer with string
+   * \endcode
+   *
+   * \param[out] value a reference to the value that will be assigned.
+   *
+   * \throws bad_variant_access if there is a type mismatch.
+   *
+   * \since 0.1.0
+   */
+  void get_to(string_type& value) const
+  {
+    value = std::get<string_type>(m_value);
+  }
+
+  /// \copydoc get_to()
+  void get_to(bool& value) const
+  {
+    value = std::get<bool>(m_value);
+  }
+
+  /// \copydoc get_to()
+  void get_to(int8& value) const
+  {
+    value = static_cast<int8>(std::get<int_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(int16& value) const
+  {
+    value = static_cast<int16>(std::get<int_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(int32& value) const
+  {
+    value = static_cast<int32>(std::get<int_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(int64& value) const
+  {
+    value = std::get<int64>(m_value);
+  }
+
+  /// \copydoc get_to()
+  void get_to(uint8& value) const
+  {
+    value = static_cast<uint8>(std::get<uint_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(uint16& value) const
+  {
+    value = static_cast<uint16>(std::get<uint_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(uint32& value) const
+  {
+    value = static_cast<uint32>(std::get<uint_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(uint64& value) const
+  {
+    value = static_cast<uint64>(std::get<uint_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(float& value) const
+  {
+    value = static_cast<float>(std::get<float_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(double& value) const
+  {
+    value = static_cast<double>(std::get<float_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(long double& value) const
+  {
+    value = static_cast<long double>(std::get<float_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  template <is_ini_value<char_type> T, typename Tag, nenya::conversion Conv>
+  void get_to(nenya::strong_type<T, Tag, Conv>& value) const
+  {
+    using strong_type = nenya::strong_type<T, Tag, Conv>;
+
+    if constexpr (std::same_as<T, bool>)
+    {
+      value = strong_type{static_cast<T>(std::get<bool>(m_value))};
+    }
+    else if constexpr (std::signed_integral<T>)
+    {
+      value = strong_type{static_cast<T>(std::get<int_type>(m_value))};
+    }
+    else if constexpr (std::unsigned_integral<T>)
+    {
+      value = strong_type{static_cast<T>(std::get<uint_type>(m_value))};
+    }
+    else if constexpr (std::floating_point<T>)
+    {
+      value = strong_type{static_cast<T>(std::get<float_type>(m_value))};
+    }
+    else /*if constexpr (std::convertible_to<T, string_type>)*/
+    {
+      value = strong_type{static_cast<T>(std::get<string_type>(m_value))};
+    }
+  }
+
+  /// \} End of checked getters
+
+  /// \name Unchecked getters
+  /// \{
+
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying value; null if the underlying value isn't a
+   * string.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_string() const noexcept -> const string_type*
+  {
+    return std::get_if<string_type>(&m_value);
+  }
+
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying value; null if the underlying value isn't an
+   * integer.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_int() const noexcept -> const int_type*
+  {
+    return std::get_if<int_type>(&m_value);
+  }
+
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying value; null if the underlying value isn't an
+   * unsigned integer.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_uint() const noexcept -> const uint_type*
+  {
+    return std::get_if<uint_type>(&m_value);
+  }
+
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying value; null if the underlying value isn't a
+   * floating-point number.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_float() const noexcept -> const float_type*
+  {
+    return std::get_if<float_type>(&m_value);
+  }
+
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying boolean value; null if the underlying value isn't
+   * a boolean.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_bool() const noexcept -> const bool*
+  {
+    return std::get_if<bool>(&m_value);
+  }
+
+  /// \} End of unchecked getters
+
+  /// \name Type indicators
+  /// \{
+
+  /**
+   * \brief Indicates whether or not the value is a string.
+   *
+   * \return `true` if the value is a string; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto is_string() const noexcept -> bool
+  {
+    return std::holds_alternative<string_type>(m_value);
+  }
+
+  /**
+   * \brief Indicates whether or not the value is a signed integer.
+   *
+   * \return `true` if the value is a signed integer; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto is_int() const noexcept -> bool
+  {
+    return std::holds_alternative<int_type>(m_value);
+  }
+
+  /**
+   * \brief Indicates whether or not the value is an unsigned integer.
+   *
+   * \return `true` if the value is an unsigned integer; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto is_uint() const noexcept -> bool
+  {
+    return std::holds_alternative<uint_type>(m_value);
+  }
+
+  /**
+   * \brief Indicates whether or not the value is a floating-point number.
+   *
+   * \return `true` if the value is a floating-point number; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto is_float() const noexcept -> bool
+  {
+    return std::holds_alternative<float_type>(m_value);
+  }
+
+  /**
+   * \brief Indicates whether or not the value is a boolean.
+   *
+   * \return `true` if the value is a boolean; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto is_bool() const noexcept -> bool
+  {
+    return std::holds_alternative<bool>(m_value);
+  }
+
+  /// \} End of type indicators
+
+  [[nodiscard]] bool operator==(const basic_ini_value&) const = default;
+
+ private:
+  value_type m_value;
+
+  template <is_ini_value<char_type> T>
+  void assign(T value)
+  {
+    if constexpr (std::same_as<T, bool>)
+    {
+      m_value.template emplace<bool>(std::move(value));
+    }
+    else if constexpr (std::signed_integral<T>)
+    {
+      m_value.template emplace<int_type>(std::move(value));
+    }
+    else if constexpr (std::unsigned_integral<T>)
+    {
+      m_value.template emplace<uint_type>(std::move(value));
+    }
+    else if constexpr (std::floating_point<T>)
+    {
+      m_value.template emplace<float_type>(std::move(value));
+    }
+    else
+    {
+      m_value.template emplace<string_type>(std::move(value));
+    }
+  }
+};
+
+/**
+ * \brief Alias for the most common use case of `basic_ini_value`.
+ *
+ * \since 0.1.0
+ */
+using ini_value = basic_ini_value<char>;
+
+/**
+ * \brief Prints a textual representation of an ini value.
+ *
+ * \tparam Char the used character type.
+ *
+ * \param stream the output stream that will be used.
+ * \param value the ini value that will be printed.
+ *
+ * \return the used stream.
+ *
+ * \since 0.1.0
+ */
+template <typename Char>
+auto operator<<(std::ostream& stream, const basic_ini_value<Char>& value) -> std::ostream&
+{
+  value.dump(stream);
+  return stream;
+}
+
+/// \} End of ini
+
+/// \} End of group io
+
+}  // namespace rune
+
+#endif  // RUNE_IO_INI_VALUE_HPP
+
+
+namespace rune {
+
+/// \addtogroup io
+/// \{
+
+/// \name Ini
+/// \{
+
+/**
+ * \brief Represents the syntax used by an ini file.
+ *
+ * \tparam Char the character type that is used.
+ *
+ * \since 0.1.0
+ */
+template <typename Char>
+struct ini_format final
+{
+  using value_type = Char;
+
+  value_type section_start = '[';  ///< Token introducing a section name.
+  value_type section_end = ']';    ///< Token that ends a section name.
+  value_type assign = '=';         ///< Assignment operator token.
+  value_type comment = ';';        ///< Line comment token.
+};
+
+/**
+ * \brief Represents a section in an ini file.
+ *
+ * \tparam Char the character type that is used.
+ *
+ * \see `ini_section`
+ * \see `basic_ini`
+ * \see `basic_ini_value`
+ *
+ * \since 0.1.0
+ */
+template <typename Char>
+class basic_ini_section final
+{
+ public:
+  using char_type = Char;
+  using elem_type = basic_ini_value<char_type>;
+  using string_type = std::basic_string<char_type>;
+  using string_view_type = std::basic_string_view<char_type>;
+  using format_type = ini_format<char_type>;
+  using storage_type = std::map<string_type, elem_type, std::less<>>;
+  using value_type = typename storage_type::value_type;
+  using iterator = typename storage_type::iterator;
+  using const_iterator = typename storage_type::const_iterator;
+  using size_type = usize;
+
+  /**
+   * \brief Outputs the contents of the section to an output stream.
+   *
+   * \param stream the output stream that will be used.
+   * \param format the syntax that will be used.
+   *
+   * \since 0.1.0
+   */
+  void dump(std::ostream& stream, const format_type& format) const
+  {
+    for (const auto& [key, value] : m_entries)
+    {
+      stream << key << format.assign << value << '\n';
+    }
+
+    stream << '\n';
+  }
+
+  /**
+   * \brief Removes an element from the section, if it exists.
+   *
+   * \param element the name of the element that will be removed.
+   *
+   * \return `true` if an element was removed; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  auto erase(const string_view_type element) -> bool
+  {
+    if (const auto it = m_entries.find(element); it != m_entries.end())
+    {
+      m_entries.erase(it);
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  /**
+   * \brief Retrieves an element from the section or default-constructs one if it doesn't
+   * already exist.
+   *
+   * \param element the name of the element that will be retrieved.
+   *
+   * \return the value that was either found or created.
+   *
+   * \since 0.1.0
+   */
+  auto get_or_emplace(const string_view_type element) -> elem_type&
+  {
+    if (const auto it = m_entries.find(element); it != m_entries.end())
+    {
+      return it->second;
+    }
+    else
+    {
+      return m_entries[string_type{element}];
+    }
+  }
+
+  /// \copydoc get_or_emplace()
+  auto operator[](const string_view_type element) -> elem_type&
+  {
+    return get_or_emplace(element);
+  }
+
+  /**
+   * \brief Returns the value associated with the specified name.
+   *
+   * \param element the name of the value to obtain.
+   *
+   * \return the ini value associated with the specified name.
+   *
+   * \throws rune_error if the section doesn't contain the specified value.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto at(const string_view_type element) -> elem_type&
+  {
+    if (const auto it = m_entries.find(element); it != m_entries.end())
+    {
+      return it->second;
+    }
+    else
+    {
+      throw rune_error{"basic_ini_section::at(): element does not exist!"};
+    }
+  }
+
+  /// \copydoc at()
+  [[nodiscard]] auto at(const string_view_type element) const -> const elem_type&
+  {
+    if (const auto it = m_entries.find(element); it != m_entries.end())
+    {
+      return it->second;
+    }
+    else
+    {
+      throw rune_error{"basic_ini_section::at(): element does not exist!"};
+    }
+  }
+
+  /**
+   * \brief Indicates whether or not the section contains a value with the specified name.
+   *
+   * \param element the name of the element to look for.
+   *
+   * \return `true` if the section contains a value with the specified name; `false`
+   * otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto contains(const string_view_type element) const -> bool
+  {
+    return m_entries.find(element) != m_entries.end();
+  }
+
+  /**
+   * \brief Returns the amount of values present in the section.
+   *
+   * \return the amount of values in the section.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto size() const noexcept -> size_type
+  {
+    return m_entries.size();
+  }
+
+  /**
+   * \brief Indicates whether or not the section is empty.
+   *
+   * \return `true` if the section is empty; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto empty() const noexcept -> bool
+  {
+    return m_entries.empty();
+  }
+
+  /**
+   * \brief Returns an iterator to the beginning of the section.
+   *
+   * \return an iterator to the beginning.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto begin() noexcept -> iterator
+  {
+    return m_entries.begin();
+  }
+
+  /**
+   * \brief Returns a const iterator to the beginning of the section.
+   *
+   * \return a const iterator to the beginning.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto begin() const noexcept -> const_iterator
+  {
+    return m_entries.begin();
+  }
+
+  /**
+   * \brief Returns an iterator to the end of the section.
+   *
+   * \return an iterator to the end.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto end() noexcept -> iterator
+  {
+    return m_entries.end();
+  }
+
+  /**
+   * \brief Returns a const iterator to the end of the section.
+   *
+   * \return a const iterator to the end.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto end() const noexcept -> const_iterator
+  {
+    return m_entries.end();
+  }
+
+ private:
+  storage_type m_entries;
+};
+
+/**
+ * \brief Alias for the most common use case of `basic_ini_section`.
+ *
+ * \since 0.1.0
+ */
+using ini_section = basic_ini_section<char>;
+
+/// \} End of ini
+
+/// \} End of group IO
+
+}  // namespace rune
+
+#endif  // RUNE_IO_INI_SECTION_HPP
+
+// #include "ini_value.hpp"
+
+
+namespace rune {
+
+/// \addtogroup io
+/// \{
+
+/// \name Ini
+/// \{
+
+/**
+ * \brief Represents an ini file.
+ *
+ * \see `ini_file`
+ * \see `basic_ini_section`
+ * \see `basic_ini_value`
+ * \see `write_ini()`
+ * \see `read_ini()`
+ * \see `operator<<(std::ostream&, const basic_ini&)`
+ * \see `operator>>(std::istream&, basic_ini&)`
+ *
+ * \since 0.1.0
+ */
+template <typename Char>
+class basic_ini final
+{
+ public:
+  using char_type = Char;
+  using string_type = std::basic_string<char_type>;
+  using string_view_type = std::basic_string_view<char_type>;
+  using section_type = basic_ini_section<char_type>;
+  using format_type = ini_format<char_type>;
+  using storage_type = std::map<string_type, section_type, std::less<>>;
+  using iterator = typename storage_type::iterator;
+  using const_iterator = typename storage_type::const_iterator;
+  using size_type = usize;
+
+  /**
+   * \brief Creates an empty ini file.
+   *
+   * \param format optional custom format.
+   *
+   * \since 0.1.0
+   */
+  explicit basic_ini(const format_type format = format_type{}) : m_format{format}
+  {}
+
+  /**
+   * \brief Writes the contents of the file to a stream.
+   *
+   * \param stream the output stream that will be used.
+   *
+   * \since 0.1.0
+   */
+  void dump(std::ostream& stream) const
+  {
+    for (const auto& [name, section] : m_sections)
+    {
+      stream << m_format.section_start << name << m_format.section_end << '\n';
+      section.dump(stream, m_format);
+    }
+  }
+
+  /**
+   * \brief Parses an ini file based on an input stream.
+   *
+   * \param stream the input stream that will be used.
+   *
+   * \since 0.1.0
+   */
+  void read(std::istream& stream)
+  {
+    string_type line;
+    string_type section;
+
+    line.reserve(32);
+    section.reserve(32);
+
+    while (std::getline(stream, line))
+    {
+      trim_left(line);
+      trim_right(line);
+      parse_line(line, section);
+    }
+  }
+
+  /**
+   * \brief Adds or replaces a section.
+   *
+   * \param section the name of the section that will be added or replaced.
+   *
+   * \return the new section.
+   *
+   * \since 0.1.0
+   */
+  auto emplace_or_replace(string_type section) -> section_type&
+  {
+    const auto [it, inserted] =
+        m_sections.insert_or_assign(std::move(section), section_type{});
+    return it->second;
+  }
+
+  /**
+   * \brief Retrieves a section from the file or default-constructs one if it doesn't
+   * already exist.
+   *
+   * \param section the name of the section that will be retrieved.
+   *
+   * \return the section that was either found or created.
+   *
+   * \since 0.1.0
+   */
+  auto get_or_emplace(const string_view_type section) -> section_type&
+  {
+    if (const auto it = m_sections.find(section); it != m_sections.end())
+    {
+      return it->second;
+    }
+    else
+    {
+      auto [iterator, inserted] = m_sections.try_emplace(string_type{section});
+      assert(inserted);
+
+      return iterator->second;
+    }
+  }
+
+  /// \copydoc get_or_emplace()
+  auto operator[](const string_view_type section) -> section_type&
+  {
+    return get_or_emplace(section);
+  }
+
+  /**
+   * \brief Removes a section from the file, if it exists.
+   *
+   * \param section the name of the section that will be removed.
+   *
+   * \return `true` if a section was removed; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  auto erase(const string_view_type section) -> bool
+  {
+    if (const auto it = m_sections.find(section); it != m_sections.end())
+    {
+      m_sections.erase(it);
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  /**
+   * \brief Returns the section associated with the specified name.
+   *
+   * \param section the name of the section to retrieve.
+   *
+   * \return the found section.
+   *
+   * \throws rune_error if there is no section with the specified name.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto at(const string_view_type section) -> section_type&
+  {
+    if (const auto it = m_sections.find(section); it != m_sections.end())
+    {
+      return it->second;
+    }
+    else
+    {
+      throw rune_error{"basic_ini::at(): section does not exist!"};
+    }
+  }
+
+  /// \copydoc at()
+  [[nodiscard]] auto at(const string_view_type section) const -> const section_type&
+  {
+    if (const auto it = m_sections.find(section); it != m_sections.end())
+    {
+      return it->second;
+    }
+    else
+    {
+      throw rune_error{"basic_ini::at(): section does not exist!"};
+    }
+  }
+
+  /**
+   * \brief Indicates whether or not the specified section exists.
+   *
+   * \param section the name of the section to look for.
+   *
+   * \return `true` if the specified section exists; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto contains(const string_view_type section) const -> bool
+  {
+    return m_sections.find(section) != m_sections.end();
+  }
+
+  /**
+   * \brief Returns the number of sections stored in the ini file.
+   *
+   * \return the number of sections.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto size() const noexcept -> size_type
+  {
+    return m_sections.size();
+  }
+
+  /**
+   * \brief Indicates whether or not there are no sections.
+   *
+   * \return `true` if there are no sections; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto empty() const noexcept -> bool
+  {
+    return m_sections.empty();
+  }
+
+  /**
+   * \brief Indicates whether or not the parsed contents are valid.
+   *
+   * \return `true` if there are no errors associated with the file; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] explicit operator bool() const noexcept
+  {
+    return m_errors.empty();
+  }
+
+  /**
+   * \brief Returns an iterator to the beginning of the instance.
+   *
+   * \return an iterator to the beginning.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto begin() noexcept -> iterator
+  {
+    return m_sections.begin();
+  }
+
+  /// \copydoc begin()
+  [[nodiscard]] auto begin() const noexcept -> const_iterator
+  {
+    return m_sections.begin();
+  }
+
+  /**
+   * \brief Returns an iterator to the end of the instance.
+   *
+   * \return an iterator to the end.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto end() noexcept -> iterator
+  {
+    return m_sections.end();
+  }
+
+  /// \copydoc end()
+  [[nodiscard]] auto end() const noexcept -> const_iterator
+  {
+    return m_sections.end();
+  }
+
+ private:
+  storage_type m_sections;
+  std::vector<string_type> m_errors;
+  format_type m_format;
+
+  template <typename T>
+  [[nodiscard]] static auto find_first_non_space(const T begin, const T end)
+  {
+    return std::find_if(begin, end, [](const char_type ch) {
+      return !std::isspace(ch, std::locale::classic());
+    });
+  }
+
+  // Remove leading whitespace
+  void trim_left(string_type& line)
+  {
+    line.erase(line.begin(), find_first_non_space(line.begin(), line.end()));
+  }
+
+  // Remove any trailing whitespace
+  void trim_right(string_type& line)
+  {
+    const auto it = find_first_non_space(line.rbegin(), line.rend());
+    line.erase(it.base(), line.end());
+  }
+
+  [[nodiscard]] static auto is_float(const string_type& str) -> bool
+  {
+    // Require float values to feature dot
+    if (str.find('.') == string_type::npos)
+    {
+      return false;
+    }
+
+    std::istringstream stream{str};
+
+    double value{};
+    stream >> value;
+
+    return stream.eof() && !stream.fail();
+  }
+
+  [[nodiscard]] static auto is_unsigned(const string_type& str) -> bool
+  {
+    return !str.starts_with('-') && str.ends_with('u') &&
+           std::all_of(str.begin(), str.end() - 1, [](const char_type ch) {
+             return std::isdigit(ch, std::locale::classic());
+           });
+  }
+
+  [[nodiscard]] static auto is_signed(const string_type& str) -> bool
+  {
+    if (str.starts_with('-'))
+    {
+      // Ignore leading minus
+      return std::all_of(str.begin() + 1, str.end(), [](const char_type ch) {
+        return std::isdigit(ch, std::locale::classic());
+      });
+    }
+    else
+    {
+      return std::ranges::all_of(str, [](const char_type ch) {
+        return std::isdigit(ch, std::locale::classic());
+      });
+    }
+  }
+
+  auto parse_variable(const string_type& line, const string_type& sectionName) -> bool
+  {
+    const auto assignment = std::ranges::find_if(line, [this](const char_type character) {
+      return character == m_format.assign;
+    });
+
+    string_type variable{line.begin(), assignment};
+    string_type value{assignment + 1, line.end()};
+
+    trim_right(variable);
+    trim_left(variable);
+
+    auto& section = m_sections[sectionName];
+    if (!section.contains(variable))
+    {
+      if (value == "true")
+      {
+        section[std::move(variable)] = true;
+      }
+      else if (value == "false")
+      {
+        section[std::move(variable)] = false;
+      }
+      else if (is_float(value))
+      {
+        section[std::move(variable)] = std::stod(value);
+      }
+      else if (is_unsigned(value))
+      {
+        section[std::move(variable)] = std::stoul(value);
+      }
+      else if (is_signed(value))
+      {
+        section[std::move(variable)] = std::stoll(value);
+      }
+      else
+      {
+        section[std::move(variable)] = std::move(value);
+      }
+
+      return true;
+    }
+    else
+    {
+      m_errors.push_back(line);
+      return false;
+    }
+  }
+
+  [[nodiscard]] auto parse_section_name(const string_type& line) -> maybe<string_type>
+  {
+    if (line.back() == m_format.section_end)
+    {
+      return line.substr(1, line.length() - 2);
+    }
+    else
+    {
+      m_errors.push_back(line);
+      return nothing;
+    }
+  }
+
+  void parse_line(const string_type& line, string_type& section)
+  {
+    if (line.empty())
+    {
+      return;
+    }
+
+    const auto& character = line.front();
+
+    if (character == m_format.comment)
+    {
+      return;
+    }
+
+    if (character == m_format.section_start)
+    {
+      if (const auto name = parse_section_name(line))
+      {
+        section = *name;
+      }
+    }
+    else if (parse_variable(line, section))
+    {}
+    else
+    {
+      m_errors.push_back(line);
+    }
+  }
+};
+
+/**
+ * \brief Alias for the most common use case of `basic_ini`.
+ *
+ * \since 0.1.0
+ */
+using ini_file = basic_ini<char>;
+
+/**
+ * \brief Writes a `basic_ini` instance to an output stream.
+ *
+ * \tparam Char the character type used.
+ *
+ * \param stream the output stream that will be used.
+ * \param ini the `basic_ini` instance that will be written to the stream.
+ *
+ * \return the used stream.
+ *
+ * \see `basic_ini::dump()`
+ */
+template <typename Char>
+auto operator<<(std::ostream& stream, const basic_ini<Char>& ini) -> std::ostream&
+{
+  ini.dump(stream);
+  return stream;
+}
+
+/**
+ * \brief Parses an ini file from an input stream.
+ *
+ * \tparam Char the character type used.
+ *
+ * \param stream the input stream.
+ * \param[out] ini the `basic_ini` instance that will be written to.
+ *
+ * \return the read input stream.
+ *
+ * \see `basic_ini::read()`
+ * \see `read_ini()`
+ */
+template <typename Char>
+auto operator>>(std::istream& stream, basic_ini<Char>& ini) -> std::istream&
+{
+  ini.read(stream);
+  return stream;
+}
+
+/**
+ * \brief Saves an Ini file to the specified file path.
+ *
+ * \tparam Char the character type used.
+ *
+ * \param ini the Ini file that will be saved.
+ * \param path the file path of the ini file.
+ *
+ * \since 0.1.0
+ */
+template <typename Char>
+void write_ini(const basic_ini<Char>& ini, const std::filesystem::path& path)
+{
+  std::ofstream stream{path};
+  stream << ini;
+}
+
+/**
+ * \brief Parses an ini file and returns its contents.
+ *
+ * \tparam Char the character type used.
+ *
+ * \param path the file path of the ini file.
+ *
+ * \return the parsed ini file; `nothing` if there were parsing errors.
+ *
+ * \since 0.1.0
+ */
+template <typename Char = char>
+[[nodiscard]] auto read_ini(const std::filesystem::path& path) -> maybe<basic_ini<Char>>
+{
+  std::ifstream stream{path};
+
+  ini_file file;
+  stream >> file;
+
+  if (file)
+  {
+    return file;
+  }
+  else
+  {
+    return nothing;
+  }
+}
+
+/// \} End of ini
+
+/// \} End of group io
+
+}  // namespace rune
+
+#endif  // RUNE_IO_INI_HPP
+
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+/**
+ * \struct configuration
+ *
+ * \brief Provides configuration options for different engine aspects.
+ *
+ * \see `engine`
+ *
+ * \since 0.1.0
+ */
+struct configuration final
+{
+  std::string window_title;
+  cen::iarea window_size;
+
+  uint32 renderer_flags;
+  cen::iarea logical_size;
+
+  double engine_max_tick_rate;
+  int engine_max_frames_per_tick;
+
+  usize aabb_default_capacity;
+
+  float ui_row_size;
+  float ui_column_size;
+};
+
+/// \name Configuration
+/// \{
+
+[[nodiscard]] inline auto get_default_cfg() -> configuration
+{
+  return {.window_title = "Rune",
+          .window_size = cen::window::default_size(),
+          .renderer_flags = cen::renderer::default_flags(),
+          .logical_size = {0, 0},
+          .engine_max_tick_rate = 120.0,
+          .engine_max_frames_per_tick = 5,
+          .aabb_default_capacity = 64u,
+          .ui_row_size = 10.0f,
+          .ui_column_size = 10.0f};
+}
+
+[[nodiscard]] inline auto get_cfg() -> configuration&
+{
+  static auto cfg = get_default_cfg();
+  return cfg;
+}
+
+[[nodiscard]] inline auto get_window_title() -> const std::string&
+{
+  return get_cfg().window_title;
+}
+
+[[nodiscard]] inline auto get_window_size() -> cen::iarea
+{
+  return get_cfg().window_size;
+}
+
+[[nodiscard]] inline auto get_logical_size() -> cen::iarea
+{
+  return get_cfg().logical_size;
+}
+
+[[nodiscard]] inline auto get_renderer_flags() -> uint32
+{
+  return get_cfg().renderer_flags;
+}
+
+[[nodiscard]] inline auto get_engine_max_tick_rate() -> double
+{
+  return get_cfg().engine_max_tick_rate;
+}
+
+[[nodiscard]] inline auto get_engine_max_frames_per_tick() -> int
+{
+  return get_cfg().engine_max_frames_per_tick;
+}
+
+[[nodiscard]] inline auto get_aabb_default_capacity() -> usize
+{
+  return get_cfg().aabb_default_capacity;
+}
+
+[[nodiscard]] inline auto get_ui_row_size() -> float
+{
+  return get_cfg().ui_row_size;
+}
+
+[[nodiscard]] inline auto get_ui_column_size() -> float
+{
+  return get_cfg().ui_column_size;
+}
+
+[[nodiscard]] inline auto parse_configuration(const std::filesystem::path& path)
+    -> configuration
+{
+  auto cfg = get_default_cfg();
+
+  const auto ini = read_ini(path);
+  if (!ini)
+  {
+    return cfg;
+  }
+
+  if (ini->contains("Engine"))
+  {
+    const auto engine = ini->at("Engine");
+
+    if (engine.contains("MaxTickRate"))
+    {
+      engine.at("MaxTickRate").get_to(cfg.engine_max_tick_rate);
+    }
+
+    if (engine.contains("MaxFramesPerTick"))
+    {
+      engine.at("MaxFramesPerTick").get_to(cfg.engine_max_frames_per_tick);
+    }
+  }
+
+  if (ini->contains("Window"))
+  {
+    const auto& window = ini->at("Window");
+
+    if (window.contains("WindowTitle"))
+    {
+      window.at("WindowTitle").get_to(cfg.window_title);
+    }
+
+    if (window.contains("WindowWidth"))
+    {
+      window.at("WindowWidth").get_to(cfg.window_size.width);
+    }
+
+    if (window.contains("WindowHeight"))
+    {
+      window.at("WindowHeight").get_to(cfg.window_size.height);
+    }
+  }
+
+  if (ini->contains("Graphics"))
+  {
+    const auto& graphics = ini->at("Graphics");
+
+    if (graphics.contains("RendererFlags"))
+    {
+      if (const auto flags = graphics.at("RendererFlags").as<std::string>();
+          flags == "default")
+      {
+        cfg.renderer_flags = cen::renderer::default_flags();
+      }
+      else
+      {
+        cfg.renderer_flags = 0;
+        for (const auto& token : parse_csv(flags))
+        {
+          if (token == "accelerated")
+          {
+            cfg.renderer_flags |= cen::renderer::accelerated;
+          }
+          else if (token == "vsync")
+          {
+            cfg.renderer_flags |= cen::renderer::vsync;
+          }
+          else if (token == "target_textures")
+          {
+            cfg.renderer_flags |= cen::renderer::target_textures;
+          }
+          else if (token == "software")
+          {
+            cfg.renderer_flags |= cen::renderer::software;
+          }
+        }
+      }
+    }
+
+    if (graphics.contains("LogicalWidth"))
+    {
+      graphics.at("LogicalWidth").get_to(cfg.logical_size.width);
+    }
+
+    if (graphics.contains("LogicalHeight"))
+    {
+      graphics.at("LogicalHeight").get_to(cfg.logical_size.height);
+    }
+  }
+
+  if (ini->contains("AABB"))
+  {
+    const auto& aabb = ini->at("AABB");
+
+    if (aabb.contains("TreeDefaultCapacity"))
+    {
+      aabb.at("TreeDefaultCapacity").get_to(cfg.aabb_default_capacity);
+    }
+  }
+
+  if (ini->contains("UI"))
+  {
+    const auto& ui = ini->at("UI");
+
+    if (ui.contains("MenuRowSize"))
+    {
+      ui.at("MenuRowSize").get_to(cfg.ui_row_size);
+    }
+
+    if (ui.contains("MenuColumnSize"))
+    {
+      ui.at("MenuColumnSize").get_to(cfg.ui_column_size);
+    }
+  }
+
+  return cfg;
+}
+
+inline void load_configuration(const std::filesystem::path& path)
+{
+  get_cfg() = parse_configuration(path);
+}
+
+inline void save_configuration(const std::filesystem::path& path)
+{
+  const auto& cfg = get_cfg();
+
+  ini_file ini;
+  ini["Graphics"]["RendererFlags"] = cfg.renderer_flags;
+  ini["Graphics"]["LogicalWidth"] = cfg.logical_size.width;
+  ini["Graphics"]["LogicalHeight"] = cfg.logical_size.height;
+  ini["Window"]["WindowTitle"] = cfg.window_title;
+  ini["Window"]["WindowWidth"] = cfg.window_size.width;
+  ini["Window"]["WindowHeight"] = cfg.window_size.height;
+  ini["Engine"]["MaxTickRate"] = cfg.engine_max_tick_rate;
+  ini["Engine"]["MaxFramesPerTick"] = cfg.engine_max_frames_per_tick;
+  ini["AABB"]["TreeDefaultCapacity"] = cfg.aabb_default_capacity;
+  ini["UI"]["RowSize"] = cfg.ui_row_size;
+  ini["UI"]["ColumnSize"] = cfg.ui_column_size;
+
+  write_ini(ini, path);
+}
+
+/// \} End of configuration
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_CORE_CONFIGURATION_HPP
+
 // #include "core/engine.hpp"
 #ifndef RUNE_CORE_ENGINE_HPP
 #define RUNE_CORE_ENGINE_HPP
@@ -3823,13 +7444,279 @@ inline constexpr std::nullopt_t nothing = std::nullopt;
 
 #endif  // RUNE_ALIASES_MAYBE_HPP
 
+// #include "configuration.hpp"
+#ifndef RUNE_CORE_CONFIGURATION_HPP
+#define RUNE_CORE_CONFIGURATION_HPP
+
+#include <centurion.hpp>  // window, renderer, iarea
+#include <concepts>       // convertible_to
+#include <filesystem>     // path
+#include <string>         // string
+
+// #include "../aliases/integers.hpp"
+
+// #include "../io/csv.hpp"
+
+// #include "../io/ini.hpp"
+
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+/**
+ * \struct configuration
+ *
+ * \brief Provides configuration options for different engine aspects.
+ *
+ * \see `engine`
+ *
+ * \since 0.1.0
+ */
+struct configuration final
+{
+  std::string window_title;
+  cen::iarea window_size;
+
+  uint32 renderer_flags;
+  cen::iarea logical_size;
+
+  double engine_max_tick_rate;
+  int engine_max_frames_per_tick;
+
+  usize aabb_default_capacity;
+
+  float ui_row_size;
+  float ui_column_size;
+};
+
+/// \name Configuration
+/// \{
+
+[[nodiscard]] inline auto get_default_cfg() -> configuration
+{
+  return {.window_title = "Rune",
+          .window_size = cen::window::default_size(),
+          .renderer_flags = cen::renderer::default_flags(),
+          .logical_size = {0, 0},
+          .engine_max_tick_rate = 120.0,
+          .engine_max_frames_per_tick = 5,
+          .aabb_default_capacity = 64u,
+          .ui_row_size = 10.0f,
+          .ui_column_size = 10.0f};
+}
+
+[[nodiscard]] inline auto get_cfg() -> configuration&
+{
+  static auto cfg = get_default_cfg();
+  return cfg;
+}
+
+[[nodiscard]] inline auto get_window_title() -> const std::string&
+{
+  return get_cfg().window_title;
+}
+
+[[nodiscard]] inline auto get_window_size() -> cen::iarea
+{
+  return get_cfg().window_size;
+}
+
+[[nodiscard]] inline auto get_logical_size() -> cen::iarea
+{
+  return get_cfg().logical_size;
+}
+
+[[nodiscard]] inline auto get_renderer_flags() -> uint32
+{
+  return get_cfg().renderer_flags;
+}
+
+[[nodiscard]] inline auto get_engine_max_tick_rate() -> double
+{
+  return get_cfg().engine_max_tick_rate;
+}
+
+[[nodiscard]] inline auto get_engine_max_frames_per_tick() -> int
+{
+  return get_cfg().engine_max_frames_per_tick;
+}
+
+[[nodiscard]] inline auto get_aabb_default_capacity() -> usize
+{
+  return get_cfg().aabb_default_capacity;
+}
+
+[[nodiscard]] inline auto get_ui_row_size() -> float
+{
+  return get_cfg().ui_row_size;
+}
+
+[[nodiscard]] inline auto get_ui_column_size() -> float
+{
+  return get_cfg().ui_column_size;
+}
+
+[[nodiscard]] inline auto parse_configuration(const std::filesystem::path& path)
+    -> configuration
+{
+  auto cfg = get_default_cfg();
+
+  const auto ini = read_ini(path);
+  if (!ini)
+  {
+    return cfg;
+  }
+
+  if (ini->contains("Engine"))
+  {
+    const auto engine = ini->at("Engine");
+
+    if (engine.contains("MaxTickRate"))
+    {
+      engine.at("MaxTickRate").get_to(cfg.engine_max_tick_rate);
+    }
+
+    if (engine.contains("MaxFramesPerTick"))
+    {
+      engine.at("MaxFramesPerTick").get_to(cfg.engine_max_frames_per_tick);
+    }
+  }
+
+  if (ini->contains("Window"))
+  {
+    const auto& window = ini->at("Window");
+
+    if (window.contains("WindowTitle"))
+    {
+      window.at("WindowTitle").get_to(cfg.window_title);
+    }
+
+    if (window.contains("WindowWidth"))
+    {
+      window.at("WindowWidth").get_to(cfg.window_size.width);
+    }
+
+    if (window.contains("WindowHeight"))
+    {
+      window.at("WindowHeight").get_to(cfg.window_size.height);
+    }
+  }
+
+  if (ini->contains("Graphics"))
+  {
+    const auto& graphics = ini->at("Graphics");
+
+    if (graphics.contains("RendererFlags"))
+    {
+      if (const auto flags = graphics.at("RendererFlags").as<std::string>();
+          flags == "default")
+      {
+        cfg.renderer_flags = cen::renderer::default_flags();
+      }
+      else
+      {
+        cfg.renderer_flags = 0;
+        for (const auto& token : parse_csv(flags))
+        {
+          if (token == "accelerated")
+          {
+            cfg.renderer_flags |= cen::renderer::accelerated;
+          }
+          else if (token == "vsync")
+          {
+            cfg.renderer_flags |= cen::renderer::vsync;
+          }
+          else if (token == "target_textures")
+          {
+            cfg.renderer_flags |= cen::renderer::target_textures;
+          }
+          else if (token == "software")
+          {
+            cfg.renderer_flags |= cen::renderer::software;
+          }
+        }
+      }
+    }
+
+    if (graphics.contains("LogicalWidth"))
+    {
+      graphics.at("LogicalWidth").get_to(cfg.logical_size.width);
+    }
+
+    if (graphics.contains("LogicalHeight"))
+    {
+      graphics.at("LogicalHeight").get_to(cfg.logical_size.height);
+    }
+  }
+
+  if (ini->contains("AABB"))
+  {
+    const auto& aabb = ini->at("AABB");
+
+    if (aabb.contains("TreeDefaultCapacity"))
+    {
+      aabb.at("TreeDefaultCapacity").get_to(cfg.aabb_default_capacity);
+    }
+  }
+
+  if (ini->contains("UI"))
+  {
+    const auto& ui = ini->at("UI");
+
+    if (ui.contains("MenuRowSize"))
+    {
+      ui.at("MenuRowSize").get_to(cfg.ui_row_size);
+    }
+
+    if (ui.contains("MenuColumnSize"))
+    {
+      ui.at("MenuColumnSize").get_to(cfg.ui_column_size);
+    }
+  }
+
+  return cfg;
+}
+
+inline void load_configuration(const std::filesystem::path& path)
+{
+  get_cfg() = parse_configuration(path);
+}
+
+inline void save_configuration(const std::filesystem::path& path)
+{
+  const auto& cfg = get_cfg();
+
+  ini_file ini;
+  ini["Graphics"]["RendererFlags"] = cfg.renderer_flags;
+  ini["Graphics"]["LogicalWidth"] = cfg.logical_size.width;
+  ini["Graphics"]["LogicalHeight"] = cfg.logical_size.height;
+  ini["Window"]["WindowTitle"] = cfg.window_title;
+  ini["Window"]["WindowWidth"] = cfg.window_size.width;
+  ini["Window"]["WindowHeight"] = cfg.window_size.height;
+  ini["Engine"]["MaxTickRate"] = cfg.engine_max_tick_rate;
+  ini["Engine"]["MaxFramesPerTick"] = cfg.engine_max_frames_per_tick;
+  ini["AABB"]["TreeDefaultCapacity"] = cfg.aabb_default_capacity;
+  ini["UI"]["RowSize"] = cfg.ui_row_size;
+  ini["UI"]["ColumnSize"] = cfg.ui_column_size;
+
+  write_ini(ini, path);
+}
+
+/// \} End of configuration
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_CORE_CONFIGURATION_HPP
+
 // #include "game.hpp"
 #ifndef RUNE_CORE_GAME_HPP
 #define RUNE_CORE_GAME_HPP
 
 #include <concepts>  // derived_from
-
-// #include "aliases/delta_time.hpp"
 
 // #include "core/graphics.hpp"
 #ifndef RUNE_CORE_GRAPHICS_HPP
@@ -3913,61 +7800,6 @@ using font_id = usize;
 #endif  // RUNE_ALIASES_FONT_ID_HPP
 
 // #include "../aliases/integers.hpp"
-#ifndef RUNE_ALIASES_INTEGERS_HPP
-#define RUNE_ALIASES_INTEGERS_HPP
-
-#include <centurion.hpp>  // ...
-#include <cstddef>        // size_t
-
-namespace rune {
-
-/// \addtogroup core
-/// \{
-
-using usize = std::size_t;
-
-using longlong = long long;
-
-using ushort = unsigned short;
-
-/// Unsigned integer.
-using uint = unsigned;
-
-/// Unsigned long integer.
-using ulong = unsigned long;
-
-/// Used as the argument type to integral literal operators.
-using ulonglong = unsigned long long;
-
-/// 8-bit signed integer.
-using int8 = cen::i8;
-
-/// 16-bit signed integer.
-using int16 = cen::i16;
-
-/// 32-bit signed integer.
-using int32 = cen::i32;
-
-/// 64-bit signed integer.
-using int64 = cen::i64;
-
-/// 8-bit unsigned integer.
-using uint8 = cen::u8;
-
-/// 16-bit unsigned integer.
-using uint16 = cen::u16;
-
-/// 32-bit unsigned integer.
-using uint32 = cen::u32;
-
-/// 64-bit unsigned integer.
-using uint64 = cen::u64;
-
-/// \} End of group core
-
-}  // namespace rune
-
-#endif  // RUNE_ALIASES_INTEGERS_HPP
 
 // #include "../aliases/texture_id.hpp"
 #ifndef RUNE_ALIASES_TEXTURE_ID_HPP
@@ -4103,6 +7935,8 @@ namespace rune {
 
 #endif  // RUNE_CORE_COMPILER_HPP
 
+// #include "configuration.hpp"
+
 
 namespace rune {
 
@@ -4136,15 +7970,22 @@ class graphics
   /**
    * \brief Creates a graphics context.
    *
-   * \tparam T the ownership semantics of the window.
    * \param window the associated game window.
-   * \param flags the renderer flags supplied to the `cen::renderer` constructor.
    */
   template <typename T>
-  graphics(const cen::basic_window<T>& window, const uint32 flags)
-      : m_renderer{window, flags}
+  explicit graphics(const cen::basic_window<T>& window)
+      : m_renderer{window, get_renderer_flags()}
       , m_format{window.get_pixel_format()}
-  {}
+  {
+    m_renderer.set_logical_size(get_logical_size());
+
+    CENTURION_LOG_DEBUG("[rune::graphics] Renderer flags: %u", get_renderer_flags());
+    CENTURION_LOG_DEBUG("[rune::graphics] Pixel format: %s",
+                        cen::to_string(m_format).data());
+    CENTURION_LOG_DEBUG("[rune::graphics] Renderer logical size: {%i, %i}",
+                        m_renderer.logical_width(),
+                        m_renderer.logical_height());
+  }
 
   virtual ~graphics() noexcept = default;
 
@@ -4314,13 +8155,13 @@ class graphics
    *
    * \return the associated renderer.
    */
-  [[nodiscard]] auto renderer() noexcept -> cen::renderer&
+  [[nodiscard]] auto get_renderer() noexcept -> cen::renderer&
   {
     return m_renderer;
   }
 
-  /// \copydoc renderer()
-  [[nodiscard]] auto renderer() const noexcept -> const cen::renderer&
+  /// \copydoc get_renderer()
+  [[nodiscard]] auto get_renderer() const noexcept -> const cen::renderer&
   {
     return m_renderer;
   }
@@ -4410,7 +8251,7 @@ namespace rune {
  *     // ...
  *   }
  *
- *   void tick(rune::delta_time dt) override
+ *   void tick(float dt) override
  *   {
  *     // ...
  *   }
@@ -4508,7 +8349,7 @@ class basic_game
    *
    * \since 0.1.0
    */
-  virtual void tick(delta_time dt)
+  virtual void tick(float dt)
   {}
 
   /**
@@ -4575,6 +8416,8 @@ using game_base = basic_game<graphics>;
 
 // #include "compiler.hpp"
 
+// #include "configuration.hpp"
+
 
 namespace rune {
 
@@ -4608,15 +8451,22 @@ class graphics
   /**
    * \brief Creates a graphics context.
    *
-   * \tparam T the ownership semantics of the window.
    * \param window the associated game window.
-   * \param flags the renderer flags supplied to the `cen::renderer` constructor.
    */
   template <typename T>
-  graphics(const cen::basic_window<T>& window, const uint32 flags)
-      : m_renderer{window, flags}
+  explicit graphics(const cen::basic_window<T>& window)
+      : m_renderer{window, get_renderer_flags()}
       , m_format{window.get_pixel_format()}
-  {}
+  {
+    m_renderer.set_logical_size(get_logical_size());
+
+    CENTURION_LOG_DEBUG("[rune::graphics] Renderer flags: %u", get_renderer_flags());
+    CENTURION_LOG_DEBUG("[rune::graphics] Pixel format: %s",
+                        cen::to_string(m_format).data());
+    CENTURION_LOG_DEBUG("[rune::graphics] Renderer logical size: {%i, %i}",
+                        m_renderer.logical_width(),
+                        m_renderer.logical_height());
+  }
 
   virtual ~graphics() noexcept = default;
 
@@ -4786,13 +8636,13 @@ class graphics
    *
    * \return the associated renderer.
    */
-  [[nodiscard]] auto renderer() noexcept -> cen::renderer&
+  [[nodiscard]] auto get_renderer() noexcept -> cen::renderer&
   {
     return m_renderer;
   }
 
-  /// \copydoc renderer()
-  [[nodiscard]] auto renderer() const noexcept -> const cen::renderer&
+  /// \copydoc get_renderer()
+  [[nodiscard]] auto get_renderer() const noexcept -> const cen::renderer&
   {
     return m_renderer;
   }
@@ -4851,46 +8701,39 @@ struct input final
 #include <centurion.hpp>  // ...
 #include <concepts>       // floating_point, derived_from
 
-// #include "../aliases/delta_time.hpp"
-#ifndef RUNE_ALIASES_DELTA_TIME_HPP
-#define RUNE_ALIASES_DELTA_TIME_HPP
+// #include "../math/max.hpp"
+#ifndef RUNE_MATH_MAX_HPP
+#define RUNE_MATH_MAX_HPP
+
+#include <concepts>
 
 namespace rune {
 
-/// \cond FALSE
-namespace tags {
-struct delta_time_tag;
-}  // namespace tags
-/// \endcond
-
-/// \addtogroup core
-/// \{
-
 /**
- * \def RUNE_DELTA_TIME_UNDERLYING_TYPE
+ * \brief Returns the largest of two values.
  *
- * \brief The underlying type of the `delta_time` strong type.
+ * \note This function exists because `std::max()` isn't marked as `noexcept`.
  *
- * \note The underlying should be a floating-point type, i.e. `float`, `double` or
- * possibly `long double`.
+ * \note This function uses `operator<`, and not `operator>`.
+ *
+ * \ingroup math
+ *
+ * \tparam T the type of the values.
+ *
+ * \param a the first value.
+ * \param b the second value.
+ *
+ * \return the largest of the two values.
  */
-#ifndef RUNE_DELTA_TIME_UNDERLYING_TYPE
-#define RUNE_DELTA_TIME_UNDERLYING_TYPE float
-#endif  // RUNE_DELTA_TIME_UNDERLYING_TYPE
-
-/**
- * \brief The type used for delta time values, e.g. in the `tick()` function of game class
- * implementations.
- *
- * \see `RUNE_DELTA_TIME_UNDERLYING_TYPE`
- */
-using delta_time = RUNE_DELTA_TIME_UNDERLYING_TYPE;
-
-/// \} End of group core
+template <typename T>
+[[nodiscard]] constexpr auto max(const T& a, const T& b) noexcept(noexcept(a < b)) -> T
+{
+  return (a < b) ? b : a;
+}
 
 }  // namespace rune
 
-#endif  // RUNE_ALIASES_DELTA_TIME_HPP
+#endif  // RUNE_MATH_MAX_HPP
 
 // #include "../math/min.hpp"
 #ifndef RUNE_MATH_MIN_HPP
@@ -4922,6 +8765,8 @@ template <typename T>
 
 #endif  // RUNE_MATH_MIN_HPP
 
+// #include "configuration.hpp"
+
 // #include "game.hpp"
 
 // #include "rune_error.hpp"
@@ -4949,9 +8794,13 @@ using str = const char*;
 
 namespace rune {
 
-/// \addtogroup core
-/// \{
-
+/**
+ * \brief The main exception thrown in the library.
+ *
+ * \ingroup core
+ *
+ * \since 0.1.0
+ */
 class rune_error final : public std::exception
 {
  public:
@@ -4967,8 +8816,6 @@ class rune_error final : public std::exception
   str m_what{"n/a"};
 };
 
-/// \} End of group core
-
 }  // namespace rune
 
 #endif  // RUNE_CORE_RUNE_ERROR_HPP
@@ -4978,65 +8825,6 @@ namespace rune {
 
 /// \addtogroup core
 /// \{
-
-/// \name Configuration macros
-/// \{
-
-/**
- * \def RUNE_MAX_TICK_RATE
- *
- * \brief The maximum tick rate of the game loop, i.e. the maximum amount of ticks per
- * second.
- *
- * \details The game loop will try to run at the refresh rate of the primary screen, as
- * long as the the refresh rate isn't greater than the value of this macro. By default,
- * this macro expands to `120.0`.
- *
- * \note The value of this macro should be a `double`.
- */
-#ifndef RUNE_MAX_TICK_RATE
-#define RUNE_MAX_TICK_RATE 120.0
-#endif  // RUNE_MAX_TICK_RATE
-
-/**
- * \def RUNE_ENGINE_MAX_FRAMES_PER_TICK
- *
- * \brief The maximum amount of frames that the game loop can run per tick.
- *
- * \details The purpose of this limit is to avoid the "spiral-of-death". By default, this
- * macro expands to `5`.
- *
- * \note The value of this macro should be an `int`.
- */
-#ifndef RUNE_ENGINE_MAX_FRAMES_PER_TICK
-#define RUNE_ENGINE_MAX_FRAMES_PER_TICK 5
-#endif  // RUNE_ENGINE_MAX_FRAMES_PER_TICK
-
-/// \} End of configuration macros
-
-/// \copybrief RUNE_MAX_TICK_RATE
-/// \see `RUNE_MAX_TICK_RATE`
-inline constexpr double max_tick_rate = RUNE_MAX_TICK_RATE;
-
-/// \copybrief RUNE_ENGINE_MAX_FRAMES_PER_TICK
-/// \see `RUNE_ENGINE_MAX_FRAMES_PER_TICK`
-inline constexpr int engine_max_frames_per_tick = RUNE_ENGINE_MAX_FRAMES_PER_TICK;
-
-/**
- * \brief Returns the tick rate used by the game loop.
- *
- * \details The tick rate is determined by comparing the refresh rate of the primary
- * screen and the maximum tick rate, and selecting the minimum value.
- *
- * \return the tick rate used by the game loop.
- *
- * \see `max_tick_rate`
- * \see `RUNE_MAX_TICK_RATE`
- */
-[[nodiscard]] inline auto tick_rate() -> double
-{
-  return min(max_tick_rate, static_cast<double>(cen::screen::refresh_rate().value()));
-}
 
 template <typename Game, typename Graphics>
 class engine;
@@ -5069,9 +8857,22 @@ class semi_fixed_game_loop
   using engine_type = engine<game_type, graphics_type>;
   using seconds_type = cen::seconds<double>;
 
+  /**
+   * \brief Creates a semi-fixed game loop instance.
+   *
+   * \details The tick rate is determined by comparing the refresh rate of the primary
+   * screen and the maximum tick rate, and selecting the minimum value.
+   *
+   * \param engine the associated engine instance.
+   * \param cfg the configuration that will be used.
+   *
+   * \since 0.1.0
+   */
   explicit semi_fixed_game_loop(engine_type* engine)
       : m_engine{engine}
-      , m_rate{tick_rate()}
+      , m_rate{rune::min(get_engine_max_tick_rate(),
+                         static_cast<double>(cen::screen::refresh_rate().value()))}
+      , m_maxFramesPerTick{rune::max(1, get_engine_max_frames_per_tick())}
       , m_delta{1.0 / m_rate}
       , m_current{cen::counter::now_in_seconds<double>()}
   {
@@ -5079,6 +8880,11 @@ class semi_fixed_game_loop
     {
       throw rune_error{"Cannot create semi_fixed_game_loop from null engine!"};
     }
+
+    CENTURION_LOG_DEBUG("[rune::semi_fixed_game_loop] Tick rate: %f", m_rate);
+    CENTURION_LOG_DEBUG("[rune::semi_fixed_game_loop] Delta: %f", m_delta);
+    CENTURION_LOG_DEBUG("[rune::semi_fixed_game_loop] Max frames per tick: %i",
+                        m_maxFramesPerTick);
   }
 
   void fetch_current_time() noexcept
@@ -5096,7 +8902,7 @@ class semi_fixed_game_loop
 
     while (frameTime > seconds_type::zero())
     {
-      if (nSteps > engine_max_frames_per_tick)
+      if (nSteps > m_maxFramesPerTick)
       {
         break;  // avoids spiral-of-death by limiting maximum amount of steps
       }
@@ -5108,7 +8914,7 @@ class semi_fixed_game_loop
       }
 
       const auto dt = rune::min(frameTime, m_delta);
-      m_engine->update_logic(static_cast<delta_time>(dt.count()));
+      m_engine->update_logic(static_cast<float>(dt.count()));
 
       frameTime -= dt;
 
@@ -5124,6 +8930,7 @@ class semi_fixed_game_loop
  private:
   engine_type* m_engine{};
   double m_rate;
+  int m_maxFramesPerTick;
   seconds_type m_delta;
   seconds_type m_current;
   bool m_running{true};
@@ -5140,35 +8947,6 @@ namespace rune {
 
 /// \addtogroup core
 /// \{
-
-// clang-format off
-
-template <typename T>
-concept is_configuration_type = requires
-{
-  { T::renderer_flags } -> std::convertible_to<uint32>;
-  { T::window_size } -> std::convertible_to<cen::iarea>;
-};
-
-// clang-format on
-
-/**
- * \struct configuration
- *
- * \brief Provides configuration options for different engine aspects.
- *
- * \note Members are initialized to their default values, meaning that you do not have to
- * assign each member if you create custom configurations.
- *
- * \see `engine`
- */
-struct configuration
-{
-  uint32 renderer_flags = cen::renderer::default_flags();
-  cen::iarea window_size = cen::window::default_size();
-};
-
-static_assert(is_configuration_type<configuration>);
 
 /**
  * \class engine
@@ -5216,15 +8994,10 @@ class engine
                 "Game class must either be default constructible or provide a "
                 "constructor that accepts \"graphics_type&\"");
 
-  /**
-   * \brief Creates an engine instance.
-   *
-   * \param cfg optional custom configuration of the engine.
-   */
-  explicit engine(const configuration& cfg = default_cfg())
+  explicit engine()
       : m_loop{this}
-      , m_window{"Rune", cfg.window_size}
-      , m_graphics{m_window, cfg.renderer_flags}
+      , m_window{get_window_title(), get_window_size()}
+      , m_graphics{m_window}
   {
     if constexpr (std::constructible_from<game_type, graphics_type&>)
     {
@@ -5252,7 +9025,7 @@ class engine
 
     m_game->on_start();
 
-    auto& renderer = m_graphics.renderer();
+    auto& renderer = m_graphics.get_renderer();
     while (m_loop.is_running())
     {
       m_loop.tick();
@@ -5331,17 +9104,6 @@ class engine
     return m_input;
   }
 
-  /**
-   * \brief Returns the default configuration used by the engine, if no custom
-   * configuration is requested.
-   *
-   * \return the default engine configuration.
-   */
-  [[nodiscard]] constexpr static auto default_cfg() -> configuration
-  {
-    return configuration{};
-  }
-
  private:
   loop_type m_loop;          ///< The game loop.
   cen::window m_window;      ///< The associated window.
@@ -5349,14 +9111,14 @@ class engine
   input m_input;             ///< The input state wrapper.
   maybe<game_type> m_game;   ///< The game instance, optional to delay construction.
 
-  void update_logic(const delta_time dt)
+  void update_logic(const float dt)
   {
     m_game->tick(dt);
   }
 
   auto update_input() -> bool
   {
-    const auto& renderer = m_graphics.renderer();
+    const auto& renderer = m_graphics.get_renderer();
     m_input.mouse.set_logical_size(renderer.logical_size());
     m_input.mouse.update(renderer.output_size());
     m_input.keyboard.update();
@@ -5404,6 +9166,7 @@ class engine
 #define RUNE_CORE_FROM_STRING_HPP
 
 #include <charconv>      // from_chars
+#include <concepts>      // floating_point, integral
 #include <string_view>   // string_view
 #include <system_error>  // errc
 
@@ -5415,7 +9178,7 @@ namespace rune {
 /// \addtogroup core
 /// \{
 
-template <typename T>
+template <std::integral T>
 [[nodiscard]] auto from_string(const std::string_view str, const int base = 10)
     -> maybe<T>
 {
@@ -5423,7 +9186,23 @@ template <typename T>
 
   const auto [ptr, error] =
       std::from_chars(str.data(), str.data() + str.size(), value, base);
-  if (error != std::errc::invalid_argument && error != std::errc::result_out_of_range)
+  if (error == std::errc{})
+  {
+    return value;
+  }
+  else
+  {
+    return nothing;
+  }
+}
+
+template <std::floating_point T>
+[[nodiscard]] auto from_string(const std::string_view str) -> maybe<T>
+{
+  T value{};
+
+  const auto [ptr, error] = std::from_chars(str.data(), str.data() + str.size(), value);
+  if (error == std::errc{})
   {
     return value;
   }
@@ -5444,8 +9223,6 @@ template <typename T>
 #define RUNE_CORE_GAME_HPP
 
 #include <concepts>  // derived_from
-
-// #include "aliases/delta_time.hpp"
 
 // #include "core/graphics.hpp"
 
@@ -5489,7 +9266,7 @@ namespace rune {
  *     // ...
  *   }
  *
- *   void tick(rune::delta_time dt) override
+ *   void tick(float dt) override
  *   {
  *     // ...
  *   }
@@ -5587,7 +9364,7 @@ class basic_game
    *
    * \since 0.1.0
    */
-  virtual void tick(delta_time dt)
+  virtual void tick(float dt)
   {}
 
   /**
@@ -5671,9 +9448,13 @@ concept iterable = requires (T obj)
 
 namespace rune {
 
-/// \addtogroup core
-/// \{
-
+/**
+ * \brief The main exception thrown in the library.
+ *
+ * \ingroup core
+ *
+ * \since 0.1.0
+ */
 class rune_error final : public std::exception
 {
  public:
@@ -5689,8 +9470,6 @@ class rune_error final : public std::exception
   str m_what{"n/a"};
 };
 
-/// \} End of group core
-
 }  // namespace rune
 
 #endif  // RUNE_CORE_RUNE_ERROR_HPP
@@ -5702,9 +9481,11 @@ class rune_error final : public std::exception
 #include <centurion.hpp>  // ...
 #include <concepts>       // floating_point, derived_from
 
-// #include "../aliases/delta_time.hpp"
+// #include "../math/max.hpp"
 
 // #include "../math/min.hpp"
+
+// #include "configuration.hpp"
 
 // #include "game.hpp"
 
@@ -5715,65 +9496,6 @@ namespace rune {
 
 /// \addtogroup core
 /// \{
-
-/// \name Configuration macros
-/// \{
-
-/**
- * \def RUNE_MAX_TICK_RATE
- *
- * \brief The maximum tick rate of the game loop, i.e. the maximum amount of ticks per
- * second.
- *
- * \details The game loop will try to run at the refresh rate of the primary screen, as
- * long as the the refresh rate isn't greater than the value of this macro. By default,
- * this macro expands to `120.0`.
- *
- * \note The value of this macro should be a `double`.
- */
-#ifndef RUNE_MAX_TICK_RATE
-#define RUNE_MAX_TICK_RATE 120.0
-#endif  // RUNE_MAX_TICK_RATE
-
-/**
- * \def RUNE_ENGINE_MAX_FRAMES_PER_TICK
- *
- * \brief The maximum amount of frames that the game loop can run per tick.
- *
- * \details The purpose of this limit is to avoid the "spiral-of-death". By default, this
- * macro expands to `5`.
- *
- * \note The value of this macro should be an `int`.
- */
-#ifndef RUNE_ENGINE_MAX_FRAMES_PER_TICK
-#define RUNE_ENGINE_MAX_FRAMES_PER_TICK 5
-#endif  // RUNE_ENGINE_MAX_FRAMES_PER_TICK
-
-/// \} End of configuration macros
-
-/// \copybrief RUNE_MAX_TICK_RATE
-/// \see `RUNE_MAX_TICK_RATE`
-inline constexpr double max_tick_rate = RUNE_MAX_TICK_RATE;
-
-/// \copybrief RUNE_ENGINE_MAX_FRAMES_PER_TICK
-/// \see `RUNE_ENGINE_MAX_FRAMES_PER_TICK`
-inline constexpr int engine_max_frames_per_tick = RUNE_ENGINE_MAX_FRAMES_PER_TICK;
-
-/**
- * \brief Returns the tick rate used by the game loop.
- *
- * \details The tick rate is determined by comparing the refresh rate of the primary
- * screen and the maximum tick rate, and selecting the minimum value.
- *
- * \return the tick rate used by the game loop.
- *
- * \see `max_tick_rate`
- * \see `RUNE_MAX_TICK_RATE`
- */
-[[nodiscard]] inline auto tick_rate() -> double
-{
-  return min(max_tick_rate, static_cast<double>(cen::screen::refresh_rate().value()));
-}
 
 template <typename Game, typename Graphics>
 class engine;
@@ -5806,9 +9528,22 @@ class semi_fixed_game_loop
   using engine_type = engine<game_type, graphics_type>;
   using seconds_type = cen::seconds<double>;
 
+  /**
+   * \brief Creates a semi-fixed game loop instance.
+   *
+   * \details The tick rate is determined by comparing the refresh rate of the primary
+   * screen and the maximum tick rate, and selecting the minimum value.
+   *
+   * \param engine the associated engine instance.
+   * \param cfg the configuration that will be used.
+   *
+   * \since 0.1.0
+   */
   explicit semi_fixed_game_loop(engine_type* engine)
       : m_engine{engine}
-      , m_rate{tick_rate()}
+      , m_rate{rune::min(get_engine_max_tick_rate(),
+                         static_cast<double>(cen::screen::refresh_rate().value()))}
+      , m_maxFramesPerTick{rune::max(1, get_engine_max_frames_per_tick())}
       , m_delta{1.0 / m_rate}
       , m_current{cen::counter::now_in_seconds<double>()}
   {
@@ -5816,6 +9551,11 @@ class semi_fixed_game_loop
     {
       throw rune_error{"Cannot create semi_fixed_game_loop from null engine!"};
     }
+
+    CENTURION_LOG_DEBUG("[rune::semi_fixed_game_loop] Tick rate: %f", m_rate);
+    CENTURION_LOG_DEBUG("[rune::semi_fixed_game_loop] Delta: %f", m_delta);
+    CENTURION_LOG_DEBUG("[rune::semi_fixed_game_loop] Max frames per tick: %i",
+                        m_maxFramesPerTick);
   }
 
   void fetch_current_time() noexcept
@@ -5833,7 +9573,7 @@ class semi_fixed_game_loop
 
     while (frameTime > seconds_type::zero())
     {
-      if (nSteps > engine_max_frames_per_tick)
+      if (nSteps > m_maxFramesPerTick)
       {
         break;  // avoids spiral-of-death by limiting maximum amount of steps
       }
@@ -5845,7 +9585,7 @@ class semi_fixed_game_loop
       }
 
       const auto dt = rune::min(frameTime, m_delta);
-      m_engine->update_logic(static_cast<delta_time>(dt.count()));
+      m_engine->update_logic(static_cast<float>(dt.count()));
 
       frameTime -= dt;
 
@@ -5861,6 +9601,7 @@ class semi_fixed_game_loop
  private:
   engine_type* m_engine{};
   double m_rate;
+  int m_maxFramesPerTick;
   seconds_type m_delta;
   seconds_type m_current;
   bool m_running{true};
@@ -6845,6 +10586,1810 @@ namespace rune {
 
 #endif  // RUNE_CORE_COMPILER_HPP
 
+// #include "configuration.hpp"
+#ifndef RUNE_CORE_CONFIGURATION_HPP
+#define RUNE_CORE_CONFIGURATION_HPP
+
+#include <centurion.hpp>  // window, renderer, iarea
+#include <concepts>       // convertible_to
+#include <filesystem>     // path
+#include <string>         // string
+
+// #include "../aliases/integers.hpp"
+
+// #include "../io/csv.hpp"
+#ifndef RUNE_IO_CSV_HPP
+#define RUNE_IO_CSV_HPP
+
+#include <sstream>  // istringstream
+#include <string>   // string, getline
+#include <utility>  // move
+#include <vector>   // vector
+
+namespace rune {
+
+/**
+ * \brief Parses a string of comma-separated values (CSV).
+ *
+ * \ingroup io
+ *
+ * \param csv the string that holds the comma separated values.
+ *
+ * \return the parsed tokens.
+ *
+ * \since 0.1.0
+ */
+[[nodiscard]] inline auto parse_csv(const std::string& csv) -> std::vector<std::string>
+{
+  std::vector<std::string> tokens;
+
+  std::istringstream stream{csv};
+  std::string token;
+
+  while (std::getline(stream, token, ','))
+  {
+    tokens.push_back(std::move(token));
+    token.clear();
+  }
+
+  return tokens;
+}
+
+}  // namespace rune
+
+#endif  // RUNE_IO_CSV_HPP
+
+// #include "../io/ini.hpp"
+#ifndef RUNE_IO_INI_HPP
+#define RUNE_IO_INI_HPP
+
+#include <algorithm>    // find_if, all_of
+#include <cassert>      // assert
+#include <filesystem>   // path
+#include <fstream>      // ifstream, ofstream
+#include <functional>   // less
+#include <istream>      // istream
+#include <locale>       // locale, isspace, isdigit
+#include <map>          // map
+#include <ostream>      // ostream
+#include <sstream>      // istringstream
+#include <string>       // basic_string, getline, stod, stoul, stoll
+#include <string_view>  // basic_string_view
+#include <utility>      // move
+#include <vector>       // vector
+
+// #include "../aliases/integers.hpp"
+#ifndef RUNE_ALIASES_INTEGERS_HPP
+#define RUNE_ALIASES_INTEGERS_HPP
+
+#include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+using usize = std::size_t;
+
+using longlong = long long;
+
+using ushort = unsigned short;
+
+/// Unsigned integer.
+using uint = unsigned;
+
+/// Unsigned long integer.
+using ulong = unsigned long;
+
+/// Used as the argument type to integral literal operators.
+using ulonglong = unsigned long long;
+
+/// 8-bit signed integer.
+using int8 = cen::i8;
+
+/// 16-bit signed integer.
+using int16 = cen::i16;
+
+/// 32-bit signed integer.
+using int32 = cen::i32;
+
+/// 64-bit signed integer.
+using int64 = cen::i64;
+
+/// 8-bit unsigned integer.
+using uint8 = cen::u8;
+
+/// 16-bit unsigned integer.
+using uint16 = cen::u16;
+
+/// 32-bit unsigned integer.
+using uint32 = cen::u32;
+
+/// 64-bit unsigned integer.
+using uint64 = cen::u64;
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_INTEGERS_HPP
+
+// #include "../aliases/maybe.hpp"
+#ifndef RUNE_ALIASES_MAYBE_HPP
+#define RUNE_ALIASES_MAYBE_HPP
+
+#include <optional>  // optional
+
+namespace rune {
+
+template <typename T>
+using maybe = std::optional<T>;
+
+inline constexpr std::nullopt_t nothing = std::nullopt;
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_MAYBE_HPP
+
+// #include "../core/rune_error.hpp"
+#ifndef RUNE_CORE_RUNE_ERROR_HPP
+#define RUNE_CORE_RUNE_ERROR_HPP
+
+#include <exception>  // exception
+
+// #include "../aliases/str.hpp"
+
+
+namespace rune {
+
+/**
+ * \typedef str
+ *
+ * \brief An alias for a C-style null-terminated string.
+ *
+ * \ingroup core
+ */
+using str = const char*;
+
+}  // namespace rune
+
+
+namespace rune {
+
+/**
+ * \brief The main exception thrown in the library.
+ *
+ * \ingroup core
+ *
+ * \since 0.1.0
+ */
+class rune_error final : public std::exception
+{
+ public:
+  explicit rune_error(const str what) noexcept : m_what{what}
+  {}
+
+  [[nodiscard]] auto what() const noexcept -> str override
+  {
+    return m_what;
+  }
+
+ private:
+  str m_what{"n/a"};
+};
+
+}  // namespace rune
+
+#endif  // RUNE_CORE_RUNE_ERROR_HPP
+
+// #include "ini_section.hpp"
+#ifndef RUNE_IO_INI_SECTION_HPP
+#define RUNE_IO_INI_SECTION_HPP
+
+#include <functional>   // less
+#include <map>          // map
+#include <ostream>      // ostream
+#include <string>       // basic_string
+#include <string_view>  // basic_string_view
+
+// #include "../aliases/integers.hpp"
+
+// #include "../core/rune_error.hpp"
+
+// #include "ini_value.hpp"
+#ifndef RUNE_IO_INI_VALUE_HPP
+#define RUNE_IO_INI_VALUE_HPP
+
+#include <concepts>   // convertible_to, integral, floating_point, same_as
+#include <nenya.hpp>  // strong_type
+#include <ostream>    // ostream
+#include <string>     // basic_string, to_string
+#include <utility>    // move
+#include <variant>    // variant, get, get_if, holds_alternative
+
+// #include "../aliases/integers.hpp"
+
+
+namespace rune {
+
+/// \addtogroup io
+/// \{
+
+/// \name Ini
+/// \{
+
+// clang-format off
+
+/**
+ * \brief Requires that a type is either a signed integer, unsigned integer,
+ * floating-point number or a string.
+ *
+ * \tparam T the type that will be checked.
+ * \tparam Char the character type.
+ *
+ * \since 0.1.0
+ */
+template <typename T, typename Char>
+concept is_ini_value = std::integral<T> ||
+                       std::floating_point<T> ||
+                       std::constructible_from<std::basic_string<Char>, T>;
+
+// clang-format on
+
+/**
+ * \brief Represents a value of an individual ini element.
+ *
+ * \tparam Char the character type that will be used.
+ *
+ * \see `ini_value`
+ * \see `basic_ini`
+ * \see `basic_ini_section`
+ *
+ * \since 0.1.0
+ */
+template <typename Char>
+class basic_ini_value final
+{
+ public:
+  using char_type = Char;
+  using string_type = std::basic_string<char_type>;
+  using int_type = int64;
+  using uint_type = uint64;
+  using float_type = double;
+  using value_type = std::variant<string_type, bool, int_type, uint_type, float_type>;
+
+  /// \name Construction
+  /// \{
+
+  /**
+   * \brief Creates a `basic_ini_value` with an empty string as its value.
+   *
+   * \since 0.1.0
+   */
+  basic_ini_value() = default;
+
+  basic_ini_value(const basic_ini_value&) = default;
+  basic_ini_value(basic_ini_value&&) noexcept = default;
+
+  basic_ini_value& operator=(const basic_ini_value&) = default;
+  basic_ini_value& operator=(basic_ini_value&&) noexcept = default;
+
+  /**
+   * \brief Creates a `basic_ini_value` instance.
+   *
+   * \tparam T the type of the value.
+   *
+   * \param value the value that will be stored.
+   *
+   * \since 0.1.0
+   */
+  template <is_ini_value<char_type> T>
+  /*implicit*/ basic_ini_value(T value)  // NOLINT
+  {
+    assign(std::move(value));
+  }
+
+  /**
+   * \brief Assigns a new value to the instance.
+   *
+   * \tparam T the type of the new value.
+   *
+   * \param value the new value of the `basic_ini_value`.
+   *
+   * \return the `basic_ini_value` instance.
+   *
+   * \since 0.1.0
+   */
+  template <is_ini_value<char_type> T>
+  auto operator=(T value) -> basic_ini_value&
+  {
+    assign(std::move(value));
+    return *this;
+  }
+
+  /// \} End of construction
+
+  /**
+   * \brief Outputs the value to an output stream.
+   *
+   * \param stream the output stream that will be used.
+   *
+   * \since 0.1.0
+   */
+  void dump(std::ostream& stream) const
+  {
+    if (const auto* str = try_get_string())
+    {
+      stream << *str;
+    }
+    else if (const auto* i = try_get_int())
+    {
+      stream << std::to_string(*i);
+    }
+    else if (const auto* u = try_get_uint())
+    {
+      stream << std::to_string(*u) << 'u';
+    }
+    else if (const auto* f = try_get_float())
+    {
+      stream << std::to_string(*f);
+    }
+    else if (const auto* b = try_get_bool())
+    {
+      stream << ((*b) ? "true" : "false");
+    }
+  }
+
+  /**
+   * \brief Returns the underlying representation.
+   *
+   * \return the underlying variant value.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto get() const -> const value_type&
+  {
+    return m_value;
+  }
+
+  /// \name Checked getters
+  /// \{
+
+  /**
+   * \brief Returns the underlying value as the specified type.
+   *
+   * \details This function can be used to safely cast the underlying value to the
+   * specified type, as long as the types are in the same "family". In other words, where
+   * the only difference between the types is the representation range. For example, if
+   * the underlying value is a 64-bit signed integer, it is perfectly valid to cast it to
+   * an `int`, since they are both signed integer types.
+   *
+   * \code{cpp}
+   * rune::ini_value value = 42;  // Signed integer value (stored as 64-bit integer)
+   *
+   * auto i = value.as<int>();  // Fine, underlying type is a signed integer
+   *
+   * auto u = value.as<unsigned>();  // Error, no implicit signed to unsigned conversion
+   * auto f = value.as<float>();     // Error, no implicit integer to float conversion
+   * auto s = value.as<std::string>();  // Error, completely unrelated types
+   * \endcode
+   *
+   * \tparam T the type of the returned value.
+   *
+   * \return the internal value casted to the specified type.
+   *
+   * \throws bad_variant_access if the underlying and specified types aren't related.
+   *
+   * \since 0.1.0
+   */
+  template <is_ini_value<char_type> T>
+  [[nodiscard]] auto as() const -> T
+  {
+    if constexpr (std::same_as<T, bool>)
+    {
+      return std::get<bool>(m_value);
+    }
+    else if constexpr (std::signed_integral<T>)
+    {
+      return static_cast<T>(std::get<int64>(m_value));
+    }
+    else if constexpr (std::unsigned_integral<T>)
+    {
+      return static_cast<T>(std::get<uint64>(m_value));
+    }
+    else if constexpr (std::floating_point<T>)
+    {
+      return static_cast<T>(std::get<double>(m_value));
+    }
+    else
+    {
+      return std::get<string_type>(m_value);
+    }
+  }
+
+  /**
+   * \brief Assigns a value with the underlying value.
+   *
+   * \details The value conversion behavior of this function is identical to those of
+   * the `as()` function.
+   *
+   * \code{cpp}
+   * rune::ini_value value = "foo";
+   *
+   * std::string str;
+   * value.get_to(str);  // Fine, the underlying type is a string
+   *
+   * int i{};
+   * value.get_to(i);  // Error, cannot assign integer with string
+   * \endcode
+   *
+   * \param[out] value a reference to the value that will be assigned.
+   *
+   * \throws bad_variant_access if there is a type mismatch.
+   *
+   * \since 0.1.0
+   */
+  void get_to(string_type& value) const
+  {
+    value = std::get<string_type>(m_value);
+  }
+
+  /// \copydoc get_to()
+  void get_to(bool& value) const
+  {
+    value = std::get<bool>(m_value);
+  }
+
+  /// \copydoc get_to()
+  void get_to(int8& value) const
+  {
+    value = static_cast<int8>(std::get<int_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(int16& value) const
+  {
+    value = static_cast<int16>(std::get<int_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(int32& value) const
+  {
+    value = static_cast<int32>(std::get<int_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(int64& value) const
+  {
+    value = std::get<int64>(m_value);
+  }
+
+  /// \copydoc get_to()
+  void get_to(uint8& value) const
+  {
+    value = static_cast<uint8>(std::get<uint_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(uint16& value) const
+  {
+    value = static_cast<uint16>(std::get<uint_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(uint32& value) const
+  {
+    value = static_cast<uint32>(std::get<uint_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(uint64& value) const
+  {
+    value = static_cast<uint64>(std::get<uint_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(float& value) const
+  {
+    value = static_cast<float>(std::get<float_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(double& value) const
+  {
+    value = static_cast<double>(std::get<float_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  void get_to(long double& value) const
+  {
+    value = static_cast<long double>(std::get<float_type>(m_value));
+  }
+
+  /// \copydoc get_to()
+  template <is_ini_value<char_type> T, typename Tag, nenya::conversion Conv>
+  void get_to(nenya::strong_type<T, Tag, Conv>& value) const
+  {
+    using strong_type = nenya::strong_type<T, Tag, Conv>;
+
+    if constexpr (std::same_as<T, bool>)
+    {
+      value = strong_type{static_cast<T>(std::get<bool>(m_value))};
+    }
+    else if constexpr (std::signed_integral<T>)
+    {
+      value = strong_type{static_cast<T>(std::get<int_type>(m_value))};
+    }
+    else if constexpr (std::unsigned_integral<T>)
+    {
+      value = strong_type{static_cast<T>(std::get<uint_type>(m_value))};
+    }
+    else if constexpr (std::floating_point<T>)
+    {
+      value = strong_type{static_cast<T>(std::get<float_type>(m_value))};
+    }
+    else /*if constexpr (std::convertible_to<T, string_type>)*/
+    {
+      value = strong_type{static_cast<T>(std::get<string_type>(m_value))};
+    }
+  }
+
+  /// \} End of checked getters
+
+  /// \name Unchecked getters
+  /// \{
+
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying value; null if the underlying value isn't a
+   * string.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_string() const noexcept -> const string_type*
+  {
+    return std::get_if<string_type>(&m_value);
+  }
+
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying value; null if the underlying value isn't an
+   * integer.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_int() const noexcept -> const int_type*
+  {
+    return std::get_if<int_type>(&m_value);
+  }
+
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying value; null if the underlying value isn't an
+   * unsigned integer.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_uint() const noexcept -> const uint_type*
+  {
+    return std::get_if<uint_type>(&m_value);
+  }
+
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying value; null if the underlying value isn't a
+   * floating-point number.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_float() const noexcept -> const float_type*
+  {
+    return std::get_if<float_type>(&m_value);
+  }
+
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying boolean value; null if the underlying value isn't
+   * a boolean.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_bool() const noexcept -> const bool*
+  {
+    return std::get_if<bool>(&m_value);
+  }
+
+  /// \} End of unchecked getters
+
+  /// \name Type indicators
+  /// \{
+
+  /**
+   * \brief Indicates whether or not the value is a string.
+   *
+   * \return `true` if the value is a string; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto is_string() const noexcept -> bool
+  {
+    return std::holds_alternative<string_type>(m_value);
+  }
+
+  /**
+   * \brief Indicates whether or not the value is a signed integer.
+   *
+   * \return `true` if the value is a signed integer; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto is_int() const noexcept -> bool
+  {
+    return std::holds_alternative<int_type>(m_value);
+  }
+
+  /**
+   * \brief Indicates whether or not the value is an unsigned integer.
+   *
+   * \return `true` if the value is an unsigned integer; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto is_uint() const noexcept -> bool
+  {
+    return std::holds_alternative<uint_type>(m_value);
+  }
+
+  /**
+   * \brief Indicates whether or not the value is a floating-point number.
+   *
+   * \return `true` if the value is a floating-point number; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto is_float() const noexcept -> bool
+  {
+    return std::holds_alternative<float_type>(m_value);
+  }
+
+  /**
+   * \brief Indicates whether or not the value is a boolean.
+   *
+   * \return `true` if the value is a boolean; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto is_bool() const noexcept -> bool
+  {
+    return std::holds_alternative<bool>(m_value);
+  }
+
+  /// \} End of type indicators
+
+  [[nodiscard]] bool operator==(const basic_ini_value&) const = default;
+
+ private:
+  value_type m_value;
+
+  template <is_ini_value<char_type> T>
+  void assign(T value)
+  {
+    if constexpr (std::same_as<T, bool>)
+    {
+      m_value.template emplace<bool>(std::move(value));
+    }
+    else if constexpr (std::signed_integral<T>)
+    {
+      m_value.template emplace<int_type>(std::move(value));
+    }
+    else if constexpr (std::unsigned_integral<T>)
+    {
+      m_value.template emplace<uint_type>(std::move(value));
+    }
+    else if constexpr (std::floating_point<T>)
+    {
+      m_value.template emplace<float_type>(std::move(value));
+    }
+    else
+    {
+      m_value.template emplace<string_type>(std::move(value));
+    }
+  }
+};
+
+/**
+ * \brief Alias for the most common use case of `basic_ini_value`.
+ *
+ * \since 0.1.0
+ */
+using ini_value = basic_ini_value<char>;
+
+/**
+ * \brief Prints a textual representation of an ini value.
+ *
+ * \tparam Char the used character type.
+ *
+ * \param stream the output stream that will be used.
+ * \param value the ini value that will be printed.
+ *
+ * \return the used stream.
+ *
+ * \since 0.1.0
+ */
+template <typename Char>
+auto operator<<(std::ostream& stream, const basic_ini_value<Char>& value) -> std::ostream&
+{
+  value.dump(stream);
+  return stream;
+}
+
+/// \} End of ini
+
+/// \} End of group io
+
+}  // namespace rune
+
+#endif  // RUNE_IO_INI_VALUE_HPP
+
+
+namespace rune {
+
+/// \addtogroup io
+/// \{
+
+/// \name Ini
+/// \{
+
+/**
+ * \brief Represents the syntax used by an ini file.
+ *
+ * \tparam Char the character type that is used.
+ *
+ * \since 0.1.0
+ */
+template <typename Char>
+struct ini_format final
+{
+  using value_type = Char;
+
+  value_type section_start = '[';  ///< Token introducing a section name.
+  value_type section_end = ']';    ///< Token that ends a section name.
+  value_type assign = '=';         ///< Assignment operator token.
+  value_type comment = ';';        ///< Line comment token.
+};
+
+/**
+ * \brief Represents a section in an ini file.
+ *
+ * \tparam Char the character type that is used.
+ *
+ * \see `ini_section`
+ * \see `basic_ini`
+ * \see `basic_ini_value`
+ *
+ * \since 0.1.0
+ */
+template <typename Char>
+class basic_ini_section final
+{
+ public:
+  using char_type = Char;
+  using elem_type = basic_ini_value<char_type>;
+  using string_type = std::basic_string<char_type>;
+  using string_view_type = std::basic_string_view<char_type>;
+  using format_type = ini_format<char_type>;
+  using storage_type = std::map<string_type, elem_type, std::less<>>;
+  using value_type = typename storage_type::value_type;
+  using iterator = typename storage_type::iterator;
+  using const_iterator = typename storage_type::const_iterator;
+  using size_type = usize;
+
+  /**
+   * \brief Outputs the contents of the section to an output stream.
+   *
+   * \param stream the output stream that will be used.
+   * \param format the syntax that will be used.
+   *
+   * \since 0.1.0
+   */
+  void dump(std::ostream& stream, const format_type& format) const
+  {
+    for (const auto& [key, value] : m_entries)
+    {
+      stream << key << format.assign << value << '\n';
+    }
+
+    stream << '\n';
+  }
+
+  /**
+   * \brief Removes an element from the section, if it exists.
+   *
+   * \param element the name of the element that will be removed.
+   *
+   * \return `true` if an element was removed; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  auto erase(const string_view_type element) -> bool
+  {
+    if (const auto it = m_entries.find(element); it != m_entries.end())
+    {
+      m_entries.erase(it);
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  /**
+   * \brief Retrieves an element from the section or default-constructs one if it doesn't
+   * already exist.
+   *
+   * \param element the name of the element that will be retrieved.
+   *
+   * \return the value that was either found or created.
+   *
+   * \since 0.1.0
+   */
+  auto get_or_emplace(const string_view_type element) -> elem_type&
+  {
+    if (const auto it = m_entries.find(element); it != m_entries.end())
+    {
+      return it->second;
+    }
+    else
+    {
+      return m_entries[string_type{element}];
+    }
+  }
+
+  /// \copydoc get_or_emplace()
+  auto operator[](const string_view_type element) -> elem_type&
+  {
+    return get_or_emplace(element);
+  }
+
+  /**
+   * \brief Returns the value associated with the specified name.
+   *
+   * \param element the name of the value to obtain.
+   *
+   * \return the ini value associated with the specified name.
+   *
+   * \throws rune_error if the section doesn't contain the specified value.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto at(const string_view_type element) -> elem_type&
+  {
+    if (const auto it = m_entries.find(element); it != m_entries.end())
+    {
+      return it->second;
+    }
+    else
+    {
+      throw rune_error{"basic_ini_section::at(): element does not exist!"};
+    }
+  }
+
+  /// \copydoc at()
+  [[nodiscard]] auto at(const string_view_type element) const -> const elem_type&
+  {
+    if (const auto it = m_entries.find(element); it != m_entries.end())
+    {
+      return it->second;
+    }
+    else
+    {
+      throw rune_error{"basic_ini_section::at(): element does not exist!"};
+    }
+  }
+
+  /**
+   * \brief Indicates whether or not the section contains a value with the specified name.
+   *
+   * \param element the name of the element to look for.
+   *
+   * \return `true` if the section contains a value with the specified name; `false`
+   * otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto contains(const string_view_type element) const -> bool
+  {
+    return m_entries.find(element) != m_entries.end();
+  }
+
+  /**
+   * \brief Returns the amount of values present in the section.
+   *
+   * \return the amount of values in the section.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto size() const noexcept -> size_type
+  {
+    return m_entries.size();
+  }
+
+  /**
+   * \brief Indicates whether or not the section is empty.
+   *
+   * \return `true` if the section is empty; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto empty() const noexcept -> bool
+  {
+    return m_entries.empty();
+  }
+
+  /**
+   * \brief Returns an iterator to the beginning of the section.
+   *
+   * \return an iterator to the beginning.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto begin() noexcept -> iterator
+  {
+    return m_entries.begin();
+  }
+
+  /**
+   * \brief Returns a const iterator to the beginning of the section.
+   *
+   * \return a const iterator to the beginning.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto begin() const noexcept -> const_iterator
+  {
+    return m_entries.begin();
+  }
+
+  /**
+   * \brief Returns an iterator to the end of the section.
+   *
+   * \return an iterator to the end.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto end() noexcept -> iterator
+  {
+    return m_entries.end();
+  }
+
+  /**
+   * \brief Returns a const iterator to the end of the section.
+   *
+   * \return a const iterator to the end.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto end() const noexcept -> const_iterator
+  {
+    return m_entries.end();
+  }
+
+ private:
+  storage_type m_entries;
+};
+
+/**
+ * \brief Alias for the most common use case of `basic_ini_section`.
+ *
+ * \since 0.1.0
+ */
+using ini_section = basic_ini_section<char>;
+
+/// \} End of ini
+
+/// \} End of group IO
+
+}  // namespace rune
+
+#endif  // RUNE_IO_INI_SECTION_HPP
+
+// #include "ini_value.hpp"
+
+
+namespace rune {
+
+/// \addtogroup io
+/// \{
+
+/// \name Ini
+/// \{
+
+/**
+ * \brief Represents an ini file.
+ *
+ * \see `ini_file`
+ * \see `basic_ini_section`
+ * \see `basic_ini_value`
+ * \see `write_ini()`
+ * \see `read_ini()`
+ * \see `operator<<(std::ostream&, const basic_ini&)`
+ * \see `operator>>(std::istream&, basic_ini&)`
+ *
+ * \since 0.1.0
+ */
+template <typename Char>
+class basic_ini final
+{
+ public:
+  using char_type = Char;
+  using string_type = std::basic_string<char_type>;
+  using string_view_type = std::basic_string_view<char_type>;
+  using section_type = basic_ini_section<char_type>;
+  using format_type = ini_format<char_type>;
+  using storage_type = std::map<string_type, section_type, std::less<>>;
+  using iterator = typename storage_type::iterator;
+  using const_iterator = typename storage_type::const_iterator;
+  using size_type = usize;
+
+  /**
+   * \brief Creates an empty ini file.
+   *
+   * \param format optional custom format.
+   *
+   * \since 0.1.0
+   */
+  explicit basic_ini(const format_type format = format_type{}) : m_format{format}
+  {}
+
+  /**
+   * \brief Writes the contents of the file to a stream.
+   *
+   * \param stream the output stream that will be used.
+   *
+   * \since 0.1.0
+   */
+  void dump(std::ostream& stream) const
+  {
+    for (const auto& [name, section] : m_sections)
+    {
+      stream << m_format.section_start << name << m_format.section_end << '\n';
+      section.dump(stream, m_format);
+    }
+  }
+
+  /**
+   * \brief Parses an ini file based on an input stream.
+   *
+   * \param stream the input stream that will be used.
+   *
+   * \since 0.1.0
+   */
+  void read(std::istream& stream)
+  {
+    string_type line;
+    string_type section;
+
+    line.reserve(32);
+    section.reserve(32);
+
+    while (std::getline(stream, line))
+    {
+      trim_left(line);
+      trim_right(line);
+      parse_line(line, section);
+    }
+  }
+
+  /**
+   * \brief Adds or replaces a section.
+   *
+   * \param section the name of the section that will be added or replaced.
+   *
+   * \return the new section.
+   *
+   * \since 0.1.0
+   */
+  auto emplace_or_replace(string_type section) -> section_type&
+  {
+    const auto [it, inserted] =
+        m_sections.insert_or_assign(std::move(section), section_type{});
+    return it->second;
+  }
+
+  /**
+   * \brief Retrieves a section from the file or default-constructs one if it doesn't
+   * already exist.
+   *
+   * \param section the name of the section that will be retrieved.
+   *
+   * \return the section that was either found or created.
+   *
+   * \since 0.1.0
+   */
+  auto get_or_emplace(const string_view_type section) -> section_type&
+  {
+    if (const auto it = m_sections.find(section); it != m_sections.end())
+    {
+      return it->second;
+    }
+    else
+    {
+      auto [iterator, inserted] = m_sections.try_emplace(string_type{section});
+      assert(inserted);
+
+      return iterator->second;
+    }
+  }
+
+  /// \copydoc get_or_emplace()
+  auto operator[](const string_view_type section) -> section_type&
+  {
+    return get_or_emplace(section);
+  }
+
+  /**
+   * \brief Removes a section from the file, if it exists.
+   *
+   * \param section the name of the section that will be removed.
+   *
+   * \return `true` if a section was removed; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  auto erase(const string_view_type section) -> bool
+  {
+    if (const auto it = m_sections.find(section); it != m_sections.end())
+    {
+      m_sections.erase(it);
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  /**
+   * \brief Returns the section associated with the specified name.
+   *
+   * \param section the name of the section to retrieve.
+   *
+   * \return the found section.
+   *
+   * \throws rune_error if there is no section with the specified name.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto at(const string_view_type section) -> section_type&
+  {
+    if (const auto it = m_sections.find(section); it != m_sections.end())
+    {
+      return it->second;
+    }
+    else
+    {
+      throw rune_error{"basic_ini::at(): section does not exist!"};
+    }
+  }
+
+  /// \copydoc at()
+  [[nodiscard]] auto at(const string_view_type section) const -> const section_type&
+  {
+    if (const auto it = m_sections.find(section); it != m_sections.end())
+    {
+      return it->second;
+    }
+    else
+    {
+      throw rune_error{"basic_ini::at(): section does not exist!"};
+    }
+  }
+
+  /**
+   * \brief Indicates whether or not the specified section exists.
+   *
+   * \param section the name of the section to look for.
+   *
+   * \return `true` if the specified section exists; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto contains(const string_view_type section) const -> bool
+  {
+    return m_sections.find(section) != m_sections.end();
+  }
+
+  /**
+   * \brief Returns the number of sections stored in the ini file.
+   *
+   * \return the number of sections.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto size() const noexcept -> size_type
+  {
+    return m_sections.size();
+  }
+
+  /**
+   * \brief Indicates whether or not there are no sections.
+   *
+   * \return `true` if there are no sections; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto empty() const noexcept -> bool
+  {
+    return m_sections.empty();
+  }
+
+  /**
+   * \brief Indicates whether or not the parsed contents are valid.
+   *
+   * \return `true` if there are no errors associated with the file; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] explicit operator bool() const noexcept
+  {
+    return m_errors.empty();
+  }
+
+  /**
+   * \brief Returns an iterator to the beginning of the instance.
+   *
+   * \return an iterator to the beginning.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto begin() noexcept -> iterator
+  {
+    return m_sections.begin();
+  }
+
+  /// \copydoc begin()
+  [[nodiscard]] auto begin() const noexcept -> const_iterator
+  {
+    return m_sections.begin();
+  }
+
+  /**
+   * \brief Returns an iterator to the end of the instance.
+   *
+   * \return an iterator to the end.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto end() noexcept -> iterator
+  {
+    return m_sections.end();
+  }
+
+  /// \copydoc end()
+  [[nodiscard]] auto end() const noexcept -> const_iterator
+  {
+    return m_sections.end();
+  }
+
+ private:
+  storage_type m_sections;
+  std::vector<string_type> m_errors;
+  format_type m_format;
+
+  template <typename T>
+  [[nodiscard]] static auto find_first_non_space(const T begin, const T end)
+  {
+    return std::find_if(begin, end, [](const char_type ch) {
+      return !std::isspace(ch, std::locale::classic());
+    });
+  }
+
+  // Remove leading whitespace
+  void trim_left(string_type& line)
+  {
+    line.erase(line.begin(), find_first_non_space(line.begin(), line.end()));
+  }
+
+  // Remove any trailing whitespace
+  void trim_right(string_type& line)
+  {
+    const auto it = find_first_non_space(line.rbegin(), line.rend());
+    line.erase(it.base(), line.end());
+  }
+
+  [[nodiscard]] static auto is_float(const string_type& str) -> bool
+  {
+    // Require float values to feature dot
+    if (str.find('.') == string_type::npos)
+    {
+      return false;
+    }
+
+    std::istringstream stream{str};
+
+    double value{};
+    stream >> value;
+
+    return stream.eof() && !stream.fail();
+  }
+
+  [[nodiscard]] static auto is_unsigned(const string_type& str) -> bool
+  {
+    return !str.starts_with('-') && str.ends_with('u') &&
+           std::all_of(str.begin(), str.end() - 1, [](const char_type ch) {
+             return std::isdigit(ch, std::locale::classic());
+           });
+  }
+
+  [[nodiscard]] static auto is_signed(const string_type& str) -> bool
+  {
+    if (str.starts_with('-'))
+    {
+      // Ignore leading minus
+      return std::all_of(str.begin() + 1, str.end(), [](const char_type ch) {
+        return std::isdigit(ch, std::locale::classic());
+      });
+    }
+    else
+    {
+      return std::ranges::all_of(str, [](const char_type ch) {
+        return std::isdigit(ch, std::locale::classic());
+      });
+    }
+  }
+
+  auto parse_variable(const string_type& line, const string_type& sectionName) -> bool
+  {
+    const auto assignment = std::ranges::find_if(line, [this](const char_type character) {
+      return character == m_format.assign;
+    });
+
+    string_type variable{line.begin(), assignment};
+    string_type value{assignment + 1, line.end()};
+
+    trim_right(variable);
+    trim_left(variable);
+
+    auto& section = m_sections[sectionName];
+    if (!section.contains(variable))
+    {
+      if (value == "true")
+      {
+        section[std::move(variable)] = true;
+      }
+      else if (value == "false")
+      {
+        section[std::move(variable)] = false;
+      }
+      else if (is_float(value))
+      {
+        section[std::move(variable)] = std::stod(value);
+      }
+      else if (is_unsigned(value))
+      {
+        section[std::move(variable)] = std::stoul(value);
+      }
+      else if (is_signed(value))
+      {
+        section[std::move(variable)] = std::stoll(value);
+      }
+      else
+      {
+        section[std::move(variable)] = std::move(value);
+      }
+
+      return true;
+    }
+    else
+    {
+      m_errors.push_back(line);
+      return false;
+    }
+  }
+
+  [[nodiscard]] auto parse_section_name(const string_type& line) -> maybe<string_type>
+  {
+    if (line.back() == m_format.section_end)
+    {
+      return line.substr(1, line.length() - 2);
+    }
+    else
+    {
+      m_errors.push_back(line);
+      return nothing;
+    }
+  }
+
+  void parse_line(const string_type& line, string_type& section)
+  {
+    if (line.empty())
+    {
+      return;
+    }
+
+    const auto& character = line.front();
+
+    if (character == m_format.comment)
+    {
+      return;
+    }
+
+    if (character == m_format.section_start)
+    {
+      if (const auto name = parse_section_name(line))
+      {
+        section = *name;
+      }
+    }
+    else if (parse_variable(line, section))
+    {}
+    else
+    {
+      m_errors.push_back(line);
+    }
+  }
+};
+
+/**
+ * \brief Alias for the most common use case of `basic_ini`.
+ *
+ * \since 0.1.0
+ */
+using ini_file = basic_ini<char>;
+
+/**
+ * \brief Writes a `basic_ini` instance to an output stream.
+ *
+ * \tparam Char the character type used.
+ *
+ * \param stream the output stream that will be used.
+ * \param ini the `basic_ini` instance that will be written to the stream.
+ *
+ * \return the used stream.
+ *
+ * \see `basic_ini::dump()`
+ */
+template <typename Char>
+auto operator<<(std::ostream& stream, const basic_ini<Char>& ini) -> std::ostream&
+{
+  ini.dump(stream);
+  return stream;
+}
+
+/**
+ * \brief Parses an ini file from an input stream.
+ *
+ * \tparam Char the character type used.
+ *
+ * \param stream the input stream.
+ * \param[out] ini the `basic_ini` instance that will be written to.
+ *
+ * \return the read input stream.
+ *
+ * \see `basic_ini::read()`
+ * \see `read_ini()`
+ */
+template <typename Char>
+auto operator>>(std::istream& stream, basic_ini<Char>& ini) -> std::istream&
+{
+  ini.read(stream);
+  return stream;
+}
+
+/**
+ * \brief Saves an Ini file to the specified file path.
+ *
+ * \tparam Char the character type used.
+ *
+ * \param ini the Ini file that will be saved.
+ * \param path the file path of the ini file.
+ *
+ * \since 0.1.0
+ */
+template <typename Char>
+void write_ini(const basic_ini<Char>& ini, const std::filesystem::path& path)
+{
+  std::ofstream stream{path};
+  stream << ini;
+}
+
+/**
+ * \brief Parses an ini file and returns its contents.
+ *
+ * \tparam Char the character type used.
+ *
+ * \param path the file path of the ini file.
+ *
+ * \return the parsed ini file; `nothing` if there were parsing errors.
+ *
+ * \since 0.1.0
+ */
+template <typename Char = char>
+[[nodiscard]] auto read_ini(const std::filesystem::path& path) -> maybe<basic_ini<Char>>
+{
+  std::ifstream stream{path};
+
+  ini_file file;
+  stream >> file;
+
+  if (file)
+  {
+    return file;
+  }
+  else
+  {
+    return nothing;
+  }
+}
+
+/// \} End of ini
+
+/// \} End of group io
+
+}  // namespace rune
+
+#endif  // RUNE_IO_INI_HPP
+
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+/**
+ * \struct configuration
+ *
+ * \brief Provides configuration options for different engine aspects.
+ *
+ * \see `engine`
+ *
+ * \since 0.1.0
+ */
+struct configuration final
+{
+  std::string window_title;
+  cen::iarea window_size;
+
+  uint32 renderer_flags;
+  cen::iarea logical_size;
+
+  double engine_max_tick_rate;
+  int engine_max_frames_per_tick;
+
+  usize aabb_default_capacity;
+
+  float ui_row_size;
+  float ui_column_size;
+};
+
+/// \name Configuration
+/// \{
+
+[[nodiscard]] inline auto get_default_cfg() -> configuration
+{
+  return {.window_title = "Rune",
+          .window_size = cen::window::default_size(),
+          .renderer_flags = cen::renderer::default_flags(),
+          .logical_size = {0, 0},
+          .engine_max_tick_rate = 120.0,
+          .engine_max_frames_per_tick = 5,
+          .aabb_default_capacity = 64u,
+          .ui_row_size = 10.0f,
+          .ui_column_size = 10.0f};
+}
+
+[[nodiscard]] inline auto get_cfg() -> configuration&
+{
+  static auto cfg = get_default_cfg();
+  return cfg;
+}
+
+[[nodiscard]] inline auto get_window_title() -> const std::string&
+{
+  return get_cfg().window_title;
+}
+
+[[nodiscard]] inline auto get_window_size() -> cen::iarea
+{
+  return get_cfg().window_size;
+}
+
+[[nodiscard]] inline auto get_logical_size() -> cen::iarea
+{
+  return get_cfg().logical_size;
+}
+
+[[nodiscard]] inline auto get_renderer_flags() -> uint32
+{
+  return get_cfg().renderer_flags;
+}
+
+[[nodiscard]] inline auto get_engine_max_tick_rate() -> double
+{
+  return get_cfg().engine_max_tick_rate;
+}
+
+[[nodiscard]] inline auto get_engine_max_frames_per_tick() -> int
+{
+  return get_cfg().engine_max_frames_per_tick;
+}
+
+[[nodiscard]] inline auto get_aabb_default_capacity() -> usize
+{
+  return get_cfg().aabb_default_capacity;
+}
+
+[[nodiscard]] inline auto get_ui_row_size() -> float
+{
+  return get_cfg().ui_row_size;
+}
+
+[[nodiscard]] inline auto get_ui_column_size() -> float
+{
+  return get_cfg().ui_column_size;
+}
+
+[[nodiscard]] inline auto parse_configuration(const std::filesystem::path& path)
+    -> configuration
+{
+  auto cfg = get_default_cfg();
+
+  const auto ini = read_ini(path);
+  if (!ini)
+  {
+    return cfg;
+  }
+
+  if (ini->contains("Engine"))
+  {
+    const auto engine = ini->at("Engine");
+
+    if (engine.contains("MaxTickRate"))
+    {
+      engine.at("MaxTickRate").get_to(cfg.engine_max_tick_rate);
+    }
+
+    if (engine.contains("MaxFramesPerTick"))
+    {
+      engine.at("MaxFramesPerTick").get_to(cfg.engine_max_frames_per_tick);
+    }
+  }
+
+  if (ini->contains("Window"))
+  {
+    const auto& window = ini->at("Window");
+
+    if (window.contains("WindowTitle"))
+    {
+      window.at("WindowTitle").get_to(cfg.window_title);
+    }
+
+    if (window.contains("WindowWidth"))
+    {
+      window.at("WindowWidth").get_to(cfg.window_size.width);
+    }
+
+    if (window.contains("WindowHeight"))
+    {
+      window.at("WindowHeight").get_to(cfg.window_size.height);
+    }
+  }
+
+  if (ini->contains("Graphics"))
+  {
+    const auto& graphics = ini->at("Graphics");
+
+    if (graphics.contains("RendererFlags"))
+    {
+      if (const auto flags = graphics.at("RendererFlags").as<std::string>();
+          flags == "default")
+      {
+        cfg.renderer_flags = cen::renderer::default_flags();
+      }
+      else
+      {
+        cfg.renderer_flags = 0;
+        for (const auto& token : parse_csv(flags))
+        {
+          if (token == "accelerated")
+          {
+            cfg.renderer_flags |= cen::renderer::accelerated;
+          }
+          else if (token == "vsync")
+          {
+            cfg.renderer_flags |= cen::renderer::vsync;
+          }
+          else if (token == "target_textures")
+          {
+            cfg.renderer_flags |= cen::renderer::target_textures;
+          }
+          else if (token == "software")
+          {
+            cfg.renderer_flags |= cen::renderer::software;
+          }
+        }
+      }
+    }
+
+    if (graphics.contains("LogicalWidth"))
+    {
+      graphics.at("LogicalWidth").get_to(cfg.logical_size.width);
+    }
+
+    if (graphics.contains("LogicalHeight"))
+    {
+      graphics.at("LogicalHeight").get_to(cfg.logical_size.height);
+    }
+  }
+
+  if (ini->contains("AABB"))
+  {
+    const auto& aabb = ini->at("AABB");
+
+    if (aabb.contains("TreeDefaultCapacity"))
+    {
+      aabb.at("TreeDefaultCapacity").get_to(cfg.aabb_default_capacity);
+    }
+  }
+
+  if (ini->contains("UI"))
+  {
+    const auto& ui = ini->at("UI");
+
+    if (ui.contains("MenuRowSize"))
+    {
+      ui.at("MenuRowSize").get_to(cfg.ui_row_size);
+    }
+
+    if (ui.contains("MenuColumnSize"))
+    {
+      ui.at("MenuColumnSize").get_to(cfg.ui_column_size);
+    }
+  }
+
+  return cfg;
+}
+
+inline void load_configuration(const std::filesystem::path& path)
+{
+  get_cfg() = parse_configuration(path);
+}
+
+inline void save_configuration(const std::filesystem::path& path)
+{
+  const auto& cfg = get_cfg();
+
+  ini_file ini;
+  ini["Graphics"]["RendererFlags"] = cfg.renderer_flags;
+  ini["Graphics"]["LogicalWidth"] = cfg.logical_size.width;
+  ini["Graphics"]["LogicalHeight"] = cfg.logical_size.height;
+  ini["Window"]["WindowTitle"] = cfg.window_title;
+  ini["Window"]["WindowWidth"] = cfg.window_size.width;
+  ini["Window"]["WindowHeight"] = cfg.window_size.height;
+  ini["Engine"]["MaxTickRate"] = cfg.engine_max_tick_rate;
+  ini["Engine"]["MaxFramesPerTick"] = cfg.engine_max_frames_per_tick;
+  ini["AABB"]["TreeDefaultCapacity"] = cfg.aabb_default_capacity;
+  ini["UI"]["RowSize"] = cfg.ui_row_size;
+  ini["UI"]["ColumnSize"] = cfg.ui_column_size;
+
+  write_ini(ini, path);
+}
+
+/// \} End of configuration
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_CORE_CONFIGURATION_HPP
+
 
 namespace rune {
 
@@ -6878,15 +12423,22 @@ class graphics
   /**
    * \brief Creates a graphics context.
    *
-   * \tparam T the ownership semantics of the window.
    * \param window the associated game window.
-   * \param flags the renderer flags supplied to the `cen::renderer` constructor.
    */
   template <typename T>
-  graphics(const cen::basic_window<T>& window, const uint32 flags)
-      : m_renderer{window, flags}
+  explicit graphics(const cen::basic_window<T>& window)
+      : m_renderer{window, get_renderer_flags()}
       , m_format{window.get_pixel_format()}
-  {}
+  {
+    m_renderer.set_logical_size(get_logical_size());
+
+    CENTURION_LOG_DEBUG("[rune::graphics] Renderer flags: %u", get_renderer_flags());
+    CENTURION_LOG_DEBUG("[rune::graphics] Pixel format: %s",
+                        cen::to_string(m_format).data());
+    CENTURION_LOG_DEBUG("[rune::graphics] Renderer logical size: {%i, %i}",
+                        m_renderer.logical_width(),
+                        m_renderer.logical_height());
+  }
 
   virtual ~graphics() noexcept = default;
 
@@ -7056,13 +12608,13 @@ class graphics
    *
    * \return the associated renderer.
    */
-  [[nodiscard]] auto renderer() noexcept -> cen::renderer&
+  [[nodiscard]] auto get_renderer() noexcept -> cen::renderer&
   {
     return m_renderer;
   }
 
-  /// \copydoc renderer()
-  [[nodiscard]] auto renderer() const noexcept -> const cen::renderer&
+  /// \copydoc get_renderer()
+  [[nodiscard]] auto get_renderer() const noexcept -> const cen::renderer&
   {
     return m_renderer;
   }
@@ -7615,6 +13167,274 @@ void serialize(auto& archive, ui_foreground& fg)
 
 #include <centurion.hpp>  // fpoint
 
+// #include "../../core/configuration.hpp"
+#ifndef RUNE_CORE_CONFIGURATION_HPP
+#define RUNE_CORE_CONFIGURATION_HPP
+
+#include <centurion.hpp>  // window, renderer, iarea
+#include <concepts>       // convertible_to
+#include <filesystem>     // path
+#include <string>         // string
+
+// #include "../aliases/integers.hpp"
+
+// #include "../io/csv.hpp"
+
+// #include "../io/ini.hpp"
+
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+/**
+ * \struct configuration
+ *
+ * \brief Provides configuration options for different engine aspects.
+ *
+ * \see `engine`
+ *
+ * \since 0.1.0
+ */
+struct configuration final
+{
+  std::string window_title;
+  cen::iarea window_size;
+
+  uint32 renderer_flags;
+  cen::iarea logical_size;
+
+  double engine_max_tick_rate;
+  int engine_max_frames_per_tick;
+
+  usize aabb_default_capacity;
+
+  float ui_row_size;
+  float ui_column_size;
+};
+
+/// \name Configuration
+/// \{
+
+[[nodiscard]] inline auto get_default_cfg() -> configuration
+{
+  return {.window_title = "Rune",
+          .window_size = cen::window::default_size(),
+          .renderer_flags = cen::renderer::default_flags(),
+          .logical_size = {0, 0},
+          .engine_max_tick_rate = 120.0,
+          .engine_max_frames_per_tick = 5,
+          .aabb_default_capacity = 64u,
+          .ui_row_size = 10.0f,
+          .ui_column_size = 10.0f};
+}
+
+[[nodiscard]] inline auto get_cfg() -> configuration&
+{
+  static auto cfg = get_default_cfg();
+  return cfg;
+}
+
+[[nodiscard]] inline auto get_window_title() -> const std::string&
+{
+  return get_cfg().window_title;
+}
+
+[[nodiscard]] inline auto get_window_size() -> cen::iarea
+{
+  return get_cfg().window_size;
+}
+
+[[nodiscard]] inline auto get_logical_size() -> cen::iarea
+{
+  return get_cfg().logical_size;
+}
+
+[[nodiscard]] inline auto get_renderer_flags() -> uint32
+{
+  return get_cfg().renderer_flags;
+}
+
+[[nodiscard]] inline auto get_engine_max_tick_rate() -> double
+{
+  return get_cfg().engine_max_tick_rate;
+}
+
+[[nodiscard]] inline auto get_engine_max_frames_per_tick() -> int
+{
+  return get_cfg().engine_max_frames_per_tick;
+}
+
+[[nodiscard]] inline auto get_aabb_default_capacity() -> usize
+{
+  return get_cfg().aabb_default_capacity;
+}
+
+[[nodiscard]] inline auto get_ui_row_size() -> float
+{
+  return get_cfg().ui_row_size;
+}
+
+[[nodiscard]] inline auto get_ui_column_size() -> float
+{
+  return get_cfg().ui_column_size;
+}
+
+[[nodiscard]] inline auto parse_configuration(const std::filesystem::path& path)
+    -> configuration
+{
+  auto cfg = get_default_cfg();
+
+  const auto ini = read_ini(path);
+  if (!ini)
+  {
+    return cfg;
+  }
+
+  if (ini->contains("Engine"))
+  {
+    const auto engine = ini->at("Engine");
+
+    if (engine.contains("MaxTickRate"))
+    {
+      engine.at("MaxTickRate").get_to(cfg.engine_max_tick_rate);
+    }
+
+    if (engine.contains("MaxFramesPerTick"))
+    {
+      engine.at("MaxFramesPerTick").get_to(cfg.engine_max_frames_per_tick);
+    }
+  }
+
+  if (ini->contains("Window"))
+  {
+    const auto& window = ini->at("Window");
+
+    if (window.contains("WindowTitle"))
+    {
+      window.at("WindowTitle").get_to(cfg.window_title);
+    }
+
+    if (window.contains("WindowWidth"))
+    {
+      window.at("WindowWidth").get_to(cfg.window_size.width);
+    }
+
+    if (window.contains("WindowHeight"))
+    {
+      window.at("WindowHeight").get_to(cfg.window_size.height);
+    }
+  }
+
+  if (ini->contains("Graphics"))
+  {
+    const auto& graphics = ini->at("Graphics");
+
+    if (graphics.contains("RendererFlags"))
+    {
+      if (const auto flags = graphics.at("RendererFlags").as<std::string>();
+          flags == "default")
+      {
+        cfg.renderer_flags = cen::renderer::default_flags();
+      }
+      else
+      {
+        cfg.renderer_flags = 0;
+        for (const auto& token : parse_csv(flags))
+        {
+          if (token == "accelerated")
+          {
+            cfg.renderer_flags |= cen::renderer::accelerated;
+          }
+          else if (token == "vsync")
+          {
+            cfg.renderer_flags |= cen::renderer::vsync;
+          }
+          else if (token == "target_textures")
+          {
+            cfg.renderer_flags |= cen::renderer::target_textures;
+          }
+          else if (token == "software")
+          {
+            cfg.renderer_flags |= cen::renderer::software;
+          }
+        }
+      }
+    }
+
+    if (graphics.contains("LogicalWidth"))
+    {
+      graphics.at("LogicalWidth").get_to(cfg.logical_size.width);
+    }
+
+    if (graphics.contains("LogicalHeight"))
+    {
+      graphics.at("LogicalHeight").get_to(cfg.logical_size.height);
+    }
+  }
+
+  if (ini->contains("AABB"))
+  {
+    const auto& aabb = ini->at("AABB");
+
+    if (aabb.contains("TreeDefaultCapacity"))
+    {
+      aabb.at("TreeDefaultCapacity").get_to(cfg.aabb_default_capacity);
+    }
+  }
+
+  if (ini->contains("UI"))
+  {
+    const auto& ui = ini->at("UI");
+
+    if (ui.contains("MenuRowSize"))
+    {
+      ui.at("MenuRowSize").get_to(cfg.ui_row_size);
+    }
+
+    if (ui.contains("MenuColumnSize"))
+    {
+      ui.at("MenuColumnSize").get_to(cfg.ui_column_size);
+    }
+  }
+
+  return cfg;
+}
+
+inline void load_configuration(const std::filesystem::path& path)
+{
+  get_cfg() = parse_configuration(path);
+}
+
+inline void save_configuration(const std::filesystem::path& path)
+{
+  const auto& cfg = get_cfg();
+
+  ini_file ini;
+  ini["Graphics"]["RendererFlags"] = cfg.renderer_flags;
+  ini["Graphics"]["LogicalWidth"] = cfg.logical_size.width;
+  ini["Graphics"]["LogicalHeight"] = cfg.logical_size.height;
+  ini["Window"]["WindowTitle"] = cfg.window_title;
+  ini["Window"]["WindowWidth"] = cfg.window_size.width;
+  ini["Window"]["WindowHeight"] = cfg.window_size.height;
+  ini["Engine"]["MaxTickRate"] = cfg.engine_max_tick_rate;
+  ini["Engine"]["MaxFramesPerTick"] = cfg.engine_max_frames_per_tick;
+  ini["AABB"]["TreeDefaultCapacity"] = cfg.aabb_default_capacity;
+  ini["UI"]["RowSize"] = cfg.ui_row_size;
+  ini["UI"]["ColumnSize"] = cfg.ui_column_size;
+
+  write_ini(ini, path);
+}
+
+/// \} End of configuration
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_CORE_CONFIGURATION_HPP
+
 // #include "ui_position.hpp"
 #ifndef RUNE_ECS_UI_UI_POSITION_HPP
 #define RUNE_ECS_UI_UI_POSITION_HPP
@@ -7661,37 +13481,25 @@ namespace rune::ui {
 /// \addtogroup ecs
 /// \{
 
-#ifndef RUNE_MENU_ROW_SIZE
-#define RUNE_MENU_ROW_SIZE 10.0f
-#endif  // RUNE_MENU_ROW_SIZE
-
-#ifndef RUNE_MENU_COLUMN_SIZE
-#define RUNE_MENU_COLUMN_SIZE 10.0f
-#endif  // RUNE_MENU_COLUMN_SIZE
-
-inline constexpr float menu_row_size = RUNE_MENU_ROW_SIZE;
-inline constexpr float menu_column_size = RUNE_MENU_COLUMN_SIZE;
-
 /// \name Grid functions
 /// \{
 
-[[nodiscard]] constexpr auto row_to_y(const float row) noexcept -> float
+[[nodiscard]] inline auto row_to_y(const float row) -> float
 {
-  return row * menu_row_size;
+  return row * get_ui_row_size();
 }
 
-[[nodiscard]] constexpr auto column_to_x(const float column) noexcept -> float
+[[nodiscard]] inline auto column_to_x(const float column) -> float
 {
-  return column * menu_column_size;
+  return column * get_ui_column_size();
 }
 
-[[nodiscard]] constexpr auto from_grid(const float row, const float column) noexcept
-    -> cen::fpoint
+[[nodiscard]] inline auto from_grid(const float row, const float column) -> cen::fpoint
 {
   return {column_to_x(column), row_to_y(row)};
 }
 
-[[nodiscard]] constexpr auto from_grid(const ui_position position) noexcept -> cen::fpoint
+[[nodiscard]] inline auto from_grid(const ui_position position) -> cen::fpoint
 {
   return {column_to_x(position.col), row_to_y(position.row)};
 }
@@ -8011,7 +13819,7 @@ namespace detail {
                                       const ui_label& label,
                                       const cen::color& color) -> cen::texture
 {
-  auto& renderer = gfx.renderer();
+  auto& renderer = gfx.get_renderer();
   renderer.set_color(color);
 
   const auto& font = gfx.get_font(label.font);
@@ -8023,7 +13831,7 @@ inline void render_label(graphics& gfx,
                          const cen::fpoint& position,
                          const cen::color& fg)
 {
-  auto& renderer = gfx.renderer();
+  auto& renderer = gfx.get_renderer();
 
   if (!label.texture)
   {
@@ -8047,13 +13855,13 @@ inline void render_shadow(graphics& gfx,
   assert(shadow.texture);
   const cen::fpoint offset{static_cast<float>(shadow.offset),
                            static_cast<float>(shadow.offset)};
-  gfx.renderer().render(*shadow.texture, position + offset);
+  gfx.get_renderer().render(*shadow.texture, position + offset);
 }
 
 inline void render_labels(const entt::registry& registry, graphics& gfx)
 {
   const auto menuEntity = registry.ctx<active_menu>().menu_entity;
-  auto& renderer = gfx.renderer();
+  auto& renderer = gfx.get_renderer();
 
   const auto filter = entt::exclude<ui_button>;
   for (auto&& [entity, label, position, fg, inMenu] :
@@ -8074,7 +13882,7 @@ inline void render_labels(const entt::registry& registry, graphics& gfx)
 inline void render_button_labels(const entt::registry& registry, graphics& gfx)
 {
   const auto menuEntity = registry.ctx<active_menu>().menu_entity;
-  auto& renderer = gfx.renderer();
+  auto& renderer = gfx.get_renderer();
 
   for (auto&& [entity, button, label, position, fg, inMenu] :
        registry.view<ui_button, ui_label, ui_position, ui_foreground, in_menu>().each())
@@ -8331,7 +14139,7 @@ namespace detail {
 
 inline void update_button_bounds(const entt::registry& registry, graphics& gfx)
 {
-  auto& renderer = gfx.renderer();
+  auto& renderer = gfx.get_renderer();
   for (auto&& [entity, button, label] : registry.view<ui_button, ui_label>().each())
   {
     if (!button.size)
@@ -8354,7 +14162,7 @@ inline void update_button_bounds(const entt::registry& registry, graphics& gfx)
 inline void render_buttons(const entt::registry& registry, graphics& gfx)
 {
   const auto menuEntity = registry.ctx<active_menu>().menu_entity;
-  auto& renderer = gfx.renderer();
+  auto& renderer = gfx.get_renderer();
 
   const auto view = registry.view<ui_button, ui_position, in_menu>();
   for (auto&& [entity, button, position, inMenu] : view.each())
@@ -8804,7 +14612,7 @@ namespace detail {
                                       const ui_label& label,
                                       const cen::color& color) -> cen::texture
 {
-  auto& renderer = gfx.renderer();
+  auto& renderer = gfx.get_renderer();
   renderer.set_color(color);
 
   const auto& font = gfx.get_font(label.font);
@@ -8816,7 +14624,7 @@ inline void render_label(graphics& gfx,
                          const cen::fpoint& position,
                          const cen::color& fg)
 {
-  auto& renderer = gfx.renderer();
+  auto& renderer = gfx.get_renderer();
 
   if (!label.texture)
   {
@@ -8840,13 +14648,13 @@ inline void render_shadow(graphics& gfx,
   assert(shadow.texture);
   const cen::fpoint offset{static_cast<float>(shadow.offset),
                            static_cast<float>(shadow.offset)};
-  gfx.renderer().render(*shadow.texture, position + offset);
+  gfx.get_renderer().render(*shadow.texture, position + offset);
 }
 
 inline void render_labels(const entt::registry& registry, graphics& gfx)
 {
   const auto menuEntity = registry.ctx<active_menu>().menu_entity;
-  auto& renderer = gfx.renderer();
+  auto& renderer = gfx.get_renderer();
 
   const auto filter = entt::exclude<ui_button>;
   for (auto&& [entity, label, position, fg, inMenu] :
@@ -8867,7 +14675,7 @@ inline void render_labels(const entt::registry& registry, graphics& gfx)
 inline void render_button_labels(const entt::registry& registry, graphics& gfx)
 {
   const auto menuEntity = registry.ctx<active_menu>().menu_entity;
-  auto& renderer = gfx.renderer();
+  auto& renderer = gfx.get_renderer();
 
   for (auto&& [entity, button, label, position, fg, inMenu] :
        registry.view<ui_button, ui_label, ui_position, ui_foreground, in_menu>().each())
@@ -8969,7 +14777,7 @@ inline void update_lazy_textures(const entt::registry& registry, graphics& gfx)
   {
     if (!lazy.texture)
     {
-      lazy.texture = cen::texture{gfx.renderer(), lazy.source};
+      lazy.texture = cen::texture{gfx.get_renderer(), lazy.source};
     }
   }
 }
@@ -9127,7 +14935,7 @@ inline void render_lines(const entt::registry& registry, graphics& gfx)
 {
   const auto menuEntity = registry.ctx<active_menu>().menu_entity;
 
-  auto& renderer = gfx.renderer();
+  auto& renderer = gfx.get_renderer();
   for (auto&& [entity, line, fg, inMenu] :
        registry.view<ui_line, ui_foreground, in_menu>().each())
   {
@@ -9454,6 +15262,8 @@ void serialize(auto& archive, ui_foreground& fg)
 
 #include <centurion.hpp>  // fpoint
 
+// #include "../../core/configuration.hpp"
+
 // #include "ui_position.hpp"
 
 
@@ -9462,37 +15272,25 @@ namespace rune::ui {
 /// \addtogroup ecs
 /// \{
 
-#ifndef RUNE_MENU_ROW_SIZE
-#define RUNE_MENU_ROW_SIZE 10.0f
-#endif  // RUNE_MENU_ROW_SIZE
-
-#ifndef RUNE_MENU_COLUMN_SIZE
-#define RUNE_MENU_COLUMN_SIZE 10.0f
-#endif  // RUNE_MENU_COLUMN_SIZE
-
-inline constexpr float menu_row_size = RUNE_MENU_ROW_SIZE;
-inline constexpr float menu_column_size = RUNE_MENU_COLUMN_SIZE;
-
 /// \name Grid functions
 /// \{
 
-[[nodiscard]] constexpr auto row_to_y(const float row) noexcept -> float
+[[nodiscard]] inline auto row_to_y(const float row) -> float
 {
-  return row * menu_row_size;
+  return row * get_ui_row_size();
 }
 
-[[nodiscard]] constexpr auto column_to_x(const float column) noexcept -> float
+[[nodiscard]] inline auto column_to_x(const float column) -> float
 {
-  return column * menu_column_size;
+  return column * get_ui_column_size();
 }
 
-[[nodiscard]] constexpr auto from_grid(const float row, const float column) noexcept
-    -> cen::fpoint
+[[nodiscard]] inline auto from_grid(const float row, const float column) -> cen::fpoint
 {
   return {column_to_x(column), row_to_y(row)};
 }
 
-[[nodiscard]] constexpr auto from_grid(const ui_position position) noexcept -> cen::fpoint
+[[nodiscard]] inline auto from_grid(const ui_position position) -> cen::fpoint
 {
   return {column_to_x(position.col), row_to_y(position.row)};
 }
@@ -10058,7 +15856,7 @@ namespace detail {
 
 inline void update_button_bounds(const entt::registry& registry, graphics& gfx)
 {
-  auto& renderer = gfx.renderer();
+  auto& renderer = gfx.get_renderer();
   for (auto&& [entity, button, label] : registry.view<ui_button, ui_label>().each())
   {
     if (!button.size)
@@ -10081,7 +15879,7 @@ inline void update_button_bounds(const entt::registry& registry, graphics& gfx)
 inline void render_buttons(const entt::registry& registry, graphics& gfx)
 {
   const auto menuEntity = registry.ctx<active_menu>().menu_entity;
-  auto& renderer = gfx.renderer();
+  auto& renderer = gfx.get_renderer();
 
   const auto view = registry.view<ui_button, ui_position, in_menu>();
   for (auto&& [entity, button, position, inMenu] : view.each())
@@ -10287,7 +16085,7 @@ inline void update_lazy_textures(const entt::registry& registry, graphics& gfx)
   {
     if (!lazy.texture)
     {
-      lazy.texture = cen::texture{gfx.renderer(), lazy.source};
+      lazy.texture = cen::texture{gfx.get_renderer(), lazy.source};
     }
   }
 }
@@ -10395,7 +16193,7 @@ inline void render_lines(const entt::registry& registry, graphics& gfx)
 {
   const auto menuEntity = registry.ctx<active_menu>().menu_entity;
 
-  auto& renderer = gfx.renderer();
+  auto& renderer = gfx.get_renderer();
   for (auto&& [entity, line, fg, inMenu] :
        registry.view<ui_line, ui_foreground, in_menu>().each())
   {
@@ -10496,7 +16294,7 @@ inline void debug(const entt::registry& registry, graphics& gfx)
 
   if (menu.is_blocking)
   {
-    auto& renderer = gfx.renderer();
+    auto& renderer = gfx.get_renderer();
     renderer.set_color(cen::colors::light_gray.with_alpha(50));
 
     const auto [logicalWidth, logicalHeight] = renderer.logical_size();
@@ -10524,7 +16322,8 @@ inline void debug(const entt::registry& registry, graphics& gfx)
 #include <locale>       // locale, isspace, isdigit
 #include <map>          // map
 #include <ostream>      // ostream
-#include <string>       // basic_string, getline
+#include <sstream>      // istringstream
+#include <string>       // basic_string, getline, stod, stoul, stoll
 #include <string_view>  // basic_string_view
 #include <utility>      // move
 #include <vector>       // vector
@@ -10628,9 +16427,13 @@ using str = const char*;
 
 namespace rune {
 
-/// \addtogroup core
-/// \{
-
+/**
+ * \brief The main exception thrown in the library.
+ *
+ * \ingroup core
+ *
+ * \since 0.1.0
+ */
 class rune_error final : public std::exception
 {
  public:
@@ -10645,8 +16448,6 @@ class rune_error final : public std::exception
  private:
   str m_what{"n/a"};
 };
-
-/// \} End of group core
 
 }  // namespace rune
 
@@ -10670,13 +16471,12 @@ class rune_error final : public std::exception
 #ifndef RUNE_IO_INI_VALUE_HPP
 #define RUNE_IO_INI_VALUE_HPP
 
-#include <concepts>     // convertible_to, integral, floating_point, same_as
-#include <nenya.hpp>    // strong_type
-#include <ostream>      // ostream
-#include <string>       // basic_string, to_string
-#include <string_view>  // basic_string_view
-#include <utility>      // move
-#include <variant>      // variant, get, get_if, holds_alternative
+#include <concepts>   // convertible_to, integral, floating_point, same_as
+#include <nenya.hpp>  // strong_type
+#include <ostream>    // ostream
+#include <string>     // basic_string, to_string
+#include <utility>    // move
+#include <variant>    // variant, get, get_if, holds_alternative
 
 // #include "../aliases/integers.hpp"
 
@@ -10691,6 +16491,15 @@ namespace rune {
 
 // clang-format off
 
+/**
+ * \brief Requires that a type is either a signed integer, unsigned integer,
+ * floating-point number or a string.
+ *
+ * \tparam T the type that will be checked.
+ * \tparam Char the character type.
+ *
+ * \since 0.1.0
+ */
 template <typename T, typename Char>
 concept is_ini_value = std::integral<T> ||
                        std::floating_point<T> ||
@@ -10698,15 +16507,36 @@ concept is_ini_value = std::integral<T> ||
 
 // clang-format on
 
+/**
+ * \brief Represents a value of an individual ini element.
+ *
+ * \tparam Char the character type that will be used.
+ *
+ * \see `ini_value`
+ * \see `basic_ini`
+ * \see `basic_ini_section`
+ *
+ * \since 0.1.0
+ */
 template <typename Char>
 class basic_ini_value final
 {
  public:
   using char_type = Char;
   using string_type = std::basic_string<char_type>;
-  using string_view_type = std::basic_string_view<char_type>;
-  using value_type = std::variant<string_type, bool, int64, uint64, double>;
+  using int_type = int64;
+  using uint_type = uint64;
+  using float_type = double;
+  using value_type = std::variant<string_type, bool, int_type, uint_type, float_type>;
 
+  /// \name Construction
+  /// \{
+
+  /**
+   * \brief Creates a `basic_ini_value` with an empty string as its value.
+   *
+   * \since 0.1.0
+   */
   basic_ini_value() = default;
 
   basic_ini_value(const basic_ini_value&) = default;
@@ -10715,32 +16545,117 @@ class basic_ini_value final
   basic_ini_value& operator=(const basic_ini_value&) = default;
   basic_ini_value& operator=(basic_ini_value&&) noexcept = default;
 
-  template <typename T>
-  /*implicit*/ basic_ini_value(T value) requires is_ini_value<T, char_type>  // NOLINT
+  /**
+   * \brief Creates a `basic_ini_value` instance.
+   *
+   * \tparam T the type of the value.
+   *
+   * \param value the value that will be stored.
+   *
+   * \since 0.1.0
+   */
+  template <is_ini_value<char_type> T>
+  /*implicit*/ basic_ini_value(T value)  // NOLINT
   {
     assign(std::move(value));
   }
 
-  template <typename T>
-  basic_ini_value& operator=(T value) requires is_ini_value<T, char_type>
+  /**
+   * \brief Assigns a new value to the instance.
+   *
+   * \tparam T the type of the new value.
+   *
+   * \param value the new value of the `basic_ini_value`.
+   *
+   * \return the `basic_ini_value` instance.
+   *
+   * \since 0.1.0
+   */
+  template <is_ini_value<char_type> T>
+  auto operator=(T value) -> basic_ini_value&
   {
     assign(std::move(value));
     return *this;
   }
 
-  // clang-format off
+  /// \} End of construction
 
-  template <typename T> requires is_ini_value<T, char_type>
-  [[nodiscard]] auto get() const -> T
+  /**
+   * \brief Outputs the value to an output stream.
+   *
+   * \param stream the output stream that will be used.
+   *
+   * \since 0.1.0
+   */
+  void dump(std::ostream& stream) const
   {
-    static_assert(std::convertible_to<T, string_type> ||
-                  std::signed_integral<T> ||
-                  std::unsigned_integral<T> ||
-                  std::floating_point<T> ||
-                  std::same_as<T, bool>,
-                  "Invalid template type parameter to basic_ini_value::get!");
-    // clang-format on
+    if (const auto* str = try_get_string())
+    {
+      stream << *str;
+    }
+    else if (const auto* i = try_get_int())
+    {
+      stream << std::to_string(*i);
+    }
+    else if (const auto* u = try_get_uint())
+    {
+      stream << std::to_string(*u) << 'u';
+    }
+    else if (const auto* f = try_get_float())
+    {
+      stream << std::to_string(*f);
+    }
+    else if (const auto* b = try_get_bool())
+    {
+      stream << ((*b) ? "true" : "false");
+    }
+  }
 
+  /**
+   * \brief Returns the underlying representation.
+   *
+   * \return the underlying variant value.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto get() const -> const value_type&
+  {
+    return m_value;
+  }
+
+  /// \name Checked getters
+  /// \{
+
+  /**
+   * \brief Returns the underlying value as the specified type.
+   *
+   * \details This function can be used to safely cast the underlying value to the
+   * specified type, as long as the types are in the same "family". In other words, where
+   * the only difference between the types is the representation range. For example, if
+   * the underlying value is a 64-bit signed integer, it is perfectly valid to cast it to
+   * an `int`, since they are both signed integer types.
+   *
+   * \code{cpp}
+   * rune::ini_value value = 42;  // Signed integer value (stored as 64-bit integer)
+   *
+   * auto i = value.as<int>();  // Fine, underlying type is a signed integer
+   *
+   * auto u = value.as<unsigned>();  // Error, no implicit signed to unsigned conversion
+   * auto f = value.as<float>();     // Error, no implicit integer to float conversion
+   * auto s = value.as<std::string>();  // Error, completely unrelated types
+   * \endcode
+   *
+   * \tparam T the type of the returned value.
+   *
+   * \return the internal value casted to the specified type.
+   *
+   * \throws bad_variant_access if the underlying and specified types aren't related.
+   *
+   * \since 0.1.0
+   */
+  template <is_ini_value<char_type> T>
+  [[nodiscard]] auto as() const -> T
+  {
     if constexpr (std::same_as<T, bool>)
     {
       return std::get<bool>(m_value);
@@ -10757,75 +16672,113 @@ class basic_ini_value final
     {
       return static_cast<T>(std::get<double>(m_value));
     }
-    else /*if constexpr (std::convertible_to<T, string_type>)*/
+    else
     {
       return std::get<string_type>(m_value);
     }
   }
 
+  /**
+   * \brief Assigns a value with the underlying value.
+   *
+   * \details The value conversion behavior of this function is identical to those of
+   * the `as()` function.
+   *
+   * \code{cpp}
+   * rune::ini_value value = "foo";
+   *
+   * std::string str;
+   * value.get_to(str);  // Fine, the underlying type is a string
+   *
+   * int i{};
+   * value.get_to(i);  // Error, cannot assign integer with string
+   * \endcode
+   *
+   * \param[out] value a reference to the value that will be assigned.
+   *
+   * \throws bad_variant_access if there is a type mismatch.
+   *
+   * \since 0.1.0
+   */
   void get_to(string_type& value) const
   {
     value = std::get<string_type>(m_value);
   }
 
+  /// \copydoc get_to()
   void get_to(bool& value) const
   {
     value = std::get<bool>(m_value);
   }
 
+  /// \copydoc get_to()
   void get_to(int8& value) const
   {
-    value = static_cast<int8>(std::get<int64>(m_value));
+    value = static_cast<int8>(std::get<int_type>(m_value));
   }
 
+  /// \copydoc get_to()
   void get_to(int16& value) const
   {
-    value = static_cast<int16>(std::get<int64>(m_value));
+    value = static_cast<int16>(std::get<int_type>(m_value));
   }
 
+  /// \copydoc get_to()
   void get_to(int32& value) const
   {
-    value = static_cast<int32>(std::get<int64>(m_value));
+    value = static_cast<int32>(std::get<int_type>(m_value));
   }
 
+  /// \copydoc get_to()
   void get_to(int64& value) const
   {
     value = std::get<int64>(m_value);
   }
 
+  /// \copydoc get_to()
   void get_to(uint8& value) const
   {
-    value = static_cast<uint8>(std::get<uint64>(m_value));
+    value = static_cast<uint8>(std::get<uint_type>(m_value));
   }
 
+  /// \copydoc get_to()
   void get_to(uint16& value) const
   {
-    value = static_cast<uint16>(std::get<uint64>(m_value));
+    value = static_cast<uint16>(std::get<uint_type>(m_value));
   }
 
+  /// \copydoc get_to()
   void get_to(uint32& value) const
   {
-    value = static_cast<uint32>(std::get<uint64>(m_value));
+    value = static_cast<uint32>(std::get<uint_type>(m_value));
   }
 
+  /// \copydoc get_to()
   void get_to(uint64& value) const
   {
-    value = std::get<uint64>(m_value);
+    value = static_cast<uint64>(std::get<uint_type>(m_value));
   }
 
+  /// \copydoc get_to()
   void get_to(float& value) const
   {
-    value = static_cast<float>(std::get<double>(m_value));
+    value = static_cast<float>(std::get<float_type>(m_value));
   }
 
+  /// \copydoc get_to()
   void get_to(double& value) const
   {
-    value = std::get<double>(m_value);
+    value = static_cast<double>(std::get<float_type>(m_value));
   }
 
-  // clang-format off
+  /// \copydoc get_to()
+  void get_to(long double& value) const
+  {
+    value = static_cast<long double>(std::get<float_type>(m_value));
+  }
 
-  template <typename T, typename Tag, nenya::conversion Conv> requires is_ini_value<T, char_type>
+  /// \copydoc get_to()
+  template <is_ini_value<char_type> T, typename Tag, nenya::conversion Conv>
   void get_to(nenya::strong_type<T, Tag, Conv>& value) const
   {
     using strong_type = nenya::strong_type<T, Tag, Conv>;
@@ -10836,15 +16789,15 @@ class basic_ini_value final
     }
     else if constexpr (std::signed_integral<T>)
     {
-      value = strong_type{static_cast<T>(std::get<int64>(m_value))};
+      value = strong_type{static_cast<T>(std::get<int_type>(m_value))};
     }
     else if constexpr (std::unsigned_integral<T>)
     {
-      value = strong_type{static_cast<T>(std::get<uint64>(m_value))};
+      value = strong_type{static_cast<T>(std::get<uint_type>(m_value))};
     }
     else if constexpr (std::floating_point<T>)
     {
-      value = strong_type{static_cast<T>(std::get<double>(m_value))};
+      value = strong_type{static_cast<T>(std::get<float_type>(m_value))};
     }
     else /*if constexpr (std::convertible_to<T, string_type>)*/
     {
@@ -10852,70 +16805,150 @@ class basic_ini_value final
     }
   }
 
-  // clang-format on
+  /// \} End of checked getters
 
-  [[nodiscard]] auto get() const -> const value_type&
-  {
-    return m_value;
-  }
+  /// \name Unchecked getters
+  /// \{
 
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying value; null if the underlying value isn't a
+   * string.
+   *
+   * \since 0.1.0
+   */
   [[nodiscard]] auto try_get_string() const noexcept -> const string_type*
   {
     return std::get_if<string_type>(&m_value);
   }
 
-  [[nodiscard]] auto try_get_int() const noexcept -> const int64*
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying value; null if the underlying value isn't an
+   * integer.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_int() const noexcept -> const int_type*
   {
-    return std::get_if<int64>(&m_value);
+    return std::get_if<int_type>(&m_value);
   }
 
-  [[nodiscard]] auto try_get_uint() const noexcept -> const uint64*
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying value; null if the underlying value isn't an
+   * unsigned integer.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_uint() const noexcept -> const uint_type*
   {
-    return std::get_if<uint64>(&m_value);
+    return std::get_if<uint_type>(&m_value);
   }
 
-  [[nodiscard]] auto try_get_float() const noexcept -> const double*
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying value; null if the underlying value isn't a
+   * floating-point number.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_float() const noexcept -> const float_type*
   {
-    return std::get_if<double>(&m_value);
+    return std::get_if<float_type>(&m_value);
   }
 
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying boolean value; null if the underlying value isn't
+   * a boolean.
+   *
+   * \since 0.1.0
+   */
   [[nodiscard]] auto try_get_bool() const noexcept -> const bool*
   {
     return std::get_if<bool>(&m_value);
   }
 
+  /// \} End of unchecked getters
+
+  /// \name Type indicators
+  /// \{
+
+  /**
+   * \brief Indicates whether or not the value is a string.
+   *
+   * \return `true` if the value is a string; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
   [[nodiscard]] auto is_string() const noexcept -> bool
   {
     return std::holds_alternative<string_type>(m_value);
   }
 
+  /**
+   * \brief Indicates whether or not the value is a signed integer.
+   *
+   * \return `true` if the value is a signed integer; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
   [[nodiscard]] auto is_int() const noexcept -> bool
   {
-    return std::holds_alternative<int64>(m_value);
+    return std::holds_alternative<int_type>(m_value);
   }
 
+  /**
+   * \brief Indicates whether or not the value is an unsigned integer.
+   *
+   * \return `true` if the value is an unsigned integer; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
   [[nodiscard]] auto is_uint() const noexcept -> bool
   {
-    return std::holds_alternative<uint64>(m_value);
+    return std::holds_alternative<uint_type>(m_value);
   }
 
+  /**
+   * \brief Indicates whether or not the value is a floating-point number.
+   *
+   * \return `true` if the value is a floating-point number; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
   [[nodiscard]] auto is_float() const noexcept -> bool
   {
-    return std::holds_alternative<double>(m_value);
+    return std::holds_alternative<float_type>(m_value);
   }
 
+  /**
+   * \brief Indicates whether or not the value is a boolean.
+   *
+   * \return `true` if the value is a boolean; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
   [[nodiscard]] auto is_bool() const noexcept -> bool
   {
     return std::holds_alternative<bool>(m_value);
   }
+
+  /// \} End of type indicators
 
   [[nodiscard]] bool operator==(const basic_ini_value&) const = default;
 
  private:
   value_type m_value;
 
-  template <typename T>
-  void assign(T value) requires is_ini_value<T, char_type>
+  template <is_ini_value<char_type> T>
+  void assign(T value)
   {
     if constexpr (std::same_as<T, bool>)
     {
@@ -10923,49 +16956,46 @@ class basic_ini_value final
     }
     else if constexpr (std::signed_integral<T>)
     {
-      m_value.template emplace<int64>(std::move(value));
+      m_value.template emplace<int_type>(std::move(value));
     }
     else if constexpr (std::unsigned_integral<T>)
     {
-      m_value.template emplace<uint64>(std::move(value));
+      m_value.template emplace<uint_type>(std::move(value));
     }
     else if constexpr (std::floating_point<T>)
     {
-      m_value.template emplace<double>(std::move(value));
+      m_value.template emplace<float_type>(std::move(value));
     }
-    else /*if constexpr (std::convertible_to<T, string_type>)*/
+    else
     {
       m_value.template emplace<string_type>(std::move(value));
     }
   }
 };
 
+/**
+ * \brief Alias for the most common use case of `basic_ini_value`.
+ *
+ * \since 0.1.0
+ */
 using ini_value = basic_ini_value<char>;
 
+/**
+ * \brief Prints a textual representation of an ini value.
+ *
+ * \tparam Char the used character type.
+ *
+ * \param stream the output stream that will be used.
+ * \param value the ini value that will be printed.
+ *
+ * \return the used stream.
+ *
+ * \since 0.1.0
+ */
 template <typename Char>
 auto operator<<(std::ostream& stream, const basic_ini_value<Char>& value) -> std::ostream&
 {
-  if (const auto* str = value.try_get_string())
-  {
-    stream << *str;
-  }
-  else if (const auto* i = value.try_get_int())
-  {
-    stream << std::to_string(*i);
-  }
-  else if (const auto* u = value.try_get_uint())
-  {
-    stream << std::to_string(*u) << 'u';
-  }
-  else if (const auto* f = value.try_get_float())
-  {
-    stream << std::to_string(*f);
-  }
-  else if (const auto* b = value.try_get_bool())
-  {
-    stream << ((*b) ? "true" : "false");
-  }
-
+  value.dump(stream);
   return stream;
 }
 
@@ -10986,28 +17016,58 @@ namespace rune {
 /// \name Ini
 /// \{
 
+/**
+ * \brief Represents the syntax used by an ini file.
+ *
+ * \tparam Char the character type that is used.
+ *
+ * \since 0.1.0
+ */
 template <typename Char>
 struct ini_format final
 {
   using value_type = Char;
 
-  value_type section_start = '[';
-  value_type section_end = ']';
-  value_type assign = '=';
-  value_type comment = ';';
+  value_type section_start = '[';  ///< Token introducing a section name.
+  value_type section_end = ']';    ///< Token that ends a section name.
+  value_type assign = '=';         ///< Assignment operator token.
+  value_type comment = ';';        ///< Line comment token.
 };
 
+/**
+ * \brief Represents a section in an ini file.
+ *
+ * \tparam Char the character type that is used.
+ *
+ * \see `ini_section`
+ * \see `basic_ini`
+ * \see `basic_ini_value`
+ *
+ * \since 0.1.0
+ */
 template <typename Char>
 class basic_ini_section final
 {
  public:
   using char_type = Char;
-  using value_type = basic_ini_value<char_type>;
+  using elem_type = basic_ini_value<char_type>;
   using string_type = std::basic_string<char_type>;
   using string_view_type = std::basic_string_view<char_type>;
   using format_type = ini_format<char_type>;
+  using storage_type = std::map<string_type, elem_type, std::less<>>;
+  using value_type = typename storage_type::value_type;
+  using iterator = typename storage_type::iterator;
+  using const_iterator = typename storage_type::const_iterator;
   using size_type = usize;
 
+  /**
+   * \brief Outputs the contents of the section to an output stream.
+   *
+   * \param stream the output stream that will be used.
+   * \param format the syntax that will be used.
+   *
+   * \since 0.1.0
+   */
   void dump(std::ostream& stream, const format_type& format) const
   {
     for (const auto& [key, value] : m_entries)
@@ -11018,16 +17078,68 @@ class basic_ini_section final
     stream << '\n';
   }
 
-  template <typename T>
-  auto operator[](const T& element) -> value_type&
+  /**
+   * \brief Removes an element from the section, if it exists.
+   *
+   * \param element the name of the element that will be removed.
+   *
+   * \return `true` if an element was removed; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  auto erase(const string_view_type element) -> bool
   {
-    // TODO get_or_emplace with string_view_type parameter
-    return m_entries[element];
+    if (const auto it = m_entries.find(element); it != m_entries.end())
+    {
+      m_entries.erase(it);
+      return true;
+    }
+    else
+    {
+      return false;
+    }
   }
 
-  // TODO erase
+  /**
+   * \brief Retrieves an element from the section or default-constructs one if it doesn't
+   * already exist.
+   *
+   * \param element the name of the element that will be retrieved.
+   *
+   * \return the value that was either found or created.
+   *
+   * \since 0.1.0
+   */
+  auto get_or_emplace(const string_view_type element) -> elem_type&
+  {
+    if (const auto it = m_entries.find(element); it != m_entries.end())
+    {
+      return it->second;
+    }
+    else
+    {
+      return m_entries[string_type{element}];
+    }
+  }
 
-  [[nodiscard]] auto at(const string_view_type element) -> value_type&
+  /// \copydoc get_or_emplace()
+  auto operator[](const string_view_type element) -> elem_type&
+  {
+    return get_or_emplace(element);
+  }
+
+  /**
+   * \brief Returns the value associated with the specified name.
+   *
+   * \param element the name of the value to obtain.
+   *
+   * \return the ini value associated with the specified name.
+   *
+   * \throws rune_error if the section doesn't contain the specified value.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto at(const string_view_type element) -> elem_type&
   {
     if (const auto it = m_entries.find(element); it != m_entries.end())
     {
@@ -11039,7 +17151,8 @@ class basic_ini_section final
     }
   }
 
-  [[nodiscard]] auto at(const string_view_type element) const -> const value_type&
+  /// \copydoc at()
+  [[nodiscard]] auto at(const string_view_type element) const -> const elem_type&
   {
     if (const auto it = m_entries.find(element); it != m_entries.end())
     {
@@ -11051,24 +17164,103 @@ class basic_ini_section final
     }
   }
 
+  /**
+   * \brief Indicates whether or not the section contains a value with the specified name.
+   *
+   * \param element the name of the element to look for.
+   *
+   * \return `true` if the section contains a value with the specified name; `false`
+   * otherwise.
+   *
+   * \since 0.1.0
+   */
   [[nodiscard]] auto contains(const string_view_type element) const -> bool
   {
     return m_entries.find(element) != m_entries.end();
   }
 
+  /**
+   * \brief Returns the amount of values present in the section.
+   *
+   * \return the amount of values in the section.
+   *
+   * \since 0.1.0
+   */
   [[nodiscard]] auto size() const noexcept -> size_type
   {
     return m_entries.size();
   }
 
+  /**
+   * \brief Indicates whether or not the section is empty.
+   *
+   * \return `true` if the section is empty; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
   [[nodiscard]] auto empty() const noexcept -> bool
   {
     return m_entries.empty();
   }
 
+  /**
+   * \brief Returns an iterator to the beginning of the section.
+   *
+   * \return an iterator to the beginning.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto begin() noexcept -> iterator
+  {
+    return m_entries.begin();
+  }
+
+  /**
+   * \brief Returns a const iterator to the beginning of the section.
+   *
+   * \return a const iterator to the beginning.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto begin() const noexcept -> const_iterator
+  {
+    return m_entries.begin();
+  }
+
+  /**
+   * \brief Returns an iterator to the end of the section.
+   *
+   * \return an iterator to the end.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto end() noexcept -> iterator
+  {
+    return m_entries.end();
+  }
+
+  /**
+   * \brief Returns a const iterator to the end of the section.
+   *
+   * \return a const iterator to the end.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto end() const noexcept -> const_iterator
+  {
+    return m_entries.end();
+  }
+
  private:
-  std::map<string_type, value_type, std::less<>> m_entries;
+  storage_type m_entries;
 };
+
+/**
+ * \brief Alias for the most common use case of `basic_ini_section`.
+ *
+ * \since 0.1.0
+ */
+using ini_section = basic_ini_section<char>;
 
 /// \} End of ini
 
@@ -11089,6 +17281,19 @@ namespace rune {
 /// \name Ini
 /// \{
 
+/**
+ * \brief Represents an ini file.
+ *
+ * \see `ini_file`
+ * \see `basic_ini_section`
+ * \see `basic_ini_value`
+ * \see `write_ini()`
+ * \see `read_ini()`
+ * \see `operator<<(std::ostream&, const basic_ini&)`
+ * \see `operator>>(std::istream&, basic_ini&)`
+ *
+ * \since 0.1.0
+ */
 template <typename Char>
 class basic_ini final
 {
@@ -11098,22 +17303,43 @@ class basic_ini final
   using string_view_type = std::basic_string_view<char_type>;
   using section_type = basic_ini_section<char_type>;
   using format_type = ini_format<char_type>;
+  using storage_type = std::map<string_type, section_type, std::less<>>;
+  using iterator = typename storage_type::iterator;
+  using const_iterator = typename storage_type::const_iterator;
   using size_type = usize;
-  using iterator = typename std::map<string_type, section_type>::iterator;
-  using const_iterator = typename std::map<string_type, section_type>::const_iterator;
 
   /**
-   * \brief Creates an empty Ini file.
+   * \brief Creates an empty ini file.
    *
    * \param format optional custom format.
+   *
+   * \since 0.1.0
    */
   explicit basic_ini(const format_type format = format_type{}) : m_format{format}
   {}
 
   /**
-   * \brief Parses an `.ini` file based on an input stream.
+   * \brief Writes the contents of the file to a stream.
    *
-   * \param stream the input stream that will be read.
+   * \param stream the output stream that will be used.
+   *
+   * \since 0.1.0
+   */
+  void dump(std::ostream& stream) const
+  {
+    for (const auto& [name, section] : m_sections)
+    {
+      stream << m_format.section_start << name << m_format.section_end << '\n';
+      section.dump(stream, m_format);
+    }
+  }
+
+  /**
+   * \brief Parses an ini file based on an input stream.
+   *
+   * \param stream the input stream that will be used.
+   *
+   * \since 0.1.0
    */
   void read(std::istream& stream)
   {
@@ -11132,25 +17358,13 @@ class basic_ini final
   }
 
   /**
-   * \brief Writes the contents of the instance to a stream.
-   *
-   * \param stream the output stream that will be used.
-   */
-  void write(std::ostream& stream) const
-  {
-    for (const auto& [name, values] : m_sections)
-    {
-      stream << m_format.section_start << name << m_format.section_end << '\n';
-      values.dump(stream, m_format);
-    }
-  }
-
-  /**
    * \brief Adds or replaces a section.
    *
    * \param section the name of the section that will be added or replaced.
    *
    * \return the new section.
+   *
+   * \since 0.1.0
    */
   auto emplace_or_replace(string_type section) -> section_type&
   {
@@ -11160,13 +17374,14 @@ class basic_ini final
   }
 
   /**
-   * \brief Returns the section with the specified name if there is one, adding a new
-   * section if it doesn't exist.
+   * \brief Retrieves a section from the file or default-constructs one if it doesn't
+   * already exist.
    *
-   * \param section the name of the desired section.
+   * \param section the name of the section that will be retrieved.
    *
-   * \return the existing section associated with the specified name or a new section if
-   * no such section existed.
+   * \return the section that was either found or created.
+   *
+   * \since 0.1.0
    */
   auto get_or_emplace(const string_view_type section) -> section_type&
   {
@@ -11189,22 +17404,38 @@ class basic_ini final
     return get_or_emplace(section);
   }
 
-  void erase(const string_view_type section)
+  /**
+   * \brief Removes a section from the file, if it exists.
+   *
+   * \param section the name of the section that will be removed.
+   *
+   * \return `true` if a section was removed; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
+  auto erase(const string_view_type section) -> bool
   {
     if (const auto it = m_sections.find(section); it != m_sections.end())
     {
       m_sections.erase(it);
+      return true;
+    }
+    else
+    {
+      return false;
     }
   }
 
   /**
-   * \brief Returns the existing section associated with the specified name.
+   * \brief Returns the section associated with the specified name.
    *
-   * \param section the name of the desired section.
+   * \param section the name of the section to retrieve.
    *
-   * \return the section with the specified name.
+   * \return the found section.
    *
    * \throws rune_error if there is no section with the specified name.
+   *
+   * \since 0.1.0
    */
   [[nodiscard]] auto at(const string_view_type section) -> section_type&
   {
@@ -11237,6 +17468,8 @@ class basic_ini final
    * \param section the name of the section to look for.
    *
    * \return `true` if the specified section exists; `false` otherwise.
+   *
+   * \since 0.1.0
    */
   [[nodiscard]] auto contains(const string_view_type section) const -> bool
   {
@@ -11244,9 +17477,11 @@ class basic_ini final
   }
 
   /**
-   * \brief Returns the number of sections stored in the `.ini` file.
+   * \brief Returns the number of sections stored in the ini file.
    *
    * \return the number of sections.
+   *
+   * \since 0.1.0
    */
   [[nodiscard]] auto size() const noexcept -> size_type
   {
@@ -11257,6 +17492,8 @@ class basic_ini final
    * \brief Indicates whether or not there are no sections.
    *
    * \return `true` if there are no sections; `false` otherwise.
+   *
+   * \since 0.1.0
    */
   [[nodiscard]] auto empty() const noexcept -> bool
   {
@@ -11264,43 +17501,55 @@ class basic_ini final
   }
 
   /**
-   * \brief Indicates whether or not the parsed contents were valid.
+   * \brief Indicates whether or not the parsed contents are valid.
    *
-   * \return `true` if there are no parse errors associated with the instance; `false`
-   * otherwise.
+   * \return `true` if there are no errors associated with the file; `false` otherwise.
+   *
+   * \since 0.1.0
    */
   [[nodiscard]] explicit operator bool() const noexcept
   {
     return m_errors.empty();
   }
 
-  [[nodiscard]] auto errors() const -> const std::vector<string_type>&
-  {
-    return m_errors;
-  }
-
+  /**
+   * \brief Returns an iterator to the beginning of the instance.
+   *
+   * \return an iterator to the beginning.
+   *
+   * \since 0.1.0
+   */
   [[nodiscard]] auto begin() noexcept -> iterator
   {
     return m_sections.begin();
   }
 
+  /// \copydoc begin()
   [[nodiscard]] auto begin() const noexcept -> const_iterator
   {
     return m_sections.begin();
   }
 
+  /**
+   * \brief Returns an iterator to the end of the instance.
+   *
+   * \return an iterator to the end.
+   *
+   * \since 0.1.0
+   */
   [[nodiscard]] auto end() noexcept -> iterator
   {
     return m_sections.end();
   }
 
+  /// \copydoc end()
   [[nodiscard]] auto end() const noexcept -> const_iterator
   {
     return m_sections.end();
   }
 
  private:
-  std::map<string_type, section_type, std::less<>> m_sections;
+  storage_type m_sections;
   std::vector<string_type> m_errors;
   format_type m_format;
 
@@ -11325,7 +17574,23 @@ class basic_ini final
     line.erase(it.base(), line.end());
   }
 
-  [[nodiscard]] static auto is_unsigned(const string_type& str)
+  [[nodiscard]] static auto is_float(const string_type& str) -> bool
+  {
+    // Require float values to feature dot
+    if (str.find('.') == string_type::npos)
+    {
+      return false;
+    }
+
+    std::istringstream stream{str};
+
+    double value{};
+    stream >> value;
+
+    return stream.eof() && !stream.fail();
+  }
+
+  [[nodiscard]] static auto is_unsigned(const string_type& str) -> bool
   {
     return !str.starts_with('-') && str.ends_with('u') &&
            std::all_of(str.begin(), str.end() - 1, [](const char_type ch) {
@@ -11333,7 +17598,7 @@ class basic_ini final
            });
   }
 
-  [[nodiscard]] static auto is_signed(const string_type& str)
+  [[nodiscard]] static auto is_signed(const string_type& str) -> bool
   {
     if (str.starts_with('-'))
     {
@@ -11372,6 +17637,10 @@ class basic_ini final
       else if (value == "false")
       {
         section[std::move(variable)] = false;
+      }
+      else if (is_float(value))
+      {
+        section[std::move(variable)] = std::stod(value);
       }
       else if (is_unsigned(value))
       {
@@ -11438,7 +17707,11 @@ class basic_ini final
   }
 };
 
-/// Alias for the most likely `basic_ini` type.
+/**
+ * \brief Alias for the most common use case of `basic_ini`.
+ *
+ * \since 0.1.0
+ */
 using ini_file = basic_ini<char>;
 
 /**
@@ -11451,17 +17724,17 @@ using ini_file = basic_ini<char>;
  *
  * \return the used stream.
  *
- * \see `basic_ini::write()`
+ * \see `basic_ini::dump()`
  */
 template <typename Char>
 auto operator<<(std::ostream& stream, const basic_ini<Char>& ini) -> std::ostream&
 {
-  ini.write(stream);
+  ini.dump(stream);
   return stream;
 }
 
 /**
- * \brief Parses an `.ini` file from an input stream.
+ * \brief Parses an ini file from an input stream.
  *
  * \tparam Char the character type used.
  *
@@ -11481,44 +17754,49 @@ auto operator>>(std::istream& stream, basic_ini<Char>& ini) -> std::istream&
 }
 
 /**
- * \brief Parses an `.ini` file and returns its contents.
- *
- * \pre `path` must feature the `.ini` extension.
- *
- * \tparam Char the character type used.
- *
- * \param path the file path of the `.ini` file.
- *
- * \return the parsed contents of the `.ini` file.
- */
-template <typename Char = char>
-[[nodiscard]] auto read_ini(const std::filesystem::path& path) -> basic_ini<Char>
-{
-  assert(path.extension() == ".ini");
-  std::ifstream stream{path};
-
-  ini_file file;
-  stream >> file;
-
-  return file;
-}
-
-/**
  * \brief Saves an Ini file to the specified file path.
- *
- * \pre `path` must feature the `.ini` extension.
  *
  * \tparam Char the character type used.
  *
  * \param ini the Ini file that will be saved.
  * \param path the file path of the ini file.
+ *
+ * \since 0.1.0
  */
 template <typename Char>
 void write_ini(const basic_ini<Char>& ini, const std::filesystem::path& path)
 {
-  assert(path.extension() == ".ini");
   std::ofstream stream{path};
   stream << ini;
+}
+
+/**
+ * \brief Parses an ini file and returns its contents.
+ *
+ * \tparam Char the character type used.
+ *
+ * \param path the file path of the ini file.
+ *
+ * \return the parsed ini file; `nothing` if there were parsing errors.
+ *
+ * \since 0.1.0
+ */
+template <typename Char = char>
+[[nodiscard]] auto read_ini(const std::filesystem::path& path) -> maybe<basic_ini<Char>>
+{
+  std::ifstream stream{path};
+
+  ini_file file;
+  stream >> file;
+
+  if (file)
+  {
+    return file;
+  }
+  else
+  {
+    return nothing;
+  }
 }
 
 /// \} End of ini
@@ -11533,13 +17811,12 @@ void write_ini(const basic_ini<Char>& ini, const std::filesystem::path& path)
 #ifndef RUNE_IO_INI_VALUE_HPP
 #define RUNE_IO_INI_VALUE_HPP
 
-#include <concepts>     // convertible_to, integral, floating_point, same_as
-#include <nenya.hpp>    // strong_type
-#include <ostream>      // ostream
-#include <string>       // basic_string, to_string
-#include <string_view>  // basic_string_view
-#include <utility>      // move
-#include <variant>      // variant, get, get_if, holds_alternative
+#include <concepts>   // convertible_to, integral, floating_point, same_as
+#include <nenya.hpp>  // strong_type
+#include <ostream>    // ostream
+#include <string>     // basic_string, to_string
+#include <utility>    // move
+#include <variant>    // variant, get, get_if, holds_alternative
 
 // #include "../aliases/integers.hpp"
 
@@ -11554,6 +17831,15 @@ namespace rune {
 
 // clang-format off
 
+/**
+ * \brief Requires that a type is either a signed integer, unsigned integer,
+ * floating-point number or a string.
+ *
+ * \tparam T the type that will be checked.
+ * \tparam Char the character type.
+ *
+ * \since 0.1.0
+ */
 template <typename T, typename Char>
 concept is_ini_value = std::integral<T> ||
                        std::floating_point<T> ||
@@ -11561,15 +17847,36 @@ concept is_ini_value = std::integral<T> ||
 
 // clang-format on
 
+/**
+ * \brief Represents a value of an individual ini element.
+ *
+ * \tparam Char the character type that will be used.
+ *
+ * \see `ini_value`
+ * \see `basic_ini`
+ * \see `basic_ini_section`
+ *
+ * \since 0.1.0
+ */
 template <typename Char>
 class basic_ini_value final
 {
  public:
   using char_type = Char;
   using string_type = std::basic_string<char_type>;
-  using string_view_type = std::basic_string_view<char_type>;
-  using value_type = std::variant<string_type, bool, int64, uint64, double>;
+  using int_type = int64;
+  using uint_type = uint64;
+  using float_type = double;
+  using value_type = std::variant<string_type, bool, int_type, uint_type, float_type>;
 
+  /// \name Construction
+  /// \{
+
+  /**
+   * \brief Creates a `basic_ini_value` with an empty string as its value.
+   *
+   * \since 0.1.0
+   */
   basic_ini_value() = default;
 
   basic_ini_value(const basic_ini_value&) = default;
@@ -11578,32 +17885,117 @@ class basic_ini_value final
   basic_ini_value& operator=(const basic_ini_value&) = default;
   basic_ini_value& operator=(basic_ini_value&&) noexcept = default;
 
-  template <typename T>
-  /*implicit*/ basic_ini_value(T value) requires is_ini_value<T, char_type>  // NOLINT
+  /**
+   * \brief Creates a `basic_ini_value` instance.
+   *
+   * \tparam T the type of the value.
+   *
+   * \param value the value that will be stored.
+   *
+   * \since 0.1.0
+   */
+  template <is_ini_value<char_type> T>
+  /*implicit*/ basic_ini_value(T value)  // NOLINT
   {
     assign(std::move(value));
   }
 
-  template <typename T>
-  basic_ini_value& operator=(T value) requires is_ini_value<T, char_type>
+  /**
+   * \brief Assigns a new value to the instance.
+   *
+   * \tparam T the type of the new value.
+   *
+   * \param value the new value of the `basic_ini_value`.
+   *
+   * \return the `basic_ini_value` instance.
+   *
+   * \since 0.1.0
+   */
+  template <is_ini_value<char_type> T>
+  auto operator=(T value) -> basic_ini_value&
   {
     assign(std::move(value));
     return *this;
   }
 
-  // clang-format off
+  /// \} End of construction
 
-  template <typename T> requires is_ini_value<T, char_type>
-  [[nodiscard]] auto get() const -> T
+  /**
+   * \brief Outputs the value to an output stream.
+   *
+   * \param stream the output stream that will be used.
+   *
+   * \since 0.1.0
+   */
+  void dump(std::ostream& stream) const
   {
-    static_assert(std::convertible_to<T, string_type> ||
-                  std::signed_integral<T> ||
-                  std::unsigned_integral<T> ||
-                  std::floating_point<T> ||
-                  std::same_as<T, bool>,
-                  "Invalid template type parameter to basic_ini_value::get!");
-    // clang-format on
+    if (const auto* str = try_get_string())
+    {
+      stream << *str;
+    }
+    else if (const auto* i = try_get_int())
+    {
+      stream << std::to_string(*i);
+    }
+    else if (const auto* u = try_get_uint())
+    {
+      stream << std::to_string(*u) << 'u';
+    }
+    else if (const auto* f = try_get_float())
+    {
+      stream << std::to_string(*f);
+    }
+    else if (const auto* b = try_get_bool())
+    {
+      stream << ((*b) ? "true" : "false");
+    }
+  }
 
+  /**
+   * \brief Returns the underlying representation.
+   *
+   * \return the underlying variant value.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto get() const -> const value_type&
+  {
+    return m_value;
+  }
+
+  /// \name Checked getters
+  /// \{
+
+  /**
+   * \brief Returns the underlying value as the specified type.
+   *
+   * \details This function can be used to safely cast the underlying value to the
+   * specified type, as long as the types are in the same "family". In other words, where
+   * the only difference between the types is the representation range. For example, if
+   * the underlying value is a 64-bit signed integer, it is perfectly valid to cast it to
+   * an `int`, since they are both signed integer types.
+   *
+   * \code{cpp}
+   * rune::ini_value value = 42;  // Signed integer value (stored as 64-bit integer)
+   *
+   * auto i = value.as<int>();  // Fine, underlying type is a signed integer
+   *
+   * auto u = value.as<unsigned>();  // Error, no implicit signed to unsigned conversion
+   * auto f = value.as<float>();     // Error, no implicit integer to float conversion
+   * auto s = value.as<std::string>();  // Error, completely unrelated types
+   * \endcode
+   *
+   * \tparam T the type of the returned value.
+   *
+   * \return the internal value casted to the specified type.
+   *
+   * \throws bad_variant_access if the underlying and specified types aren't related.
+   *
+   * \since 0.1.0
+   */
+  template <is_ini_value<char_type> T>
+  [[nodiscard]] auto as() const -> T
+  {
     if constexpr (std::same_as<T, bool>)
     {
       return std::get<bool>(m_value);
@@ -11620,75 +18012,113 @@ class basic_ini_value final
     {
       return static_cast<T>(std::get<double>(m_value));
     }
-    else /*if constexpr (std::convertible_to<T, string_type>)*/
+    else
     {
       return std::get<string_type>(m_value);
     }
   }
 
+  /**
+   * \brief Assigns a value with the underlying value.
+   *
+   * \details The value conversion behavior of this function is identical to those of
+   * the `as()` function.
+   *
+   * \code{cpp}
+   * rune::ini_value value = "foo";
+   *
+   * std::string str;
+   * value.get_to(str);  // Fine, the underlying type is a string
+   *
+   * int i{};
+   * value.get_to(i);  // Error, cannot assign integer with string
+   * \endcode
+   *
+   * \param[out] value a reference to the value that will be assigned.
+   *
+   * \throws bad_variant_access if there is a type mismatch.
+   *
+   * \since 0.1.0
+   */
   void get_to(string_type& value) const
   {
     value = std::get<string_type>(m_value);
   }
 
+  /// \copydoc get_to()
   void get_to(bool& value) const
   {
     value = std::get<bool>(m_value);
   }
 
+  /// \copydoc get_to()
   void get_to(int8& value) const
   {
-    value = static_cast<int8>(std::get<int64>(m_value));
+    value = static_cast<int8>(std::get<int_type>(m_value));
   }
 
+  /// \copydoc get_to()
   void get_to(int16& value) const
   {
-    value = static_cast<int16>(std::get<int64>(m_value));
+    value = static_cast<int16>(std::get<int_type>(m_value));
   }
 
+  /// \copydoc get_to()
   void get_to(int32& value) const
   {
-    value = static_cast<int32>(std::get<int64>(m_value));
+    value = static_cast<int32>(std::get<int_type>(m_value));
   }
 
+  /// \copydoc get_to()
   void get_to(int64& value) const
   {
     value = std::get<int64>(m_value);
   }
 
+  /// \copydoc get_to()
   void get_to(uint8& value) const
   {
-    value = static_cast<uint8>(std::get<uint64>(m_value));
+    value = static_cast<uint8>(std::get<uint_type>(m_value));
   }
 
+  /// \copydoc get_to()
   void get_to(uint16& value) const
   {
-    value = static_cast<uint16>(std::get<uint64>(m_value));
+    value = static_cast<uint16>(std::get<uint_type>(m_value));
   }
 
+  /// \copydoc get_to()
   void get_to(uint32& value) const
   {
-    value = static_cast<uint32>(std::get<uint64>(m_value));
+    value = static_cast<uint32>(std::get<uint_type>(m_value));
   }
 
+  /// \copydoc get_to()
   void get_to(uint64& value) const
   {
-    value = std::get<uint64>(m_value);
+    value = static_cast<uint64>(std::get<uint_type>(m_value));
   }
 
+  /// \copydoc get_to()
   void get_to(float& value) const
   {
-    value = static_cast<float>(std::get<double>(m_value));
+    value = static_cast<float>(std::get<float_type>(m_value));
   }
 
+  /// \copydoc get_to()
   void get_to(double& value) const
   {
-    value = std::get<double>(m_value);
+    value = static_cast<double>(std::get<float_type>(m_value));
   }
 
-  // clang-format off
+  /// \copydoc get_to()
+  void get_to(long double& value) const
+  {
+    value = static_cast<long double>(std::get<float_type>(m_value));
+  }
 
-  template <typename T, typename Tag, nenya::conversion Conv> requires is_ini_value<T, char_type>
+  /// \copydoc get_to()
+  template <is_ini_value<char_type> T, typename Tag, nenya::conversion Conv>
   void get_to(nenya::strong_type<T, Tag, Conv>& value) const
   {
     using strong_type = nenya::strong_type<T, Tag, Conv>;
@@ -11699,15 +18129,15 @@ class basic_ini_value final
     }
     else if constexpr (std::signed_integral<T>)
     {
-      value = strong_type{static_cast<T>(std::get<int64>(m_value))};
+      value = strong_type{static_cast<T>(std::get<int_type>(m_value))};
     }
     else if constexpr (std::unsigned_integral<T>)
     {
-      value = strong_type{static_cast<T>(std::get<uint64>(m_value))};
+      value = strong_type{static_cast<T>(std::get<uint_type>(m_value))};
     }
     else if constexpr (std::floating_point<T>)
     {
-      value = strong_type{static_cast<T>(std::get<double>(m_value))};
+      value = strong_type{static_cast<T>(std::get<float_type>(m_value))};
     }
     else /*if constexpr (std::convertible_to<T, string_type>)*/
     {
@@ -11715,70 +18145,150 @@ class basic_ini_value final
     }
   }
 
-  // clang-format on
+  /// \} End of checked getters
 
-  [[nodiscard]] auto get() const -> const value_type&
-  {
-    return m_value;
-  }
+  /// \name Unchecked getters
+  /// \{
 
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying value; null if the underlying value isn't a
+   * string.
+   *
+   * \since 0.1.0
+   */
   [[nodiscard]] auto try_get_string() const noexcept -> const string_type*
   {
     return std::get_if<string_type>(&m_value);
   }
 
-  [[nodiscard]] auto try_get_int() const noexcept -> const int64*
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying value; null if the underlying value isn't an
+   * integer.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_int() const noexcept -> const int_type*
   {
-    return std::get_if<int64>(&m_value);
+    return std::get_if<int_type>(&m_value);
   }
 
-  [[nodiscard]] auto try_get_uint() const noexcept -> const uint64*
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying value; null if the underlying value isn't an
+   * unsigned integer.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_uint() const noexcept -> const uint_type*
   {
-    return std::get_if<uint64>(&m_value);
+    return std::get_if<uint_type>(&m_value);
   }
 
-  [[nodiscard]] auto try_get_float() const noexcept -> const double*
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying value; null if the underlying value isn't a
+   * floating-point number.
+   *
+   * \since 0.1.0
+   */
+  [[nodiscard]] auto try_get_float() const noexcept -> const float_type*
   {
-    return std::get_if<double>(&m_value);
+    return std::get_if<float_type>(&m_value);
   }
 
+  /**
+   * \brief Returns a pointer to the underlying value.
+   *
+   * \return a pointer to the underlying boolean value; null if the underlying value isn't
+   * a boolean.
+   *
+   * \since 0.1.0
+   */
   [[nodiscard]] auto try_get_bool() const noexcept -> const bool*
   {
     return std::get_if<bool>(&m_value);
   }
 
+  /// \} End of unchecked getters
+
+  /// \name Type indicators
+  /// \{
+
+  /**
+   * \brief Indicates whether or not the value is a string.
+   *
+   * \return `true` if the value is a string; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
   [[nodiscard]] auto is_string() const noexcept -> bool
   {
     return std::holds_alternative<string_type>(m_value);
   }
 
+  /**
+   * \brief Indicates whether or not the value is a signed integer.
+   *
+   * \return `true` if the value is a signed integer; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
   [[nodiscard]] auto is_int() const noexcept -> bool
   {
-    return std::holds_alternative<int64>(m_value);
+    return std::holds_alternative<int_type>(m_value);
   }
 
+  /**
+   * \brief Indicates whether or not the value is an unsigned integer.
+   *
+   * \return `true` if the value is an unsigned integer; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
   [[nodiscard]] auto is_uint() const noexcept -> bool
   {
-    return std::holds_alternative<uint64>(m_value);
+    return std::holds_alternative<uint_type>(m_value);
   }
 
+  /**
+   * \brief Indicates whether or not the value is a floating-point number.
+   *
+   * \return `true` if the value is a floating-point number; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
   [[nodiscard]] auto is_float() const noexcept -> bool
   {
-    return std::holds_alternative<double>(m_value);
+    return std::holds_alternative<float_type>(m_value);
   }
 
+  /**
+   * \brief Indicates whether or not the value is a boolean.
+   *
+   * \return `true` if the value is a boolean; `false` otherwise.
+   *
+   * \since 0.1.0
+   */
   [[nodiscard]] auto is_bool() const noexcept -> bool
   {
     return std::holds_alternative<bool>(m_value);
   }
+
+  /// \} End of type indicators
 
   [[nodiscard]] bool operator==(const basic_ini_value&) const = default;
 
  private:
   value_type m_value;
 
-  template <typename T>
-  void assign(T value) requires is_ini_value<T, char_type>
+  template <is_ini_value<char_type> T>
+  void assign(T value)
   {
     if constexpr (std::same_as<T, bool>)
     {
@@ -11786,49 +18296,46 @@ class basic_ini_value final
     }
     else if constexpr (std::signed_integral<T>)
     {
-      m_value.template emplace<int64>(std::move(value));
+      m_value.template emplace<int_type>(std::move(value));
     }
     else if constexpr (std::unsigned_integral<T>)
     {
-      m_value.template emplace<uint64>(std::move(value));
+      m_value.template emplace<uint_type>(std::move(value));
     }
     else if constexpr (std::floating_point<T>)
     {
-      m_value.template emplace<double>(std::move(value));
+      m_value.template emplace<float_type>(std::move(value));
     }
-    else /*if constexpr (std::convertible_to<T, string_type>)*/
+    else
     {
       m_value.template emplace<string_type>(std::move(value));
     }
   }
 };
 
+/**
+ * \brief Alias for the most common use case of `basic_ini_value`.
+ *
+ * \since 0.1.0
+ */
 using ini_value = basic_ini_value<char>;
 
+/**
+ * \brief Prints a textual representation of an ini value.
+ *
+ * \tparam Char the used character type.
+ *
+ * \param stream the output stream that will be used.
+ * \param value the ini value that will be printed.
+ *
+ * \return the used stream.
+ *
+ * \since 0.1.0
+ */
 template <typename Char>
 auto operator<<(std::ostream& stream, const basic_ini_value<Char>& value) -> std::ostream&
 {
-  if (const auto* str = value.try_get_string())
-  {
-    stream << *str;
-  }
-  else if (const auto* i = value.try_get_int())
-  {
-    stream << std::to_string(*i);
-  }
-  else if (const auto* u = value.try_get_uint())
-  {
-    stream << std::to_string(*u) << 'u';
-  }
-  else if (const auto* f = value.try_get_float())
-  {
-    stream << std::to_string(*f);
-  }
-  else if (const auto* b = value.try_get_bool())
-  {
-    stream << ((*b) ? "true" : "false");
-  }
-
+  value.dump(stream);
   return stream;
 }
 
@@ -11869,8 +18376,6 @@ using json_type = nlohmann::json;
 // #include "../aliases/maybe.hpp"
 
 // #include "../core/rune_error.hpp"
-
-// #include "rune_api.hpp"
 
 
 namespace rune {
@@ -12127,6 +18632,4814 @@ void try_emplace_to(const json_type& json,
 }  // namespace rune
 
 #endif  // RUNE_IO_JSON_UTILS_HPP
+
+// #include "io/tmx/parse_tileset.hpp"
+#ifndef RUNE_TMX_PARSE_TILESET_HPP
+#define RUNE_TMX_PARSE_TILESET_HPP
+
+#include <filesystem>  // path
+#include <string>      // string
+
+// #include "../../aliases/json_type.hpp"
+#ifndef RUNE_ALIASES_JSON_TYPE_HPP
+#define RUNE_ALIASES_JSON_TYPE_HPP
+
+#include <json.hpp>  // json
+
+namespace rune {
+
+using json_type = nlohmann::json;
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_JSON_TYPE_HPP
+
+// #include "../json_utils.hpp"
+#ifndef RUNE_IO_JSON_UTILS_HPP
+#define RUNE_IO_JSON_UTILS_HPP
+
+#include <cassert>      // assert
+#include <concepts>     // same_as
+#include <filesystem>   // path
+#include <fstream>      // ifstream
+#include <string_view>  // string_view
+#include <variant>      // variant
+#include <vector>       // vector
+
+// #include "../aliases/json_type.hpp"
+#ifndef RUNE_ALIASES_JSON_TYPE_HPP
+#define RUNE_ALIASES_JSON_TYPE_HPP
+
+#include <json.hpp>  // json
+
+namespace rune {
+
+using json_type = nlohmann::json;
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_JSON_TYPE_HPP
+
+// #include "../aliases/maybe.hpp"
+#ifndef RUNE_ALIASES_MAYBE_HPP
+#define RUNE_ALIASES_MAYBE_HPP
+
+#include <optional>  // optional
+
+namespace rune {
+
+template <typename T>
+using maybe = std::optional<T>;
+
+inline constexpr std::nullopt_t nothing = std::nullopt;
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_MAYBE_HPP
+
+// #include "../core/rune_error.hpp"
+#ifndef RUNE_CORE_RUNE_ERROR_HPP
+#define RUNE_CORE_RUNE_ERROR_HPP
+
+#include <exception>  // exception
+
+// #include "../aliases/str.hpp"
+
+
+namespace rune {
+
+/**
+ * \typedef str
+ *
+ * \brief An alias for a C-style null-terminated string.
+ *
+ * \ingroup core
+ */
+using str = const char*;
+
+}  // namespace rune
+
+
+namespace rune {
+
+/**
+ * \brief The main exception thrown in the library.
+ *
+ * \ingroup core
+ *
+ * \since 0.1.0
+ */
+class rune_error final : public std::exception
+{
+ public:
+  explicit rune_error(const str what) noexcept : m_what{what}
+  {}
+
+  [[nodiscard]] auto what() const noexcept -> str override
+  {
+    return m_what;
+  }
+
+ private:
+  str m_what{"n/a"};
+};
+
+}  // namespace rune
+
+#endif  // RUNE_CORE_RUNE_ERROR_HPP
+
+
+namespace rune {
+
+/// \addtogroup io
+/// \{
+
+/// \name JSON
+/// \{
+
+// clang-format off
+
+template <typename T>
+concept json_serializable_type = requires (json_type json)
+{
+  { json.get<T>() };
+};
+
+// clang-format on
+
+/**
+ * \brief Parses the JSON file at the specified path, and returns the contents.
+ *
+ * \pre `file` must refer to a JSON file.
+ *
+ * \param file the file path of the JSON file.
+ *
+ * \return the parsed JSON data.
+ */
+[[nodiscard]] inline auto read_json(const std::filesystem::path& file) -> json_type
+{
+  assert(file.extension() == ".json");
+  std::ifstream stream{file};
+
+  json_type json;
+  stream >> json;
+
+  return json;
+}
+
+/// \} End of JSON
+
+/// \} End of group io
+
+namespace io {
+
+/// \addtogroup io
+/// \{
+
+/// \name JSON
+/// \{
+
+/**
+ * \brief Fills a vector with values from a JSON array.
+ *
+ * \pre `array` must represent a JSON array.
+ *
+ * \param array the JSON array that provides the source data.
+ * \param[out] container the vector that will be filled.
+ *
+ * \see `try_get_to()`
+ *
+ * \since 0.1.0
+ */
+template <json_serializable_type T>
+void get_to(const json_type& array, std::vector<T>& container)
+{
+  assert(array.is_array());
+
+  container.reserve(array.size());
+  for (const auto& [key, value] : array.items())
+  {
+    container.push_back(value.template get<T>());
+  }
+}
+
+/**
+ * \brief Fills a vector with values from a JSON array in a JSON object.
+ *
+ * \pre The JSON element associated with the specified key must be an array.
+ *
+ * \param json the JSON object that contains an array associated with the specified key.
+ * \param key the key of the child JSON array element.
+ * \param[out] container the vector that will be filled.
+ *
+ * \see `try_get_to()`
+ *
+ * \throws rune_error if there is no key with the specified name.
+ *
+ * \since 0.1.0
+ */
+template <json_serializable_type T>
+void get_to(const json_type& json, const std::string_view key, std::vector<T>& container)
+{
+  const auto it = json.find(key);
+  if (it == json.end())
+  {
+    throw rune_error{"io::get_to(): key does not exist"};
+  }
+
+  assert(it->is_array());
+  container.reserve(it->size());
+  for (const auto& [key, value] : it->items())
+  {
+    container.push_back(value.template get<T>());
+  }
+}
+
+/**
+ * \brief Attempts to serialize and assign a value.
+ *
+ * \details This function has no effect if there is no element associated with the
+ * specified key.
+ *
+ * \tparam T the type of the serializable value.
+ *
+ * \param json the source JSON object.
+ * \param key the key associated with the desired JSON value.
+ * \param[out] value the value that will be assigned.
+ *
+ * \see `get_to()`
+ */
+template <json_serializable_type T>
+void try_get_to(const json_type& json, const std::string_view key, T& value)
+{
+  if (const auto it = json.find(key); it != json.end())
+  {
+    value = it->get<T>();
+  }
+}
+
+/// \copydoc try_get_to()
+template <json_serializable_type T>
+void try_get_to(const json_type& json, const std::string_view key, maybe<T>& value)
+{
+  if (const auto it = json.find(key); it != json.end())
+  {
+    value = it->get<T>();
+  }
+}
+
+/**
+ * \brief Fills a vector with values from a JSON array, if it exists.
+ *
+ * \note This function has no effect if there is no element associated with the specified
+ * key.
+ *
+ * \pre The JSON element associated with the specified key must be an array.
+ *
+ * \param json the JSON object that contains an array associated with the specified key.
+ * \param key the key of the JSON array element.
+ * \param[out] container the vector that will be filled.
+ *
+ * \see `get_to()`
+ *
+ * \since 0.1.0
+ */
+template <json_serializable_type T>
+void try_get_to(const json_type& json,
+                const std::string_view key,
+                std::vector<T>& container)
+{
+  if (const auto it = json.find(key); it != json.end())
+  {
+    assert(it->is_array());
+    container.reserve(it->size());
+    for (const auto& [key, value] : it->items())
+    {
+      container.push_back(value.template get<T>());
+    }
+  }
+}
+
+/**
+ * \brief Assigns a wrapper from a serializable value.
+ *
+ * \tparam T the type of the wrapper.
+ *
+ * \param json the source JSON object.
+ * \param key the key associated with the desired JSON value.
+ * \param[out] value the value that will be assigned.
+ *
+ * \throws rune_error if there is no key with the specified name.
+ *
+ * \see `try_emplace_to()`
+ *
+ * \since 0.1.0
+ */
+template <typename T>
+  requires json_serializable_type<typename T::value_type>
+void emplace_to(const json_type& json, const std::string_view key, T& value)
+{
+  if (const auto it = json.find(key); it != json.end())
+  {
+    value = T{it->get<typename T::value_type>()};
+  }
+  else
+  {
+    throw rune_error{"io::emplace_to(): key does not exist"};
+  }
+}
+
+/// \copydoc emplace_to()
+template <typename T>
+  requires json_serializable_type<typename T::value_type>
+void emplace_to(const json_type& json, const std::string_view key, maybe<T>& value)
+{
+  if (const auto it = json.find(key); it != json.end())
+  {
+    value = T{it->get<typename T::value_type>()};
+  }
+  else
+  {
+    throw rune_error{"io::emplace_to(): key does not exist"};
+  }
+}
+
+/**
+ * \brief Attempts to assign a wrapper from a serializable value.
+ *
+ * \details This function has no effect if there is no element associated with the
+ * specified key.
+ *
+ * \tparam T the type of the wrapper.
+ *
+ * \param json the source JSON object.
+ * \param key the key associated with the desired JSON value.
+ * \param[out] value the value that will be assigned.
+ *
+ * \see `emplace_to()`
+ *
+ * \since 0.1.0
+ */
+template <json_serializable_type T, typename... Types>
+void try_emplace_to(const json_type& json,
+                    const std::string_view key,
+                    std::variant<Types...>& value)
+{
+  static_assert((std::same_as<T, Types> || ...),
+                "Cannot emplace value of type that is not used by the variant!");
+
+  if (const auto it = json.find(key); it != json.end())
+  {
+    value.template emplace<T>(it->get<T>());
+  }
+}
+
+/// \} End of JSON
+
+/// \} End of group io
+
+}  // namespace io
+
+}  // namespace rune
+
+#endif  // RUNE_IO_JSON_UTILS_HPP
+
+// #include "tmx_global_id.hpp"
+#ifndef RUNE_TMX_GLOBAL_ID_HPP
+#define RUNE_TMX_GLOBAL_ID_HPP
+
+#include <nenya.hpp>  // strong_type
+
+// #include "../../aliases/integers.hpp"
+#ifndef RUNE_ALIASES_INTEGERS_HPP
+#define RUNE_ALIASES_INTEGERS_HPP
+
+#include <centurion.hpp>  // ...
+#include <cstddef>        // size_t
+
+namespace rune {
+
+/// \addtogroup core
+/// \{
+
+using usize = std::size_t;
+
+using longlong = long long;
+
+using ushort = unsigned short;
+
+/// Unsigned integer.
+using uint = unsigned;
+
+/// Unsigned long integer.
+using ulong = unsigned long;
+
+/// Used as the argument type to integral literal operators.
+using ulonglong = unsigned long long;
+
+/// 8-bit signed integer.
+using int8 = cen::i8;
+
+/// 16-bit signed integer.
+using int16 = cen::i16;
+
+/// 32-bit signed integer.
+using int32 = cen::i32;
+
+/// 64-bit signed integer.
+using int64 = cen::i64;
+
+/// 8-bit unsigned integer.
+using uint8 = cen::u8;
+
+/// 16-bit unsigned integer.
+using uint16 = cen::u16;
+
+/// 32-bit unsigned integer.
+using uint32 = cen::u32;
+
+/// 64-bit unsigned integer.
+using uint64 = cen::u64;
+
+/// \} End of group core
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_INTEGERS_HPP
+
+
+namespace rune {
+
+/// \cond FALSE
+namespace tags {
+struct tmx_global_id_tag;
+}
+/// \endcond
+
+/// \addtogroup tmx
+/// \{
+
+using tmx_global_id = nenya::strong_type<uint, tags::tmx_global_id_tag>;
+
+/// \} End of group tmx
+
+namespace tmx_literals {
+
+/// \addtogroup tmx
+/// \{
+
+/// \name Literal operators
+/// \{
+
+[[nodiscard]] constexpr auto operator""_global(const ulonglong value) noexcept
+    -> tmx_global_id
+{
+  return tmx_global_id{static_cast<tmx_global_id::value_type>(value)};
+}
+
+/// \} End of literal operators
+/// \} End of group tmx
+
+}  // namespace tmx_literals
+}  // namespace rune
+
+#endif  // RUNE_TMX_GLOBAL_ID_HPP
+
+// #include "tmx_tileset.hpp"
+#ifndef RUNE_TMX_TILESET_HPP
+#define RUNE_TMX_TILESET_HPP
+
+#include <string>  // string
+#include <vector>  // vector
+
+// #include "../../aliases/maybe.hpp"
+#ifndef RUNE_ALIASES_MAYBE_HPP
+#define RUNE_ALIASES_MAYBE_HPP
+
+#include <optional>  // optional
+
+namespace rune {
+
+template <typename T>
+using maybe = std::optional<T>;
+
+inline constexpr std::nullopt_t nothing = std::nullopt;
+
+}  // namespace rune
+
+#endif  // RUNE_ALIASES_MAYBE_HPP
+
+// #include "tmx_color.hpp"
+#ifndef RUNE_TMX_COLOR_HPP
+#define RUNE_TMX_COLOR_HPP
+
+#include <cassert>      // assert
+#include <string>       // string
+#include <string_view>  // string_view
+
+// #include "../../aliases/integers.hpp"
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "core/from_string.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_color final
+{
+  uint8 red{};
+  uint8 green{};
+  uint8 blue{};
+  uint8 alpha{0xFF};
+
+  [[nodiscard]] constexpr bool operator==(const tmx_color&) const noexcept = default;
+};
+
+/// \} End of group tmx
+
+namespace tmx {
+
+/// \addtogroup tmx
+/// \{
+
+inline constexpr tmx_color black{0, 0, 0, 0xFF};
+
+[[nodiscard]] inline auto from_hex(const std::string_view str) -> uint8
+{
+  assert(str.size() == 2);
+  return from_string<uint8>(str, 16).value();
+}
+
+[[nodiscard]] inline auto make_color(const std::string_view str) -> tmx_color
+{
+  assert(str.size() == 7 || str.size() == 9);
+  assert(str.at(0) == '#');
+
+  const auto noHash = str.substr(1);
+  const auto length = noHash.size();
+
+  tmx_color result;
+
+  if (length == 8)
+  {
+    // ARGB
+    result.alpha = from_hex(noHash.substr(0, 2));
+    result.red = from_hex(noHash.substr(2, 2));
+    result.green = from_hex(noHash.substr(4, 2));
+    result.blue = from_hex(noHash.substr(6, 2));
+  }
+  else
+  {
+    // RGB
+    result.red = from_hex(noHash.substr(0, 2));
+    result.green = from_hex(noHash.substr(2, 2));
+    result.blue = from_hex(noHash.substr(4, 2));
+  }
+
+  return result;
+}
+
+/// \} End of group tmx
+
+}  // namespace tmx
+
+inline void from_json(const json_type& json, tmx_color& color)
+{
+  color = tmx::make_color(json.get<std::string>());
+}
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_COLOR_TEST
+
+// #include "tmx_global_id.hpp"
+
+// #include "tmx_grid.hpp"
+#ifndef RUNE_TMX_GRID_HPP
+#define RUNE_TMX_GRID_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+// #include "../../aliases/json_type.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_grid_orientation
+{
+  orthogonal,
+  isometric
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_grid_orientation,
+                             {{tmx_grid_orientation::orthogonal, "orthogonal"},
+                              {tmx_grid_orientation::isometric, "isometric"}})
+
+struct tmx_grid final
+{
+  int cell_width{};
+  int cell_height{};
+  tmx_grid_orientation orientation{tmx_grid_orientation::orthogonal};
+};
+
+inline void from_json(const json_type& json, tmx_grid& grid)
+{
+  json.at("width").get_to(grid.cell_width);
+  json.at("height").get_to(grid.cell_height);
+  json.at("orientation").get_to(grid.orientation);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_GRID_HPP
+
+// #include "tmx_property.hpp"
+#ifndef RUNE_TMX_PROPERTY_HPP
+#define RUNE_TMX_PROPERTY_HPP
+
+#include <algorithm>    // any_of, find_if
+#include <cassert>      // assert
+#include <concepts>     // same_as
+#include <nenya.hpp>    // strong_type
+#include <string>       // string
+#include <string_view>  // string_view
+#include <variant>      // variant, get, get_if, holds_alternative
+#include <vector>       // vector
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "core/rune_error.hpp"
+
+// #include "tmx_color.hpp"
+
+// #include "tmx_property_type.hpp"
+#ifndef RUNE_TMX_PROPERTY_TYPE_HPP
+#define RUNE_TMX_PROPERTY_TYPE_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_property_type
+{
+  string,    ///< For string values, such as `"foo"`.
+  integer,   ///< For integer values, e.g. `27`.
+  floating,  ///< For floating-point values, e.g. `182.4`.
+  boolean,   ///< For the boolean values `true`/`false`.
+  color,     ///< For ARGB/RGB colors, i.e. `"#AARRGGBB"` and `"#RRGGBB"`.
+  file,      ///< For file paths, e.g. `"some/path/abc.png"`.
+  object     ///< For referencing other objects, really just an integer ID.
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_property_type,
+                             {{tmx_property_type::string, "string"},
+                              {tmx_property_type::integer, "int"},
+                              {tmx_property_type::floating, "float"},
+                              {tmx_property_type::boolean, "bool"},
+                              {tmx_property_type::color, "color"},
+                              {tmx_property_type::object, "object"},
+                              {tmx_property_type::file, "file"}})
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_PROPERTY_TYPE_HPP
+
+
+namespace rune {
+
+/// \cond FALSE
+namespace tags {
+struct tmx_file_tag;
+struct tmx_object_id_tag;
+}  // namespace tags
+/// \endcond
+
+/// \addtogroup tmx
+/// \{
+
+using tmx_file = nenya::strong_type<std::string, tags::tmx_file_tag>;
+using tmx_object_id = nenya::strong_type<int, tags::tmx_object_id_tag>;
+
+/**
+ * \brief Represents a property, with an associated name and value.
+ */
+struct tmx_property final
+{
+  using data_type =
+      std::variant<std::string, tmx_file, tmx_object_id, tmx_color, int, float, bool>;
+
+  std::string name;
+  tmx_property_type type{tmx_property_type::string};
+  data_type value;
+};
+
+using tmx_properties = std::vector<tmx_property>;
+
+inline void from_json(const json_type& json, tmx_property& property)
+{
+  json.at("name").get_to(property.name);
+  json.at("type").get_to(property.type);
+
+  switch (property.type)
+  {
+    default:
+      assert(false && "from_json() for tmx_property has missing branch!");
+
+    case tmx_property_type::string:
+      property.value.emplace<std::string>(json.at("value").get<std::string>());
+      break;
+
+    case tmx_property_type::integer:
+      property.value.emplace<int>(json.at("value").get<int>());
+      break;
+
+    case tmx_property_type::floating:
+      property.value.emplace<float>(json.at("value").get<float>());
+      break;
+
+    case tmx_property_type::boolean:
+      property.value.emplace<bool>(json.at("value").get<bool>());
+      break;
+
+    case tmx_property_type::color:
+      property.value.emplace<tmx_color>(json.at("value").get<tmx_color>());
+      break;
+
+    case tmx_property_type::file:
+      property.value.emplace<tmx_file>(json.at("value").get<std::string>());
+      break;
+
+    case tmx_property_type::object:
+      property.value.emplace<tmx_object_id>(json.at("value").get<int>());
+      break;
+  }
+}
+
+/// \} End of group tmx
+
+namespace tmx {
+
+/// \addtogroup tmx
+/// \{
+
+// clang-format off
+
+template <typename T>
+concept property_value_type = std::same_as<T, int> ||
+                              std::same_as<T, float> ||
+                              std::same_as<T, bool> ||
+                              std::same_as<T, std::string> ||
+                              std::same_as<T, tmx_color> ||
+                              std::same_as<T, tmx_file> ||
+                              std::same_as<T, tmx_object_id>;
+
+// clang-format on
+
+/// \name Property functions
+/// \{
+
+[[nodiscard]] inline auto try_get(const tmx_properties& properties,
+                                  const std::string_view name)
+    -> tmx_properties::const_iterator
+{
+  return std::ranges::find_if(properties, [name](const tmx_property& property) noexcept {
+    return property.name == name;
+  });
+}
+
+template <property_value_type T>
+[[nodiscard]] auto get_if(const tmx_properties& properties,
+                          const std::string_view name) noexcept -> const T*
+{
+  if (const auto it = try_get(properties, name); it != properties.end())
+  {
+    return std::get_if<T>(&it->value);
+  }
+  else
+  {
+    return nullptr;
+  }
+}
+
+[[nodiscard]] inline auto get_if_string(const tmx_property& property) noexcept
+    -> const std::string*
+{
+  return std::get_if<std::string>(&property.value);
+}
+
+[[nodiscard]] inline auto get_if_string(const tmx_properties& properties,
+                                        const std::string_view name) -> const std::string*
+{
+  return get_if<std::string>(properties, name);
+}
+
+[[nodiscard]] inline auto get_if_int(const tmx_property& property) noexcept -> const int*
+{
+  return std::get_if<int>(&property.value);
+}
+
+[[nodiscard]] inline auto get_if_int(const tmx_properties& properties,
+                                     const std::string_view name) -> const int*
+{
+  return get_if<int>(properties, name);
+}
+
+[[nodiscard]] inline auto get_if_float(const tmx_property& property) noexcept -> const
+    float*
+{
+  return std::get_if<float>(&property.value);
+}
+
+[[nodiscard]] inline auto get_if_float(const tmx_properties& properties,
+                                       const std::string_view name) -> const float*
+{
+  return get_if<float>(properties, name);
+}
+
+[[nodiscard]] inline auto get_if_bool(const tmx_property& property) noexcept -> const
+    bool*
+{
+  return std::get_if<bool>(&property.value);
+}
+
+[[nodiscard]] inline auto get_if_bool(const tmx_properties& properties,
+                                      const std::string_view name) -> const bool*
+{
+  return get_if<bool>(properties, name);
+}
+
+[[nodiscard]] inline auto get_if_color(const tmx_property& property) noexcept
+    -> const tmx_color*
+{
+  return std::get_if<tmx_color>(&property.value);
+}
+
+[[nodiscard]] inline auto get_if_color(const tmx_properties& properties,
+                                       const std::string_view name) -> const tmx_color*
+{
+  return get_if<tmx_color>(properties, name);
+}
+
+[[nodiscard]] inline auto get_if_file(const tmx_property& property) noexcept
+    -> const tmx_file*
+{
+  return std::get_if<tmx_file>(&property.value);
+}
+
+[[nodiscard]] inline auto get_if_file(const tmx_properties& properties,
+                                      const std::string_view name) -> const tmx_file*
+{
+  return get_if<tmx_file>(properties, name);
+}
+
+[[nodiscard]] inline auto get_if_object(const tmx_property& property) noexcept
+    -> const tmx_object_id*
+{
+  return std::get_if<tmx_object_id>(&property.value);
+}
+
+[[nodiscard]] inline auto get_if_object(const tmx_properties& properties,
+                                        const std::string_view name)
+    -> const tmx_object_id*
+{
+  return get_if<tmx_object_id>(properties, name);
+}
+
+template <property_value_type T>
+[[nodiscard]] auto is(const tmx_property& property) noexcept -> bool
+{
+  return std::holds_alternative<T>(property.value);
+}
+
+template <property_value_type T>
+[[nodiscard]] auto is(const tmx_properties& properties, const std::string_view name)
+    -> bool
+{
+  if (const auto it = try_get(properties, name); it != properties.end())
+  {
+    return is<T>(*it);
+  }
+  else
+  {
+    return false;
+  }
+}
+
+[[nodiscard]] inline auto is_string(const tmx_property& property) noexcept -> bool
+{
+  return is<std::string>(property);
+}
+
+[[nodiscard]] inline auto is_string(const tmx_properties& properties,
+                                    const std::string_view name) -> bool
+{
+  return is<std::string>(properties, name);
+}
+
+[[nodiscard]] inline auto is_int(const tmx_property& property) noexcept -> bool
+{
+  return is<int>(property);
+}
+
+[[nodiscard]] inline auto is_int(const tmx_properties& properties,
+                                 const std::string_view name) -> bool
+{
+  return is<int>(properties, name);
+}
+
+[[nodiscard]] inline auto is_float(const tmx_property& property) noexcept -> bool
+{
+  return is<float>(property);
+}
+
+[[nodiscard]] inline auto is_float(const tmx_properties& properties,
+                                   const std::string_view name) -> bool
+{
+  return is<float>(properties, name);
+}
+
+[[nodiscard]] inline auto is_bool(const tmx_property& property) noexcept -> bool
+{
+  return is<bool>(property);
+}
+
+[[nodiscard]] inline auto is_bool(const tmx_properties& properties,
+                                  const std::string_view name) -> bool
+{
+  return is<bool>(properties, name);
+}
+
+[[nodiscard]] inline auto is_color(const tmx_property& property) noexcept -> bool
+{
+  return is<tmx_color>(property);
+}
+
+[[nodiscard]] inline auto is_color(const tmx_properties& properties,
+                                   const std::string_view name) -> bool
+{
+  return is<tmx_color>(properties, name);
+}
+
+[[nodiscard]] inline auto is_file(const tmx_property& property) noexcept -> bool
+{
+  return is<tmx_file>(property);
+}
+
+[[nodiscard]] inline auto is_file(const tmx_properties& properties,
+                                  const std::string_view name) -> bool
+{
+  return is<tmx_file>(properties, name);
+}
+
+[[nodiscard]] inline auto is_object(const tmx_property& property) noexcept -> bool
+{
+  return is<tmx_object_id>(property);
+}
+
+[[nodiscard]] inline auto is_object(const tmx_properties& properties,
+                                    const std::string_view name) -> bool
+{
+  return is<tmx_object_id>(properties, name);
+}
+
+template <property_value_type T>
+[[nodiscard]] auto get(const tmx_property& property) -> const T&
+{
+  return std::get<T>(property.value);
+}
+
+template <property_value_type T>
+[[nodiscard]] auto get(const tmx_properties& properties, const std::string_view name)
+    -> const T&
+{
+  if (const auto it = try_get(properties, name); it != properties.end())
+  {
+    return get<T>(*it);
+  }
+  else
+  {
+    throw rune_error{"Could not find property with the specified name!"};
+  }
+}
+
+[[nodiscard]] inline auto get_string(const tmx_property& property) -> const std::string&
+{
+  return get<std::string>(property);
+}
+
+[[nodiscard]] inline auto get_string(const tmx_properties& properties,
+                                     const std::string_view name) -> const std::string&
+{
+  return get<std::string>(properties, name);
+}
+
+[[nodiscard]] inline auto get_int(const tmx_property& property) -> int
+{
+  return get<int>(property);
+}
+
+[[nodiscard]] inline auto get_int(const tmx_properties& properties,
+                                  const std::string_view name) -> int
+{
+  return get<int>(properties, name);
+}
+
+[[nodiscard]] inline auto get_float(const tmx_property& property) -> float
+{
+  return get<float>(property);
+}
+
+[[nodiscard]] inline auto get_float(const tmx_properties& properties,
+                                    const std::string_view name) -> float
+{
+  return get<float>(properties, name);
+}
+
+[[nodiscard]] inline auto get_bool(const tmx_property& property) -> bool
+{
+  return get<bool>(property);
+}
+
+[[nodiscard]] inline auto get_bool(const tmx_properties& properties,
+                                   const std::string_view name) -> bool
+{
+  return get<bool>(properties, name);
+}
+
+[[nodiscard]] inline auto get_color(const tmx_property& property) -> const tmx_color&
+{
+  return get<tmx_color>(property);
+}
+
+[[nodiscard]] inline auto get_color(const tmx_properties& properties,
+                                    const std::string_view name) -> const tmx_color&
+{
+  return get<tmx_color>(properties, name);
+}
+
+[[nodiscard]] inline auto get_file(const tmx_property& property) -> const tmx_file&
+{
+  return get<tmx_file>(property);
+}
+
+[[nodiscard]] inline auto get_file(const tmx_properties& properties,
+                                   const std::string_view name) -> const tmx_file&
+{
+  return get<tmx_file>(properties, name);
+}
+
+[[nodiscard]] inline auto get_object(const tmx_property& property) -> tmx_object_id
+{
+  return get<tmx_object_id>(property);
+}
+
+[[nodiscard]] inline auto get_object(const tmx_properties& properties,
+                                     const std::string_view name) -> tmx_object_id
+{
+  return get<tmx_object_id>(properties, name);
+}
+
+/**
+ * \brief Indicates whether or not a property with the specified name exists in a vector
+ * of properties.
+ *
+ * \param properties the vector of properties that will be searched.
+ * \param name the name of the property to look for.
+ *
+ * \return `true` if the properties contains a property with the specified name; `false`
+ * otherwise.
+ */
+[[nodiscard]] inline auto contains(const tmx_properties& properties,
+                                   const std::string_view name) -> bool
+{
+  return std::ranges::any_of(properties, [name](const tmx_property& property) noexcept {
+    return property.name == name;
+  });
+}
+
+/**
+ * \brief Attempts to find and return a property with the specified name.
+ *
+ * \param properties the properties that will be searched.
+ * \param name the name of the desired property.
+ *
+ * \return the property with the specified name.
+ *
+ * \throws rune_error if there is no property with the specified name.
+ */
+[[nodiscard]] inline auto at(const tmx_properties& properties,
+                             const std::string_view name) -> const tmx_property&
+{
+  if (const auto it = try_get(properties, name); it != properties.end())
+  {
+    return *it;
+  }
+  else
+  {
+    throw rune_error{"Could not find property with specified name!"};
+  }
+}
+
+/// \} End of property functions
+
+/// \} End of group tmx
+
+}  // namespace tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_PROPERTY_HPP
+
+// #include "tmx_terrain.hpp"
+#ifndef RUNE_TMX_TERRAIN_HPP
+#define RUNE_TMX_TERRAIN_HPP
+
+#include <string>  // string
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_local_id.hpp"
+#ifndef RUNE_TMX_LOCAL_ID_HPP
+#define RUNE_TMX_LOCAL_ID_HPP
+
+#include <nenya.hpp>  // strong_type
+
+// #include "../../aliases/integers.hpp"
+
+
+namespace rune {
+
+/// \cond FALSE
+namespace tags {
+struct tmx_local_id_tag;
+}  // namespace tags
+/// \endcond
+
+/// \addtogroup tmx
+/// \{
+
+using tmx_local_id = nenya::strong_type<int, tags::tmx_local_id_tag>;
+
+/// \} End of group tmx
+
+namespace tmx_literals {
+
+/// \addtogroup tmx
+/// \{
+
+/// \name Literal operators
+/// \{
+
+[[nodiscard]] constexpr auto operator""_local(const ulonglong value) noexcept
+    -> tmx_local_id
+{
+  return tmx_local_id{static_cast<tmx_local_id::value_type>(value)};
+}
+
+/// \} End of literal operators
+
+/// \} End of group tmx
+
+}  // namespace tmx_literals
+}  // namespace rune
+
+#endif  // RUNE_TMX_LOCAL_ID_HPP
+
+// #include "tmx_property.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_terrain final
+{
+  tmx_local_id tile{};
+  std::string name;
+  tmx_properties properties;
+};
+
+inline void from_json(const json_type& json, tmx_terrain& terrain)
+{
+  terrain.tile = tmx_local_id{json.at("tile").get<tmx_local_id::value_type>()};
+  json.at("name").get_to(terrain.name);
+  io::try_get_to(json, "properties", terrain.properties);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_TERRAIN_HPP
+
+// #include "tmx_tile.hpp"
+#ifndef RUNE_TMX_TILE_HPP
+#define RUNE_TMX_TILE_HPP
+
+#include <array>   // array
+#include <string>  // string
+
+// #include "../../aliases/integers.hpp"
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../../aliases/maybe.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "core/from_string.hpp"
+
+// #include "tmx_animation.hpp"
+#ifndef RUNE_TMX_ANIMATION_HPP
+#define RUNE_TMX_ANIMATION_HPP
+
+#include <chrono>  // milliseconds
+#include <vector>  // vector
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_local_id.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_frame final
+{
+  tmx_local_id tile{};
+  std::chrono::milliseconds duration{};
+};
+
+struct tmx_animation final
+{
+  std::vector<tmx_frame> frames;
+};
+
+inline void from_json(const json_type& json, tmx_frame& frame)
+{
+  using ms_t = std::chrono::milliseconds;
+
+  io::emplace_to(json, "tileid", frame.tile);
+  frame.duration = ms_t{json.at("duration").get<ms_t::rep>()};
+}
+
+inline void from_json(const json_type& json, tmx_animation& animation)
+{
+  io::get_to(json, animation.frames);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_ANIMATION_HPP
+
+// #include "tmx_layer.hpp"
+#ifndef RUNE_TMX_LAYER_HPP
+#define RUNE_TMX_LAYER_HPP
+
+#include <cassert>   // assert
+#include <concepts>  // same_as
+#include <memory>    // unique_ptr, make_unique
+#include <string>    // string
+#include <variant>   // variant, monostate
+#include <vector>    // vector
+
+// #include "../../aliases/integers.hpp"
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../../aliases/maybe.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_color.hpp"
+
+// #include "tmx_image_layer.hpp"
+#ifndef RUNE_TMX_IMAGE_LAYER_HPP
+#define RUNE_TMX_IMAGE_LAYER_HPP
+
+#include <string>  // string
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../../aliases/maybe.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_color.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_image_layer final
+{
+  std::string image;
+  maybe<tmx_color> transparent;
+};
+
+inline void from_json(const json_type& json, tmx_image_layer& layer)
+{
+  json.at("image").get_to(layer.image);
+  io::try_get_to(json, "transparentcolor", layer.transparent);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_IMAGE_LAYER_HPP
+
+// #include "tmx_layer_type.hpp"
+#ifndef RUNE_TMX_LAYER_TYPE_HPP
+#define RUNE_TMX_LAYER_TYPE_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_layer_type
+{
+  tile_layer,
+  object_layer,
+  image_layer,
+  group
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_layer_type,
+                             {{tmx_layer_type::tile_layer, "tilelayer"},
+                              {tmx_layer_type::image_layer, "imagelayer"},
+                              {tmx_layer_type::object_layer, "objectgroup"},
+                              {tmx_layer_type::group, "group"}})
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_LAYER_TYPE_HPP
+
+// #include "tmx_object.hpp"
+#ifndef RUNE_TMX_OBJECT_HPP
+#define RUNE_TMX_OBJECT_HPP
+
+#include <memory>   // unique_ptr, make_unique
+#include <string>   // string
+#include <variant>  // variant, monostate
+#include <vector>   // vector
+
+// #include "../../aliases/integers.hpp"
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../../aliases/maybe.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_global_id.hpp"
+
+// #include "tmx_point.hpp"
+#ifndef RUNE_TMX_POINT_HPP
+#define RUNE_TMX_POINT_HPP
+
+// #include "../../aliases/json_type.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_point final
+{
+  float x{};  ///< The x-coordinate of the point.
+  float y{};  ///< The y-coordinate of the point.
+};
+
+inline void from_json(const json_type& json, tmx_point& point)
+{
+  json.at("x").get_to(point.x);
+  json.at("y").get_to(point.y);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_POINT_HPP
+
+// #include "tmx_property.hpp"
+
+// #include "tmx_text.hpp"
+#ifndef RUNE_TMX_TEXT_HPP
+#define RUNE_TMX_TEXT_HPP
+
+#include <string>  // string
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_color.hpp"
+
+// #include "tmx_halign.hpp"
+#ifndef RUNE_TMX_HALIGN_HPP
+#define RUNE_TMX_HALIGN_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_halign
+{
+  center,
+  right,
+  left,
+  justify
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_halign,
+                             {{tmx_halign::center, "center"},
+                              {tmx_halign::right, "right"},
+                              {tmx_halign::left, "left"},
+                              {tmx_halign::justify, "justify"}})
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_HALIGN_HPP
+
+// #include "tmx_valign.hpp"
+#ifndef RUNE_TMX_VALIGN_HPP
+#define RUNE_TMX_VALIGN_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_valign
+{
+  center,
+  top,
+  bottom
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_valign,
+                             {{tmx_valign::center, "center"},
+                              {tmx_valign::top, "top"},
+                              {tmx_valign::bottom, "bottom"}})
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_VALIGN_HPP
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_text final
+{
+  std::string text;
+  std::string family{"sans-serif"};
+  tmx_color color;
+  tmx_halign horizontal_alignment{tmx_halign::left};
+  tmx_valign vertical_alignment{tmx_valign::top};
+  int pixel_size{16};
+  bool bold{};
+  bool italic{};
+  bool kerning{true};
+  bool strikeout{};
+  bool underline{};
+  bool wrap{};
+};
+
+inline void from_json(const json_type& json, tmx_text& text)
+{
+  json.at("text").get_to(text.text);
+
+  io::try_get_to(json, "fontfamily", text.family);
+  io::try_get_to(json, "halign", text.horizontal_alignment);
+  io::try_get_to(json, "valign", text.vertical_alignment);
+  io::try_get_to(json, "pixelsize", text.pixel_size);
+  io::try_get_to(json, "bold", text.bold);
+  io::try_get_to(json, "italic", text.italic);
+  io::try_get_to(json, "kerning", text.kerning);
+  io::try_get_to(json, "strikeout", text.strikeout);
+  io::try_get_to(json, "underline", text.underline);
+  io::try_get_to(json, "wrap", text.wrap);
+
+  if (const auto it = json.find("color"); it != json.end())
+  {
+    text.color = tmx::make_color(it->get<std::string>());
+  }
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_TEXT_HPP
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_object;
+
+struct tmx_polygon final
+{
+  std::vector<tmx_point> points;
+};
+
+struct tmx_polyline final
+{
+  std::vector<tmx_point> points;
+};
+
+struct tmx_template_object final
+{
+  std::string template_file;
+  std::unique_ptr<tmx_object> object;
+  maybe<std::string> tileset_source;
+  maybe<tmx_global_id> tileset_first_id;
+};
+
+struct tmx_object final
+{
+  using data_type = std::variant<std::monostate,
+                                 tmx_polygon,
+                                 tmx_polyline,
+                                 tmx_text,
+                                 tmx_template_object,
+                                 tmx_global_id>;
+
+  int id{};
+  float x{};
+  float y{};
+  float width{};
+  float height{};
+  float rotation{};
+  std::string name;
+  std::string type;
+  tmx_properties properties;
+  data_type data;
+  bool is_ellipse{};
+  bool is_point{};
+  bool visible{true};
+};
+
+inline void from_json(const json_type& json, tmx_polygon& polygon)
+{
+  io::get_to(json, polygon.points);
+}
+
+inline void from_json(const json_type& json, tmx_polyline& line)
+{
+  io::get_to(json, line.points);
+}
+
+void from_json(const json_type& json, tmx_object& object);
+
+inline void from_json(const json_type& json, tmx_template_object& object)
+{
+  json.at("template").get_to(object.template_file);
+  object.object = std::make_unique<tmx_object>(json.at("object").get<tmx_object>());
+
+  if (const auto it = json.find("tileset"); it != json.end())
+  {
+    io::emplace_to(json, "firstgid", object.tileset_first_id);
+    object.tileset_source = json.at("source").get<std::string>();
+  }
+}
+
+inline void from_json(const json_type& json, tmx_object& object)
+{
+  json.at("id").get_to(object.id);
+  json.at("x").get_to(object.x);
+  json.at("y").get_to(object.y);
+  json.at("width").get_to(object.width);
+  json.at("height").get_to(object.height);
+  json.at("rotation").get_to(object.rotation);
+  json.at("name").get_to(object.name);
+  json.at("type").get_to(object.type);
+  json.at("visible").get_to(object.visible);
+
+  io::try_get_to(json, "ellipse", object.is_ellipse);
+  io::try_get_to(json, "point", object.is_point);
+
+  io::try_get_to(json, "properties", object.properties);
+
+  if (const auto it = json.find("gid"); it != json.end())
+  {
+    object.data.emplace<tmx_global_id>(it->get<tmx_global_id::value_type>());
+  }
+
+  io::try_emplace_to<tmx_text>(json, "text", object.data);
+  io::try_emplace_to<tmx_polygon>(json, "polygon", object.data);
+  io::try_emplace_to<tmx_polyline>(json, "polyline", object.data);
+  io::try_emplace_to<tmx_template_object>(json, "template", object.data);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_OBJECT_HPP
+
+// #include "tmx_object_layer.hpp"
+#ifndef RUNE_TMX_OBJECT_LAYER_HPP
+#define RUNE_TMX_OBJECT_LAYER_HPP
+
+#include <cassert>   // assert
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+#include <vector>    // vector
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_object.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_object_layer_draw_order
+{
+  top_down,
+  index
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_object_layer_draw_order,
+                             {{tmx_object_layer_draw_order::top_down, "topdown"},
+                              {tmx_object_layer_draw_order::index, "index"}})
+
+struct tmx_object_layer final  // Note, referred to as "object group" by tiled
+{
+  tmx_object_layer_draw_order draw_order{tmx_object_layer_draw_order::top_down};
+  std::vector<tmx_object> objects;
+};
+
+inline void from_json(const json_type& json, tmx_object_layer& layer)
+{
+  io::get_to(json, "objects", layer.objects);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_OBJECT_LAYER_HPP
+
+// #include "tmx_property.hpp"
+
+// #include "tmx_tile_layer.hpp"
+#ifndef RUNE_TMX_TILE_LAYER_HPP
+#define RUNE_TMX_TILE_LAYER_HPP
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../../aliases/maybe.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_data.hpp"
+#ifndef RUNE_TMX_DATA_HPP
+#define RUNE_TMX_DATA_HPP
+
+#include <cassert>  // assert
+#include <string>   // string
+#include <variant>  // variant
+#include <vector>   // vector
+
+// #include "../../aliases/integers.hpp"
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "tmx_global_id.hpp"
+
+
+namespace rune {
+
+struct tmx_data final
+{
+  using gid_data = std::vector<tmx_global_id>;
+  using base64_data = std::string;
+  using data_type = std::variant<gid_data, base64_data>;
+
+  data_type tile_data;
+};
+
+inline void from_json(const json_type& json, tmx_data& data)
+{
+  assert(json.is_array() || json.is_string());
+
+  if (json.is_array())
+  {
+    auto& gidData = data.tile_data.emplace<tmx_data::gid_data>();
+    for (const auto& [key, value] : json.items())
+    {
+      gidData.emplace_back(value.get<uint>());
+    }
+  }
+  else if (json.is_string())
+  {
+    data.tile_data.emplace<tmx_data::base64_data>(json.get<tmx_data::base64_data>());
+  }
+}
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_DATA_HPP
+
+// #include "tmx_tile_layer_compression.hpp"
+#ifndef RUNE_TMX_TILE_LAYER_COMPRESSION_HPP
+#define RUNE_TMX_TILE_LAYER_COMPRESSION_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_tile_layer_compression
+{
+  none,
+  gzip,
+  zlib
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_tile_layer_compression,
+                             {{tmx_tile_layer_compression::none, ""},
+                              {tmx_tile_layer_compression::gzip, "gzip"},
+                              {tmx_tile_layer_compression::zlib, "zlib"}})
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_TILE_LAYER_COMPRESSION_HPP
+
+// #include "tmx_tile_layer_encoding.hpp"
+#ifndef RUNE_TMX_TILE_LAYER_ENCODING_HPP
+#define RUNE_TMX_TILE_LAYER_ENCODING_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_tile_layer_encoding
+{
+  csv,
+  base64
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_tile_layer_encoding,
+                             {{tmx_tile_layer_encoding::csv, "csv"},
+                              {tmx_tile_layer_encoding::base64, "base64"}})
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_TILE_LAYER_ENCODING_HPP
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_tile_layer final
+{
+  tmx_tile_layer_compression compression{tmx_tile_layer_compression::none};
+  tmx_tile_layer_encoding encoding{tmx_tile_layer_encoding::csv};
+  maybe<tmx_data> data;
+  // TODO std::vector<chunk> m_chunks;
+};
+
+inline void from_json(const json_type& json, tmx_tile_layer& layer)
+{
+  io::try_get_to(json, "compression", layer.compression);
+  io::try_get_to(json, "encoding", layer.encoding);
+  io::try_get_to(json, "data", layer.data);
+
+  // TODO
+  //  if (json.contains("chunks")) {
+  //    m_chunks = detail::fill<std::vector<chunk>>(json, "chunks");
+  //  }
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_TILE_LAYER_HPP
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_layer;
+
+struct tmx_group final
+{
+  std::vector<std::unique_ptr<tmx_layer>> layers;
+};
+
+struct tmx_layer final
+{
+  using data_type = std::variant<std::monostate,
+                                 tmx_tile_layer,
+                                 tmx_image_layer,
+                                 tmx_object_layer,
+                                 tmx_group>;
+
+  tmx_layer_type type{tmx_layer_type::tile_layer};
+  int id{};
+  int width{};
+  int height{};
+  int start_x{};
+  int start_y{};
+  float parallax_x{1};
+  float parallax_y{1};
+  float offset_x{};
+  float offset_y{};
+  float opacity{1};
+
+  maybe<tmx_color> tint;
+  tmx_properties properties;
+
+  data_type data;
+
+  std::string name;
+  bool visible{true};
+};
+
+using tmx_layers = std::vector<tmx_layer>;
+
+void from_json(const json_type& json, tmx_layer& layer);
+
+inline void from_json(const json_type& json, tmx_group& group)
+{
+  const auto& layers = json.at("layers");
+  group.layers.reserve(layers.size());
+  for (const auto& [key, value] : layers.items())
+  {
+    group.layers.push_back(std::make_unique<tmx_layer>(value.get<tmx_layer>()));
+  }
+}
+
+inline void from_json(const json_type& json, tmx_layer& layer)
+{
+  json.at("type").get_to(layer.type);
+
+  io::try_get_to(json, "name", layer.name);
+  io::try_get_to(json, "opacity", layer.opacity);
+  io::try_get_to(json, "visible", layer.visible);
+  io::try_get_to(json, "id", layer.id);
+  io::try_get_to(json, "width", layer.width);
+  io::try_get_to(json, "height", layer.height);
+  io::try_get_to(json, "startx", layer.start_x);
+  io::try_get_to(json, "starty", layer.start_y);
+  io::try_get_to(json, "parallaxx", layer.parallax_x);
+  io::try_get_to(json, "parallaxy", layer.parallax_y);
+  io::try_get_to(json, "offsetx", layer.offset_x);
+  io::try_get_to(json, "offsety", layer.offset_y);
+  io::try_get_to(json, "tintcolor", layer.tint);
+
+  io::try_get_to(json, "properties", layer.properties);
+
+  switch (layer.type)
+  {
+    default:
+      assert(false && "from_json() for tmx_layer is missing branch!");
+
+    case tmx_layer_type::tile_layer:
+      layer.data = json.get<tmx_tile_layer>();
+      break;
+
+    case tmx_layer_type::object_layer:
+      layer.data = json.get<tmx_object_layer>();
+      break;
+
+    case tmx_layer_type::image_layer:
+      layer.data = json.get<tmx_image_layer>();
+      break;
+
+    case tmx_layer_type::group:
+      layer.data = json.get<tmx_group>();
+      break;
+  }
+}
+
+/// \} End of group tmx
+
+namespace tmx {
+
+/// \addtogroup tmx
+/// \{
+
+// clang-format off
+
+template <typename T>
+concept layer_value_type = std::same_as<T, tmx_tile_layer> ||
+                           std::same_as<T, tmx_object_layer> ||
+                           std::same_as<T, tmx_image_layer> ||
+                           std::same_as<T, tmx_group>;
+
+// clang-format on
+
+/// \name Layer functions
+/// \{
+
+template <layer_value_type T>
+[[nodiscard]] auto get(const tmx_layer& layer) -> const T&
+{
+  return std::get<T>(layer.data);
+}
+
+[[nodiscard]] inline auto get_tile_layer(const tmx_layer& layer) -> const tmx_tile_layer&
+{
+  return get<tmx_tile_layer>(layer);
+}
+
+[[nodiscard]] inline auto get_image_layer(const tmx_layer& layer)
+    -> const tmx_image_layer&
+{
+  return get<tmx_image_layer>(layer);
+}
+
+[[nodiscard]] inline auto get_object_layer(const tmx_layer& layer)
+    -> const tmx_object_layer&
+{
+  return get<tmx_object_layer>(layer);
+}
+
+[[nodiscard]] inline auto get_group(const tmx_layer& layer) -> const tmx_group&
+{
+  return get<tmx_group>(layer);
+}
+
+template <layer_value_type T>
+[[nodiscard]] auto try_get(const tmx_layer& layer) noexcept -> const T*
+{
+  return std::get_if<T>(&layer.data);
+}
+
+[[nodiscard]] inline auto try_get_tile_layer(const tmx_layer& layer) noexcept
+    -> const tmx_tile_layer*
+{
+  return try_get<tmx_tile_layer>(layer);
+}
+
+[[nodiscard]] inline auto try_get_object_layer(const tmx_layer& layer) noexcept
+    -> const tmx_object_layer*
+{
+  return try_get<tmx_object_layer>(layer);
+}
+
+[[nodiscard]] inline auto try_get_image_layer(const tmx_layer& layer) noexcept
+    -> const tmx_image_layer*
+{
+  return try_get<tmx_image_layer>(layer);
+}
+
+[[nodiscard]] inline auto try_get_group(const tmx_layer& layer) noexcept
+    -> const tmx_group*
+{
+  return try_get<tmx_group>(layer);
+}
+
+template <layer_value_type T>
+[[nodiscard]] auto is(const tmx_layer& layer) noexcept -> bool
+{
+  return std::holds_alternative<T>(layer.data);
+}
+
+[[nodiscard]] inline auto is_tile_layer(const tmx_layer& layer) noexcept -> bool
+{
+  return is<tmx_tile_layer>(layer);
+}
+
+[[nodiscard]] inline auto is_object_layer(const tmx_layer& layer) noexcept -> bool
+{
+  return is<tmx_object_layer>(layer);
+}
+
+[[nodiscard]] inline auto is_image_layer(const tmx_layer& layer) noexcept -> bool
+{
+  return is<tmx_image_layer>(layer);
+}
+
+[[nodiscard]] inline auto is_group(const tmx_layer& layer) noexcept -> bool
+{
+  return is<tmx_group>(layer);
+}
+
+/// \} End of layer functions
+
+/// \} End of group tmx
+
+}  // namespace tmx
+}  // namespace rune
+
+#endif  // RUNE_TMX_LAYER_HPP
+
+// #include "tmx_local_id.hpp"
+
+// #include "tmx_property.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_tile final
+{
+  tmx_local_id id{};
+  maybe<tmx_animation> animation;
+  maybe<std::array<int, 4>> terrain;
+  maybe<std::string> type;
+  maybe<std::string> image;
+  maybe<int> image_width;
+  maybe<int> image_height;
+  maybe<float> probability;
+  maybe<tmx_layer> object_layer;
+  tmx_properties properties;
+};
+
+inline void from_json(const json_type& json, tmx_tile& tile)
+{
+  io::emplace_to(json, "id", tile.id);
+
+  io::try_get_to(json, "animation", tile.animation);
+  io::try_get_to(json, "type", tile.type);
+  io::try_get_to(json, "image", tile.image);
+  io::try_get_to(json, "imagewidth", tile.image_width);
+  io::try_get_to(json, "imageheight", tile.image_height);
+  io::try_get_to(json, "probability", tile.probability);
+  io::try_get_to(json, "objectgroup", tile.object_layer);
+  io::try_get_to(json, "properties", tile.properties);
+
+  if (const auto it = json.find("terrain"); it != json.end())
+  {
+    auto& terrain = tile.terrain.emplace();
+    for (const auto& [key, value] : it->items())
+    {
+      const auto index = from_string<usize>(key).value();
+      terrain.at(index) = value.get<int>();
+    }
+  }
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_TILE_HPP
+
+// #include "tmx_tile_offset.hpp"
+#ifndef RUNE_TMX_TILE_OFFSET_HPP
+#define RUNE_TMX_TILE_OFFSET_HPP
+
+// #include "../../aliases/json_type.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_tile_offset final
+{
+  int x{};
+  int y{};
+};
+
+inline void from_json(const json_type& json, tmx_tile_offset& offset)
+{
+  json.at("x").get_to(offset.x);
+  json.at("y").get_to(offset.y);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_TILE_OFFSET_HPP
+
+// #include "tmx_wang_set.hpp"
+#ifndef RUNE_TMX_WANG_SET_HPP
+#define RUNE_TMX_WANG_SET_HPP
+
+#include <string>  // string
+#include <vector>  // vector
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_local_id.hpp"
+
+// #include "tmx_property.hpp"
+
+// #include "tmx_wang_color.hpp"
+#ifndef RUNE_TMX_WANG_COLOR_HPP
+#define RUNE_TMX_WANG_COLOR_HPP
+
+#include <string>  // string
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_color.hpp"
+
+// #include "tmx_local_id.hpp"
+
+// #include "tmx_property.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_wang_color final
+{
+  tmx_local_id tile{};
+  tmx_color color;
+  std::string name;
+  float probability{};
+  tmx_properties properties;
+};
+
+inline void from_json(const json_type& json, tmx_wang_color& color)
+{
+  json.at("name").get_to(color.name);
+  json.at("color").get_to(color.color);
+  json.at("probability").get_to(color.probability);
+  io::emplace_to(json, "tile", color.tile);
+
+  io::try_get_to(json, "properties", color.properties);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_WANG_COLOR_HPP
+
+// #include "tmx_wang_tile.hpp"
+#ifndef RUNE_TMX_WANG_TILE_HPP
+#define RUNE_TMX_WANG_TILE_HPP
+
+#include <array>  // array
+
+// #include "../../aliases/integers.hpp"
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_local_id.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_wang_tile final
+{
+  tmx_local_id tile{};
+  std::array<uint8, 8> indices{};
+};
+
+inline void from_json(const json_type& json, tmx_wang_tile& tile)
+{
+  io::emplace_to(json, "tileid", tile.tile);
+  json.at("wangid").get_to(tile.indices);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_WANG_TILE_HPP
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_wang_set final
+{
+  tmx_local_id tile{};
+  std::string name;
+  std::vector<tmx_wang_tile> wang_tiles;
+  std::vector<tmx_wang_color> colors;
+  tmx_properties properties;
+};
+
+inline void from_json(const json_type& json, tmx_wang_set& set)
+{
+  io::emplace_to(json, "tile", set.tile);
+  json.at("name").get_to(set.name);
+
+  // TODO check if colors or wangtiles are required
+  io::try_get_to(json, "colors", set.colors);
+  io::try_get_to(json, "wangtiles", set.wang_tiles);
+  io::try_get_to(json, "properties", set.properties);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_WANG_SET_HPP
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_tileset final
+{
+  tmx_global_id first_id{1};
+  int tile_width{};
+  int tile_height{};
+  int tile_count{};
+  int column_count{};
+  int image_width{};
+  int image_height{};
+  int margin{};
+  int spacing{};
+
+  std::string name;
+  std::string image;
+  std::string external_source;
+  std::string tiled_version;
+  std::string json_version;
+
+  maybe<tmx_color> background;
+  maybe<tmx_color> transparent;
+  maybe<tmx_tile_offset> tile_offset;
+  maybe<tmx_grid> grid;
+
+  std::vector<tmx_tile> tiles;
+  std::vector<tmx_terrain> terrains;
+  std::vector<tmx_wang_set> wang_sets;
+  tmx_properties properties;
+};
+
+using tmx_tilesets = std::vector<tmx_tileset>;
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_TILESET_HPP
+
+
+namespace rune::tmx {
+
+/// \cond FALSE
+
+namespace detail {
+
+inline void parse_tileset_common(const json_type& json, tmx_tileset& tileset)
+{
+  json.at("tilewidth").get_to(tileset.tile_width);
+  json.at("tileheight").get_to(tileset.tile_height);
+  json.at("tilecount").get_to(tileset.tile_count);
+  json.at("columns").get_to(tileset.column_count);
+  json.at("imagewidth").get_to(tileset.image_width);
+  json.at("imageheight").get_to(tileset.image_height);
+  json.at("margin").get_to(tileset.margin);
+  json.at("spacing").get_to(tileset.spacing);
+  json.at("image").get_to(tileset.image);
+  json.at("name").get_to(tileset.name);
+
+  io::try_get_to(json, "tiledversion", tileset.tiled_version);
+  io::try_get_to(json, "version", tileset.json_version);
+  io::try_get_to(json, "backgroundcolor", tileset.background);
+  io::try_get_to(json, "transparentcolor", tileset.transparent);
+  io::try_get_to(json, "tileoffset", tileset.tile_offset);
+  io::try_get_to(json, "grid", tileset.grid);
+
+  io::try_get_to(json, "tiles", tileset.tiles);
+  io::try_get_to(json, "terrains", tileset.terrains);
+  io::try_get_to(json, "wangsets", tileset.wang_sets);
+  io::try_get_to(json, "properties", tileset.properties);
+}
+
+}  // namespace detail
+
+/// \endcond
+
+/// \addtogroup tmx
+/// \{
+
+[[nodiscard]] inline auto parse_tileset(const std::filesystem::path& directory,
+                                        const json_type& json) -> tmx_tileset
+{
+  tmx_tileset tileset;
+
+  tileset.first_id = tmx_global_id{json.at("firstgid").get<tmx_global_id::value_type>()};
+  if (const auto it = json.find("source"); it != json.end())
+  {
+    // External
+    tileset.external_source = it->get<std::string>();
+
+    const auto source = directory / tileset.external_source;
+    const auto external = read_json(source);
+
+    detail::parse_tileset_common(external, tileset);
+  }
+  else
+  {
+    // Embedded
+    detail::parse_tileset_common(json, tileset);
+  }
+
+  return tileset;
+}
+
+/// \} End of group tmx
+
+}  // namespace rune::tmx
+
+#endif  // RUNE_TMX_PARSE_TILESET_HPP
+
+// #include "io/tmx/parse_tmx.hpp"
+#ifndef RUNE_TMX_PARSE_TMX_HPP
+#define RUNE_TMX_PARSE_TMX_HPP
+
+#include <cassert>     // assert
+#include <filesystem>  // path
+#include <string>      // string
+
+// #include "../../aliases/integers.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "parse_tileset.hpp"
+#ifndef RUNE_TMX_PARSE_TILESET_HPP
+#define RUNE_TMX_PARSE_TILESET_HPP
+
+#include <filesystem>  // path
+#include <string>      // string
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_global_id.hpp"
+
+// #include "tmx_tileset.hpp"
+
+
+namespace rune::tmx {
+
+/// \cond FALSE
+
+namespace detail {
+
+inline void parse_tileset_common(const json_type& json, tmx_tileset& tileset)
+{
+  json.at("tilewidth").get_to(tileset.tile_width);
+  json.at("tileheight").get_to(tileset.tile_height);
+  json.at("tilecount").get_to(tileset.tile_count);
+  json.at("columns").get_to(tileset.column_count);
+  json.at("imagewidth").get_to(tileset.image_width);
+  json.at("imageheight").get_to(tileset.image_height);
+  json.at("margin").get_to(tileset.margin);
+  json.at("spacing").get_to(tileset.spacing);
+  json.at("image").get_to(tileset.image);
+  json.at("name").get_to(tileset.name);
+
+  io::try_get_to(json, "tiledversion", tileset.tiled_version);
+  io::try_get_to(json, "version", tileset.json_version);
+  io::try_get_to(json, "backgroundcolor", tileset.background);
+  io::try_get_to(json, "transparentcolor", tileset.transparent);
+  io::try_get_to(json, "tileoffset", tileset.tile_offset);
+  io::try_get_to(json, "grid", tileset.grid);
+
+  io::try_get_to(json, "tiles", tileset.tiles);
+  io::try_get_to(json, "terrains", tileset.terrains);
+  io::try_get_to(json, "wangsets", tileset.wang_sets);
+  io::try_get_to(json, "properties", tileset.properties);
+}
+
+}  // namespace detail
+
+/// \endcond
+
+/// \addtogroup tmx
+/// \{
+
+[[nodiscard]] inline auto parse_tileset(const std::filesystem::path& directory,
+                                        const json_type& json) -> tmx_tileset
+{
+  tmx_tileset tileset;
+
+  tileset.first_id = tmx_global_id{json.at("firstgid").get<tmx_global_id::value_type>()};
+  if (const auto it = json.find("source"); it != json.end())
+  {
+    // External
+    tileset.external_source = it->get<std::string>();
+
+    const auto source = directory / tileset.external_source;
+    const auto external = read_json(source);
+
+    detail::parse_tileset_common(external, tileset);
+  }
+  else
+  {
+    // Embedded
+    detail::parse_tileset_common(json, tileset);
+  }
+
+  return tileset;
+}
+
+/// \} End of group tmx
+
+}  // namespace rune::tmx
+
+#endif  // RUNE_TMX_PARSE_TILESET_HPP
+
+// #include "tmx_global_id.hpp"
+
+// #include "tmx_local_id.hpp"
+
+// #include "tmx_map.hpp"
+#ifndef RUNE_TMX_MAP_HPP
+#define RUNE_TMX_MAP_HPP
+
+#include <string>  // string
+
+// #include "../../aliases/maybe.hpp"
+
+// #include "tmx_color.hpp"
+
+// #include "tmx_layer.hpp"
+
+// #include "tmx_map_orientation.hpp"
+#ifndef RUNE_TMX_MAP_ORIENTATION_HPP
+#define RUNE_TMX_MAP_ORIENTATION_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_map_orientation
+{
+  orthogonal,
+  isometric,
+  staggered,
+  hexagonal
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_map_orientation,
+                             {{tmx_map_orientation::orthogonal, "orthogonal"},
+                              {tmx_map_orientation::isometric, "isometric"},
+                              {tmx_map_orientation::staggered, "staggered"},
+                              {tmx_map_orientation::hexagonal, "hexagonal"}})
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_MAP_ORIENTATION_HPP
+
+// #include "tmx_map_render_order.hpp"
+#ifndef RUNE_TMX_MAP_RENDER_ORDER_HPP
+#define RUNE_TMX_MAP_RENDER_ORDER_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_map_render_order
+{
+  right_down,
+  right_up,
+  left_down,
+  left_up
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_map_render_order,
+                             {{tmx_map_render_order::right_down, "right-down"},
+                              {tmx_map_render_order::right_up, "right-up"},
+                              {tmx_map_render_order::left_down, "left-down"},
+                              {tmx_map_render_order::left_up, "left-up"}})
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_MAP_RENDER_ORDER_HPP
+
+// #include "tmx_property.hpp"
+
+// #include "tmx_stagger_axis.hpp"
+#ifndef RUNE_TMX_STAGGER_AXIS_HPP
+#define RUNE_TMX_STAGGER_AXIS_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_stagger_axis
+{
+  x,
+  y
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_stagger_axis,
+                             {{tmx_stagger_axis::x, "x"}, {tmx_stagger_axis::y, "y"}})
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_STAGGER_AXIS_HPP
+
+// #include "tmx_stagger_index.hpp"
+#ifndef RUNE_TMX_STAGGER_INDEX_HPP
+#define RUNE_TMX_STAGGER_INDEX_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_stagger_index
+{
+  odd,
+  even
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_stagger_index,
+                             {{tmx_stagger_index::odd, "odd"},
+                              {tmx_stagger_index::even, "even"}})
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_STAGGER_INDEX_HPP
+
+// #include "tmx_tileset.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_map final
+{
+  int width{};   ///< Number of columns.
+  int height{};  ///< Number of rows.
+
+  int next_layer_id{1};
+  int next_object_id{1};
+
+  int tile_height{};
+  int tile_width{};
+
+  int compression_level{-1};
+  int hex_side_length{};
+
+  tmx_map_orientation orientation{tmx_map_orientation::orthogonal};
+  tmx_map_render_order render_order{tmx_map_render_order::right_down};
+
+  maybe<tmx_color> background;
+  maybe<tmx_stagger_axis> stagger_axis;
+  maybe<tmx_stagger_index> stagger_index;
+
+  tmx_layers layers;
+  tmx_tilesets tilesets;
+  tmx_properties properties;
+
+  std::string tiled_version;
+  std::string json_version;
+  bool infinite{};
+};
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_MAP_HPP
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+/**
+ * \brief Parses a Tiled JSON map file, and returns the contents.
+ *
+ * \details This function will not validate the specified JSON file. An invalid map file
+ * will likely result in an exception being thrown due to parsing errors. However, there
+ * are debug assertions that try to make it easier to detect errors and their cause,
+ * compared to the generic exceptions from the JSON parser.
+ *
+ * \note The Tiled XML format is not supported.
+ *
+ * \todo Support all versions of the JSON format.
+ *
+ * \param path the file path to the Tiled JSON map file.
+ *
+ * \return the parsed Tiled map.
+ */
+[[nodiscard]] inline auto parse_tmx(const std::filesystem::path& path) -> tmx_map
+{
+  const auto json = read_json(path);
+  assert(json.contains("type") && "Map file requires \"type\" element!");
+  assert(json.at("type").get<std::string>() == "map");
+
+  tmx_map map;
+
+  json.at("width").get_to(map.width);
+  json.at("height").get_to(map.height);
+  json.at("nextlayerid").get_to(map.next_layer_id);
+  json.at("nextobjectid").get_to(map.next_object_id);
+  json.at("tilewidth").get_to(map.tile_width);
+  json.at("tileheight").get_to(map.tile_height);
+  json.at("infinite").get_to(map.infinite);
+  json.at("orientation").get_to(map.orientation);
+  json.at("renderorder").get_to(map.render_order);
+  json.at("tiledversion").get_to(map.tiled_version);
+  json.at("version").get_to(map.json_version);
+
+  io::try_get_to(json, "backgroundcolor", map.background);
+  io::try_get_to(json, "compressionlevel", map.compression_level);
+  io::try_get_to(json, "hexsidelength", map.hex_side_length);
+  io::try_get_to(json, "staggeraxis", map.stagger_axis);
+  io::try_get_to(json, "staggerindex", map.stagger_index);
+
+  io::try_get_to(json, "layers", map.layers);
+  io::try_get_to(json, "properties", map.properties);
+
+  if (const auto it = json.find("tilesets"); it != json.end())
+  {
+    const auto directory = path.parent_path();
+
+    map.tilesets.reserve(it->size());
+    for (const auto& [key, value] : it->items())
+    {
+      map.tilesets.push_back(tmx::parse_tileset(directory, value));
+    }
+  }
+
+  return map;
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_PARSE_TMX_HPP
+
+// #include "io/tmx/tmx_animation.hpp"
+#ifndef RUNE_TMX_ANIMATION_HPP
+#define RUNE_TMX_ANIMATION_HPP
+
+#include <chrono>  // milliseconds
+#include <vector>  // vector
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_local_id.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_frame final
+{
+  tmx_local_id tile{};
+  std::chrono::milliseconds duration{};
+};
+
+struct tmx_animation final
+{
+  std::vector<tmx_frame> frames;
+};
+
+inline void from_json(const json_type& json, tmx_frame& frame)
+{
+  using ms_t = std::chrono::milliseconds;
+
+  io::emplace_to(json, "tileid", frame.tile);
+  frame.duration = ms_t{json.at("duration").get<ms_t::rep>()};
+}
+
+inline void from_json(const json_type& json, tmx_animation& animation)
+{
+  io::get_to(json, animation.frames);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_ANIMATION_HPP
+
+// #include "io/tmx/tmx_color.hpp"
+#ifndef RUNE_TMX_COLOR_HPP
+#define RUNE_TMX_COLOR_HPP
+
+#include <cassert>      // assert
+#include <string>       // string
+#include <string_view>  // string_view
+
+// #include "../../aliases/integers.hpp"
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "core/from_string.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_color final
+{
+  uint8 red{};
+  uint8 green{};
+  uint8 blue{};
+  uint8 alpha{0xFF};
+
+  [[nodiscard]] constexpr bool operator==(const tmx_color&) const noexcept = default;
+};
+
+/// \} End of group tmx
+
+namespace tmx {
+
+/// \addtogroup tmx
+/// \{
+
+inline constexpr tmx_color black{0, 0, 0, 0xFF};
+
+[[nodiscard]] inline auto from_hex(const std::string_view str) -> uint8
+{
+  assert(str.size() == 2);
+  return from_string<uint8>(str, 16).value();
+}
+
+[[nodiscard]] inline auto make_color(const std::string_view str) -> tmx_color
+{
+  assert(str.size() == 7 || str.size() == 9);
+  assert(str.at(0) == '#');
+
+  const auto noHash = str.substr(1);
+  const auto length = noHash.size();
+
+  tmx_color result;
+
+  if (length == 8)
+  {
+    // ARGB
+    result.alpha = from_hex(noHash.substr(0, 2));
+    result.red = from_hex(noHash.substr(2, 2));
+    result.green = from_hex(noHash.substr(4, 2));
+    result.blue = from_hex(noHash.substr(6, 2));
+  }
+  else
+  {
+    // RGB
+    result.red = from_hex(noHash.substr(0, 2));
+    result.green = from_hex(noHash.substr(2, 2));
+    result.blue = from_hex(noHash.substr(4, 2));
+  }
+
+  return result;
+}
+
+/// \} End of group tmx
+
+}  // namespace tmx
+
+inline void from_json(const json_type& json, tmx_color& color)
+{
+  color = tmx::make_color(json.get<std::string>());
+}
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_COLOR_TEST
+
+// #include "io/tmx/tmx_data.hpp"
+#ifndef RUNE_TMX_DATA_HPP
+#define RUNE_TMX_DATA_HPP
+
+#include <cassert>  // assert
+#include <string>   // string
+#include <variant>  // variant
+#include <vector>   // vector
+
+// #include "../../aliases/integers.hpp"
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "tmx_global_id.hpp"
+
+
+namespace rune {
+
+struct tmx_data final
+{
+  using gid_data = std::vector<tmx_global_id>;
+  using base64_data = std::string;
+  using data_type = std::variant<gid_data, base64_data>;
+
+  data_type tile_data;
+};
+
+inline void from_json(const json_type& json, tmx_data& data)
+{
+  assert(json.is_array() || json.is_string());
+
+  if (json.is_array())
+  {
+    auto& gidData = data.tile_data.emplace<tmx_data::gid_data>();
+    for (const auto& [key, value] : json.items())
+    {
+      gidData.emplace_back(value.get<uint>());
+    }
+  }
+  else if (json.is_string())
+  {
+    data.tile_data.emplace<tmx_data::base64_data>(json.get<tmx_data::base64_data>());
+  }
+}
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_DATA_HPP
+
+// #include "io/tmx/tmx_global_id.hpp"
+#ifndef RUNE_TMX_GLOBAL_ID_HPP
+#define RUNE_TMX_GLOBAL_ID_HPP
+
+#include <nenya.hpp>  // strong_type
+
+// #include "../../aliases/integers.hpp"
+
+
+namespace rune {
+
+/// \cond FALSE
+namespace tags {
+struct tmx_global_id_tag;
+}
+/// \endcond
+
+/// \addtogroup tmx
+/// \{
+
+using tmx_global_id = nenya::strong_type<uint, tags::tmx_global_id_tag>;
+
+/// \} End of group tmx
+
+namespace tmx_literals {
+
+/// \addtogroup tmx
+/// \{
+
+/// \name Literal operators
+/// \{
+
+[[nodiscard]] constexpr auto operator""_global(const ulonglong value) noexcept
+    -> tmx_global_id
+{
+  return tmx_global_id{static_cast<tmx_global_id::value_type>(value)};
+}
+
+/// \} End of literal operators
+/// \} End of group tmx
+
+}  // namespace tmx_literals
+}  // namespace rune
+
+#endif  // RUNE_TMX_GLOBAL_ID_HPP
+
+// #include "io/tmx/tmx_grid.hpp"
+#ifndef RUNE_TMX_GRID_HPP
+#define RUNE_TMX_GRID_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+// #include "../../aliases/json_type.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_grid_orientation
+{
+  orthogonal,
+  isometric
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_grid_orientation,
+                             {{tmx_grid_orientation::orthogonal, "orthogonal"},
+                              {tmx_grid_orientation::isometric, "isometric"}})
+
+struct tmx_grid final
+{
+  int cell_width{};
+  int cell_height{};
+  tmx_grid_orientation orientation{tmx_grid_orientation::orthogonal};
+};
+
+inline void from_json(const json_type& json, tmx_grid& grid)
+{
+  json.at("width").get_to(grid.cell_width);
+  json.at("height").get_to(grid.cell_height);
+  json.at("orientation").get_to(grid.orientation);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_GRID_HPP
+
+// #include "io/tmx/tmx_halign.hpp"
+#ifndef RUNE_TMX_HALIGN_HPP
+#define RUNE_TMX_HALIGN_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_halign
+{
+  center,
+  right,
+  left,
+  justify
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_halign,
+                             {{tmx_halign::center, "center"},
+                              {tmx_halign::right, "right"},
+                              {tmx_halign::left, "left"},
+                              {tmx_halign::justify, "justify"}})
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_HALIGN_HPP
+
+// #include "io/tmx/tmx_image_layer.hpp"
+#ifndef RUNE_TMX_IMAGE_LAYER_HPP
+#define RUNE_TMX_IMAGE_LAYER_HPP
+
+#include <string>  // string
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../../aliases/maybe.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_color.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_image_layer final
+{
+  std::string image;
+  maybe<tmx_color> transparent;
+};
+
+inline void from_json(const json_type& json, tmx_image_layer& layer)
+{
+  json.at("image").get_to(layer.image);
+  io::try_get_to(json, "transparentcolor", layer.transparent);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_IMAGE_LAYER_HPP
+
+// #include "io/tmx/tmx_layer.hpp"
+#ifndef RUNE_TMX_LAYER_HPP
+#define RUNE_TMX_LAYER_HPP
+
+#include <cassert>   // assert
+#include <concepts>  // same_as
+#include <memory>    // unique_ptr, make_unique
+#include <string>    // string
+#include <variant>   // variant, monostate
+#include <vector>    // vector
+
+// #include "../../aliases/integers.hpp"
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../../aliases/maybe.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_color.hpp"
+
+// #include "tmx_image_layer.hpp"
+
+// #include "tmx_layer_type.hpp"
+
+// #include "tmx_object.hpp"
+
+// #include "tmx_object_layer.hpp"
+
+// #include "tmx_property.hpp"
+
+// #include "tmx_tile_layer.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_layer;
+
+struct tmx_group final
+{
+  std::vector<std::unique_ptr<tmx_layer>> layers;
+};
+
+struct tmx_layer final
+{
+  using data_type = std::variant<std::monostate,
+                                 tmx_tile_layer,
+                                 tmx_image_layer,
+                                 tmx_object_layer,
+                                 tmx_group>;
+
+  tmx_layer_type type{tmx_layer_type::tile_layer};
+  int id{};
+  int width{};
+  int height{};
+  int start_x{};
+  int start_y{};
+  float parallax_x{1};
+  float parallax_y{1};
+  float offset_x{};
+  float offset_y{};
+  float opacity{1};
+
+  maybe<tmx_color> tint;
+  tmx_properties properties;
+
+  data_type data;
+
+  std::string name;
+  bool visible{true};
+};
+
+using tmx_layers = std::vector<tmx_layer>;
+
+void from_json(const json_type& json, tmx_layer& layer);
+
+inline void from_json(const json_type& json, tmx_group& group)
+{
+  const auto& layers = json.at("layers");
+  group.layers.reserve(layers.size());
+  for (const auto& [key, value] : layers.items())
+  {
+    group.layers.push_back(std::make_unique<tmx_layer>(value.get<tmx_layer>()));
+  }
+}
+
+inline void from_json(const json_type& json, tmx_layer& layer)
+{
+  json.at("type").get_to(layer.type);
+
+  io::try_get_to(json, "name", layer.name);
+  io::try_get_to(json, "opacity", layer.opacity);
+  io::try_get_to(json, "visible", layer.visible);
+  io::try_get_to(json, "id", layer.id);
+  io::try_get_to(json, "width", layer.width);
+  io::try_get_to(json, "height", layer.height);
+  io::try_get_to(json, "startx", layer.start_x);
+  io::try_get_to(json, "starty", layer.start_y);
+  io::try_get_to(json, "parallaxx", layer.parallax_x);
+  io::try_get_to(json, "parallaxy", layer.parallax_y);
+  io::try_get_to(json, "offsetx", layer.offset_x);
+  io::try_get_to(json, "offsety", layer.offset_y);
+  io::try_get_to(json, "tintcolor", layer.tint);
+
+  io::try_get_to(json, "properties", layer.properties);
+
+  switch (layer.type)
+  {
+    default:
+      assert(false && "from_json() for tmx_layer is missing branch!");
+
+    case tmx_layer_type::tile_layer:
+      layer.data = json.get<tmx_tile_layer>();
+      break;
+
+    case tmx_layer_type::object_layer:
+      layer.data = json.get<tmx_object_layer>();
+      break;
+
+    case tmx_layer_type::image_layer:
+      layer.data = json.get<tmx_image_layer>();
+      break;
+
+    case tmx_layer_type::group:
+      layer.data = json.get<tmx_group>();
+      break;
+  }
+}
+
+/// \} End of group tmx
+
+namespace tmx {
+
+/// \addtogroup tmx
+/// \{
+
+// clang-format off
+
+template <typename T>
+concept layer_value_type = std::same_as<T, tmx_tile_layer> ||
+                           std::same_as<T, tmx_object_layer> ||
+                           std::same_as<T, tmx_image_layer> ||
+                           std::same_as<T, tmx_group>;
+
+// clang-format on
+
+/// \name Layer functions
+/// \{
+
+template <layer_value_type T>
+[[nodiscard]] auto get(const tmx_layer& layer) -> const T&
+{
+  return std::get<T>(layer.data);
+}
+
+[[nodiscard]] inline auto get_tile_layer(const tmx_layer& layer) -> const tmx_tile_layer&
+{
+  return get<tmx_tile_layer>(layer);
+}
+
+[[nodiscard]] inline auto get_image_layer(const tmx_layer& layer)
+    -> const tmx_image_layer&
+{
+  return get<tmx_image_layer>(layer);
+}
+
+[[nodiscard]] inline auto get_object_layer(const tmx_layer& layer)
+    -> const tmx_object_layer&
+{
+  return get<tmx_object_layer>(layer);
+}
+
+[[nodiscard]] inline auto get_group(const tmx_layer& layer) -> const tmx_group&
+{
+  return get<tmx_group>(layer);
+}
+
+template <layer_value_type T>
+[[nodiscard]] auto try_get(const tmx_layer& layer) noexcept -> const T*
+{
+  return std::get_if<T>(&layer.data);
+}
+
+[[nodiscard]] inline auto try_get_tile_layer(const tmx_layer& layer) noexcept
+    -> const tmx_tile_layer*
+{
+  return try_get<tmx_tile_layer>(layer);
+}
+
+[[nodiscard]] inline auto try_get_object_layer(const tmx_layer& layer) noexcept
+    -> const tmx_object_layer*
+{
+  return try_get<tmx_object_layer>(layer);
+}
+
+[[nodiscard]] inline auto try_get_image_layer(const tmx_layer& layer) noexcept
+    -> const tmx_image_layer*
+{
+  return try_get<tmx_image_layer>(layer);
+}
+
+[[nodiscard]] inline auto try_get_group(const tmx_layer& layer) noexcept
+    -> const tmx_group*
+{
+  return try_get<tmx_group>(layer);
+}
+
+template <layer_value_type T>
+[[nodiscard]] auto is(const tmx_layer& layer) noexcept -> bool
+{
+  return std::holds_alternative<T>(layer.data);
+}
+
+[[nodiscard]] inline auto is_tile_layer(const tmx_layer& layer) noexcept -> bool
+{
+  return is<tmx_tile_layer>(layer);
+}
+
+[[nodiscard]] inline auto is_object_layer(const tmx_layer& layer) noexcept -> bool
+{
+  return is<tmx_object_layer>(layer);
+}
+
+[[nodiscard]] inline auto is_image_layer(const tmx_layer& layer) noexcept -> bool
+{
+  return is<tmx_image_layer>(layer);
+}
+
+[[nodiscard]] inline auto is_group(const tmx_layer& layer) noexcept -> bool
+{
+  return is<tmx_group>(layer);
+}
+
+/// \} End of layer functions
+
+/// \} End of group tmx
+
+}  // namespace tmx
+}  // namespace rune
+
+#endif  // RUNE_TMX_LAYER_HPP
+
+// #include "io/tmx/tmx_layer_type.hpp"
+#ifndef RUNE_TMX_LAYER_TYPE_HPP
+#define RUNE_TMX_LAYER_TYPE_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_layer_type
+{
+  tile_layer,
+  object_layer,
+  image_layer,
+  group
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_layer_type,
+                             {{tmx_layer_type::tile_layer, "tilelayer"},
+                              {tmx_layer_type::image_layer, "imagelayer"},
+                              {tmx_layer_type::object_layer, "objectgroup"},
+                              {tmx_layer_type::group, "group"}})
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_LAYER_TYPE_HPP
+
+// #include "io/tmx/tmx_local_id.hpp"
+#ifndef RUNE_TMX_LOCAL_ID_HPP
+#define RUNE_TMX_LOCAL_ID_HPP
+
+#include <nenya.hpp>  // strong_type
+
+// #include "../../aliases/integers.hpp"
+
+
+namespace rune {
+
+/// \cond FALSE
+namespace tags {
+struct tmx_local_id_tag;
+}  // namespace tags
+/// \endcond
+
+/// \addtogroup tmx
+/// \{
+
+using tmx_local_id = nenya::strong_type<int, tags::tmx_local_id_tag>;
+
+/// \} End of group tmx
+
+namespace tmx_literals {
+
+/// \addtogroup tmx
+/// \{
+
+/// \name Literal operators
+/// \{
+
+[[nodiscard]] constexpr auto operator""_local(const ulonglong value) noexcept
+    -> tmx_local_id
+{
+  return tmx_local_id{static_cast<tmx_local_id::value_type>(value)};
+}
+
+/// \} End of literal operators
+
+/// \} End of group tmx
+
+}  // namespace tmx_literals
+}  // namespace rune
+
+#endif  // RUNE_TMX_LOCAL_ID_HPP
+
+// #include "io/tmx/tmx_map.hpp"
+#ifndef RUNE_TMX_MAP_HPP
+#define RUNE_TMX_MAP_HPP
+
+#include <string>  // string
+
+// #include "../../aliases/maybe.hpp"
+
+// #include "tmx_color.hpp"
+
+// #include "tmx_layer.hpp"
+
+// #include "tmx_map_orientation.hpp"
+
+// #include "tmx_map_render_order.hpp"
+
+// #include "tmx_property.hpp"
+
+// #include "tmx_stagger_axis.hpp"
+
+// #include "tmx_stagger_index.hpp"
+
+// #include "tmx_tileset.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_map final
+{
+  int width{};   ///< Number of columns.
+  int height{};  ///< Number of rows.
+
+  int next_layer_id{1};
+  int next_object_id{1};
+
+  int tile_height{};
+  int tile_width{};
+
+  int compression_level{-1};
+  int hex_side_length{};
+
+  tmx_map_orientation orientation{tmx_map_orientation::orthogonal};
+  tmx_map_render_order render_order{tmx_map_render_order::right_down};
+
+  maybe<tmx_color> background;
+  maybe<tmx_stagger_axis> stagger_axis;
+  maybe<tmx_stagger_index> stagger_index;
+
+  tmx_layers layers;
+  tmx_tilesets tilesets;
+  tmx_properties properties;
+
+  std::string tiled_version;
+  std::string json_version;
+  bool infinite{};
+};
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_MAP_HPP
+
+// #include "io/tmx/tmx_map_orientation.hpp"
+#ifndef RUNE_TMX_MAP_ORIENTATION_HPP
+#define RUNE_TMX_MAP_ORIENTATION_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_map_orientation
+{
+  orthogonal,
+  isometric,
+  staggered,
+  hexagonal
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_map_orientation,
+                             {{tmx_map_orientation::orthogonal, "orthogonal"},
+                              {tmx_map_orientation::isometric, "isometric"},
+                              {tmx_map_orientation::staggered, "staggered"},
+                              {tmx_map_orientation::hexagonal, "hexagonal"}})
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_MAP_ORIENTATION_HPP
+
+// #include "io/tmx/tmx_map_render_order.hpp"
+#ifndef RUNE_TMX_MAP_RENDER_ORDER_HPP
+#define RUNE_TMX_MAP_RENDER_ORDER_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_map_render_order
+{
+  right_down,
+  right_up,
+  left_down,
+  left_up
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_map_render_order,
+                             {{tmx_map_render_order::right_down, "right-down"},
+                              {tmx_map_render_order::right_up, "right-up"},
+                              {tmx_map_render_order::left_down, "left-down"},
+                              {tmx_map_render_order::left_up, "left-up"}})
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_MAP_RENDER_ORDER_HPP
+
+// #include "io/tmx/tmx_object.hpp"
+#ifndef RUNE_TMX_OBJECT_HPP
+#define RUNE_TMX_OBJECT_HPP
+
+#include <memory>   // unique_ptr, make_unique
+#include <string>   // string
+#include <variant>  // variant, monostate
+#include <vector>   // vector
+
+// #include "../../aliases/integers.hpp"
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../../aliases/maybe.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_global_id.hpp"
+
+// #include "tmx_point.hpp"
+
+// #include "tmx_property.hpp"
+
+// #include "tmx_text.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_object;
+
+struct tmx_polygon final
+{
+  std::vector<tmx_point> points;
+};
+
+struct tmx_polyline final
+{
+  std::vector<tmx_point> points;
+};
+
+struct tmx_template_object final
+{
+  std::string template_file;
+  std::unique_ptr<tmx_object> object;
+  maybe<std::string> tileset_source;
+  maybe<tmx_global_id> tileset_first_id;
+};
+
+struct tmx_object final
+{
+  using data_type = std::variant<std::monostate,
+                                 tmx_polygon,
+                                 tmx_polyline,
+                                 tmx_text,
+                                 tmx_template_object,
+                                 tmx_global_id>;
+
+  int id{};
+  float x{};
+  float y{};
+  float width{};
+  float height{};
+  float rotation{};
+  std::string name;
+  std::string type;
+  tmx_properties properties;
+  data_type data;
+  bool is_ellipse{};
+  bool is_point{};
+  bool visible{true};
+};
+
+inline void from_json(const json_type& json, tmx_polygon& polygon)
+{
+  io::get_to(json, polygon.points);
+}
+
+inline void from_json(const json_type& json, tmx_polyline& line)
+{
+  io::get_to(json, line.points);
+}
+
+void from_json(const json_type& json, tmx_object& object);
+
+inline void from_json(const json_type& json, tmx_template_object& object)
+{
+  json.at("template").get_to(object.template_file);
+  object.object = std::make_unique<tmx_object>(json.at("object").get<tmx_object>());
+
+  if (const auto it = json.find("tileset"); it != json.end())
+  {
+    io::emplace_to(json, "firstgid", object.tileset_first_id);
+    object.tileset_source = json.at("source").get<std::string>();
+  }
+}
+
+inline void from_json(const json_type& json, tmx_object& object)
+{
+  json.at("id").get_to(object.id);
+  json.at("x").get_to(object.x);
+  json.at("y").get_to(object.y);
+  json.at("width").get_to(object.width);
+  json.at("height").get_to(object.height);
+  json.at("rotation").get_to(object.rotation);
+  json.at("name").get_to(object.name);
+  json.at("type").get_to(object.type);
+  json.at("visible").get_to(object.visible);
+
+  io::try_get_to(json, "ellipse", object.is_ellipse);
+  io::try_get_to(json, "point", object.is_point);
+
+  io::try_get_to(json, "properties", object.properties);
+
+  if (const auto it = json.find("gid"); it != json.end())
+  {
+    object.data.emplace<tmx_global_id>(it->get<tmx_global_id::value_type>());
+  }
+
+  io::try_emplace_to<tmx_text>(json, "text", object.data);
+  io::try_emplace_to<tmx_polygon>(json, "polygon", object.data);
+  io::try_emplace_to<tmx_polyline>(json, "polyline", object.data);
+  io::try_emplace_to<tmx_template_object>(json, "template", object.data);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_OBJECT_HPP
+
+// #include "io/tmx/tmx_object_layer.hpp"
+#ifndef RUNE_TMX_OBJECT_LAYER_HPP
+#define RUNE_TMX_OBJECT_LAYER_HPP
+
+#include <cassert>   // assert
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+#include <vector>    // vector
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_object.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_object_layer_draw_order
+{
+  top_down,
+  index
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_object_layer_draw_order,
+                             {{tmx_object_layer_draw_order::top_down, "topdown"},
+                              {tmx_object_layer_draw_order::index, "index"}})
+
+struct tmx_object_layer final  // Note, referred to as "object group" by tiled
+{
+  tmx_object_layer_draw_order draw_order{tmx_object_layer_draw_order::top_down};
+  std::vector<tmx_object> objects;
+};
+
+inline void from_json(const json_type& json, tmx_object_layer& layer)
+{
+  io::get_to(json, "objects", layer.objects);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_OBJECT_LAYER_HPP
+
+// #include "io/tmx/tmx_point.hpp"
+#ifndef RUNE_TMX_POINT_HPP
+#define RUNE_TMX_POINT_HPP
+
+// #include "../../aliases/json_type.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_point final
+{
+  float x{};  ///< The x-coordinate of the point.
+  float y{};  ///< The y-coordinate of the point.
+};
+
+inline void from_json(const json_type& json, tmx_point& point)
+{
+  json.at("x").get_to(point.x);
+  json.at("y").get_to(point.y);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_POINT_HPP
+
+// #include "io/tmx/tmx_property.hpp"
+#ifndef RUNE_TMX_PROPERTY_HPP
+#define RUNE_TMX_PROPERTY_HPP
+
+#include <algorithm>    // any_of, find_if
+#include <cassert>      // assert
+#include <concepts>     // same_as
+#include <nenya.hpp>    // strong_type
+#include <string>       // string
+#include <string_view>  // string_view
+#include <variant>      // variant, get, get_if, holds_alternative
+#include <vector>       // vector
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "core/rune_error.hpp"
+
+// #include "tmx_color.hpp"
+
+// #include "tmx_property_type.hpp"
+
+
+namespace rune {
+
+/// \cond FALSE
+namespace tags {
+struct tmx_file_tag;
+struct tmx_object_id_tag;
+}  // namespace tags
+/// \endcond
+
+/// \addtogroup tmx
+/// \{
+
+using tmx_file = nenya::strong_type<std::string, tags::tmx_file_tag>;
+using tmx_object_id = nenya::strong_type<int, tags::tmx_object_id_tag>;
+
+/**
+ * \brief Represents a property, with an associated name and value.
+ */
+struct tmx_property final
+{
+  using data_type =
+      std::variant<std::string, tmx_file, tmx_object_id, tmx_color, int, float, bool>;
+
+  std::string name;
+  tmx_property_type type{tmx_property_type::string};
+  data_type value;
+};
+
+using tmx_properties = std::vector<tmx_property>;
+
+inline void from_json(const json_type& json, tmx_property& property)
+{
+  json.at("name").get_to(property.name);
+  json.at("type").get_to(property.type);
+
+  switch (property.type)
+  {
+    default:
+      assert(false && "from_json() for tmx_property has missing branch!");
+
+    case tmx_property_type::string:
+      property.value.emplace<std::string>(json.at("value").get<std::string>());
+      break;
+
+    case tmx_property_type::integer:
+      property.value.emplace<int>(json.at("value").get<int>());
+      break;
+
+    case tmx_property_type::floating:
+      property.value.emplace<float>(json.at("value").get<float>());
+      break;
+
+    case tmx_property_type::boolean:
+      property.value.emplace<bool>(json.at("value").get<bool>());
+      break;
+
+    case tmx_property_type::color:
+      property.value.emplace<tmx_color>(json.at("value").get<tmx_color>());
+      break;
+
+    case tmx_property_type::file:
+      property.value.emplace<tmx_file>(json.at("value").get<std::string>());
+      break;
+
+    case tmx_property_type::object:
+      property.value.emplace<tmx_object_id>(json.at("value").get<int>());
+      break;
+  }
+}
+
+/// \} End of group tmx
+
+namespace tmx {
+
+/// \addtogroup tmx
+/// \{
+
+// clang-format off
+
+template <typename T>
+concept property_value_type = std::same_as<T, int> ||
+                              std::same_as<T, float> ||
+                              std::same_as<T, bool> ||
+                              std::same_as<T, std::string> ||
+                              std::same_as<T, tmx_color> ||
+                              std::same_as<T, tmx_file> ||
+                              std::same_as<T, tmx_object_id>;
+
+// clang-format on
+
+/// \name Property functions
+/// \{
+
+[[nodiscard]] inline auto try_get(const tmx_properties& properties,
+                                  const std::string_view name)
+    -> tmx_properties::const_iterator
+{
+  return std::ranges::find_if(properties, [name](const tmx_property& property) noexcept {
+    return property.name == name;
+  });
+}
+
+template <property_value_type T>
+[[nodiscard]] auto get_if(const tmx_properties& properties,
+                          const std::string_view name) noexcept -> const T*
+{
+  if (const auto it = try_get(properties, name); it != properties.end())
+  {
+    return std::get_if<T>(&it->value);
+  }
+  else
+  {
+    return nullptr;
+  }
+}
+
+[[nodiscard]] inline auto get_if_string(const tmx_property& property) noexcept
+    -> const std::string*
+{
+  return std::get_if<std::string>(&property.value);
+}
+
+[[nodiscard]] inline auto get_if_string(const tmx_properties& properties,
+                                        const std::string_view name) -> const std::string*
+{
+  return get_if<std::string>(properties, name);
+}
+
+[[nodiscard]] inline auto get_if_int(const tmx_property& property) noexcept -> const int*
+{
+  return std::get_if<int>(&property.value);
+}
+
+[[nodiscard]] inline auto get_if_int(const tmx_properties& properties,
+                                     const std::string_view name) -> const int*
+{
+  return get_if<int>(properties, name);
+}
+
+[[nodiscard]] inline auto get_if_float(const tmx_property& property) noexcept -> const
+    float*
+{
+  return std::get_if<float>(&property.value);
+}
+
+[[nodiscard]] inline auto get_if_float(const tmx_properties& properties,
+                                       const std::string_view name) -> const float*
+{
+  return get_if<float>(properties, name);
+}
+
+[[nodiscard]] inline auto get_if_bool(const tmx_property& property) noexcept -> const
+    bool*
+{
+  return std::get_if<bool>(&property.value);
+}
+
+[[nodiscard]] inline auto get_if_bool(const tmx_properties& properties,
+                                      const std::string_view name) -> const bool*
+{
+  return get_if<bool>(properties, name);
+}
+
+[[nodiscard]] inline auto get_if_color(const tmx_property& property) noexcept
+    -> const tmx_color*
+{
+  return std::get_if<tmx_color>(&property.value);
+}
+
+[[nodiscard]] inline auto get_if_color(const tmx_properties& properties,
+                                       const std::string_view name) -> const tmx_color*
+{
+  return get_if<tmx_color>(properties, name);
+}
+
+[[nodiscard]] inline auto get_if_file(const tmx_property& property) noexcept
+    -> const tmx_file*
+{
+  return std::get_if<tmx_file>(&property.value);
+}
+
+[[nodiscard]] inline auto get_if_file(const tmx_properties& properties,
+                                      const std::string_view name) -> const tmx_file*
+{
+  return get_if<tmx_file>(properties, name);
+}
+
+[[nodiscard]] inline auto get_if_object(const tmx_property& property) noexcept
+    -> const tmx_object_id*
+{
+  return std::get_if<tmx_object_id>(&property.value);
+}
+
+[[nodiscard]] inline auto get_if_object(const tmx_properties& properties,
+                                        const std::string_view name)
+    -> const tmx_object_id*
+{
+  return get_if<tmx_object_id>(properties, name);
+}
+
+template <property_value_type T>
+[[nodiscard]] auto is(const tmx_property& property) noexcept -> bool
+{
+  return std::holds_alternative<T>(property.value);
+}
+
+template <property_value_type T>
+[[nodiscard]] auto is(const tmx_properties& properties, const std::string_view name)
+    -> bool
+{
+  if (const auto it = try_get(properties, name); it != properties.end())
+  {
+    return is<T>(*it);
+  }
+  else
+  {
+    return false;
+  }
+}
+
+[[nodiscard]] inline auto is_string(const tmx_property& property) noexcept -> bool
+{
+  return is<std::string>(property);
+}
+
+[[nodiscard]] inline auto is_string(const tmx_properties& properties,
+                                    const std::string_view name) -> bool
+{
+  return is<std::string>(properties, name);
+}
+
+[[nodiscard]] inline auto is_int(const tmx_property& property) noexcept -> bool
+{
+  return is<int>(property);
+}
+
+[[nodiscard]] inline auto is_int(const tmx_properties& properties,
+                                 const std::string_view name) -> bool
+{
+  return is<int>(properties, name);
+}
+
+[[nodiscard]] inline auto is_float(const tmx_property& property) noexcept -> bool
+{
+  return is<float>(property);
+}
+
+[[nodiscard]] inline auto is_float(const tmx_properties& properties,
+                                   const std::string_view name) -> bool
+{
+  return is<float>(properties, name);
+}
+
+[[nodiscard]] inline auto is_bool(const tmx_property& property) noexcept -> bool
+{
+  return is<bool>(property);
+}
+
+[[nodiscard]] inline auto is_bool(const tmx_properties& properties,
+                                  const std::string_view name) -> bool
+{
+  return is<bool>(properties, name);
+}
+
+[[nodiscard]] inline auto is_color(const tmx_property& property) noexcept -> bool
+{
+  return is<tmx_color>(property);
+}
+
+[[nodiscard]] inline auto is_color(const tmx_properties& properties,
+                                   const std::string_view name) -> bool
+{
+  return is<tmx_color>(properties, name);
+}
+
+[[nodiscard]] inline auto is_file(const tmx_property& property) noexcept -> bool
+{
+  return is<tmx_file>(property);
+}
+
+[[nodiscard]] inline auto is_file(const tmx_properties& properties,
+                                  const std::string_view name) -> bool
+{
+  return is<tmx_file>(properties, name);
+}
+
+[[nodiscard]] inline auto is_object(const tmx_property& property) noexcept -> bool
+{
+  return is<tmx_object_id>(property);
+}
+
+[[nodiscard]] inline auto is_object(const tmx_properties& properties,
+                                    const std::string_view name) -> bool
+{
+  return is<tmx_object_id>(properties, name);
+}
+
+template <property_value_type T>
+[[nodiscard]] auto get(const tmx_property& property) -> const T&
+{
+  return std::get<T>(property.value);
+}
+
+template <property_value_type T>
+[[nodiscard]] auto get(const tmx_properties& properties, const std::string_view name)
+    -> const T&
+{
+  if (const auto it = try_get(properties, name); it != properties.end())
+  {
+    return get<T>(*it);
+  }
+  else
+  {
+    throw rune_error{"Could not find property with the specified name!"};
+  }
+}
+
+[[nodiscard]] inline auto get_string(const tmx_property& property) -> const std::string&
+{
+  return get<std::string>(property);
+}
+
+[[nodiscard]] inline auto get_string(const tmx_properties& properties,
+                                     const std::string_view name) -> const std::string&
+{
+  return get<std::string>(properties, name);
+}
+
+[[nodiscard]] inline auto get_int(const tmx_property& property) -> int
+{
+  return get<int>(property);
+}
+
+[[nodiscard]] inline auto get_int(const tmx_properties& properties,
+                                  const std::string_view name) -> int
+{
+  return get<int>(properties, name);
+}
+
+[[nodiscard]] inline auto get_float(const tmx_property& property) -> float
+{
+  return get<float>(property);
+}
+
+[[nodiscard]] inline auto get_float(const tmx_properties& properties,
+                                    const std::string_view name) -> float
+{
+  return get<float>(properties, name);
+}
+
+[[nodiscard]] inline auto get_bool(const tmx_property& property) -> bool
+{
+  return get<bool>(property);
+}
+
+[[nodiscard]] inline auto get_bool(const tmx_properties& properties,
+                                   const std::string_view name) -> bool
+{
+  return get<bool>(properties, name);
+}
+
+[[nodiscard]] inline auto get_color(const tmx_property& property) -> const tmx_color&
+{
+  return get<tmx_color>(property);
+}
+
+[[nodiscard]] inline auto get_color(const tmx_properties& properties,
+                                    const std::string_view name) -> const tmx_color&
+{
+  return get<tmx_color>(properties, name);
+}
+
+[[nodiscard]] inline auto get_file(const tmx_property& property) -> const tmx_file&
+{
+  return get<tmx_file>(property);
+}
+
+[[nodiscard]] inline auto get_file(const tmx_properties& properties,
+                                   const std::string_view name) -> const tmx_file&
+{
+  return get<tmx_file>(properties, name);
+}
+
+[[nodiscard]] inline auto get_object(const tmx_property& property) -> tmx_object_id
+{
+  return get<tmx_object_id>(property);
+}
+
+[[nodiscard]] inline auto get_object(const tmx_properties& properties,
+                                     const std::string_view name) -> tmx_object_id
+{
+  return get<tmx_object_id>(properties, name);
+}
+
+/**
+ * \brief Indicates whether or not a property with the specified name exists in a vector
+ * of properties.
+ *
+ * \param properties the vector of properties that will be searched.
+ * \param name the name of the property to look for.
+ *
+ * \return `true` if the properties contains a property with the specified name; `false`
+ * otherwise.
+ */
+[[nodiscard]] inline auto contains(const tmx_properties& properties,
+                                   const std::string_view name) -> bool
+{
+  return std::ranges::any_of(properties, [name](const tmx_property& property) noexcept {
+    return property.name == name;
+  });
+}
+
+/**
+ * \brief Attempts to find and return a property with the specified name.
+ *
+ * \param properties the properties that will be searched.
+ * \param name the name of the desired property.
+ *
+ * \return the property with the specified name.
+ *
+ * \throws rune_error if there is no property with the specified name.
+ */
+[[nodiscard]] inline auto at(const tmx_properties& properties,
+                             const std::string_view name) -> const tmx_property&
+{
+  if (const auto it = try_get(properties, name); it != properties.end())
+  {
+    return *it;
+  }
+  else
+  {
+    throw rune_error{"Could not find property with specified name!"};
+  }
+}
+
+/// \} End of property functions
+
+/// \} End of group tmx
+
+}  // namespace tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_PROPERTY_HPP
+
+// #include "io/tmx/tmx_stagger_axis.hpp"
+#ifndef RUNE_TMX_STAGGER_AXIS_HPP
+#define RUNE_TMX_STAGGER_AXIS_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_stagger_axis
+{
+  x,
+  y
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_stagger_axis,
+                             {{tmx_stagger_axis::x, "x"}, {tmx_stagger_axis::y, "y"}})
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_STAGGER_AXIS_HPP
+
+// #include "io/tmx/tmx_stagger_index.hpp"
+#ifndef RUNE_TMX_STAGGER_INDEX_HPP
+#define RUNE_TMX_STAGGER_INDEX_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_stagger_index
+{
+  odd,
+  even
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_stagger_index,
+                             {{tmx_stagger_index::odd, "odd"},
+                              {tmx_stagger_index::even, "even"}})
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_STAGGER_INDEX_HPP
+
+// #include "io/tmx/tmx_terrain.hpp"
+#ifndef RUNE_TMX_TERRAIN_HPP
+#define RUNE_TMX_TERRAIN_HPP
+
+#include <string>  // string
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_local_id.hpp"
+
+// #include "tmx_property.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_terrain final
+{
+  tmx_local_id tile{};
+  std::string name;
+  tmx_properties properties;
+};
+
+inline void from_json(const json_type& json, tmx_terrain& terrain)
+{
+  terrain.tile = tmx_local_id{json.at("tile").get<tmx_local_id::value_type>()};
+  json.at("name").get_to(terrain.name);
+  io::try_get_to(json, "properties", terrain.properties);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_TERRAIN_HPP
+
+// #include "io/tmx/tmx_text.hpp"
+#ifndef RUNE_TMX_TEXT_HPP
+#define RUNE_TMX_TEXT_HPP
+
+#include <string>  // string
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_color.hpp"
+
+// #include "tmx_halign.hpp"
+
+// #include "tmx_valign.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_text final
+{
+  std::string text;
+  std::string family{"sans-serif"};
+  tmx_color color;
+  tmx_halign horizontal_alignment{tmx_halign::left};
+  tmx_valign vertical_alignment{tmx_valign::top};
+  int pixel_size{16};
+  bool bold{};
+  bool italic{};
+  bool kerning{true};
+  bool strikeout{};
+  bool underline{};
+  bool wrap{};
+};
+
+inline void from_json(const json_type& json, tmx_text& text)
+{
+  json.at("text").get_to(text.text);
+
+  io::try_get_to(json, "fontfamily", text.family);
+  io::try_get_to(json, "halign", text.horizontal_alignment);
+  io::try_get_to(json, "valign", text.vertical_alignment);
+  io::try_get_to(json, "pixelsize", text.pixel_size);
+  io::try_get_to(json, "bold", text.bold);
+  io::try_get_to(json, "italic", text.italic);
+  io::try_get_to(json, "kerning", text.kerning);
+  io::try_get_to(json, "strikeout", text.strikeout);
+  io::try_get_to(json, "underline", text.underline);
+  io::try_get_to(json, "wrap", text.wrap);
+
+  if (const auto it = json.find("color"); it != json.end())
+  {
+    text.color = tmx::make_color(it->get<std::string>());
+  }
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_TEXT_HPP
+
+// #include "io/tmx/tmx_tile.hpp"
+#ifndef RUNE_TMX_TILE_HPP
+#define RUNE_TMX_TILE_HPP
+
+#include <array>   // array
+#include <string>  // string
+
+// #include "../../aliases/integers.hpp"
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../../aliases/maybe.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "core/from_string.hpp"
+
+// #include "tmx_animation.hpp"
+
+// #include "tmx_layer.hpp"
+
+// #include "tmx_local_id.hpp"
+
+// #include "tmx_property.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_tile final
+{
+  tmx_local_id id{};
+  maybe<tmx_animation> animation;
+  maybe<std::array<int, 4>> terrain;
+  maybe<std::string> type;
+  maybe<std::string> image;
+  maybe<int> image_width;
+  maybe<int> image_height;
+  maybe<float> probability;
+  maybe<tmx_layer> object_layer;
+  tmx_properties properties;
+};
+
+inline void from_json(const json_type& json, tmx_tile& tile)
+{
+  io::emplace_to(json, "id", tile.id);
+
+  io::try_get_to(json, "animation", tile.animation);
+  io::try_get_to(json, "type", tile.type);
+  io::try_get_to(json, "image", tile.image);
+  io::try_get_to(json, "imagewidth", tile.image_width);
+  io::try_get_to(json, "imageheight", tile.image_height);
+  io::try_get_to(json, "probability", tile.probability);
+  io::try_get_to(json, "objectgroup", tile.object_layer);
+  io::try_get_to(json, "properties", tile.properties);
+
+  if (const auto it = json.find("terrain"); it != json.end())
+  {
+    auto& terrain = tile.terrain.emplace();
+    for (const auto& [key, value] : it->items())
+    {
+      const auto index = from_string<usize>(key).value();
+      terrain.at(index) = value.get<int>();
+    }
+  }
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_TILE_HPP
+
+// #include "io/tmx/tmx_tile_layer.hpp"
+#ifndef RUNE_TMX_TILE_LAYER_HPP
+#define RUNE_TMX_TILE_LAYER_HPP
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../../aliases/maybe.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_data.hpp"
+
+// #include "tmx_tile_layer_compression.hpp"
+
+// #include "tmx_tile_layer_encoding.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_tile_layer final
+{
+  tmx_tile_layer_compression compression{tmx_tile_layer_compression::none};
+  tmx_tile_layer_encoding encoding{tmx_tile_layer_encoding::csv};
+  maybe<tmx_data> data;
+  // TODO std::vector<chunk> m_chunks;
+};
+
+inline void from_json(const json_type& json, tmx_tile_layer& layer)
+{
+  io::try_get_to(json, "compression", layer.compression);
+  io::try_get_to(json, "encoding", layer.encoding);
+  io::try_get_to(json, "data", layer.data);
+
+  // TODO
+  //  if (json.contains("chunks")) {
+  //    m_chunks = detail::fill<std::vector<chunk>>(json, "chunks");
+  //  }
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_TILE_LAYER_HPP
+
+// #include "io/tmx/tmx_tile_layer_compression.hpp"
+#ifndef RUNE_TMX_TILE_LAYER_COMPRESSION_HPP
+#define RUNE_TMX_TILE_LAYER_COMPRESSION_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_tile_layer_compression
+{
+  none,
+  gzip,
+  zlib
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_tile_layer_compression,
+                             {{tmx_tile_layer_compression::none, ""},
+                              {tmx_tile_layer_compression::gzip, "gzip"},
+                              {tmx_tile_layer_compression::zlib, "zlib"}})
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_TILE_LAYER_COMPRESSION_HPP
+
+// #include "io/tmx/tmx_tile_layer_encoding.hpp"
+#ifndef RUNE_TMX_TILE_LAYER_ENCODING_HPP
+#define RUNE_TMX_TILE_LAYER_ENCODING_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_tile_layer_encoding
+{
+  csv,
+  base64
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_tile_layer_encoding,
+                             {{tmx_tile_layer_encoding::csv, "csv"},
+                              {tmx_tile_layer_encoding::base64, "base64"}})
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_TILE_LAYER_ENCODING_HPP
+
+// #include "io/tmx/tmx_tile_offset.hpp"
+#ifndef RUNE_TMX_TILE_OFFSET_HPP
+#define RUNE_TMX_TILE_OFFSET_HPP
+
+// #include "../../aliases/json_type.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_tile_offset final
+{
+  int x{};
+  int y{};
+};
+
+inline void from_json(const json_type& json, tmx_tile_offset& offset)
+{
+  json.at("x").get_to(offset.x);
+  json.at("y").get_to(offset.y);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_TILE_OFFSET_HPP
+
+// #include "io/tmx/tmx_tileset.hpp"
+#ifndef RUNE_TMX_TILESET_HPP
+#define RUNE_TMX_TILESET_HPP
+
+#include <string>  // string
+#include <vector>  // vector
+
+// #include "../../aliases/maybe.hpp"
+
+// #include "tmx_color.hpp"
+
+// #include "tmx_global_id.hpp"
+
+// #include "tmx_grid.hpp"
+
+// #include "tmx_property.hpp"
+
+// #include "tmx_terrain.hpp"
+
+// #include "tmx_tile.hpp"
+
+// #include "tmx_tile_offset.hpp"
+
+// #include "tmx_wang_set.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_tileset final
+{
+  tmx_global_id first_id{1};
+  int tile_width{};
+  int tile_height{};
+  int tile_count{};
+  int column_count{};
+  int image_width{};
+  int image_height{};
+  int margin{};
+  int spacing{};
+
+  std::string name;
+  std::string image;
+  std::string external_source;
+  std::string tiled_version;
+  std::string json_version;
+
+  maybe<tmx_color> background;
+  maybe<tmx_color> transparent;
+  maybe<tmx_tile_offset> tile_offset;
+  maybe<tmx_grid> grid;
+
+  std::vector<tmx_tile> tiles;
+  std::vector<tmx_terrain> terrains;
+  std::vector<tmx_wang_set> wang_sets;
+  tmx_properties properties;
+};
+
+using tmx_tilesets = std::vector<tmx_tileset>;
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_TILESET_HPP
+
+// #include "io/tmx/tmx_valign.hpp"
+#ifndef RUNE_TMX_VALIGN_HPP
+#define RUNE_TMX_VALIGN_HPP
+
+#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+enum class tmx_valign
+{
+  center,
+  top,
+  bottom
+};
+
+NLOHMANN_JSON_SERIALIZE_ENUM(tmx_valign,
+                             {{tmx_valign::center, "center"},
+                              {tmx_valign::top, "top"},
+                              {tmx_valign::bottom, "bottom"}})
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_VALIGN_HPP
+
+// #include "io/tmx/tmx_wang_color.hpp"
+#ifndef RUNE_TMX_WANG_COLOR_HPP
+#define RUNE_TMX_WANG_COLOR_HPP
+
+#include <string>  // string
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_color.hpp"
+
+// #include "tmx_local_id.hpp"
+
+// #include "tmx_property.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_wang_color final
+{
+  tmx_local_id tile{};
+  tmx_color color;
+  std::string name;
+  float probability{};
+  tmx_properties properties;
+};
+
+inline void from_json(const json_type& json, tmx_wang_color& color)
+{
+  json.at("name").get_to(color.name);
+  json.at("color").get_to(color.color);
+  json.at("probability").get_to(color.probability);
+  io::emplace_to(json, "tile", color.tile);
+
+  io::try_get_to(json, "properties", color.properties);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_WANG_COLOR_HPP
+
+// #include "io/tmx/tmx_wang_set.hpp"
+#ifndef RUNE_TMX_WANG_SET_HPP
+#define RUNE_TMX_WANG_SET_HPP
+
+#include <string>  // string
+#include <vector>  // vector
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_local_id.hpp"
+
+// #include "tmx_property.hpp"
+
+// #include "tmx_wang_color.hpp"
+
+// #include "tmx_wang_tile.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_wang_set final
+{
+  tmx_local_id tile{};
+  std::string name;
+  std::vector<tmx_wang_tile> wang_tiles;
+  std::vector<tmx_wang_color> colors;
+  tmx_properties properties;
+};
+
+inline void from_json(const json_type& json, tmx_wang_set& set)
+{
+  io::emplace_to(json, "tile", set.tile);
+  json.at("name").get_to(set.name);
+
+  // TODO check if colors or wangtiles are required
+  io::try_get_to(json, "colors", set.colors);
+  io::try_get_to(json, "wangtiles", set.wang_tiles);
+  io::try_get_to(json, "properties", set.properties);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_WANG_SET_HPP
+
+// #include "io/tmx/tmx_wang_tile.hpp"
+#ifndef RUNE_TMX_WANG_TILE_HPP
+#define RUNE_TMX_WANG_TILE_HPP
+
+#include <array>  // array
+
+// #include "../../aliases/integers.hpp"
+
+// #include "../../aliases/json_type.hpp"
+
+// #include "../json_utils.hpp"
+
+// #include "tmx_local_id.hpp"
+
+
+namespace rune {
+
+/// \addtogroup tmx
+/// \{
+
+struct tmx_wang_tile final
+{
+  tmx_local_id tile{};
+  std::array<uint8, 8> indices{};
+};
+
+inline void from_json(const json_type& json, tmx_wang_tile& tile)
+{
+  io::emplace_to(json, "tileid", tile.tile);
+  json.at("wangid").get_to(tile.indices);
+}
+
+/// \} End of group tmx
+
+}  // namespace rune
+
+#endif  // RUNE_TMX_WANG_TILE_HPP
 
 // #include "math/almost_equal.hpp"
 #ifndef RUNE_MATH_ALMOST_EQUAL_HPP
@@ -12886,4938 +24199,6 @@ auto operator<<(std::ostream& stream, const basic_vector2<T> vec) -> std::ostrea
 }  // namespace rune
 
 #endif  // RUNE_MATH_VECTOR2_HPP
-
-// #include "tmx/parse_tileset.hpp"
-#ifndef RUNE_TMX_PARSE_TILESET_HPP
-#define RUNE_TMX_PARSE_TILESET_HPP
-
-#include <filesystem>  // path
-#include <string>      // string
-
-// #include "../aliases/json_type.hpp"
-#ifndef RUNE_ALIASES_JSON_TYPE_HPP
-#define RUNE_ALIASES_JSON_TYPE_HPP
-
-#include <json.hpp>  // json
-
-namespace rune {
-
-using json_type = nlohmann::json;
-
-}  // namespace rune
-
-#endif  // RUNE_ALIASES_JSON_TYPE_HPP
-
-// #include "../io/json_utils.hpp"
-#ifndef RUNE_IO_JSON_UTILS_HPP
-#define RUNE_IO_JSON_UTILS_HPP
-
-#include <cassert>      // assert
-#include <concepts>     // same_as
-#include <filesystem>   // path
-#include <fstream>      // ifstream
-#include <string_view>  // string_view
-#include <variant>      // variant
-#include <vector>       // vector
-
-// #include "../aliases/json_type.hpp"
-#ifndef RUNE_ALIASES_JSON_TYPE_HPP
-#define RUNE_ALIASES_JSON_TYPE_HPP
-
-#include <json.hpp>  // json
-
-namespace rune {
-
-using json_type = nlohmann::json;
-
-}  // namespace rune
-
-#endif  // RUNE_ALIASES_JSON_TYPE_HPP
-
-// #include "../aliases/maybe.hpp"
-#ifndef RUNE_ALIASES_MAYBE_HPP
-#define RUNE_ALIASES_MAYBE_HPP
-
-#include <optional>  // optional
-
-namespace rune {
-
-template <typename T>
-using maybe = std::optional<T>;
-
-inline constexpr std::nullopt_t nothing = std::nullopt;
-
-}  // namespace rune
-
-#endif  // RUNE_ALIASES_MAYBE_HPP
-
-// #include "../core/rune_error.hpp"
-#ifndef RUNE_CORE_RUNE_ERROR_HPP
-#define RUNE_CORE_RUNE_ERROR_HPP
-
-#include <exception>  // exception
-
-// #include "../aliases/str.hpp"
-
-
-namespace rune {
-
-/**
- * \typedef str
- *
- * \brief An alias for a C-style null-terminated string.
- *
- * \ingroup core
- */
-using str = const char*;
-
-}  // namespace rune
-
-
-namespace rune {
-
-/// \addtogroup core
-/// \{
-
-class rune_error final : public std::exception
-{
- public:
-  explicit rune_error(const str what) noexcept : m_what{what}
-  {}
-
-  [[nodiscard]] auto what() const noexcept -> str override
-  {
-    return m_what;
-  }
-
- private:
-  str m_what{"n/a"};
-};
-
-/// \} End of group core
-
-}  // namespace rune
-
-#endif  // RUNE_CORE_RUNE_ERROR_HPP
-
-// #include "rune_api.hpp"
-
-
-namespace rune {
-
-/// \addtogroup io
-/// \{
-
-/// \name JSON
-/// \{
-
-// clang-format off
-
-template <typename T>
-concept json_serializable_type = requires (json_type json)
-{
-  { json.get<T>() };
-};
-
-// clang-format on
-
-/**
- * \brief Parses the JSON file at the specified path, and returns the contents.
- *
- * \pre `file` must refer to a JSON file.
- *
- * \param file the file path of the JSON file.
- *
- * \return the parsed JSON data.
- */
-[[nodiscard]] inline auto read_json(const std::filesystem::path& file) -> json_type
-{
-  assert(file.extension() == ".json");
-  std::ifstream stream{file};
-
-  json_type json;
-  stream >> json;
-
-  return json;
-}
-
-/// \} End of JSON
-
-/// \} End of group io
-
-namespace io {
-
-/// \addtogroup io
-/// \{
-
-/// \name JSON
-/// \{
-
-/**
- * \brief Fills a vector with values from a JSON array.
- *
- * \pre `array` must represent a JSON array.
- *
- * \param array the JSON array that provides the source data.
- * \param[out] container the vector that will be filled.
- *
- * \see `try_get_to()`
- *
- * \since 0.1.0
- */
-template <json_serializable_type T>
-void get_to(const json_type& array, std::vector<T>& container)
-{
-  assert(array.is_array());
-
-  container.reserve(array.size());
-  for (const auto& [key, value] : array.items())
-  {
-    container.push_back(value.template get<T>());
-  }
-}
-
-/**
- * \brief Fills a vector with values from a JSON array in a JSON object.
- *
- * \pre The JSON element associated with the specified key must be an array.
- *
- * \param json the JSON object that contains an array associated with the specified key.
- * \param key the key of the child JSON array element.
- * \param[out] container the vector that will be filled.
- *
- * \see `try_get_to()`
- *
- * \throws rune_error if there is no key with the specified name.
- *
- * \since 0.1.0
- */
-template <json_serializable_type T>
-void get_to(const json_type& json, const std::string_view key, std::vector<T>& container)
-{
-  const auto it = json.find(key);
-  if (it == json.end())
-  {
-    throw rune_error{"io::get_to(): key does not exist"};
-  }
-
-  assert(it->is_array());
-  container.reserve(it->size());
-  for (const auto& [key, value] : it->items())
-  {
-    container.push_back(value.template get<T>());
-  }
-}
-
-/**
- * \brief Attempts to serialize and assign a value.
- *
- * \details This function has no effect if there is no element associated with the
- * specified key.
- *
- * \tparam T the type of the serializable value.
- *
- * \param json the source JSON object.
- * \param key the key associated with the desired JSON value.
- * \param[out] value the value that will be assigned.
- *
- * \see `get_to()`
- */
-template <json_serializable_type T>
-void try_get_to(const json_type& json, const std::string_view key, T& value)
-{
-  if (const auto it = json.find(key); it != json.end())
-  {
-    value = it->get<T>();
-  }
-}
-
-/// \copydoc try_get_to()
-template <json_serializable_type T>
-void try_get_to(const json_type& json, const std::string_view key, maybe<T>& value)
-{
-  if (const auto it = json.find(key); it != json.end())
-  {
-    value = it->get<T>();
-  }
-}
-
-/**
- * \brief Fills a vector with values from a JSON array, if it exists.
- *
- * \note This function has no effect if there is no element associated with the specified
- * key.
- *
- * \pre The JSON element associated with the specified key must be an array.
- *
- * \param json the JSON object that contains an array associated with the specified key.
- * \param key the key of the JSON array element.
- * \param[out] container the vector that will be filled.
- *
- * \see `get_to()`
- *
- * \since 0.1.0
- */
-template <json_serializable_type T>
-void try_get_to(const json_type& json,
-                const std::string_view key,
-                std::vector<T>& container)
-{
-  if (const auto it = json.find(key); it != json.end())
-  {
-    assert(it->is_array());
-    container.reserve(it->size());
-    for (const auto& [key, value] : it->items())
-    {
-      container.push_back(value.template get<T>());
-    }
-  }
-}
-
-/**
- * \brief Assigns a wrapper from a serializable value.
- *
- * \tparam T the type of the wrapper.
- *
- * \param json the source JSON object.
- * \param key the key associated with the desired JSON value.
- * \param[out] value the value that will be assigned.
- *
- * \throws rune_error if there is no key with the specified name.
- *
- * \see `try_emplace_to()`
- *
- * \since 0.1.0
- */
-template <typename T>
-  requires json_serializable_type<typename T::value_type>
-void emplace_to(const json_type& json, const std::string_view key, T& value)
-{
-  if (const auto it = json.find(key); it != json.end())
-  {
-    value = T{it->get<typename T::value_type>()};
-  }
-  else
-  {
-    throw rune_error{"io::emplace_to(): key does not exist"};
-  }
-}
-
-/// \copydoc emplace_to()
-template <typename T>
-  requires json_serializable_type<typename T::value_type>
-void emplace_to(const json_type& json, const std::string_view key, maybe<T>& value)
-{
-  if (const auto it = json.find(key); it != json.end())
-  {
-    value = T{it->get<typename T::value_type>()};
-  }
-  else
-  {
-    throw rune_error{"io::emplace_to(): key does not exist"};
-  }
-}
-
-/**
- * \brief Attempts to assign a wrapper from a serializable value.
- *
- * \details This function has no effect if there is no element associated with the
- * specified key.
- *
- * \tparam T the type of the wrapper.
- *
- * \param json the source JSON object.
- * \param key the key associated with the desired JSON value.
- * \param[out] value the value that will be assigned.
- *
- * \see `emplace_to()`
- *
- * \since 0.1.0
- */
-template <json_serializable_type T, typename... Types>
-void try_emplace_to(const json_type& json,
-                    const std::string_view key,
-                    std::variant<Types...>& value)
-{
-  static_assert((std::same_as<T, Types> || ...),
-                "Cannot emplace value of type that is not used by the variant!");
-
-  if (const auto it = json.find(key); it != json.end())
-  {
-    value.template emplace<T>(it->get<T>());
-  }
-}
-
-/// \} End of JSON
-
-/// \} End of group io
-
-}  // namespace io
-
-}  // namespace rune
-
-#endif  // RUNE_IO_JSON_UTILS_HPP
-
-// #include "tmx_global_id.hpp"
-#ifndef RUNE_TMX_GLOBAL_ID_HPP
-#define RUNE_TMX_GLOBAL_ID_HPP
-
-#include <nenya.hpp>  // strong_type
-
-// #include "../aliases/integers.hpp"
-#ifndef RUNE_ALIASES_INTEGERS_HPP
-#define RUNE_ALIASES_INTEGERS_HPP
-
-#include <centurion.hpp>  // ...
-#include <cstddef>        // size_t
-
-namespace rune {
-
-/// \addtogroup core
-/// \{
-
-using usize = std::size_t;
-
-using longlong = long long;
-
-using ushort = unsigned short;
-
-/// Unsigned integer.
-using uint = unsigned;
-
-/// Unsigned long integer.
-using ulong = unsigned long;
-
-/// Used as the argument type to integral literal operators.
-using ulonglong = unsigned long long;
-
-/// 8-bit signed integer.
-using int8 = cen::i8;
-
-/// 16-bit signed integer.
-using int16 = cen::i16;
-
-/// 32-bit signed integer.
-using int32 = cen::i32;
-
-/// 64-bit signed integer.
-using int64 = cen::i64;
-
-/// 8-bit unsigned integer.
-using uint8 = cen::u8;
-
-/// 16-bit unsigned integer.
-using uint16 = cen::u16;
-
-/// 32-bit unsigned integer.
-using uint32 = cen::u32;
-
-/// 64-bit unsigned integer.
-using uint64 = cen::u64;
-
-/// \} End of group core
-
-}  // namespace rune
-
-#endif  // RUNE_ALIASES_INTEGERS_HPP
-
-
-namespace rune {
-
-/// \cond FALSE
-namespace tags {
-struct tmx_global_id_tag;
-}
-/// \endcond
-
-/// \addtogroup tmx
-/// \{
-
-using tmx_global_id = nenya::strong_type<uint, tags::tmx_global_id_tag>;
-
-/// \} End of group tmx
-
-namespace tmx_literals {
-
-/// \addtogroup tmx
-/// \{
-
-/// \name Literal operators
-/// \{
-
-[[nodiscard]] constexpr auto operator""_global(const ulonglong value) noexcept
-    -> tmx_global_id
-{
-  return tmx_global_id{static_cast<tmx_global_id::value_type>(value)};
-}
-
-/// \} End of literal operators
-/// \} End of group tmx
-
-}  // namespace tmx_literals
-}  // namespace rune
-
-#endif  // RUNE_TMX_GLOBAL_ID_HPP
-
-// #include "tmx_tileset.hpp"
-#ifndef RUNE_TMX_TILESET_HPP
-#define RUNE_TMX_TILESET_HPP
-
-#include <string>  // string
-#include <vector>  // vector
-
-// #include "../aliases/maybe.hpp"
-#ifndef RUNE_ALIASES_MAYBE_HPP
-#define RUNE_ALIASES_MAYBE_HPP
-
-#include <optional>  // optional
-
-namespace rune {
-
-template <typename T>
-using maybe = std::optional<T>;
-
-inline constexpr std::nullopt_t nothing = std::nullopt;
-
-}  // namespace rune
-
-#endif  // RUNE_ALIASES_MAYBE_HPP
-
-// #include "rune_api.hpp"
-
-// #include "tmx_color.hpp"
-#ifndef RUNE_TMX_COLOR_HPP
-#define RUNE_TMX_COLOR_HPP
-
-#include <cassert>      // assert
-#include <string>       // string
-#include <string_view>  // string_view
-
-// #include "../aliases/integers.hpp"
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../core/from_string.hpp"
-#ifndef RUNE_CORE_FROM_STRING_HPP
-#define RUNE_CORE_FROM_STRING_HPP
-
-#include <charconv>      // from_chars
-#include <string_view>   // string_view
-#include <system_error>  // errc
-
-// #include "../aliases/maybe.hpp"
-#ifndef RUNE_ALIASES_MAYBE_HPP
-#define RUNE_ALIASES_MAYBE_HPP
-
-#include <optional>  // optional
-
-namespace rune {
-
-template <typename T>
-using maybe = std::optional<T>;
-
-inline constexpr std::nullopt_t nothing = std::nullopt;
-
-}  // namespace rune
-
-#endif  // RUNE_ALIASES_MAYBE_HPP
-
-
-namespace rune {
-
-/// \addtogroup core
-/// \{
-
-template <typename T>
-[[nodiscard]] auto from_string(const std::string_view str, const int base = 10)
-    -> maybe<T>
-{
-  T value{};
-
-  const auto [ptr, error] =
-      std::from_chars(str.data(), str.data() + str.size(), value, base);
-  if (error != std::errc::invalid_argument && error != std::errc::result_out_of_range)
-  {
-    return value;
-  }
-  else
-  {
-    return nothing;
-  }
-}
-
-/// \} End of group core
-
-}  // namespace rune
-
-#endif  // RUNE_CORE_FROM_STRING_HPP
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_color final
-{
-  uint8 red{};
-  uint8 green{};
-  uint8 blue{};
-  uint8 alpha{0xFF};
-
-  [[nodiscard]] constexpr bool operator==(const tmx_color&) const noexcept = default;
-};
-
-/// \} End of group tmx
-
-namespace tmx {
-
-/// \addtogroup tmx
-/// \{
-
-inline constexpr tmx_color black{0, 0, 0, 0xFF};
-
-[[nodiscard]] inline auto from_hex(const std::string_view str) -> uint8
-{
-  assert(str.size() == 2);
-  return from_string<uint8>(str, 16).value();
-}
-
-[[nodiscard]] inline auto make_color(const std::string_view str) -> tmx_color
-{
-  assert(str.size() == 7 || str.size() == 9);
-  assert(str.at(0) == '#');
-
-  const auto noHash = str.substr(1);
-  const auto length = noHash.size();
-
-  tmx_color result;
-
-  if (length == 8)
-  {
-    // ARGB
-    result.alpha = from_hex(noHash.substr(0, 2));
-    result.red = from_hex(noHash.substr(2, 2));
-    result.green = from_hex(noHash.substr(4, 2));
-    result.blue = from_hex(noHash.substr(6, 2));
-  }
-  else
-  {
-    // RGB
-    result.red = from_hex(noHash.substr(0, 2));
-    result.green = from_hex(noHash.substr(2, 2));
-    result.blue = from_hex(noHash.substr(4, 2));
-  }
-
-  return result;
-}
-
-/// \} End of group tmx
-
-}  // namespace tmx
-
-inline void from_json(const json_type& json, tmx_color& color)
-{
-  color = tmx::make_color(json.get<std::string>());
-}
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_COLOR_TEST
-
-// #include "tmx_global_id.hpp"
-
-// #include "tmx_grid.hpp"
-#ifndef RUNE_TMX_GRID_HPP
-#define RUNE_TMX_GRID_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-// #include "../aliases/json_type.hpp"
-
-// #include "rune_api.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_grid_orientation
-{
-  orthogonal,
-  isometric
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_grid_orientation,
-                             {{tmx_grid_orientation::orthogonal, "orthogonal"},
-                              {tmx_grid_orientation::isometric, "isometric"}})
-
-struct tmx_grid final
-{
-  int cell_width{};
-  int cell_height{};
-  tmx_grid_orientation orientation{tmx_grid_orientation::orthogonal};
-};
-
-inline void from_json(const json_type& json, tmx_grid& grid)
-{
-  json.at("width").get_to(grid.cell_width);
-  json.at("height").get_to(grid.cell_height);
-  json.at("orientation").get_to(grid.orientation);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_GRID_HPP
-
-// #include "tmx_property.hpp"
-#ifndef RUNE_TMX_PROPERTY_HPP
-#define RUNE_TMX_PROPERTY_HPP
-
-#include <algorithm>    // any_of, find_if
-#include <cassert>      // assert
-#include <concepts>     // same_as
-#include <nenya.hpp>    // strong_type
-#include <string>       // string
-#include <string_view>  // string_view
-#include <variant>      // variant, get, get_if, holds_alternative
-#include <vector>       // vector
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../core/rune_error.hpp"
-#ifndef RUNE_CORE_RUNE_ERROR_HPP
-#define RUNE_CORE_RUNE_ERROR_HPP
-
-#include <exception>  // exception
-
-// #include "../aliases/str.hpp"
-
-
-namespace rune {
-
-/**
- * \typedef str
- *
- * \brief An alias for a C-style null-terminated string.
- *
- * \ingroup core
- */
-using str = const char*;
-
-}  // namespace rune
-
-
-namespace rune {
-
-/// \addtogroup core
-/// \{
-
-class rune_error final : public std::exception
-{
- public:
-  explicit rune_error(const str what) noexcept : m_what{what}
-  {}
-
-  [[nodiscard]] auto what() const noexcept -> str override
-  {
-    return m_what;
-  }
-
- private:
-  str m_what{"n/a"};
-};
-
-/// \} End of group core
-
-}  // namespace rune
-
-#endif  // RUNE_CORE_RUNE_ERROR_HPP
-
-// #include "rune_api.hpp"
-
-// #include "tmx_color.hpp"
-
-// #include "tmx_property_type.hpp"
-#ifndef RUNE_TMX_PROPERTY_TYPE_HPP
-#define RUNE_TMX_PROPERTY_TYPE_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_property_type
-{
-  string,    ///< For string values, such as `"foo"`.
-  integer,   ///< For integer values, e.g. `27`.
-  floating,  ///< For floating-point values, e.g. `182.4`.
-  boolean,   ///< For the boolean values `true`/`false`.
-  color,     ///< For ARGB/RGB colors, i.e. `"#AARRGGBB"` and `"#RRGGBB"`.
-  file,      ///< For file paths, e.g. `"some/path/abc.png"`.
-  object     ///< For referencing other objects, really just an integer ID.
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_property_type,
-                             {{tmx_property_type::string, "string"},
-                              {tmx_property_type::integer, "int"},
-                              {tmx_property_type::floating, "float"},
-                              {tmx_property_type::boolean, "bool"},
-                              {tmx_property_type::color, "color"},
-                              {tmx_property_type::object, "object"},
-                              {tmx_property_type::file, "file"}})
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_PROPERTY_TYPE_HPP
-
-
-namespace rune {
-
-/// \cond FALSE
-namespace tags {
-struct tmx_file_tag;
-struct tmx_object_id_tag;
-}  // namespace tags
-/// \endcond
-
-/// \addtogroup tmx
-/// \{
-
-using tmx_file = nenya::strong_type<std::string, tags::tmx_file_tag>;
-using tmx_object_id = nenya::strong_type<int, tags::tmx_object_id_tag>;
-
-/**
- * \brief Represents a property, with an associated name and value.
- */
-struct tmx_property final
-{
-  using data_type =
-      std::variant<std::string, tmx_file, tmx_object_id, tmx_color, int, float, bool>;
-
-  std::string name;
-  tmx_property_type type{tmx_property_type::string};
-  data_type value;
-};
-
-using tmx_properties = std::vector<tmx_property>;
-
-inline void from_json(const json_type& json, tmx_property& property)
-{
-  json.at("name").get_to(property.name);
-  json.at("type").get_to(property.type);
-
-  switch (property.type)
-  {
-    default:
-      assert(false && "from_json() for tmx_property has missing branch!");
-
-    case tmx_property_type::string:
-      property.value.emplace<std::string>(json.at("value").get<std::string>());
-      break;
-
-    case tmx_property_type::integer:
-      property.value.emplace<int>(json.at("value").get<int>());
-      break;
-
-    case tmx_property_type::floating:
-      property.value.emplace<float>(json.at("value").get<float>());
-      break;
-
-    case tmx_property_type::boolean:
-      property.value.emplace<bool>(json.at("value").get<bool>());
-      break;
-
-    case tmx_property_type::color:
-      property.value.emplace<tmx_color>(json.at("value").get<tmx_color>());
-      break;
-
-    case tmx_property_type::file:
-      property.value.emplace<tmx_file>(json.at("value").get<std::string>());
-      break;
-
-    case tmx_property_type::object:
-      property.value.emplace<tmx_object_id>(json.at("value").get<int>());
-      break;
-  }
-}
-
-/// \} End of group tmx
-
-namespace tmx {
-
-/// \addtogroup tmx
-/// \{
-
-// clang-format off
-
-template <typename T>
-concept property_value_type = std::same_as<T, int> ||
-                              std::same_as<T, float> ||
-                              std::same_as<T, bool> ||
-                              std::same_as<T, std::string> ||
-                              std::same_as<T, tmx_color> ||
-                              std::same_as<T, tmx_file> ||
-                              std::same_as<T, tmx_object_id>;
-
-// clang-format on
-
-/// \name Property functions
-/// \{
-
-[[nodiscard]] inline auto try_get(const tmx_properties& properties,
-                                  const std::string_view name)
-    -> tmx_properties::const_iterator
-{
-  return std::ranges::find_if(properties, [name](const tmx_property& property) noexcept {
-    return property.name == name;
-  });
-}
-
-template <property_value_type T>
-[[nodiscard]] auto get_if(const tmx_properties& properties,
-                          const std::string_view name) noexcept -> const T*
-{
-  if (const auto it = try_get(properties, name); it != properties.end())
-  {
-    return std::get_if<T>(&it->value);
-  }
-  else
-  {
-    return nullptr;
-  }
-}
-
-[[nodiscard]] inline auto get_if_string(const tmx_property& property) noexcept
-    -> const std::string*
-{
-  return std::get_if<std::string>(&property.value);
-}
-
-[[nodiscard]] inline auto get_if_string(const tmx_properties& properties,
-                                        const std::string_view name) -> const std::string*
-{
-  return get_if<std::string>(properties, name);
-}
-
-[[nodiscard]] inline auto get_if_int(const tmx_property& property) noexcept -> const int*
-{
-  return std::get_if<int>(&property.value);
-}
-
-[[nodiscard]] inline auto get_if_int(const tmx_properties& properties,
-                                     const std::string_view name) -> const int*
-{
-  return get_if<int>(properties, name);
-}
-
-[[nodiscard]] inline auto get_if_float(const tmx_property& property) noexcept -> const
-    float*
-{
-  return std::get_if<float>(&property.value);
-}
-
-[[nodiscard]] inline auto get_if_float(const tmx_properties& properties,
-                                       const std::string_view name) -> const float*
-{
-  return get_if<float>(properties, name);
-}
-
-[[nodiscard]] inline auto get_if_bool(const tmx_property& property) noexcept -> const
-    bool*
-{
-  return std::get_if<bool>(&property.value);
-}
-
-[[nodiscard]] inline auto get_if_bool(const tmx_properties& properties,
-                                      const std::string_view name) -> const bool*
-{
-  return get_if<bool>(properties, name);
-}
-
-[[nodiscard]] inline auto get_if_color(const tmx_property& property) noexcept
-    -> const tmx_color*
-{
-  return std::get_if<tmx_color>(&property.value);
-}
-
-[[nodiscard]] inline auto get_if_color(const tmx_properties& properties,
-                                       const std::string_view name) -> const tmx_color*
-{
-  return get_if<tmx_color>(properties, name);
-}
-
-[[nodiscard]] inline auto get_if_file(const tmx_property& property) noexcept
-    -> const tmx_file*
-{
-  return std::get_if<tmx_file>(&property.value);
-}
-
-[[nodiscard]] inline auto get_if_file(const tmx_properties& properties,
-                                      const std::string_view name) -> const tmx_file*
-{
-  return get_if<tmx_file>(properties, name);
-}
-
-[[nodiscard]] inline auto get_if_object(const tmx_property& property) noexcept
-    -> const tmx_object_id*
-{
-  return std::get_if<tmx_object_id>(&property.value);
-}
-
-[[nodiscard]] inline auto get_if_object(const tmx_properties& properties,
-                                        const std::string_view name)
-    -> const tmx_object_id*
-{
-  return get_if<tmx_object_id>(properties, name);
-}
-
-template <property_value_type T>
-[[nodiscard]] auto is(const tmx_property& property) noexcept -> bool
-{
-  return std::holds_alternative<T>(property.value);
-}
-
-template <property_value_type T>
-[[nodiscard]] auto is(const tmx_properties& properties, const std::string_view name)
-    -> bool
-{
-  if (const auto it = try_get(properties, name); it != properties.end())
-  {
-    return is<T>(*it);
-  }
-  else
-  {
-    return false;
-  }
-}
-
-[[nodiscard]] inline auto is_string(const tmx_property& property) noexcept -> bool
-{
-  return is<std::string>(property);
-}
-
-[[nodiscard]] inline auto is_string(const tmx_properties& properties,
-                                    const std::string_view name) -> bool
-{
-  return is<std::string>(properties, name);
-}
-
-[[nodiscard]] inline auto is_int(const tmx_property& property) noexcept -> bool
-{
-  return is<int>(property);
-}
-
-[[nodiscard]] inline auto is_int(const tmx_properties& properties,
-                                 const std::string_view name) -> bool
-{
-  return is<int>(properties, name);
-}
-
-[[nodiscard]] inline auto is_float(const tmx_property& property) noexcept -> bool
-{
-  return is<float>(property);
-}
-
-[[nodiscard]] inline auto is_float(const tmx_properties& properties,
-                                   const std::string_view name) -> bool
-{
-  return is<float>(properties, name);
-}
-
-[[nodiscard]] inline auto is_bool(const tmx_property& property) noexcept -> bool
-{
-  return is<bool>(property);
-}
-
-[[nodiscard]] inline auto is_bool(const tmx_properties& properties,
-                                  const std::string_view name) -> bool
-{
-  return is<bool>(properties, name);
-}
-
-[[nodiscard]] inline auto is_color(const tmx_property& property) noexcept -> bool
-{
-  return is<tmx_color>(property);
-}
-
-[[nodiscard]] inline auto is_color(const tmx_properties& properties,
-                                   const std::string_view name) -> bool
-{
-  return is<tmx_color>(properties, name);
-}
-
-[[nodiscard]] inline auto is_file(const tmx_property& property) noexcept -> bool
-{
-  return is<tmx_file>(property);
-}
-
-[[nodiscard]] inline auto is_file(const tmx_properties& properties,
-                                  const std::string_view name) -> bool
-{
-  return is<tmx_file>(properties, name);
-}
-
-[[nodiscard]] inline auto is_object(const tmx_property& property) noexcept -> bool
-{
-  return is<tmx_object_id>(property);
-}
-
-[[nodiscard]] inline auto is_object(const tmx_properties& properties,
-                                    const std::string_view name) -> bool
-{
-  return is<tmx_object_id>(properties, name);
-}
-
-template <property_value_type T>
-[[nodiscard]] auto get(const tmx_property& property) -> const T&
-{
-  return std::get<T>(property.value);
-}
-
-template <property_value_type T>
-[[nodiscard]] auto get(const tmx_properties& properties, const std::string_view name)
-    -> const T&
-{
-  if (const auto it = try_get(properties, name); it != properties.end())
-  {
-    return get<T>(*it);
-  }
-  else
-  {
-    throw rune_error{"Could not find property with the specified name!"};
-  }
-}
-
-[[nodiscard]] inline auto get_string(const tmx_property& property) -> const std::string&
-{
-  return get<std::string>(property);
-}
-
-[[nodiscard]] inline auto get_string(const tmx_properties& properties,
-                                     const std::string_view name) -> const std::string&
-{
-  return get<std::string>(properties, name);
-}
-
-[[nodiscard]] inline auto get_int(const tmx_property& property) -> int
-{
-  return get<int>(property);
-}
-
-[[nodiscard]] inline auto get_int(const tmx_properties& properties,
-                                  const std::string_view name) -> int
-{
-  return get<int>(properties, name);
-}
-
-[[nodiscard]] inline auto get_float(const tmx_property& property) -> float
-{
-  return get<float>(property);
-}
-
-[[nodiscard]] inline auto get_float(const tmx_properties& properties,
-                                    const std::string_view name) -> float
-{
-  return get<float>(properties, name);
-}
-
-[[nodiscard]] inline auto get_bool(const tmx_property& property) -> bool
-{
-  return get<bool>(property);
-}
-
-[[nodiscard]] inline auto get_bool(const tmx_properties& properties,
-                                   const std::string_view name) -> bool
-{
-  return get<bool>(properties, name);
-}
-
-[[nodiscard]] inline auto get_color(const tmx_property& property) -> const tmx_color&
-{
-  return get<tmx_color>(property);
-}
-
-[[nodiscard]] inline auto get_color(const tmx_properties& properties,
-                                    const std::string_view name) -> const tmx_color&
-{
-  return get<tmx_color>(properties, name);
-}
-
-[[nodiscard]] inline auto get_file(const tmx_property& property) -> const tmx_file&
-{
-  return get<tmx_file>(property);
-}
-
-[[nodiscard]] inline auto get_file(const tmx_properties& properties,
-                                   const std::string_view name) -> const tmx_file&
-{
-  return get<tmx_file>(properties, name);
-}
-
-[[nodiscard]] inline auto get_object(const tmx_property& property) -> tmx_object_id
-{
-  return get<tmx_object_id>(property);
-}
-
-[[nodiscard]] inline auto get_object(const tmx_properties& properties,
-                                     const std::string_view name) -> tmx_object_id
-{
-  return get<tmx_object_id>(properties, name);
-}
-
-/**
- * \brief Indicates whether or not a property with the specified name exists in a vector
- * of properties.
- *
- * \param properties the vector of properties that will be searched.
- * \param name the name of the property to look for.
- *
- * \return `true` if the properties contains a property with the specified name; `false`
- * otherwise.
- */
-[[nodiscard]] inline auto contains(const tmx_properties& properties,
-                                   const std::string_view name) -> bool
-{
-  return std::ranges::any_of(properties, [name](const tmx_property& property) noexcept {
-    return property.name == name;
-  });
-}
-
-/**
- * \brief Attempts to find and return a property with the specified name.
- *
- * \param properties the properties that will be searched.
- * \param name the name of the desired property.
- *
- * \return the property with the specified name.
- *
- * \throws rune_error if there is no property with the specified name.
- */
-[[nodiscard]] inline auto at(const tmx_properties& properties,
-                             const std::string_view name) -> const tmx_property&
-{
-  if (const auto it = try_get(properties, name); it != properties.end())
-  {
-    return *it;
-  }
-  else
-  {
-    throw rune_error{"Could not find property with specified name!"};
-  }
-}
-
-/// \} End of property functions
-
-/// \} End of group tmx
-
-}  // namespace tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_PROPERTY_HPP
-
-// #include "tmx_terrain.hpp"
-#ifndef RUNE_TMX_TERRAIN_HPP
-#define RUNE_TMX_TERRAIN_HPP
-
-#include <string>  // string
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "tmx_local_id.hpp"
-#ifndef RUNE_TMX_LOCAL_ID_HPP
-#define RUNE_TMX_LOCAL_ID_HPP
-
-#include <nenya.hpp>  // strong_type
-
-// #include "../aliases/integers.hpp"
-
-
-namespace rune {
-
-/// \cond FALSE
-namespace tags {
-struct tmx_local_id_tag;
-}  // namespace tags
-/// \endcond
-
-/// \addtogroup tmx
-/// \{
-
-using tmx_local_id = nenya::strong_type<int, tags::tmx_local_id_tag>;
-
-/// \} End of group tmx
-
-namespace tmx_literals {
-
-/// \addtogroup tmx
-/// \{
-
-/// \name Literal operators
-/// \{
-
-[[nodiscard]] constexpr auto operator""_local(const ulonglong value) noexcept
-    -> tmx_local_id
-{
-  return tmx_local_id{static_cast<tmx_local_id::value_type>(value)};
-}
-
-/// \} End of literal operators
-
-/// \} End of group tmx
-
-}  // namespace tmx_literals
-}  // namespace rune
-
-#endif  // RUNE_TMX_LOCAL_ID_HPP
-
-// #include "tmx_property.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_terrain final
-{
-  tmx_local_id tile{};
-  std::string name;
-  tmx_properties properties;
-};
-
-inline void from_json(const json_type& json, tmx_terrain& terrain)
-{
-  terrain.tile = tmx_local_id{json.at("tile").get<tmx_local_id::value_type>()};
-  json.at("name").get_to(terrain.name);
-  io::try_get_to(json, "properties", terrain.properties);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_TERRAIN_HPP
-
-// #include "tmx_tile.hpp"
-#ifndef RUNE_TMX_TILE_HPP
-#define RUNE_TMX_TILE_HPP
-
-#include <array>   // array
-#include <string>  // string
-
-// #include "../aliases/integers.hpp"
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../aliases/maybe.hpp"
-
-// #include "../core/from_string.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "tmx_animation.hpp"
-#ifndef RUNE_TMX_ANIMATION_HPP
-#define RUNE_TMX_ANIMATION_HPP
-
-#include <chrono>  // milliseconds
-#include <vector>  // vector
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "rune_api.hpp"
-
-// #include "tmx_local_id.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_frame final
-{
-  tmx_local_id tile{};
-  std::chrono::milliseconds duration{};
-};
-
-struct tmx_animation final
-{
-  std::vector<tmx_frame> frames;
-};
-
-inline void from_json(const json_type& json, tmx_frame& frame)
-{
-  using ms_t = std::chrono::milliseconds;
-
-  io::emplace_to(json, "tileid", frame.tile);
-  frame.duration = ms_t{json.at("duration").get<ms_t::rep>()};
-}
-
-inline void from_json(const json_type& json, tmx_animation& animation)
-{
-  io::get_to(json, animation.frames);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_ANIMATION_HPP
-
-// #include "tmx_layer.hpp"
-#ifndef RUNE_TMX_LAYER_HPP
-#define RUNE_TMX_LAYER_HPP
-
-#include <cassert>   // assert
-#include <concepts>  // same_as
-#include <memory>    // unique_ptr, make_unique
-#include <string>    // string
-#include <variant>   // variant, monostate
-#include <vector>    // vector
-
-// #include "../aliases/integers.hpp"
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../aliases/maybe.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "rune_api.hpp"
-
-// #include "tmx_color.hpp"
-
-// #include "tmx_image_layer.hpp"
-#ifndef RUNE_TMX_IMAGE_LAYER_HPP
-#define RUNE_TMX_IMAGE_LAYER_HPP
-
-#include <string>  // string
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../aliases/maybe.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "tmx_color.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_image_layer final
-{
-  std::string image;
-  maybe<tmx_color> transparent;
-};
-
-inline void from_json(const json_type& json, tmx_image_layer& layer)
-{
-  json.at("image").get_to(layer.image);
-  io::try_get_to(json, "transparentcolor", layer.transparent);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_IMAGE_LAYER_HPP
-
-// #include "tmx_layer_type.hpp"
-#ifndef RUNE_TMX_LAYER_TYPE_HPP
-#define RUNE_TMX_LAYER_TYPE_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_layer_type
-{
-  tile_layer,
-  object_layer,
-  image_layer,
-  group
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_layer_type,
-                             {{tmx_layer_type::tile_layer, "tilelayer"},
-                              {tmx_layer_type::image_layer, "imagelayer"},
-                              {tmx_layer_type::object_layer, "objectgroup"},
-                              {tmx_layer_type::group, "group"}})
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_LAYER_TYPE_HPP
-
-// #include "tmx_object.hpp"
-#ifndef RUNE_TMX_OBJECT_HPP
-#define RUNE_TMX_OBJECT_HPP
-
-#include <memory>   // unique_ptr, make_unique
-#include <string>   // string
-#include <variant>  // variant, monostate
-#include <vector>   // vector
-
-// #include "../aliases/integers.hpp"
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../aliases/maybe.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "rune_api.hpp"
-
-// #include "tmx_global_id.hpp"
-
-// #include "tmx_point.hpp"
-#ifndef RUNE_TMX_POINT_HPP
-#define RUNE_TMX_POINT_HPP
-
-// #include "../aliases/json_type.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_point final
-{
-  float x{};  ///< The x-coordinate of the point.
-  float y{};  ///< The y-coordinate of the point.
-};
-
-inline void from_json(const json_type& json, tmx_point& point)
-{
-  json.at("x").get_to(point.x);
-  json.at("y").get_to(point.y);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_POINT_HPP
-
-// #include "tmx_property.hpp"
-
-// #include "tmx_text.hpp"
-#ifndef RUNE_TMX_TEXT_HPP
-#define RUNE_TMX_TEXT_HPP
-
-#include <string>  // string
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "tmx_color.hpp"
-
-// #include "tmx_halign.hpp"
-#ifndef RUNE_TMX_HALIGN_HPP
-#define RUNE_TMX_HALIGN_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_halign
-{
-  center,
-  right,
-  left,
-  justify
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_halign,
-                             {{tmx_halign::center, "center"},
-                              {tmx_halign::right, "right"},
-                              {tmx_halign::left, "left"},
-                              {tmx_halign::justify, "justify"}})
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_HALIGN_HPP
-
-// #include "tmx_valign.hpp"
-#ifndef RUNE_TMX_VALIGN_HPP
-#define RUNE_TMX_VALIGN_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_valign
-{
-  center,
-  top,
-  bottom
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_valign,
-                             {{tmx_valign::center, "center"},
-                              {tmx_valign::top, "top"},
-                              {tmx_valign::bottom, "bottom"}})
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_VALIGN_HPP
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_text final
-{
-  std::string text;
-  std::string family{"sans-serif"};
-  tmx_color color;
-  tmx_halign horizontal_alignment{tmx_halign::left};
-  tmx_valign vertical_alignment{tmx_valign::top};
-  int pixel_size{16};
-  bool bold{};
-  bool italic{};
-  bool kerning{true};
-  bool strikeout{};
-  bool underline{};
-  bool wrap{};
-};
-
-inline void from_json(const json_type& json, tmx_text& text)
-{
-  json.at("text").get_to(text.text);
-
-  io::try_get_to(json, "fontfamily", text.family);
-  io::try_get_to(json, "halign", text.horizontal_alignment);
-  io::try_get_to(json, "valign", text.vertical_alignment);
-  io::try_get_to(json, "pixelsize", text.pixel_size);
-  io::try_get_to(json, "bold", text.bold);
-  io::try_get_to(json, "italic", text.italic);
-  io::try_get_to(json, "kerning", text.kerning);
-  io::try_get_to(json, "strikeout", text.strikeout);
-  io::try_get_to(json, "underline", text.underline);
-  io::try_get_to(json, "wrap", text.wrap);
-
-  if (const auto it = json.find("color"); it != json.end())
-  {
-    text.color = tmx::make_color(it->get<std::string>());
-  }
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_TEXT_HPP
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_object;
-
-struct tmx_polygon final
-{
-  std::vector<tmx_point> points;
-};
-
-struct tmx_polyline final
-{
-  std::vector<tmx_point> points;
-};
-
-struct tmx_template_object final
-{
-  std::string template_file;
-  std::unique_ptr<tmx_object> object;
-  maybe<std::string> tileset_source;
-  maybe<tmx_global_id> tileset_first_id;
-};
-
-struct tmx_object final
-{
-  using data_type = std::variant<std::monostate,
-                                 tmx_polygon,
-                                 tmx_polyline,
-                                 tmx_text,
-                                 tmx_template_object,
-                                 tmx_global_id>;
-
-  int id{};
-  float x{};
-  float y{};
-  float width{};
-  float height{};
-  float rotation{};
-  std::string name;
-  std::string type;
-  tmx_properties properties;
-  data_type data;
-  bool is_ellipse{};
-  bool is_point{};
-  bool visible{true};
-};
-
-inline void from_json(const json_type& json, tmx_polygon& polygon)
-{
-  io::get_to(json, polygon.points);
-}
-
-inline void from_json(const json_type& json, tmx_polyline& line)
-{
-  io::get_to(json, line.points);
-}
-
-void from_json(const json_type& json, tmx_object& object);
-
-inline void from_json(const json_type& json, tmx_template_object& object)
-{
-  json.at("template").get_to(object.template_file);
-  object.object = std::make_unique<tmx_object>(json.at("object").get<tmx_object>());
-
-  if (const auto it = json.find("tileset"); it != json.end())
-  {
-    io::emplace_to(json, "firstgid", object.tileset_first_id);
-    object.tileset_source = json.at("source").get<std::string>();
-  }
-}
-
-inline void from_json(const json_type& json, tmx_object& object)
-{
-  json.at("id").get_to(object.id);
-  json.at("x").get_to(object.x);
-  json.at("y").get_to(object.y);
-  json.at("width").get_to(object.width);
-  json.at("height").get_to(object.height);
-  json.at("rotation").get_to(object.rotation);
-  json.at("name").get_to(object.name);
-  json.at("type").get_to(object.type);
-  json.at("visible").get_to(object.visible);
-
-  io::try_get_to(json, "ellipse", object.is_ellipse);
-  io::try_get_to(json, "point", object.is_point);
-
-  io::try_get_to(json, "properties", object.properties);
-
-  if (const auto it = json.find("gid"); it != json.end())
-  {
-    object.data.emplace<tmx_global_id>(it->get<tmx_global_id::value_type>());
-  }
-
-  io::try_emplace_to<tmx_text>(json, "text", object.data);
-  io::try_emplace_to<tmx_polygon>(json, "polygon", object.data);
-  io::try_emplace_to<tmx_polyline>(json, "polyline", object.data);
-  io::try_emplace_to<tmx_template_object>(json, "template", object.data);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_OBJECT_HPP
-
-// #include "tmx_object_layer.hpp"
-#ifndef RUNE_TMX_OBJECT_LAYER_HPP
-#define RUNE_TMX_OBJECT_LAYER_HPP
-
-#include <cassert>   // assert
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-#include <vector>    // vector
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "tmx_object.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_object_layer_draw_order
-{
-  top_down,
-  index
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_object_layer_draw_order,
-                             {{tmx_object_layer_draw_order::top_down, "topdown"},
-                              {tmx_object_layer_draw_order::index, "index"}})
-
-struct tmx_object_layer final  // Note, referred to as "object group" by tiled
-{
-  tmx_object_layer_draw_order draw_order{tmx_object_layer_draw_order::top_down};
-  std::vector<tmx_object> objects;
-};
-
-inline void from_json(const json_type& json, tmx_object_layer& layer)
-{
-  io::get_to(json, "objects", layer.objects);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_OBJECT_LAYER_HPP
-
-// #include "tmx_property.hpp"
-
-// #include "tmx_tile_layer.hpp"
-#ifndef RUNE_TMX_TILE_LAYER_HPP
-#define RUNE_TMX_TILE_LAYER_HPP
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../aliases/maybe.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "tmx_data.hpp"
-#ifndef RUNE_TMX_DATA_HPP
-#define RUNE_TMX_DATA_HPP
-
-#include <cassert>  // assert
-#include <string>   // string
-#include <variant>  // variant
-#include <vector>   // vector
-
-// #include "../aliases/integers.hpp"
-
-// #include "../aliases/json_type.hpp"
-
-// #include "tmx_global_id.hpp"
-
-
-namespace rune {
-
-struct tmx_data final
-{
-  using gid_data = std::vector<tmx_global_id>;
-  using base64_data = std::string;
-  using data_type = std::variant<gid_data, base64_data>;
-
-  data_type tile_data;
-};
-
-inline void from_json(const json_type& json, tmx_data& data)
-{
-  assert(json.is_array() || json.is_string());
-
-  if (json.is_array())
-  {
-    auto& gidData = data.tile_data.emplace<tmx_data::gid_data>();
-    for (const auto& [key, value] : json.items())
-    {
-      gidData.emplace_back(value.get<uint>());
-    }
-  }
-  else if (json.is_string())
-  {
-    data.tile_data.emplace<tmx_data::base64_data>(json.get<tmx_data::base64_data>());
-  }
-}
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_DATA_HPP
-
-// #include "tmx_tile_layer_compression.hpp"
-#ifndef RUNE_TMX_TILE_LAYER_COMPRESSION_HPP
-#define RUNE_TMX_TILE_LAYER_COMPRESSION_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_tile_layer_compression
-{
-  none,
-  gzip,
-  zlib
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_tile_layer_compression,
-                             {{tmx_tile_layer_compression::none, ""},
-                              {tmx_tile_layer_compression::gzip, "gzip"},
-                              {tmx_tile_layer_compression::zlib, "zlib"}})
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_TILE_LAYER_COMPRESSION_HPP
-
-// #include "tmx_tile_layer_encoding.hpp"
-#ifndef RUNE_TMX_TILE_LAYER_ENCODING_HPP
-#define RUNE_TMX_TILE_LAYER_ENCODING_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_tile_layer_encoding
-{
-  csv,
-  base64
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_tile_layer_encoding,
-                             {{tmx_tile_layer_encoding::csv, "csv"},
-                              {tmx_tile_layer_encoding::base64, "base64"}})
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_TILE_LAYER_ENCODING_HPP
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_tile_layer final
-{
-  tmx_tile_layer_compression compression{tmx_tile_layer_compression::none};
-  tmx_tile_layer_encoding encoding{tmx_tile_layer_encoding::csv};
-  maybe<tmx_data> data;
-  // TODO std::vector<chunk> m_chunks;
-};
-
-inline void from_json(const json_type& json, tmx_tile_layer& layer)
-{
-  io::try_get_to(json, "compression", layer.compression);
-  io::try_get_to(json, "encoding", layer.encoding);
-  io::try_get_to(json, "data", layer.data);
-
-  // TODO
-  //  if (json.contains("chunks")) {
-  //    m_chunks = detail::fill<std::vector<chunk>>(json, "chunks");
-  //  }
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_TILE_LAYER_HPP
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_layer;
-
-struct tmx_group final
-{
-  std::vector<std::unique_ptr<tmx_layer>> layers;
-};
-
-struct tmx_layer final
-{
-  using data_type = std::variant<std::monostate,
-                                 tmx_tile_layer,
-                                 tmx_image_layer,
-                                 tmx_object_layer,
-                                 tmx_group>;
-
-  tmx_layer_type type{tmx_layer_type::tile_layer};
-  int id{};
-  int width{};
-  int height{};
-  int start_x{};
-  int start_y{};
-  float parallax_x{1};
-  float parallax_y{1};
-  float offset_x{};
-  float offset_y{};
-  float opacity{1};
-
-  maybe<tmx_color> tint;
-  tmx_properties properties;
-
-  data_type data;
-
-  std::string name;
-  bool visible{true};
-};
-
-using tmx_layers = std::vector<tmx_layer>;
-
-void from_json(const json_type& json, tmx_layer& layer);
-
-inline void from_json(const json_type& json, tmx_group& group)
-{
-  const auto& layers = json.at("layers");
-  group.layers.reserve(layers.size());
-  for (const auto& [key, value] : layers.items())
-  {
-    group.layers.push_back(std::make_unique<tmx_layer>(value.get<tmx_layer>()));
-  }
-}
-
-inline void from_json(const json_type& json, tmx_layer& layer)
-{
-  json.at("type").get_to(layer.type);
-
-  io::try_get_to(json, "name", layer.name);
-  io::try_get_to(json, "opacity", layer.opacity);
-  io::try_get_to(json, "visible", layer.visible);
-  io::try_get_to(json, "id", layer.id);
-  io::try_get_to(json, "width", layer.width);
-  io::try_get_to(json, "height", layer.height);
-  io::try_get_to(json, "startx", layer.start_x);
-  io::try_get_to(json, "starty", layer.start_y);
-  io::try_get_to(json, "parallaxx", layer.parallax_x);
-  io::try_get_to(json, "parallaxy", layer.parallax_y);
-  io::try_get_to(json, "offsetx", layer.offset_x);
-  io::try_get_to(json, "offsety", layer.offset_y);
-  io::try_get_to(json, "tintcolor", layer.tint);
-
-  io::try_get_to(json, "properties", layer.properties);
-
-  switch (layer.type)
-  {
-    default:
-      assert(false && "from_json() for tmx_layer is missing branch!");
-
-    case tmx_layer_type::tile_layer:
-      layer.data = json.get<tmx_tile_layer>();
-      break;
-
-    case tmx_layer_type::object_layer:
-      layer.data = json.get<tmx_object_layer>();
-      break;
-
-    case tmx_layer_type::image_layer:
-      layer.data = json.get<tmx_image_layer>();
-      break;
-
-    case tmx_layer_type::group:
-      layer.data = json.get<tmx_group>();
-      break;
-  }
-}
-
-/// \} End of group tmx
-
-namespace tmx {
-
-/// \addtogroup tmx
-/// \{
-
-// clang-format off
-
-template <typename T>
-concept layer_value_type = std::same_as<T, tmx_tile_layer> ||
-                           std::same_as<T, tmx_object_layer> ||
-                           std::same_as<T, tmx_image_layer> ||
-                           std::same_as<T, tmx_group>;
-
-// clang-format on
-
-/// \name Layer functions
-/// \{
-
-template <layer_value_type T>
-[[nodiscard]] auto get(const tmx_layer& layer) -> const T&
-{
-  return std::get<T>(layer.data);
-}
-
-[[nodiscard]] inline auto get_tile_layer(const tmx_layer& layer) -> const tmx_tile_layer&
-{
-  return get<tmx_tile_layer>(layer);
-}
-
-[[nodiscard]] inline auto get_image_layer(const tmx_layer& layer)
-    -> const tmx_image_layer&
-{
-  return get<tmx_image_layer>(layer);
-}
-
-[[nodiscard]] inline auto get_object_layer(const tmx_layer& layer)
-    -> const tmx_object_layer&
-{
-  return get<tmx_object_layer>(layer);
-}
-
-[[nodiscard]] inline auto get_group(const tmx_layer& layer) -> const tmx_group&
-{
-  return get<tmx_group>(layer);
-}
-
-template <layer_value_type T>
-[[nodiscard]] auto try_get(const tmx_layer& layer) noexcept -> const T*
-{
-  return std::get_if<T>(&layer.data);
-}
-
-[[nodiscard]] inline auto try_get_tile_layer(const tmx_layer& layer) noexcept
-    -> const tmx_tile_layer*
-{
-  return try_get<tmx_tile_layer>(layer);
-}
-
-[[nodiscard]] inline auto try_get_object_layer(const tmx_layer& layer) noexcept
-    -> const tmx_object_layer*
-{
-  return try_get<tmx_object_layer>(layer);
-}
-
-[[nodiscard]] inline auto try_get_image_layer(const tmx_layer& layer) noexcept
-    -> const tmx_image_layer*
-{
-  return try_get<tmx_image_layer>(layer);
-}
-
-[[nodiscard]] inline auto try_get_group(const tmx_layer& layer) noexcept
-    -> const tmx_group*
-{
-  return try_get<tmx_group>(layer);
-}
-
-template <layer_value_type T>
-[[nodiscard]] auto is(const tmx_layer& layer) noexcept -> bool
-{
-  return std::holds_alternative<T>(layer.data);
-}
-
-[[nodiscard]] inline auto is_tile_layer(const tmx_layer& layer) noexcept -> bool
-{
-  return is<tmx_tile_layer>(layer);
-}
-
-[[nodiscard]] inline auto is_object_layer(const tmx_layer& layer) noexcept -> bool
-{
-  return is<tmx_object_layer>(layer);
-}
-
-[[nodiscard]] inline auto is_image_layer(const tmx_layer& layer) noexcept -> bool
-{
-  return is<tmx_image_layer>(layer);
-}
-
-[[nodiscard]] inline auto is_group(const tmx_layer& layer) noexcept -> bool
-{
-  return is<tmx_group>(layer);
-}
-
-/// \} End of layer functions
-
-/// \} End of group tmx
-
-}  // namespace tmx
-}  // namespace rune
-
-#endif  // RUNE_TMX_LAYER_HPP
-
-// #include "tmx_local_id.hpp"
-
-// #include "tmx_property.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_tile final
-{
-  tmx_local_id id{};
-  maybe<tmx_animation> animation;
-  maybe<std::array<int, 4>> terrain;
-  maybe<std::string> type;
-  maybe<std::string> image;
-  maybe<int> image_width;
-  maybe<int> image_height;
-  maybe<float> probability;
-  maybe<tmx_layer> object_layer;
-  tmx_properties properties;
-};
-
-inline void from_json(const json_type& json, tmx_tile& tile)
-{
-  io::emplace_to(json, "id", tile.id);
-
-  io::try_get_to(json, "animation", tile.animation);
-  io::try_get_to(json, "type", tile.type);
-  io::try_get_to(json, "image", tile.image);
-  io::try_get_to(json, "imagewidth", tile.image_width);
-  io::try_get_to(json, "imageheight", tile.image_height);
-  io::try_get_to(json, "probability", tile.probability);
-  io::try_get_to(json, "objectgroup", tile.object_layer);
-  io::try_get_to(json, "properties", tile.properties);
-
-  if (const auto it = json.find("terrain"); it != json.end())
-  {
-    auto& terrain = tile.terrain.emplace();
-    for (const auto& [key, value] : it->items())
-    {
-      const auto index = from_string<usize>(key).value();
-      terrain.at(index) = value.get<int>();
-    }
-  }
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_TILE_HPP
-
-// #include "tmx_tile_offset.hpp"
-#ifndef RUNE_TMX_TILE_OFFSET_HPP
-#define RUNE_TMX_TILE_OFFSET_HPP
-
-// #include "../aliases/json_type.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_tile_offset final
-{
-  int x{};
-  int y{};
-};
-
-inline void from_json(const json_type& json, tmx_tile_offset& offset)
-{
-  json.at("x").get_to(offset.x);
-  json.at("y").get_to(offset.y);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_TILE_OFFSET_HPP
-
-// #include "tmx_wang_set.hpp"
-#ifndef RUNE_TMX_WANG_SET_HPP
-#define RUNE_TMX_WANG_SET_HPP
-
-#include <string>  // string
-#include <vector>  // vector
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "tmx_local_id.hpp"
-
-// #include "tmx_property.hpp"
-
-// #include "tmx_wang_color.hpp"
-#ifndef RUNE_TMX_WANG_COLOR_HPP
-#define RUNE_TMX_WANG_COLOR_HPP
-
-#include <string>  // string
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "tmx_color.hpp"
-
-// #include "tmx_local_id.hpp"
-
-// #include "tmx_property.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_wang_color final
-{
-  tmx_local_id tile{};
-  tmx_color color;
-  std::string name;
-  float probability{};
-  tmx_properties properties;
-};
-
-inline void from_json(const json_type& json, tmx_wang_color& color)
-{
-  json.at("name").get_to(color.name);
-  json.at("color").get_to(color.color);
-  json.at("probability").get_to(color.probability);
-  io::emplace_to(json, "tile", color.tile);
-
-  io::try_get_to(json, "properties", color.properties);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_WANG_COLOR_HPP
-
-// #include "tmx_wang_tile.hpp"
-#ifndef RUNE_TMX_WANG_TILE_HPP
-#define RUNE_TMX_WANG_TILE_HPP
-
-#include <array>  // array
-
-// #include "../aliases/integers.hpp"
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "tmx_local_id.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_wang_tile final
-{
-  tmx_local_id tile{};
-  std::array<uint8, 8> indices{};
-};
-
-inline void from_json(const json_type& json, tmx_wang_tile& tile)
-{
-  io::emplace_to(json, "tileid", tile.tile);
-  json.at("wangid").get_to(tile.indices);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_WANG_TILE_HPP
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_wang_set final
-{
-  tmx_local_id tile{};
-  std::string name;
-  std::vector<tmx_wang_tile> wang_tiles;
-  std::vector<tmx_wang_color> colors;
-  tmx_properties properties;
-};
-
-inline void from_json(const json_type& json, tmx_wang_set& set)
-{
-  io::emplace_to(json, "tile", set.tile);
-  json.at("name").get_to(set.name);
-
-  // TODO check if colors or wangtiles are required
-  io::try_get_to(json, "colors", set.colors);
-  io::try_get_to(json, "wangtiles", set.wang_tiles);
-  io::try_get_to(json, "properties", set.properties);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_WANG_SET_HPP
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_tileset final
-{
-  tmx_global_id first_id{1};
-  int tile_width{};
-  int tile_height{};
-  int tile_count{};
-  int column_count{};
-  int image_width{};
-  int image_height{};
-  int margin{};
-  int spacing{};
-
-  std::string name;
-  std::string image;
-  std::string external_source;
-  std::string tiled_version;
-  std::string json_version;
-
-  maybe<tmx_color> background;
-  maybe<tmx_color> transparent;
-  maybe<tmx_tile_offset> tile_offset;
-  maybe<tmx_grid> grid;
-
-  std::vector<tmx_tile> tiles;
-  std::vector<tmx_terrain> terrains;
-  std::vector<tmx_wang_set> wang_sets;
-  tmx_properties properties;
-};
-
-using tmx_tilesets = std::vector<tmx_tileset>;
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_TILESET_HPP
-
-
-namespace rune::tmx {
-
-/// \cond FALSE
-
-namespace detail {
-
-inline void parse_tileset_common(const json_type& json, tmx_tileset& tileset)
-{
-  json.at("tilewidth").get_to(tileset.tile_width);
-  json.at("tileheight").get_to(tileset.tile_height);
-  json.at("tilecount").get_to(tileset.tile_count);
-  json.at("columns").get_to(tileset.column_count);
-  json.at("imagewidth").get_to(tileset.image_width);
-  json.at("imageheight").get_to(tileset.image_height);
-  json.at("margin").get_to(tileset.margin);
-  json.at("spacing").get_to(tileset.spacing);
-  json.at("image").get_to(tileset.image);
-  json.at("name").get_to(tileset.name);
-
-  io::try_get_to(json, "tiledversion", tileset.tiled_version);
-  io::try_get_to(json, "version", tileset.json_version);
-  io::try_get_to(json, "backgroundcolor", tileset.background);
-  io::try_get_to(json, "transparentcolor", tileset.transparent);
-  io::try_get_to(json, "tileoffset", tileset.tile_offset);
-  io::try_get_to(json, "grid", tileset.grid);
-
-  io::try_get_to(json, "tiles", tileset.tiles);
-  io::try_get_to(json, "terrains", tileset.terrains);
-  io::try_get_to(json, "wangsets", tileset.wang_sets);
-  io::try_get_to(json, "properties", tileset.properties);
-}
-
-}  // namespace detail
-
-/// \endcond
-
-/// \addtogroup tmx
-/// \{
-
-[[nodiscard]] inline auto parse_tileset(const std::filesystem::path& directory,
-                                        const json_type& json) -> tmx_tileset
-{
-  tmx_tileset tileset;
-
-  tileset.first_id = tmx_global_id{json.at("firstgid").get<tmx_global_id::value_type>()};
-  if (const auto it = json.find("source"); it != json.end())
-  {
-    // External
-    tileset.external_source = it->get<std::string>();
-
-    const auto source = directory / tileset.external_source;
-    const auto external = read_json(source);
-
-    detail::parse_tileset_common(external, tileset);
-  }
-  else
-  {
-    // Embedded
-    detail::parse_tileset_common(json, tileset);
-  }
-
-  return tileset;
-}
-
-/// \} End of group tmx
-
-}  // namespace rune::tmx
-
-#endif  // RUNE_TMX_PARSE_TILESET_HPP
-
-// #include "tmx/parse_tmx.hpp"
-#ifndef RUNE_TMX_PARSE_TMX_HPP
-#define RUNE_TMX_PARSE_TMX_HPP
-
-#include <cassert>     // assert
-#include <filesystem>  // path
-#include <string>      // string
-
-// #include "../aliases/integers.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "parse_tileset.hpp"
-#ifndef RUNE_TMX_PARSE_TILESET_HPP
-#define RUNE_TMX_PARSE_TILESET_HPP
-
-#include <filesystem>  // path
-#include <string>      // string
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "tmx_global_id.hpp"
-
-// #include "tmx_tileset.hpp"
-
-
-namespace rune::tmx {
-
-/// \cond FALSE
-
-namespace detail {
-
-inline void parse_tileset_common(const json_type& json, tmx_tileset& tileset)
-{
-  json.at("tilewidth").get_to(tileset.tile_width);
-  json.at("tileheight").get_to(tileset.tile_height);
-  json.at("tilecount").get_to(tileset.tile_count);
-  json.at("columns").get_to(tileset.column_count);
-  json.at("imagewidth").get_to(tileset.image_width);
-  json.at("imageheight").get_to(tileset.image_height);
-  json.at("margin").get_to(tileset.margin);
-  json.at("spacing").get_to(tileset.spacing);
-  json.at("image").get_to(tileset.image);
-  json.at("name").get_to(tileset.name);
-
-  io::try_get_to(json, "tiledversion", tileset.tiled_version);
-  io::try_get_to(json, "version", tileset.json_version);
-  io::try_get_to(json, "backgroundcolor", tileset.background);
-  io::try_get_to(json, "transparentcolor", tileset.transparent);
-  io::try_get_to(json, "tileoffset", tileset.tile_offset);
-  io::try_get_to(json, "grid", tileset.grid);
-
-  io::try_get_to(json, "tiles", tileset.tiles);
-  io::try_get_to(json, "terrains", tileset.terrains);
-  io::try_get_to(json, "wangsets", tileset.wang_sets);
-  io::try_get_to(json, "properties", tileset.properties);
-}
-
-}  // namespace detail
-
-/// \endcond
-
-/// \addtogroup tmx
-/// \{
-
-[[nodiscard]] inline auto parse_tileset(const std::filesystem::path& directory,
-                                        const json_type& json) -> tmx_tileset
-{
-  tmx_tileset tileset;
-
-  tileset.first_id = tmx_global_id{json.at("firstgid").get<tmx_global_id::value_type>()};
-  if (const auto it = json.find("source"); it != json.end())
-  {
-    // External
-    tileset.external_source = it->get<std::string>();
-
-    const auto source = directory / tileset.external_source;
-    const auto external = read_json(source);
-
-    detail::parse_tileset_common(external, tileset);
-  }
-  else
-  {
-    // Embedded
-    detail::parse_tileset_common(json, tileset);
-  }
-
-  return tileset;
-}
-
-/// \} End of group tmx
-
-}  // namespace rune::tmx
-
-#endif  // RUNE_TMX_PARSE_TILESET_HPP
-
-// #include "tmx_global_id.hpp"
-
-// #include "tmx_local_id.hpp"
-
-// #include "tmx_map.hpp"
-#ifndef RUNE_TMX_MAP_HPP
-#define RUNE_TMX_MAP_HPP
-
-#include <string>  // string
-
-// #include "../aliases/maybe.hpp"
-
-// #include "tmx_color.hpp"
-
-// #include "tmx_layer.hpp"
-
-// #include "tmx_map_orientation.hpp"
-#ifndef RUNE_TMX_MAP_ORIENTATION_HPP
-#define RUNE_TMX_MAP_ORIENTATION_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_map_orientation
-{
-  orthogonal,
-  isometric,
-  staggered,
-  hexagonal
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_map_orientation,
-                             {{tmx_map_orientation::orthogonal, "orthogonal"},
-                              {tmx_map_orientation::isometric, "isometric"},
-                              {tmx_map_orientation::staggered, "staggered"},
-                              {tmx_map_orientation::hexagonal, "hexagonal"}})
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_MAP_ORIENTATION_HPP
-
-// #include "tmx_map_render_order.hpp"
-#ifndef RUNE_TMX_MAP_RENDER_ORDER_HPP
-#define RUNE_TMX_MAP_RENDER_ORDER_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_map_render_order
-{
-  right_down,
-  right_up,
-  left_down,
-  left_up
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_map_render_order,
-                             {{tmx_map_render_order::right_down, "right-down"},
-                              {tmx_map_render_order::right_up, "right-up"},
-                              {tmx_map_render_order::left_down, "left-down"},
-                              {tmx_map_render_order::left_up, "left-up"}})
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_MAP_RENDER_ORDER_HPP
-
-// #include "tmx_property.hpp"
-
-// #include "tmx_stagger_axis.hpp"
-#ifndef RUNE_TMX_STAGGER_AXIS_HPP
-#define RUNE_TMX_STAGGER_AXIS_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_stagger_axis
-{
-  x,
-  y
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_stagger_axis,
-                             {{tmx_stagger_axis::x, "x"}, {tmx_stagger_axis::y, "y"}})
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_STAGGER_AXIS_HPP
-
-// #include "tmx_stagger_index.hpp"
-#ifndef RUNE_TMX_STAGGER_INDEX_HPP
-#define RUNE_TMX_STAGGER_INDEX_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_stagger_index
-{
-  odd,
-  even
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_stagger_index,
-                             {{tmx_stagger_index::odd, "odd"},
-                              {tmx_stagger_index::even, "even"}})
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_STAGGER_INDEX_HPP
-
-// #include "tmx_tileset.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_map final
-{
-  int width{};   ///< Number of columns.
-  int height{};  ///< Number of rows.
-
-  int next_layer_id{1};
-  int next_object_id{1};
-
-  int tile_height{};
-  int tile_width{};
-
-  int compression_level{-1};
-  int hex_side_length{};
-
-  tmx_map_orientation orientation{tmx_map_orientation::orthogonal};
-  tmx_map_render_order render_order{tmx_map_render_order::right_down};
-
-  maybe<tmx_color> background;
-  maybe<tmx_stagger_axis> stagger_axis;
-  maybe<tmx_stagger_index> stagger_index;
-
-  tmx_layers layers;
-  tmx_tilesets tilesets;
-  tmx_properties properties;
-
-  std::string tiled_version;
-  std::string json_version;
-  bool infinite{};
-};
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_MAP_HPP
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-/**
- * \brief Parses a Tiled JSON map file, and returns the contents.
- *
- * \details This function will not validate the specified JSON file. An invalid map file
- * will likely result in an exception being thrown due to parsing errors. However, there
- * are debug assertions that try to make it easier to detect errors and their cause,
- * compared to the generic exceptions from the JSON parser.
- *
- * \note The Tiled XML format is not supported.
- *
- * \todo Support all versions of the JSON format.
- *
- * \param path the file path to the Tiled JSON map file.
- *
- * \return the parsed Tiled map.
- */
-[[nodiscard]] inline auto parse_tmx(const std::filesystem::path& path) -> tmx_map
-{
-  const auto json = read_json(path);
-  assert(json.contains("type") && "Map file requires \"type\" element!");
-  assert(json.at("type").get<std::string>() == "map");
-
-  tmx_map map;
-
-  json.at("width").get_to(map.width);
-  json.at("height").get_to(map.height);
-  json.at("nextlayerid").get_to(map.next_layer_id);
-  json.at("nextobjectid").get_to(map.next_object_id);
-  json.at("tilewidth").get_to(map.tile_width);
-  json.at("tileheight").get_to(map.tile_height);
-  json.at("infinite").get_to(map.infinite);
-  json.at("orientation").get_to(map.orientation);
-  json.at("renderorder").get_to(map.render_order);
-  json.at("tiledversion").get_to(map.tiled_version);
-  json.at("version").get_to(map.json_version);
-
-  io::try_get_to(json, "backgroundcolor", map.background);
-  io::try_get_to(json, "compressionlevel", map.compression_level);
-  io::try_get_to(json, "hexsidelength", map.hex_side_length);
-  io::try_get_to(json, "staggeraxis", map.stagger_axis);
-  io::try_get_to(json, "staggerindex", map.stagger_index);
-
-  io::try_get_to(json, "layers", map.layers);
-  io::try_get_to(json, "properties", map.properties);
-
-  if (const auto it = json.find("tilesets"); it != json.end())
-  {
-    const auto directory = path.parent_path();
-
-    map.tilesets.reserve(it->size());
-    for (const auto& [key, value] : it->items())
-    {
-      map.tilesets.push_back(tmx::parse_tileset(directory, value));
-    }
-  }
-
-  return map;
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_PARSE_TMX_HPP
-
-// #include "tmx/tmx_animation.hpp"
-#ifndef RUNE_TMX_ANIMATION_HPP
-#define RUNE_TMX_ANIMATION_HPP
-
-#include <chrono>  // milliseconds
-#include <vector>  // vector
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "rune_api.hpp"
-
-// #include "tmx_local_id.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_frame final
-{
-  tmx_local_id tile{};
-  std::chrono::milliseconds duration{};
-};
-
-struct tmx_animation final
-{
-  std::vector<tmx_frame> frames;
-};
-
-inline void from_json(const json_type& json, tmx_frame& frame)
-{
-  using ms_t = std::chrono::milliseconds;
-
-  io::emplace_to(json, "tileid", frame.tile);
-  frame.duration = ms_t{json.at("duration").get<ms_t::rep>()};
-}
-
-inline void from_json(const json_type& json, tmx_animation& animation)
-{
-  io::get_to(json, animation.frames);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_ANIMATION_HPP
-
-// #include "tmx/tmx_color.hpp"
-#ifndef RUNE_TMX_COLOR_HPP
-#define RUNE_TMX_COLOR_HPP
-
-#include <cassert>      // assert
-#include <string>       // string
-#include <string_view>  // string_view
-
-// #include "../aliases/integers.hpp"
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../core/from_string.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_color final
-{
-  uint8 red{};
-  uint8 green{};
-  uint8 blue{};
-  uint8 alpha{0xFF};
-
-  [[nodiscard]] constexpr bool operator==(const tmx_color&) const noexcept = default;
-};
-
-/// \} End of group tmx
-
-namespace tmx {
-
-/// \addtogroup tmx
-/// \{
-
-inline constexpr tmx_color black{0, 0, 0, 0xFF};
-
-[[nodiscard]] inline auto from_hex(const std::string_view str) -> uint8
-{
-  assert(str.size() == 2);
-  return from_string<uint8>(str, 16).value();
-}
-
-[[nodiscard]] inline auto make_color(const std::string_view str) -> tmx_color
-{
-  assert(str.size() == 7 || str.size() == 9);
-  assert(str.at(0) == '#');
-
-  const auto noHash = str.substr(1);
-  const auto length = noHash.size();
-
-  tmx_color result;
-
-  if (length == 8)
-  {
-    // ARGB
-    result.alpha = from_hex(noHash.substr(0, 2));
-    result.red = from_hex(noHash.substr(2, 2));
-    result.green = from_hex(noHash.substr(4, 2));
-    result.blue = from_hex(noHash.substr(6, 2));
-  }
-  else
-  {
-    // RGB
-    result.red = from_hex(noHash.substr(0, 2));
-    result.green = from_hex(noHash.substr(2, 2));
-    result.blue = from_hex(noHash.substr(4, 2));
-  }
-
-  return result;
-}
-
-/// \} End of group tmx
-
-}  // namespace tmx
-
-inline void from_json(const json_type& json, tmx_color& color)
-{
-  color = tmx::make_color(json.get<std::string>());
-}
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_COLOR_TEST
-
-// #include "tmx/tmx_data.hpp"
-#ifndef RUNE_TMX_DATA_HPP
-#define RUNE_TMX_DATA_HPP
-
-#include <cassert>  // assert
-#include <string>   // string
-#include <variant>  // variant
-#include <vector>   // vector
-
-// #include "../aliases/integers.hpp"
-
-// #include "../aliases/json_type.hpp"
-
-// #include "tmx_global_id.hpp"
-
-
-namespace rune {
-
-struct tmx_data final
-{
-  using gid_data = std::vector<tmx_global_id>;
-  using base64_data = std::string;
-  using data_type = std::variant<gid_data, base64_data>;
-
-  data_type tile_data;
-};
-
-inline void from_json(const json_type& json, tmx_data& data)
-{
-  assert(json.is_array() || json.is_string());
-
-  if (json.is_array())
-  {
-    auto& gidData = data.tile_data.emplace<tmx_data::gid_data>();
-    for (const auto& [key, value] : json.items())
-    {
-      gidData.emplace_back(value.get<uint>());
-    }
-  }
-  else if (json.is_string())
-  {
-    data.tile_data.emplace<tmx_data::base64_data>(json.get<tmx_data::base64_data>());
-  }
-}
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_DATA_HPP
-
-// #include "tmx/tmx_global_id.hpp"
-#ifndef RUNE_TMX_GLOBAL_ID_HPP
-#define RUNE_TMX_GLOBAL_ID_HPP
-
-#include <nenya.hpp>  // strong_type
-
-// #include "../aliases/integers.hpp"
-
-
-namespace rune {
-
-/// \cond FALSE
-namespace tags {
-struct tmx_global_id_tag;
-}
-/// \endcond
-
-/// \addtogroup tmx
-/// \{
-
-using tmx_global_id = nenya::strong_type<uint, tags::tmx_global_id_tag>;
-
-/// \} End of group tmx
-
-namespace tmx_literals {
-
-/// \addtogroup tmx
-/// \{
-
-/// \name Literal operators
-/// \{
-
-[[nodiscard]] constexpr auto operator""_global(const ulonglong value) noexcept
-    -> tmx_global_id
-{
-  return tmx_global_id{static_cast<tmx_global_id::value_type>(value)};
-}
-
-/// \} End of literal operators
-/// \} End of group tmx
-
-}  // namespace tmx_literals
-}  // namespace rune
-
-#endif  // RUNE_TMX_GLOBAL_ID_HPP
-
-// #include "tmx/tmx_grid.hpp"
-#ifndef RUNE_TMX_GRID_HPP
-#define RUNE_TMX_GRID_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-// #include "../aliases/json_type.hpp"
-
-// #include "rune_api.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_grid_orientation
-{
-  orthogonal,
-  isometric
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_grid_orientation,
-                             {{tmx_grid_orientation::orthogonal, "orthogonal"},
-                              {tmx_grid_orientation::isometric, "isometric"}})
-
-struct tmx_grid final
-{
-  int cell_width{};
-  int cell_height{};
-  tmx_grid_orientation orientation{tmx_grid_orientation::orthogonal};
-};
-
-inline void from_json(const json_type& json, tmx_grid& grid)
-{
-  json.at("width").get_to(grid.cell_width);
-  json.at("height").get_to(grid.cell_height);
-  json.at("orientation").get_to(grid.orientation);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_GRID_HPP
-
-// #include "tmx/tmx_halign.hpp"
-#ifndef RUNE_TMX_HALIGN_HPP
-#define RUNE_TMX_HALIGN_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_halign
-{
-  center,
-  right,
-  left,
-  justify
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_halign,
-                             {{tmx_halign::center, "center"},
-                              {tmx_halign::right, "right"},
-                              {tmx_halign::left, "left"},
-                              {tmx_halign::justify, "justify"}})
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_HALIGN_HPP
-
-// #include "tmx/tmx_image_layer.hpp"
-#ifndef RUNE_TMX_IMAGE_LAYER_HPP
-#define RUNE_TMX_IMAGE_LAYER_HPP
-
-#include <string>  // string
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../aliases/maybe.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "tmx_color.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_image_layer final
-{
-  std::string image;
-  maybe<tmx_color> transparent;
-};
-
-inline void from_json(const json_type& json, tmx_image_layer& layer)
-{
-  json.at("image").get_to(layer.image);
-  io::try_get_to(json, "transparentcolor", layer.transparent);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_IMAGE_LAYER_HPP
-
-// #include "tmx/tmx_layer.hpp"
-#ifndef RUNE_TMX_LAYER_HPP
-#define RUNE_TMX_LAYER_HPP
-
-#include <cassert>   // assert
-#include <concepts>  // same_as
-#include <memory>    // unique_ptr, make_unique
-#include <string>    // string
-#include <variant>   // variant, monostate
-#include <vector>    // vector
-
-// #include "../aliases/integers.hpp"
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../aliases/maybe.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "rune_api.hpp"
-
-// #include "tmx_color.hpp"
-
-// #include "tmx_image_layer.hpp"
-
-// #include "tmx_layer_type.hpp"
-
-// #include "tmx_object.hpp"
-
-// #include "tmx_object_layer.hpp"
-
-// #include "tmx_property.hpp"
-
-// #include "tmx_tile_layer.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_layer;
-
-struct tmx_group final
-{
-  std::vector<std::unique_ptr<tmx_layer>> layers;
-};
-
-struct tmx_layer final
-{
-  using data_type = std::variant<std::monostate,
-                                 tmx_tile_layer,
-                                 tmx_image_layer,
-                                 tmx_object_layer,
-                                 tmx_group>;
-
-  tmx_layer_type type{tmx_layer_type::tile_layer};
-  int id{};
-  int width{};
-  int height{};
-  int start_x{};
-  int start_y{};
-  float parallax_x{1};
-  float parallax_y{1};
-  float offset_x{};
-  float offset_y{};
-  float opacity{1};
-
-  maybe<tmx_color> tint;
-  tmx_properties properties;
-
-  data_type data;
-
-  std::string name;
-  bool visible{true};
-};
-
-using tmx_layers = std::vector<tmx_layer>;
-
-void from_json(const json_type& json, tmx_layer& layer);
-
-inline void from_json(const json_type& json, tmx_group& group)
-{
-  const auto& layers = json.at("layers");
-  group.layers.reserve(layers.size());
-  for (const auto& [key, value] : layers.items())
-  {
-    group.layers.push_back(std::make_unique<tmx_layer>(value.get<tmx_layer>()));
-  }
-}
-
-inline void from_json(const json_type& json, tmx_layer& layer)
-{
-  json.at("type").get_to(layer.type);
-
-  io::try_get_to(json, "name", layer.name);
-  io::try_get_to(json, "opacity", layer.opacity);
-  io::try_get_to(json, "visible", layer.visible);
-  io::try_get_to(json, "id", layer.id);
-  io::try_get_to(json, "width", layer.width);
-  io::try_get_to(json, "height", layer.height);
-  io::try_get_to(json, "startx", layer.start_x);
-  io::try_get_to(json, "starty", layer.start_y);
-  io::try_get_to(json, "parallaxx", layer.parallax_x);
-  io::try_get_to(json, "parallaxy", layer.parallax_y);
-  io::try_get_to(json, "offsetx", layer.offset_x);
-  io::try_get_to(json, "offsety", layer.offset_y);
-  io::try_get_to(json, "tintcolor", layer.tint);
-
-  io::try_get_to(json, "properties", layer.properties);
-
-  switch (layer.type)
-  {
-    default:
-      assert(false && "from_json() for tmx_layer is missing branch!");
-
-    case tmx_layer_type::tile_layer:
-      layer.data = json.get<tmx_tile_layer>();
-      break;
-
-    case tmx_layer_type::object_layer:
-      layer.data = json.get<tmx_object_layer>();
-      break;
-
-    case tmx_layer_type::image_layer:
-      layer.data = json.get<tmx_image_layer>();
-      break;
-
-    case tmx_layer_type::group:
-      layer.data = json.get<tmx_group>();
-      break;
-  }
-}
-
-/// \} End of group tmx
-
-namespace tmx {
-
-/// \addtogroup tmx
-/// \{
-
-// clang-format off
-
-template <typename T>
-concept layer_value_type = std::same_as<T, tmx_tile_layer> ||
-                           std::same_as<T, tmx_object_layer> ||
-                           std::same_as<T, tmx_image_layer> ||
-                           std::same_as<T, tmx_group>;
-
-// clang-format on
-
-/// \name Layer functions
-/// \{
-
-template <layer_value_type T>
-[[nodiscard]] auto get(const tmx_layer& layer) -> const T&
-{
-  return std::get<T>(layer.data);
-}
-
-[[nodiscard]] inline auto get_tile_layer(const tmx_layer& layer) -> const tmx_tile_layer&
-{
-  return get<tmx_tile_layer>(layer);
-}
-
-[[nodiscard]] inline auto get_image_layer(const tmx_layer& layer)
-    -> const tmx_image_layer&
-{
-  return get<tmx_image_layer>(layer);
-}
-
-[[nodiscard]] inline auto get_object_layer(const tmx_layer& layer)
-    -> const tmx_object_layer&
-{
-  return get<tmx_object_layer>(layer);
-}
-
-[[nodiscard]] inline auto get_group(const tmx_layer& layer) -> const tmx_group&
-{
-  return get<tmx_group>(layer);
-}
-
-template <layer_value_type T>
-[[nodiscard]] auto try_get(const tmx_layer& layer) noexcept -> const T*
-{
-  return std::get_if<T>(&layer.data);
-}
-
-[[nodiscard]] inline auto try_get_tile_layer(const tmx_layer& layer) noexcept
-    -> const tmx_tile_layer*
-{
-  return try_get<tmx_tile_layer>(layer);
-}
-
-[[nodiscard]] inline auto try_get_object_layer(const tmx_layer& layer) noexcept
-    -> const tmx_object_layer*
-{
-  return try_get<tmx_object_layer>(layer);
-}
-
-[[nodiscard]] inline auto try_get_image_layer(const tmx_layer& layer) noexcept
-    -> const tmx_image_layer*
-{
-  return try_get<tmx_image_layer>(layer);
-}
-
-[[nodiscard]] inline auto try_get_group(const tmx_layer& layer) noexcept
-    -> const tmx_group*
-{
-  return try_get<tmx_group>(layer);
-}
-
-template <layer_value_type T>
-[[nodiscard]] auto is(const tmx_layer& layer) noexcept -> bool
-{
-  return std::holds_alternative<T>(layer.data);
-}
-
-[[nodiscard]] inline auto is_tile_layer(const tmx_layer& layer) noexcept -> bool
-{
-  return is<tmx_tile_layer>(layer);
-}
-
-[[nodiscard]] inline auto is_object_layer(const tmx_layer& layer) noexcept -> bool
-{
-  return is<tmx_object_layer>(layer);
-}
-
-[[nodiscard]] inline auto is_image_layer(const tmx_layer& layer) noexcept -> bool
-{
-  return is<tmx_image_layer>(layer);
-}
-
-[[nodiscard]] inline auto is_group(const tmx_layer& layer) noexcept -> bool
-{
-  return is<tmx_group>(layer);
-}
-
-/// \} End of layer functions
-
-/// \} End of group tmx
-
-}  // namespace tmx
-}  // namespace rune
-
-#endif  // RUNE_TMX_LAYER_HPP
-
-// #include "tmx/tmx_layer_type.hpp"
-#ifndef RUNE_TMX_LAYER_TYPE_HPP
-#define RUNE_TMX_LAYER_TYPE_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_layer_type
-{
-  tile_layer,
-  object_layer,
-  image_layer,
-  group
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_layer_type,
-                             {{tmx_layer_type::tile_layer, "tilelayer"},
-                              {tmx_layer_type::image_layer, "imagelayer"},
-                              {tmx_layer_type::object_layer, "objectgroup"},
-                              {tmx_layer_type::group, "group"}})
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_LAYER_TYPE_HPP
-
-// #include "tmx/tmx_local_id.hpp"
-#ifndef RUNE_TMX_LOCAL_ID_HPP
-#define RUNE_TMX_LOCAL_ID_HPP
-
-#include <nenya.hpp>  // strong_type
-
-// #include "../aliases/integers.hpp"
-
-
-namespace rune {
-
-/// \cond FALSE
-namespace tags {
-struct tmx_local_id_tag;
-}  // namespace tags
-/// \endcond
-
-/// \addtogroup tmx
-/// \{
-
-using tmx_local_id = nenya::strong_type<int, tags::tmx_local_id_tag>;
-
-/// \} End of group tmx
-
-namespace tmx_literals {
-
-/// \addtogroup tmx
-/// \{
-
-/// \name Literal operators
-/// \{
-
-[[nodiscard]] constexpr auto operator""_local(const ulonglong value) noexcept
-    -> tmx_local_id
-{
-  return tmx_local_id{static_cast<tmx_local_id::value_type>(value)};
-}
-
-/// \} End of literal operators
-
-/// \} End of group tmx
-
-}  // namespace tmx_literals
-}  // namespace rune
-
-#endif  // RUNE_TMX_LOCAL_ID_HPP
-
-// #include "tmx/tmx_map.hpp"
-#ifndef RUNE_TMX_MAP_HPP
-#define RUNE_TMX_MAP_HPP
-
-#include <string>  // string
-
-// #include "../aliases/maybe.hpp"
-
-// #include "tmx_color.hpp"
-
-// #include "tmx_layer.hpp"
-
-// #include "tmx_map_orientation.hpp"
-
-// #include "tmx_map_render_order.hpp"
-
-// #include "tmx_property.hpp"
-
-// #include "tmx_stagger_axis.hpp"
-
-// #include "tmx_stagger_index.hpp"
-
-// #include "tmx_tileset.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_map final
-{
-  int width{};   ///< Number of columns.
-  int height{};  ///< Number of rows.
-
-  int next_layer_id{1};
-  int next_object_id{1};
-
-  int tile_height{};
-  int tile_width{};
-
-  int compression_level{-1};
-  int hex_side_length{};
-
-  tmx_map_orientation orientation{tmx_map_orientation::orthogonal};
-  tmx_map_render_order render_order{tmx_map_render_order::right_down};
-
-  maybe<tmx_color> background;
-  maybe<tmx_stagger_axis> stagger_axis;
-  maybe<tmx_stagger_index> stagger_index;
-
-  tmx_layers layers;
-  tmx_tilesets tilesets;
-  tmx_properties properties;
-
-  std::string tiled_version;
-  std::string json_version;
-  bool infinite{};
-};
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_MAP_HPP
-
-// #include "tmx/tmx_map_orientation.hpp"
-#ifndef RUNE_TMX_MAP_ORIENTATION_HPP
-#define RUNE_TMX_MAP_ORIENTATION_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_map_orientation
-{
-  orthogonal,
-  isometric,
-  staggered,
-  hexagonal
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_map_orientation,
-                             {{tmx_map_orientation::orthogonal, "orthogonal"},
-                              {tmx_map_orientation::isometric, "isometric"},
-                              {tmx_map_orientation::staggered, "staggered"},
-                              {tmx_map_orientation::hexagonal, "hexagonal"}})
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_MAP_ORIENTATION_HPP
-
-// #include "tmx/tmx_map_render_order.hpp"
-#ifndef RUNE_TMX_MAP_RENDER_ORDER_HPP
-#define RUNE_TMX_MAP_RENDER_ORDER_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_map_render_order
-{
-  right_down,
-  right_up,
-  left_down,
-  left_up
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_map_render_order,
-                             {{tmx_map_render_order::right_down, "right-down"},
-                              {tmx_map_render_order::right_up, "right-up"},
-                              {tmx_map_render_order::left_down, "left-down"},
-                              {tmx_map_render_order::left_up, "left-up"}})
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_MAP_RENDER_ORDER_HPP
-
-// #include "tmx/tmx_object.hpp"
-#ifndef RUNE_TMX_OBJECT_HPP
-#define RUNE_TMX_OBJECT_HPP
-
-#include <memory>   // unique_ptr, make_unique
-#include <string>   // string
-#include <variant>  // variant, monostate
-#include <vector>   // vector
-
-// #include "../aliases/integers.hpp"
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../aliases/maybe.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "rune_api.hpp"
-
-// #include "tmx_global_id.hpp"
-
-// #include "tmx_point.hpp"
-
-// #include "tmx_property.hpp"
-
-// #include "tmx_text.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_object;
-
-struct tmx_polygon final
-{
-  std::vector<tmx_point> points;
-};
-
-struct tmx_polyline final
-{
-  std::vector<tmx_point> points;
-};
-
-struct tmx_template_object final
-{
-  std::string template_file;
-  std::unique_ptr<tmx_object> object;
-  maybe<std::string> tileset_source;
-  maybe<tmx_global_id> tileset_first_id;
-};
-
-struct tmx_object final
-{
-  using data_type = std::variant<std::monostate,
-                                 tmx_polygon,
-                                 tmx_polyline,
-                                 tmx_text,
-                                 tmx_template_object,
-                                 tmx_global_id>;
-
-  int id{};
-  float x{};
-  float y{};
-  float width{};
-  float height{};
-  float rotation{};
-  std::string name;
-  std::string type;
-  tmx_properties properties;
-  data_type data;
-  bool is_ellipse{};
-  bool is_point{};
-  bool visible{true};
-};
-
-inline void from_json(const json_type& json, tmx_polygon& polygon)
-{
-  io::get_to(json, polygon.points);
-}
-
-inline void from_json(const json_type& json, tmx_polyline& line)
-{
-  io::get_to(json, line.points);
-}
-
-void from_json(const json_type& json, tmx_object& object);
-
-inline void from_json(const json_type& json, tmx_template_object& object)
-{
-  json.at("template").get_to(object.template_file);
-  object.object = std::make_unique<tmx_object>(json.at("object").get<tmx_object>());
-
-  if (const auto it = json.find("tileset"); it != json.end())
-  {
-    io::emplace_to(json, "firstgid", object.tileset_first_id);
-    object.tileset_source = json.at("source").get<std::string>();
-  }
-}
-
-inline void from_json(const json_type& json, tmx_object& object)
-{
-  json.at("id").get_to(object.id);
-  json.at("x").get_to(object.x);
-  json.at("y").get_to(object.y);
-  json.at("width").get_to(object.width);
-  json.at("height").get_to(object.height);
-  json.at("rotation").get_to(object.rotation);
-  json.at("name").get_to(object.name);
-  json.at("type").get_to(object.type);
-  json.at("visible").get_to(object.visible);
-
-  io::try_get_to(json, "ellipse", object.is_ellipse);
-  io::try_get_to(json, "point", object.is_point);
-
-  io::try_get_to(json, "properties", object.properties);
-
-  if (const auto it = json.find("gid"); it != json.end())
-  {
-    object.data.emplace<tmx_global_id>(it->get<tmx_global_id::value_type>());
-  }
-
-  io::try_emplace_to<tmx_text>(json, "text", object.data);
-  io::try_emplace_to<tmx_polygon>(json, "polygon", object.data);
-  io::try_emplace_to<tmx_polyline>(json, "polyline", object.data);
-  io::try_emplace_to<tmx_template_object>(json, "template", object.data);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_OBJECT_HPP
-
-// #include "tmx/tmx_object_layer.hpp"
-#ifndef RUNE_TMX_OBJECT_LAYER_HPP
-#define RUNE_TMX_OBJECT_LAYER_HPP
-
-#include <cassert>   // assert
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-#include <vector>    // vector
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "tmx_object.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_object_layer_draw_order
-{
-  top_down,
-  index
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_object_layer_draw_order,
-                             {{tmx_object_layer_draw_order::top_down, "topdown"},
-                              {tmx_object_layer_draw_order::index, "index"}})
-
-struct tmx_object_layer final  // Note, referred to as "object group" by tiled
-{
-  tmx_object_layer_draw_order draw_order{tmx_object_layer_draw_order::top_down};
-  std::vector<tmx_object> objects;
-};
-
-inline void from_json(const json_type& json, tmx_object_layer& layer)
-{
-  io::get_to(json, "objects", layer.objects);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_OBJECT_LAYER_HPP
-
-// #include "tmx/tmx_point.hpp"
-#ifndef RUNE_TMX_POINT_HPP
-#define RUNE_TMX_POINT_HPP
-
-// #include "../aliases/json_type.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_point final
-{
-  float x{};  ///< The x-coordinate of the point.
-  float y{};  ///< The y-coordinate of the point.
-};
-
-inline void from_json(const json_type& json, tmx_point& point)
-{
-  json.at("x").get_to(point.x);
-  json.at("y").get_to(point.y);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_POINT_HPP
-
-// #include "tmx/tmx_property.hpp"
-#ifndef RUNE_TMX_PROPERTY_HPP
-#define RUNE_TMX_PROPERTY_HPP
-
-#include <algorithm>    // any_of, find_if
-#include <cassert>      // assert
-#include <concepts>     // same_as
-#include <nenya.hpp>    // strong_type
-#include <string>       // string
-#include <string_view>  // string_view
-#include <variant>      // variant, get, get_if, holds_alternative
-#include <vector>       // vector
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../core/rune_error.hpp"
-
-// #include "rune_api.hpp"
-
-// #include "tmx_color.hpp"
-
-// #include "tmx_property_type.hpp"
-
-
-namespace rune {
-
-/// \cond FALSE
-namespace tags {
-struct tmx_file_tag;
-struct tmx_object_id_tag;
-}  // namespace tags
-/// \endcond
-
-/// \addtogroup tmx
-/// \{
-
-using tmx_file = nenya::strong_type<std::string, tags::tmx_file_tag>;
-using tmx_object_id = nenya::strong_type<int, tags::tmx_object_id_tag>;
-
-/**
- * \brief Represents a property, with an associated name and value.
- */
-struct tmx_property final
-{
-  using data_type =
-      std::variant<std::string, tmx_file, tmx_object_id, tmx_color, int, float, bool>;
-
-  std::string name;
-  tmx_property_type type{tmx_property_type::string};
-  data_type value;
-};
-
-using tmx_properties = std::vector<tmx_property>;
-
-inline void from_json(const json_type& json, tmx_property& property)
-{
-  json.at("name").get_to(property.name);
-  json.at("type").get_to(property.type);
-
-  switch (property.type)
-  {
-    default:
-      assert(false && "from_json() for tmx_property has missing branch!");
-
-    case tmx_property_type::string:
-      property.value.emplace<std::string>(json.at("value").get<std::string>());
-      break;
-
-    case tmx_property_type::integer:
-      property.value.emplace<int>(json.at("value").get<int>());
-      break;
-
-    case tmx_property_type::floating:
-      property.value.emplace<float>(json.at("value").get<float>());
-      break;
-
-    case tmx_property_type::boolean:
-      property.value.emplace<bool>(json.at("value").get<bool>());
-      break;
-
-    case tmx_property_type::color:
-      property.value.emplace<tmx_color>(json.at("value").get<tmx_color>());
-      break;
-
-    case tmx_property_type::file:
-      property.value.emplace<tmx_file>(json.at("value").get<std::string>());
-      break;
-
-    case tmx_property_type::object:
-      property.value.emplace<tmx_object_id>(json.at("value").get<int>());
-      break;
-  }
-}
-
-/// \} End of group tmx
-
-namespace tmx {
-
-/// \addtogroup tmx
-/// \{
-
-// clang-format off
-
-template <typename T>
-concept property_value_type = std::same_as<T, int> ||
-                              std::same_as<T, float> ||
-                              std::same_as<T, bool> ||
-                              std::same_as<T, std::string> ||
-                              std::same_as<T, tmx_color> ||
-                              std::same_as<T, tmx_file> ||
-                              std::same_as<T, tmx_object_id>;
-
-// clang-format on
-
-/// \name Property functions
-/// \{
-
-[[nodiscard]] inline auto try_get(const tmx_properties& properties,
-                                  const std::string_view name)
-    -> tmx_properties::const_iterator
-{
-  return std::ranges::find_if(properties, [name](const tmx_property& property) noexcept {
-    return property.name == name;
-  });
-}
-
-template <property_value_type T>
-[[nodiscard]] auto get_if(const tmx_properties& properties,
-                          const std::string_view name) noexcept -> const T*
-{
-  if (const auto it = try_get(properties, name); it != properties.end())
-  {
-    return std::get_if<T>(&it->value);
-  }
-  else
-  {
-    return nullptr;
-  }
-}
-
-[[nodiscard]] inline auto get_if_string(const tmx_property& property) noexcept
-    -> const std::string*
-{
-  return std::get_if<std::string>(&property.value);
-}
-
-[[nodiscard]] inline auto get_if_string(const tmx_properties& properties,
-                                        const std::string_view name) -> const std::string*
-{
-  return get_if<std::string>(properties, name);
-}
-
-[[nodiscard]] inline auto get_if_int(const tmx_property& property) noexcept -> const int*
-{
-  return std::get_if<int>(&property.value);
-}
-
-[[nodiscard]] inline auto get_if_int(const tmx_properties& properties,
-                                     const std::string_view name) -> const int*
-{
-  return get_if<int>(properties, name);
-}
-
-[[nodiscard]] inline auto get_if_float(const tmx_property& property) noexcept -> const
-    float*
-{
-  return std::get_if<float>(&property.value);
-}
-
-[[nodiscard]] inline auto get_if_float(const tmx_properties& properties,
-                                       const std::string_view name) -> const float*
-{
-  return get_if<float>(properties, name);
-}
-
-[[nodiscard]] inline auto get_if_bool(const tmx_property& property) noexcept -> const
-    bool*
-{
-  return std::get_if<bool>(&property.value);
-}
-
-[[nodiscard]] inline auto get_if_bool(const tmx_properties& properties,
-                                      const std::string_view name) -> const bool*
-{
-  return get_if<bool>(properties, name);
-}
-
-[[nodiscard]] inline auto get_if_color(const tmx_property& property) noexcept
-    -> const tmx_color*
-{
-  return std::get_if<tmx_color>(&property.value);
-}
-
-[[nodiscard]] inline auto get_if_color(const tmx_properties& properties,
-                                       const std::string_view name) -> const tmx_color*
-{
-  return get_if<tmx_color>(properties, name);
-}
-
-[[nodiscard]] inline auto get_if_file(const tmx_property& property) noexcept
-    -> const tmx_file*
-{
-  return std::get_if<tmx_file>(&property.value);
-}
-
-[[nodiscard]] inline auto get_if_file(const tmx_properties& properties,
-                                      const std::string_view name) -> const tmx_file*
-{
-  return get_if<tmx_file>(properties, name);
-}
-
-[[nodiscard]] inline auto get_if_object(const tmx_property& property) noexcept
-    -> const tmx_object_id*
-{
-  return std::get_if<tmx_object_id>(&property.value);
-}
-
-[[nodiscard]] inline auto get_if_object(const tmx_properties& properties,
-                                        const std::string_view name)
-    -> const tmx_object_id*
-{
-  return get_if<tmx_object_id>(properties, name);
-}
-
-template <property_value_type T>
-[[nodiscard]] auto is(const tmx_property& property) noexcept -> bool
-{
-  return std::holds_alternative<T>(property.value);
-}
-
-template <property_value_type T>
-[[nodiscard]] auto is(const tmx_properties& properties, const std::string_view name)
-    -> bool
-{
-  if (const auto it = try_get(properties, name); it != properties.end())
-  {
-    return is<T>(*it);
-  }
-  else
-  {
-    return false;
-  }
-}
-
-[[nodiscard]] inline auto is_string(const tmx_property& property) noexcept -> bool
-{
-  return is<std::string>(property);
-}
-
-[[nodiscard]] inline auto is_string(const tmx_properties& properties,
-                                    const std::string_view name) -> bool
-{
-  return is<std::string>(properties, name);
-}
-
-[[nodiscard]] inline auto is_int(const tmx_property& property) noexcept -> bool
-{
-  return is<int>(property);
-}
-
-[[nodiscard]] inline auto is_int(const tmx_properties& properties,
-                                 const std::string_view name) -> bool
-{
-  return is<int>(properties, name);
-}
-
-[[nodiscard]] inline auto is_float(const tmx_property& property) noexcept -> bool
-{
-  return is<float>(property);
-}
-
-[[nodiscard]] inline auto is_float(const tmx_properties& properties,
-                                   const std::string_view name) -> bool
-{
-  return is<float>(properties, name);
-}
-
-[[nodiscard]] inline auto is_bool(const tmx_property& property) noexcept -> bool
-{
-  return is<bool>(property);
-}
-
-[[nodiscard]] inline auto is_bool(const tmx_properties& properties,
-                                  const std::string_view name) -> bool
-{
-  return is<bool>(properties, name);
-}
-
-[[nodiscard]] inline auto is_color(const tmx_property& property) noexcept -> bool
-{
-  return is<tmx_color>(property);
-}
-
-[[nodiscard]] inline auto is_color(const tmx_properties& properties,
-                                   const std::string_view name) -> bool
-{
-  return is<tmx_color>(properties, name);
-}
-
-[[nodiscard]] inline auto is_file(const tmx_property& property) noexcept -> bool
-{
-  return is<tmx_file>(property);
-}
-
-[[nodiscard]] inline auto is_file(const tmx_properties& properties,
-                                  const std::string_view name) -> bool
-{
-  return is<tmx_file>(properties, name);
-}
-
-[[nodiscard]] inline auto is_object(const tmx_property& property) noexcept -> bool
-{
-  return is<tmx_object_id>(property);
-}
-
-[[nodiscard]] inline auto is_object(const tmx_properties& properties,
-                                    const std::string_view name) -> bool
-{
-  return is<tmx_object_id>(properties, name);
-}
-
-template <property_value_type T>
-[[nodiscard]] auto get(const tmx_property& property) -> const T&
-{
-  return std::get<T>(property.value);
-}
-
-template <property_value_type T>
-[[nodiscard]] auto get(const tmx_properties& properties, const std::string_view name)
-    -> const T&
-{
-  if (const auto it = try_get(properties, name); it != properties.end())
-  {
-    return get<T>(*it);
-  }
-  else
-  {
-    throw rune_error{"Could not find property with the specified name!"};
-  }
-}
-
-[[nodiscard]] inline auto get_string(const tmx_property& property) -> const std::string&
-{
-  return get<std::string>(property);
-}
-
-[[nodiscard]] inline auto get_string(const tmx_properties& properties,
-                                     const std::string_view name) -> const std::string&
-{
-  return get<std::string>(properties, name);
-}
-
-[[nodiscard]] inline auto get_int(const tmx_property& property) -> int
-{
-  return get<int>(property);
-}
-
-[[nodiscard]] inline auto get_int(const tmx_properties& properties,
-                                  const std::string_view name) -> int
-{
-  return get<int>(properties, name);
-}
-
-[[nodiscard]] inline auto get_float(const tmx_property& property) -> float
-{
-  return get<float>(property);
-}
-
-[[nodiscard]] inline auto get_float(const tmx_properties& properties,
-                                    const std::string_view name) -> float
-{
-  return get<float>(properties, name);
-}
-
-[[nodiscard]] inline auto get_bool(const tmx_property& property) -> bool
-{
-  return get<bool>(property);
-}
-
-[[nodiscard]] inline auto get_bool(const tmx_properties& properties,
-                                   const std::string_view name) -> bool
-{
-  return get<bool>(properties, name);
-}
-
-[[nodiscard]] inline auto get_color(const tmx_property& property) -> const tmx_color&
-{
-  return get<tmx_color>(property);
-}
-
-[[nodiscard]] inline auto get_color(const tmx_properties& properties,
-                                    const std::string_view name) -> const tmx_color&
-{
-  return get<tmx_color>(properties, name);
-}
-
-[[nodiscard]] inline auto get_file(const tmx_property& property) -> const tmx_file&
-{
-  return get<tmx_file>(property);
-}
-
-[[nodiscard]] inline auto get_file(const tmx_properties& properties,
-                                   const std::string_view name) -> const tmx_file&
-{
-  return get<tmx_file>(properties, name);
-}
-
-[[nodiscard]] inline auto get_object(const tmx_property& property) -> tmx_object_id
-{
-  return get<tmx_object_id>(property);
-}
-
-[[nodiscard]] inline auto get_object(const tmx_properties& properties,
-                                     const std::string_view name) -> tmx_object_id
-{
-  return get<tmx_object_id>(properties, name);
-}
-
-/**
- * \brief Indicates whether or not a property with the specified name exists in a vector
- * of properties.
- *
- * \param properties the vector of properties that will be searched.
- * \param name the name of the property to look for.
- *
- * \return `true` if the properties contains a property with the specified name; `false`
- * otherwise.
- */
-[[nodiscard]] inline auto contains(const tmx_properties& properties,
-                                   const std::string_view name) -> bool
-{
-  return std::ranges::any_of(properties, [name](const tmx_property& property) noexcept {
-    return property.name == name;
-  });
-}
-
-/**
- * \brief Attempts to find and return a property with the specified name.
- *
- * \param properties the properties that will be searched.
- * \param name the name of the desired property.
- *
- * \return the property with the specified name.
- *
- * \throws rune_error if there is no property with the specified name.
- */
-[[nodiscard]] inline auto at(const tmx_properties& properties,
-                             const std::string_view name) -> const tmx_property&
-{
-  if (const auto it = try_get(properties, name); it != properties.end())
-  {
-    return *it;
-  }
-  else
-  {
-    throw rune_error{"Could not find property with specified name!"};
-  }
-}
-
-/// \} End of property functions
-
-/// \} End of group tmx
-
-}  // namespace tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_PROPERTY_HPP
-
-// #include "tmx/tmx_stagger_axis.hpp"
-#ifndef RUNE_TMX_STAGGER_AXIS_HPP
-#define RUNE_TMX_STAGGER_AXIS_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_stagger_axis
-{
-  x,
-  y
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_stagger_axis,
-                             {{tmx_stagger_axis::x, "x"}, {tmx_stagger_axis::y, "y"}})
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_STAGGER_AXIS_HPP
-
-// #include "tmx/tmx_stagger_index.hpp"
-#ifndef RUNE_TMX_STAGGER_INDEX_HPP
-#define RUNE_TMX_STAGGER_INDEX_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_stagger_index
-{
-  odd,
-  even
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_stagger_index,
-                             {{tmx_stagger_index::odd, "odd"},
-                              {tmx_stagger_index::even, "even"}})
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_STAGGER_INDEX_HPP
-
-// #include "tmx/tmx_terrain.hpp"
-#ifndef RUNE_TMX_TERRAIN_HPP
-#define RUNE_TMX_TERRAIN_HPP
-
-#include <string>  // string
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "tmx_local_id.hpp"
-
-// #include "tmx_property.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_terrain final
-{
-  tmx_local_id tile{};
-  std::string name;
-  tmx_properties properties;
-};
-
-inline void from_json(const json_type& json, tmx_terrain& terrain)
-{
-  terrain.tile = tmx_local_id{json.at("tile").get<tmx_local_id::value_type>()};
-  json.at("name").get_to(terrain.name);
-  io::try_get_to(json, "properties", terrain.properties);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_TERRAIN_HPP
-
-// #include "tmx/tmx_text.hpp"
-#ifndef RUNE_TMX_TEXT_HPP
-#define RUNE_TMX_TEXT_HPP
-
-#include <string>  // string
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "tmx_color.hpp"
-
-// #include "tmx_halign.hpp"
-
-// #include "tmx_valign.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_text final
-{
-  std::string text;
-  std::string family{"sans-serif"};
-  tmx_color color;
-  tmx_halign horizontal_alignment{tmx_halign::left};
-  tmx_valign vertical_alignment{tmx_valign::top};
-  int pixel_size{16};
-  bool bold{};
-  bool italic{};
-  bool kerning{true};
-  bool strikeout{};
-  bool underline{};
-  bool wrap{};
-};
-
-inline void from_json(const json_type& json, tmx_text& text)
-{
-  json.at("text").get_to(text.text);
-
-  io::try_get_to(json, "fontfamily", text.family);
-  io::try_get_to(json, "halign", text.horizontal_alignment);
-  io::try_get_to(json, "valign", text.vertical_alignment);
-  io::try_get_to(json, "pixelsize", text.pixel_size);
-  io::try_get_to(json, "bold", text.bold);
-  io::try_get_to(json, "italic", text.italic);
-  io::try_get_to(json, "kerning", text.kerning);
-  io::try_get_to(json, "strikeout", text.strikeout);
-  io::try_get_to(json, "underline", text.underline);
-  io::try_get_to(json, "wrap", text.wrap);
-
-  if (const auto it = json.find("color"); it != json.end())
-  {
-    text.color = tmx::make_color(it->get<std::string>());
-  }
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_TEXT_HPP
-
-// #include "tmx/tmx_tile.hpp"
-#ifndef RUNE_TMX_TILE_HPP
-#define RUNE_TMX_TILE_HPP
-
-#include <array>   // array
-#include <string>  // string
-
-// #include "../aliases/integers.hpp"
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../aliases/maybe.hpp"
-
-// #include "../core/from_string.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "tmx_animation.hpp"
-
-// #include "tmx_layer.hpp"
-
-// #include "tmx_local_id.hpp"
-
-// #include "tmx_property.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_tile final
-{
-  tmx_local_id id{};
-  maybe<tmx_animation> animation;
-  maybe<std::array<int, 4>> terrain;
-  maybe<std::string> type;
-  maybe<std::string> image;
-  maybe<int> image_width;
-  maybe<int> image_height;
-  maybe<float> probability;
-  maybe<tmx_layer> object_layer;
-  tmx_properties properties;
-};
-
-inline void from_json(const json_type& json, tmx_tile& tile)
-{
-  io::emplace_to(json, "id", tile.id);
-
-  io::try_get_to(json, "animation", tile.animation);
-  io::try_get_to(json, "type", tile.type);
-  io::try_get_to(json, "image", tile.image);
-  io::try_get_to(json, "imagewidth", tile.image_width);
-  io::try_get_to(json, "imageheight", tile.image_height);
-  io::try_get_to(json, "probability", tile.probability);
-  io::try_get_to(json, "objectgroup", tile.object_layer);
-  io::try_get_to(json, "properties", tile.properties);
-
-  if (const auto it = json.find("terrain"); it != json.end())
-  {
-    auto& terrain = tile.terrain.emplace();
-    for (const auto& [key, value] : it->items())
-    {
-      const auto index = from_string<usize>(key).value();
-      terrain.at(index) = value.get<int>();
-    }
-  }
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_TILE_HPP
-
-// #include "tmx/tmx_tile_layer.hpp"
-#ifndef RUNE_TMX_TILE_LAYER_HPP
-#define RUNE_TMX_TILE_LAYER_HPP
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../aliases/maybe.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "tmx_data.hpp"
-
-// #include "tmx_tile_layer_compression.hpp"
-
-// #include "tmx_tile_layer_encoding.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_tile_layer final
-{
-  tmx_tile_layer_compression compression{tmx_tile_layer_compression::none};
-  tmx_tile_layer_encoding encoding{tmx_tile_layer_encoding::csv};
-  maybe<tmx_data> data;
-  // TODO std::vector<chunk> m_chunks;
-};
-
-inline void from_json(const json_type& json, tmx_tile_layer& layer)
-{
-  io::try_get_to(json, "compression", layer.compression);
-  io::try_get_to(json, "encoding", layer.encoding);
-  io::try_get_to(json, "data", layer.data);
-
-  // TODO
-  //  if (json.contains("chunks")) {
-  //    m_chunks = detail::fill<std::vector<chunk>>(json, "chunks");
-  //  }
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_TILE_LAYER_HPP
-
-// #include "tmx/tmx_tile_layer_compression.hpp"
-#ifndef RUNE_TMX_TILE_LAYER_COMPRESSION_HPP
-#define RUNE_TMX_TILE_LAYER_COMPRESSION_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_tile_layer_compression
-{
-  none,
-  gzip,
-  zlib
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_tile_layer_compression,
-                             {{tmx_tile_layer_compression::none, ""},
-                              {tmx_tile_layer_compression::gzip, "gzip"},
-                              {tmx_tile_layer_compression::zlib, "zlib"}})
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_TILE_LAYER_COMPRESSION_HPP
-
-// #include "tmx/tmx_tile_layer_encoding.hpp"
-#ifndef RUNE_TMX_TILE_LAYER_ENCODING_HPP
-#define RUNE_TMX_TILE_LAYER_ENCODING_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_tile_layer_encoding
-{
-  csv,
-  base64
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_tile_layer_encoding,
-                             {{tmx_tile_layer_encoding::csv, "csv"},
-                              {tmx_tile_layer_encoding::base64, "base64"}})
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_TILE_LAYER_ENCODING_HPP
-
-// #include "tmx/tmx_tile_offset.hpp"
-#ifndef RUNE_TMX_TILE_OFFSET_HPP
-#define RUNE_TMX_TILE_OFFSET_HPP
-
-// #include "../aliases/json_type.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_tile_offset final
-{
-  int x{};
-  int y{};
-};
-
-inline void from_json(const json_type& json, tmx_tile_offset& offset)
-{
-  json.at("x").get_to(offset.x);
-  json.at("y").get_to(offset.y);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_TILE_OFFSET_HPP
-
-// #include "tmx/tmx_tileset.hpp"
-#ifndef RUNE_TMX_TILESET_HPP
-#define RUNE_TMX_TILESET_HPP
-
-#include <string>  // string
-#include <vector>  // vector
-
-// #include "../aliases/maybe.hpp"
-
-// #include "rune_api.hpp"
-
-// #include "tmx_color.hpp"
-
-// #include "tmx_global_id.hpp"
-
-// #include "tmx_grid.hpp"
-
-// #include "tmx_property.hpp"
-
-// #include "tmx_terrain.hpp"
-
-// #include "tmx_tile.hpp"
-
-// #include "tmx_tile_offset.hpp"
-
-// #include "tmx_wang_set.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_tileset final
-{
-  tmx_global_id first_id{1};
-  int tile_width{};
-  int tile_height{};
-  int tile_count{};
-  int column_count{};
-  int image_width{};
-  int image_height{};
-  int margin{};
-  int spacing{};
-
-  std::string name;
-  std::string image;
-  std::string external_source;
-  std::string tiled_version;
-  std::string json_version;
-
-  maybe<tmx_color> background;
-  maybe<tmx_color> transparent;
-  maybe<tmx_tile_offset> tile_offset;
-  maybe<tmx_grid> grid;
-
-  std::vector<tmx_tile> tiles;
-  std::vector<tmx_terrain> terrains;
-  std::vector<tmx_wang_set> wang_sets;
-  tmx_properties properties;
-};
-
-using tmx_tilesets = std::vector<tmx_tileset>;
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_TILESET_HPP
-
-// #include "tmx/tmx_valign.hpp"
-#ifndef RUNE_TMX_VALIGN_HPP
-#define RUNE_TMX_VALIGN_HPP
-
-#include <json.hpp>  // NLOHMANN_JSON_SERIALIZE_ENUM
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-enum class tmx_valign
-{
-  center,
-  top,
-  bottom
-};
-
-NLOHMANN_JSON_SERIALIZE_ENUM(tmx_valign,
-                             {{tmx_valign::center, "center"},
-                              {tmx_valign::top, "top"},
-                              {tmx_valign::bottom, "bottom"}})
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_VALIGN_HPP
-
-// #include "tmx/tmx_wang_color.hpp"
-#ifndef RUNE_TMX_WANG_COLOR_HPP
-#define RUNE_TMX_WANG_COLOR_HPP
-
-#include <string>  // string
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "tmx_color.hpp"
-
-// #include "tmx_local_id.hpp"
-
-// #include "tmx_property.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_wang_color final
-{
-  tmx_local_id tile{};
-  tmx_color color;
-  std::string name;
-  float probability{};
-  tmx_properties properties;
-};
-
-inline void from_json(const json_type& json, tmx_wang_color& color)
-{
-  json.at("name").get_to(color.name);
-  json.at("color").get_to(color.color);
-  json.at("probability").get_to(color.probability);
-  io::emplace_to(json, "tile", color.tile);
-
-  io::try_get_to(json, "properties", color.properties);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_WANG_COLOR_HPP
-
-// #include "tmx/tmx_wang_set.hpp"
-#ifndef RUNE_TMX_WANG_SET_HPP
-#define RUNE_TMX_WANG_SET_HPP
-
-#include <string>  // string
-#include <vector>  // vector
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "tmx_local_id.hpp"
-
-// #include "tmx_property.hpp"
-
-// #include "tmx_wang_color.hpp"
-
-// #include "tmx_wang_tile.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_wang_set final
-{
-  tmx_local_id tile{};
-  std::string name;
-  std::vector<tmx_wang_tile> wang_tiles;
-  std::vector<tmx_wang_color> colors;
-  tmx_properties properties;
-};
-
-inline void from_json(const json_type& json, tmx_wang_set& set)
-{
-  io::emplace_to(json, "tile", set.tile);
-  json.at("name").get_to(set.name);
-
-  // TODO check if colors or wangtiles are required
-  io::try_get_to(json, "colors", set.colors);
-  io::try_get_to(json, "wangtiles", set.wang_tiles);
-  io::try_get_to(json, "properties", set.properties);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_WANG_SET_HPP
-
-// #include "tmx/tmx_wang_tile.hpp"
-#ifndef RUNE_TMX_WANG_TILE_HPP
-#define RUNE_TMX_WANG_TILE_HPP
-
-#include <array>  // array
-
-// #include "../aliases/integers.hpp"
-
-// #include "../aliases/json_type.hpp"
-
-// #include "../io/json_utils.hpp"
-
-// #include "tmx_local_id.hpp"
-
-
-namespace rune {
-
-/// \addtogroup tmx
-/// \{
-
-struct tmx_wang_tile final
-{
-  tmx_local_id tile{};
-  std::array<uint8, 8> indices{};
-};
-
-inline void from_json(const json_type& json, tmx_wang_tile& tile)
-{
-  io::emplace_to(json, "tileid", tile.tile);
-  json.at("wangid").get_to(tile.indices);
-}
-
-/// \} End of group tmx
-
-}  // namespace rune
-
-#endif  // RUNE_TMX_WANG_TILE_HPP
 
 
 #endif  // RUNE_EVERYTHING_HPP
