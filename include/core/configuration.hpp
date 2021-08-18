@@ -34,7 +34,6 @@ struct configuration final
 
   double engine_max_tick_rate;
   int engine_max_frames_per_tick;
-  // TODO game_loop engine_loop;
 
   usize aabb_default_capacity;
 
