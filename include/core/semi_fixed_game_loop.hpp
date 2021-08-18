@@ -69,6 +69,11 @@ class semi_fixed_game_loop
     {
       throw rune_error{"Cannot create semi_fixed_game_loop from null engine!"};
     }
+
+    CENTURION_LOG_DEBUG("[rune::semi_fixed_game_loop] Tick rate: %f", m_rate);
+    CENTURION_LOG_DEBUG("[rune::semi_fixed_game_loop] Delta: %f", m_delta);
+    CENTURION_LOG_DEBUG("[rune::semi_fixed_game_loop] Max frames per tick: %i",
+                        m_maxFramesPerTick);
   }
 
   void fetch_current_time() noexcept
