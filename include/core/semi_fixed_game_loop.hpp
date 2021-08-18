@@ -4,6 +4,7 @@
 #include <centurion.hpp>  // ...
 #include <concepts>       // floating_point, derived_from
 
+#include "../math/max.hpp"
 #include "../math/min.hpp"
 #include "configuration.hpp"
 #include "game.hpp"
@@ -60,7 +61,7 @@ class semi_fixed_game_loop
       : m_engine{engine}
       , m_rate{rune::min(get_engine_max_tick_rate(),
                          static_cast<double>(cen::screen::refresh_rate().value()))}
-      , m_maxFramesPerTick{rune::min(1, get_engine_max_frames_per_tick())}
+      , m_maxFramesPerTick{rune::max(1, get_engine_max_frames_per_tick())}
       , m_delta{1.0 / m_rate}
       , m_current{cen::counter::now_in_seconds<double>()}
   {
