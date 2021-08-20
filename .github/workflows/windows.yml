@@ -22,7 +22,7 @@ jobs:
         shell: cmd
 
       - name: Download SDL2
-        uses: albin-johansson/download-sdl2@v1
+        uses: albin-johansson/download-sdl2@latest
         with:
           version: ${{env.SDL_VERSION}}
           sources_destination: .
