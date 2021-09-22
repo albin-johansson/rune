@@ -27,11 +27,6 @@ find_package(SDL2_image REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 
-add_header_only_lib(EnTT ${RUNE_LIBRARY_DIR}/entt ${RUNE_LIBRARY_DIR}/entt/entt.hpp)
-add_header_only_lib(Centurion ${RUNE_LIBRARY_DIR}/centurion ${RUNE_LIBRARY_DIR}/centurion/centurion.hpp)
-add_header_only_lib(JSON ${RUNE_LIBRARY_DIR}/json ${RUNE_LIBRARY_DIR}/json/json.hpp)
-add_header_only_lib(Nenya ${RUNE_LIBRARY_DIR}/nenya ${RUNE_LIBRARY_DIR}/nenya/nenya.hpp)
-
 add_subdirectory(test)
 
 if (RUNE_BUILD_EXAMPLES)

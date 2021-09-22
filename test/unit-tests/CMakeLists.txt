@@ -56,6 +56,7 @@ set(SOURCE_FILES
     )
 
 add_executable(UnitTests ${SOURCE_FILES})
+
 set_compiler_options(UnitTests)
 
 target_compile_definitions(UnitTests PRIVATE RUNE_DEBUG_CONTAINERS)
@@ -67,6 +68,10 @@ target_include_directories(UnitTests
     SYSTEM PUBLIC ${SDL2_IMAGE_INCLUDE_DIRS}
     SYSTEM PUBLIC ${SDL2_MIXER_INCLUDE_DIRS}
     SYSTEM PUBLIC ${SDL2_TTF_INCLUDE_DIRS}
+    SYSTEM PUBLIC ${RUNE_LIBRARY_DIR}/centurion
+    SYSTEM PUBLIC ${RUNE_LIBRARY_DIR}/entt
+    SYSTEM PUBLIC ${RUNE_LIBRARY_DIR}/json
+    SYSTEM PUBLIC ${RUNE_LIBRARY_DIR}/nenya
     SYSTEM PUBLIC ${TEST_LIBRARY_DIR}/cereal
     SYSTEM PUBLIC ${gtest_SOURCE_DIR}/include
     SYSTEM PUBLIC ${gtest_SOURCE_DIR}
@@ -78,10 +83,6 @@ target_link_libraries(UnitTests
     PUBLIC ${SDL2_MIXER_LIBRARIES}
     PUBLIC ${SDL2_TTF_LIBRARIES}
     PUBLIC ${SDL2_LIBRARY}
-    PUBLIC Centurion
-    PUBLIC EnTT
-    PUBLIC JSON
-    PUBLIC Nenya
     PUBLIC gtest)
 
 add_test(NAME UnitTests COMMAND UnitTests)
