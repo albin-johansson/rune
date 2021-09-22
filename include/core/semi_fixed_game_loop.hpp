@@ -53,7 +53,6 @@ class semi_fixed_game_loop
    * screen and the maximum tick rate, and selecting the minimum value.
    *
    * \param engine the associated engine instance.
-   * \param cfg the configuration that will be used.
    *
    * \since 0.1.0
    */
