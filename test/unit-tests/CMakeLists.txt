@@ -59,6 +59,22 @@ add_executable(UnitTests ${SOURCE_FILES})
 
 set_compiler_options(UnitTests)
 
+target_precompile_headers(UnitTests PRIVATE
+    <array>
+    <algorithm>
+    <vector>
+    <string>
+    <concepts>
+    <unordered_map>
+    <functional>
+    <utility>
+    <type_traits>
+
+    <centurion.hpp>
+    <entt.hpp>
+    <json.hpp>
+    )
+
 if (MSVC)
   target_compile_options(UnitTests PRIVATE
       /wd4834  # "discarding return value of function with 'nodiscard' attribute"
