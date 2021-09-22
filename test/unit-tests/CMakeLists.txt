@@ -59,6 +59,12 @@ add_executable(UnitTests ${SOURCE_FILES})
 
 set_compiler_options(UnitTests)
 
+if (MSVC)
+  target_compile_options(UnitTests PRIVATE
+      /wd4834  # "discarding return value of function with 'nodiscard' attribute"
+      )
+endif ()
+
 target_compile_definitions(UnitTests PRIVATE RUNE_DEBUG_CONTAINERS)
 
 target_include_directories(UnitTests
