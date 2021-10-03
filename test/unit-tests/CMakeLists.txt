@@ -30,7 +30,6 @@ set(SOURCE_FILES
     rune/io/ini_section_test.cpp
     rune/io/ini_test.cpp
     rune/io/ini_value_test.cpp
-    rune/io/json_utils_test.cpp
 
     rune/math/almost_equal_test.cpp
     rune/math/index_to_matrix_test.cpp
