@@ -4,12 +4,12 @@
 #include <centurion.hpp>  // window, renderer, iarea
 #include <concepts>       // convertible_to
 #include <filesystem>     // path
+#include <ini.hpp>        // ini, read_ini
 #include <string>         // string
 #include <utility>        // move
 
 #include "../aliases/integers.hpp"
 #include "../io/csv.hpp"
-#include "../io/ini.hpp"
 
 namespace rune {
 
@@ -114,15 +114,11 @@ struct configuration final
 {
   auto cfg = get_default_cfg();
 
-  const auto ini = read_ini(path);
-  if (!ini)
-  {
-    return cfg;
-  }
+  const auto ini = init::read_ini(path);
 
-  if (ini->contains("Engine"))
+  if (ini.contains("Engine"))
   {
-    const auto engine = ini->at("Engine");
+    const auto engine = ini.at("Engine");
 
     if (engine.contains("MaxTickRate"))
     {
@@ -135,9 +131,9 @@ struct configuration final
     }
   }
 
-  if (ini->contains("Window"))
+  if (ini.contains("Window"))
   {
-    const auto& window = ini->at("Window");
+    const auto& window = ini.at("Window");
 
     if (window.contains("WindowTitle"))
     {
@@ -155,9 +151,9 @@ struct configuration final
     }
   }
 
-  if (ini->contains("Graphics"))
+  if (ini.contains("Graphics"))
   {
-    const auto& graphics = ini->at("Graphics");
+    const auto& graphics = ini.at("Graphics");
 
     if (graphics.contains("RendererFlags"))
     {
@@ -202,9 +198,9 @@ struct configuration final
     }
   }
 
-  if (ini->contains("AABB"))
+  if (ini.contains("AABB"))
   {
-    const auto& aabb = ini->at("AABB");
+    const auto& aabb = ini.at("AABB");
 
     if (aabb.contains("TreeDefaultCapacity"))
     {
@@ -212,9 +208,9 @@ struct configuration final
     }
   }
 
-  if (ini->contains("UI"))
+  if (ini.contains("UI"))
   {
-    const auto& ui = ini->at("UI");
+    const auto& ui = ini.at("UI");
 
     if (ui.contains("MenuRowSize"))
     {
@@ -239,7 +235,7 @@ inline void save_configuration(const std::filesystem::path& path)
 {
   const auto& cfg = get_cfg();
 
-  ini_file ini;
+  init::ini ini;
 
   {
     std::string str;

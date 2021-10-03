@@ -27,9 +27,6 @@ set(SOURCE_FILES
     rune/ecs/ui/label_system_test.cpp
 
     rune/io/csv_test.cpp
-    rune/io/ini_section_test.cpp
-    rune/io/ini_test.cpp
-    rune/io/ini_value_test.cpp
 
     rune/math/almost_equal_test.cpp
     rune/math/index_to_matrix_test.cpp
@@ -68,28 +65,36 @@ endif ()
 target_compile_definitions(UnitTests PRIVATE RUNE_DEBUG_CONTAINERS)
 
 target_include_directories(UnitTests
-    PUBLIC .
-    PUBLIC ${RUNE_INCLUDE_DIR}
-    SYSTEM PUBLIC ${SDL2_INCLUDE_DIR}
-    SYSTEM PUBLIC ${SDL2_IMAGE_INCLUDE_DIRS}
-    SYSTEM PUBLIC ${SDL2_MIXER_INCLUDE_DIRS}
-    SYSTEM PUBLIC ${SDL2_TTF_INCLUDE_DIRS}
-    SYSTEM PUBLIC ${RUNE_LIBRARY_DIR}/centurion
-    SYSTEM PUBLIC ${RUNE_LIBRARY_DIR}/entt
-    SYSTEM PUBLIC ${RUNE_LIBRARY_DIR}/json
-    SYSTEM PUBLIC ${RUNE_LIBRARY_DIR}/nenya
-    SYSTEM PUBLIC ${TEST_LIBRARY_DIR}/cereal
-    SYSTEM PUBLIC ${gtest_SOURCE_DIR}/include
-    SYSTEM PUBLIC ${gtest_SOURCE_DIR}
-    SYSTEM PUBLIC ${gmock_SOURCE_DIR}/include
-    SYSTEM PUBLIC ${gmock_SOURCE_DIR})
+    PUBLIC
+    ${PROJECT_SOURCE_DIR}
+    ${RUNE_INCLUDE_DIR}
 
-target_link_libraries(UnitTests
-    PUBLIC ${SDL2_IMAGE_LIBRARIES}
-    PUBLIC ${SDL2_MIXER_LIBRARIES}
-    PUBLIC ${SDL2_TTF_LIBRARIES}
-    PUBLIC ${SDL2_LIBRARY}
-    PUBLIC gtest)
+    SYSTEM PUBLIC
+    ${SDL2_INCLUDE_DIR}
+    ${SDL2_IMAGE_INCLUDE_DIRS}
+    ${SDL2_MIXER_INCLUDE_DIRS}
+    ${SDL2_TTF_INCLUDE_DIRS}
+
+    ${RUNE_LIBRARY_DIR}/centurion
+    ${RUNE_LIBRARY_DIR}/entt
+    ${RUNE_LIBRARY_DIR}/json
+    ${RUNE_LIBRARY_DIR}/nenya
+    ${RUNE_LIBRARY_DIR}/init
+
+    ${TEST_LIBRARY_DIR}/cereal
+    ${gtest_SOURCE_DIR}/include
+    ${gtest_SOURCE_DIR}
+    ${gmock_SOURCE_DIR}/include
+    ${gmock_SOURCE_DIR}
+    )
+
+target_link_libraries(UnitTests PUBLIC
+    ${SDL2_IMAGE_LIBRARIES}
+    ${SDL2_MIXER_LIBRARIES}
+    ${SDL2_TTF_LIBRARIES}
+    ${SDL2_LIBRARY}
+    gtest
+    )
 
 add_test(NAME UnitTests COMMAND UnitTests)
 
