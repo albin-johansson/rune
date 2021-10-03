@@ -23,12 +23,12 @@
 #ifndef RUNE_EVERYTHING_HPP
 #define RUNE_EVERYTHING_HPP
 
-#include "aliases/font_id.hpp"
-#include "aliases/integers.hpp"
-#include "aliases/json_type.hpp"
-#include "aliases/str.hpp"
-#include "aliases/texture_id.hpp"
-#include "aliases/texture_index.hpp"
+#include "common/font_id.hpp"
+#include "common/integers.hpp"
+#include "common/json_type.hpp"
+#include "common/str.hpp"
+#include "common/texture_id.hpp"
+#include "common/texture_index.hpp"
 #include "containers/aabb.hpp"
 #include "containers/aabb_node.hpp"
 #include "containers/aabb_tree.hpp"

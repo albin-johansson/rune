@@ -5,7 +5,7 @@
 #include <cstddef>          // byte
 #include <memory_resource>  // memory_resource, monotonic_buffer_resource
 
-#include "../aliases/integers.hpp"
+#include "../common/integers.hpp"
 
 namespace rune {
 

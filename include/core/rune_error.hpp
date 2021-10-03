@@ -3,7 +3,7 @@
 
 #include <exception>  // exception
 
-#include "../aliases/str.hpp"
+#include "../common/str.hpp"
 
 namespace rune {
 

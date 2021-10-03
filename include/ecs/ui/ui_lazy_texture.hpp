@@ -3,7 +3,7 @@
 
 #include <centurion.hpp>  // surface, texture
 
-#include "../../aliases/maybe.hpp"
+#include "../../common/maybe.hpp"
 #include "../entity_type.hpp"
 
 namespace rune {

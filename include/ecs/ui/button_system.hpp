@@ -7,9 +7,9 @@
 #include <string>         // string
 #include <utility>        // move
 
-#include "../../aliases/font_id.hpp"
-#include "../../aliases/integers.hpp"
-#include "../../aliases/maybe.hpp"
+#include "../../common/font_id.hpp"
+#include "../../common/integers.hpp"
+#include "../../common/maybe.hpp"
 #include "../../core/graphics.hpp"
 #include "../events/button_pressed_event.hpp"
 #include "../null_entity.hpp"

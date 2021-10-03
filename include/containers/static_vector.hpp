@@ -7,7 +7,7 @@
 #include <initializer_list>  // initializer_list
 #include <utility>           // forward, move
 
-#include "../aliases/integers.hpp"
+#include "../common/integers.hpp"
 #include "../core/rune_error.hpp"
 
 namespace rune {

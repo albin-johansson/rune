@@ -5,7 +5,7 @@
 #include <centurion.hpp>  // window, renderer, ...
 #include <concepts>       // derived_from, constructible_from
 
-#include "../aliases/maybe.hpp"
+#include "../common/maybe.hpp"
 #include "configuration.hpp"
 #include "game.hpp"
 #include "graphics.hpp"

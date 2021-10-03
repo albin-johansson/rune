@@ -4,8 +4,8 @@
 #include <centurion.hpp>  // texture
 #include <string>         // string
 
-#include "../../aliases/font_id.hpp"
-#include "../../aliases/maybe.hpp"
+#include "../../common/font_id.hpp"
+#include "../../common/maybe.hpp"
 #include "../entity_type.hpp"
 #include "ui_lazy_texture.hpp"
 

@@ -4,7 +4,7 @@
 #include <centurion.hpp>  // texture, surface
 #include <entt.hpp>       // registry
 
-#include "../../aliases/str.hpp"
+#include "../../common/str.hpp"
 #include "../../core/graphics.hpp"
 #include "ui_lazy_texture.hpp"
 

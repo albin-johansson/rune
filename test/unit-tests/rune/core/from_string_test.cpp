@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "aliases/integers.hpp"
+#include "common/integers.hpp"
 
 TEST(FromString, Integer)
 {

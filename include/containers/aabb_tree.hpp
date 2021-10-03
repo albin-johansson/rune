@@ -16,8 +16,8 @@
 #include <unordered_map>  // unordered_map
 #include <vector>         // vector
 
-#include "../aliases/integers.hpp"
-#include "../aliases/maybe.hpp"
+#include "../common/integers.hpp"
+#include "../common/maybe.hpp"
 #include "../core/configuration.hpp"
 #include "../math/max.hpp"
 #include "../math/min.hpp"

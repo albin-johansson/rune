@@ -4,7 +4,7 @@
 #include <centurion.hpp>  // scan_code, key_mod
 #include <entt.hpp>       // registry, dispatcher
 
-#include "../../aliases/integers.hpp"
+#include "../../common/integers.hpp"
 #include "../../core/input.hpp"
 #include "../events/key_bind_triggered_event.hpp"
 #include "ui_key_bind.hpp"

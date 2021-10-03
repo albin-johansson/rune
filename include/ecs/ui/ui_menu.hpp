@@ -1,7 +1,7 @@
 #ifndef RUNE_ECS_UI_UI_MENU_HPP
 #define RUNE_ECS_UI_UI_MENU_HPP
 
-#include "../../aliases/integers.hpp"
+#include "../../common/integers.hpp"
 #include "../entity_type.hpp"
 #include "../null_entity.hpp"
 

@@ -8,7 +8,7 @@
 #include <string>         // string
 #include <utility>        // move
 
-#include "../aliases/integers.hpp"
+#include "../common/integers.hpp"
 #include "../io/csv.hpp"
 
 namespace rune {

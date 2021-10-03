@@ -5,8 +5,8 @@
 #include <string>    // string
 #include <utility>   // move
 
-#include "../../aliases/font_id.hpp"
-#include "../../aliases/integers.hpp"
+#include "../../common/font_id.hpp"
+#include "../../common/integers.hpp"
 #include "ui_label.hpp"
 #include "ui_menu.hpp"
 

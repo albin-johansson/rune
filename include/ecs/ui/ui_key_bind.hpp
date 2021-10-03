@@ -3,7 +3,7 @@
 
 #include <centurion.hpp>  // scan_code
 
-#include "../../aliases/integers.hpp"
+#include "../../common/integers.hpp"
 #include "../entity_type.hpp"
 
 namespace rune {

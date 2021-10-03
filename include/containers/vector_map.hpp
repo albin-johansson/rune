@@ -8,8 +8,8 @@
 #include <utility>    // pair, move, forward
 #include <vector>     // vector
 
-#include "../aliases/integers.hpp"
-#include "../aliases/maybe.hpp"
+#include "../common/integers.hpp"
+#include "../common/maybe.hpp"
 #include "../core/rune_error.hpp"
 
 namespace rune {

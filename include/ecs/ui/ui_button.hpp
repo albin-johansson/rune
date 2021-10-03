@@ -3,8 +3,8 @@
 
 #include <centurion.hpp>  // farea, fpoint
 
-#include "../../aliases/integers.hpp"
-#include "../../aliases/maybe.hpp"
+#include "../../common/integers.hpp"
+#include "../../common/maybe.hpp"
 #include "../entity_type.hpp"
 
 namespace rune {

@@ -7,7 +7,7 @@
 #include <string>         // string
 #include <utility>        // move
 
-#include "../../aliases/font_id.hpp"
+#include "../../common/font_id.hpp"
 #include "../../core/graphics.hpp"
 #include "../null_entity.hpp"
 #include "ui_button.hpp"

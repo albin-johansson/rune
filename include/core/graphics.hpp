@@ -8,10 +8,10 @@
 #include <utility>        // forward
 #include <vector>         // vector
 
-#include "../aliases/font_id.hpp"
-#include "../aliases/integers.hpp"
-#include "../aliases/texture_id.hpp"
-#include "../aliases/texture_index.hpp"
+#include "../common/font_id.hpp"
+#include "../common/integers.hpp"
+#include "../common/texture_id.hpp"
+#include "../common/texture_index.hpp"
 #include "compiler.hpp"
 #include "configuration.hpp"
 
