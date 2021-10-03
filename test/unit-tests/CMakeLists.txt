@@ -32,21 +32,6 @@ set(SOURCE_FILES
     rune/io/ini_value_test.cpp
     rune/io/json_utils_test.cpp
 
-    rune/io/tmx/tmx_animation_test.cpp
-    rune/io/tmx/tmx_color_test.cpp
-    rune/io/tmx/tmx_grid_test.cpp
-    rune/io/tmx/tmx_layer_test.cpp
-    rune/io/tmx/tmx_map_test.cpp
-    rune/io/tmx/tmx_object_test.cpp
-    rune/io/tmx/tmx_point_test.cpp
-    rune/io/tmx/tmx_property_test.cpp
-    rune/io/tmx/tmx_text_test.cpp
-    rune/io/tmx/tmx_tile_offset_test.cpp
-    rune/io/tmx/tmx_tileset_test.cpp
-    rune/io/tmx/tmx_wang_color_test.cpp
-    rune/io/tmx/tmx_wang_set_test.cpp
-    rune/io/tmx/tmx_wang_tile_test.cpp
-
     rune/math/almost_equal_test.cpp
     rune/math/index_to_matrix_test.cpp
     rune/math/min_test.cpp
