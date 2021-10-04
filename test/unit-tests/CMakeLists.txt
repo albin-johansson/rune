@@ -31,7 +31,8 @@ set(SOURCE_FILES
 add_executable(UnitTests ${SOURCE_FILES})
 add_dependencies(UnitTests ${RUNE_LIBRARY_TARGET})
 
-target_precompile_headers(UnitTests PRIVATE
+target_precompile_headers(UnitTests
+    PRIVATE
     <array>
     <algorithm>
     <vector>
@@ -41,13 +42,13 @@ target_precompile_headers(UnitTests PRIVATE
     <functional>
     <utility>
     <type_traits>
-
     <centurion.hpp>
     <entt.hpp>
     )
 
 if (MSVC)
-  target_compile_options(UnitTests PRIVATE
+  target_compile_options(UnitTests
+      PRIVATE
       /wd4834  # "discarding return value of function with 'nodiscard' attribute"
       )
 endif ()
