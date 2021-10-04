@@ -1,5 +1,5 @@
-#ifndef RUNE_CORE_CONFIGURATION_HPP
-#define RUNE_CORE_CONFIGURATION_HPP
+#ifndef RUNE_CONFIGURATION_HPP_
+#define RUNE_CONFIGURATION_HPP_
 
 #include <centurion.hpp>  // window, renderer, iarea
 #include <concepts>       // convertible_to
@@ -289,4 +289,4 @@ inline void save_configuration(const std::filesystem::path& path)
 
 }  // namespace rune
 
-#endif  // RUNE_CORE_CONFIGURATION_HPP
+#endif  // RUNE_CONFIGURATION_HPP_

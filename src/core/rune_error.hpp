@@ -1,5 +1,5 @@
-#ifndef RUNE_CORE_RUNE_ERROR_HPP
-#define RUNE_CORE_RUNE_ERROR_HPP
+#ifndef RUNE_RUNE_ERROR_HPP_
+#define RUNE_RUNE_ERROR_HPP_
 
 #include <exception>  // exception
 
@@ -31,4 +31,4 @@ class rune_error final : public std::exception
 
 }  // namespace rune
 
-#endif  // RUNE_CORE_RUNE_ERROR_HPP
+#endif  // RUNE_RUNE_ERROR_HPP_

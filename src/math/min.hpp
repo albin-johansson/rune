@@ -1,5 +1,5 @@
-#ifndef RUNE_MATH_MIN_HPP
-#define RUNE_MATH_MIN_HPP
+#ifndef RUNE_MIN_HPP_
+#define RUNE_MIN_HPP_
 
 namespace rune {
 
@@ -25,4 +25,4 @@ template <typename T>
 
 }  // namespace rune
 
-#endif  // RUNE_MATH_MIN_HPP
+#endif  // RUNE_MIN_HPP_

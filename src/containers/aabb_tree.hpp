@@ -1,5 +1,5 @@
-#ifndef RUNE_CONTAINERS_AABB_TREE_HPP
-#define RUNE_CONTAINERS_AABB_TREE_HPP
+#ifndef RUNE_AABB_TREE_HPP_
+#define RUNE_AABB_TREE_HPP_
 
 #include <array>          // array
 #include <cassert>        // assert
@@ -1174,4 +1174,4 @@ auto operator<<(std::ostream& stream, const aabb_tree<Key, Precision>& tree)
 
 }  // namespace rune
 
-#endif  // RUNE_CONTAINERS_AABB_TREE_HPP
+#endif  // RUNE_AABB_TREE_HPP_

@@ -1,5 +1,5 @@
-#ifndef RUNE_CORE_ENGINE_HPP
-#define RUNE_CORE_ENGINE_HPP
+#ifndef RUNE_ENGINE_HPP_
+#define RUNE_ENGINE_HPP_
 
 #include <cassert>        // assert
 #include <centurion.hpp>  // window, event, counter, screen, keyboard, mouse
@@ -12,7 +12,6 @@
 #include "../math/min.hpp"
 #include "configuration.hpp"
 #include "graphics.hpp"
-#include "input.hpp"
 
 namespace rune {
 
@@ -312,4 +311,4 @@ class engine final
 
 }  // namespace rune
 
-#endif  // RUNE_CORE_ENGINE_HPP
+#endif  // RUNE_ENGINE_HPP_

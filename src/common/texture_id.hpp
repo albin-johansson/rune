@@ -1,5 +1,5 @@
-#ifndef RUNE_ALIASES_TEXTURE_ID_HPP
-#define RUNE_ALIASES_TEXTURE_ID_HPP
+#ifndef RUNE_TEXTURE_ID_HPP_
+#define RUNE_TEXTURE_ID_HPP_
 
 #include <nenya.hpp>  // strong_type
 
@@ -45,4 +45,4 @@ using texture_id =
 
 }  // namespace rune
 
-#endif  // RUNE_ALIASES_TEXTURE_ID_HPP
+#endif  // RUNE_TEXTURE_ID_HPP_

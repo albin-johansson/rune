@@ -1,5 +1,5 @@
-#ifndef RUNE_CORE_FROM_STRING_HPP
-#define RUNE_CORE_FROM_STRING_HPP
+#ifndef RUNE_FROM_STRING_HPP_
+#define RUNE_FROM_STRING_HPP_
 
 #include <charconv>      // from_chars
 #include <concepts>      // floating_point, integral
@@ -51,4 +51,4 @@ template <std::floating_point T>
 
 }  // namespace rune
 
-#endif  // RUNE_CORE_FROM_STRING_HPP
+#endif  // RUNE_FROM_STRING_HPP_

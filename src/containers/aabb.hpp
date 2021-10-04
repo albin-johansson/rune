@@ -1,5 +1,5 @@
-#ifndef RUNE_CONTAINERS_AABB_HPP
-#define RUNE_CONTAINERS_AABB_HPP
+#ifndef RUNE_AABB_HPP_
+#define RUNE_AABB_HPP_
 
 #include <cassert>   // assert
 #include <concepts>  // floating_point
@@ -268,4 +268,4 @@ void fatten(basic_aabb<T>& aabb, const T percentage) noexcept
 
 }  // namespace rune
 
-#endif  // RUNE_CONTAINERS_AABB_HPP
+#endif  // RUNE_AABB_HPP_

@@ -1,5 +1,5 @@
-#ifndef RUNE_CONTAINERS_AABB_NODE_HPP
-#define RUNE_CONTAINERS_AABB_NODE_HPP
+#ifndef RUNE_AABB_NODE_HPP_
+#define RUNE_AABB_NODE_HPP_
 
 #include <concepts>  // floating_point
 
@@ -71,4 +71,4 @@ template <typename Key, std::floating_point Precision>
 
 }  // namespace rune
 
-#endif  // RUNE_CONTAINERS_AABB_NODE_HPP
+#endif  // RUNE_AABB_NODE_HPP_

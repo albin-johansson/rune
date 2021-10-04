@@ -1,5 +1,5 @@
-#ifndef RUNE_ALIASES_TEXTURE_INDEX_HPP
-#define RUNE_ALIASES_TEXTURE_INDEX_HPP
+#ifndef RUNE_TEXTURE_INDEX_HPP_
+#define RUNE_TEXTURE_INDEX_HPP_
 
 #include <nenya.hpp>  // strong_type
 
@@ -27,4 +27,4 @@ using texture_index = nenya::strong_type<usize, tags::texture_index_tag>;
 
 }  // namespace rune
 
-#endif  // RUNE_ALIASES_TEXTURE_INDEX_HPP
+#endif  // RUNE_TEXTURE_INDEX_HPP_

@@ -1,5 +1,5 @@
-#ifndef RUNE_MATH_MAX_HPP
-#define RUNE_MATH_MAX_HPP
+#ifndef RUNE_MAX_HPP_
+#define RUNE_MAX_HPP_
 
 #include <concepts>
 
@@ -29,4 +29,4 @@ template <typename T>
 
 }  // namespace rune
 
-#endif  // RUNE_MATH_MAX_HPP
+#endif  // RUNE_MAX_HPP_

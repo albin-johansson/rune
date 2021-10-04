@@ -1,5 +1,5 @@
-#ifndef RUNE_ALIASES_FONT_ID_HPP
-#define RUNE_ALIASES_FONT_ID_HPP
+#ifndef RUNE_FONT_ID_HPP_
+#define RUNE_FONT_ID_HPP_
 
 #include "integers.hpp"
 
@@ -9,4 +9,4 @@ using font_id = usize;
 
 }  // namespace rune
 
-#endif  // RUNE_ALIASES_FONT_ID_HPP
+#endif  // RUNE_FONT_ID_HPP_

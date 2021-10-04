@@ -1,5 +1,5 @@
-#ifndef RUNE_CORE_GRAPHICS_HPP
-#define RUNE_CORE_GRAPHICS_HPP
+#ifndef RUNE_GRAPHICS_HPP_
+#define RUNE_GRAPHICS_HPP_
 
 #include <cassert>        // assert
 #include <centurion.hpp>  // window, renderer, texture, font_cache, pixel_format
@@ -265,4 +265,4 @@ class graphics
 
 }  // namespace rune
 
-#endif  // RUNE_CORE_GRAPHICS_HPP
+#endif  // RUNE_GRAPHICS_HPP_
