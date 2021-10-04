@@ -22,9 +22,6 @@ set(SOURCE_FILES
     rune/ecs/entity_type_test.cpp
     rune/ecs/null_entity_test.cpp
 
-    rune/ecs/ui/button_system_test.cpp
-    rune/ecs/ui/label_system_test.cpp
-
     rune/io/csv_test.cpp
 
     rune/math/almost_equal_test.cpp

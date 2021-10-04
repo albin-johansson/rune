@@ -56,24 +56,6 @@ target_sources(${RUNE_LIBRARY_TARGET} PUBLIC INTERFACE
     include/ecs/null_entity.hpp
     include/ecs/events/button_pressed_event.hpp
     include/ecs/events/key_bind_triggered_event.hpp
-    include/ecs/ui/button_system.hpp
-    include/ecs/ui/key_bind_system.hpp
-    include/ecs/ui/label_system.hpp
-    include/ecs/ui/lazy_texture_system.hpp
-    include/ecs/ui/line_system.hpp
-    include/ecs/ui/menu_system.hpp
-    include/ecs/ui/ui_background.hpp
-    include/ecs/ui/ui_button.hpp
-    include/ecs/ui/ui_checkbox.hpp
-    include/ecs/ui/ui_foreground.hpp
-    include/ecs/ui/ui_grid.hpp
-    include/ecs/ui/ui_key_bind.hpp
-    include/ecs/ui/ui_label.hpp
-    include/ecs/ui/ui_lazy_texture.hpp
-    include/ecs/ui/ui_line.hpp
-    include/ecs/ui/ui_menu.hpp
-    include/ecs/ui/ui_position.hpp
-    include/ecs/ui/ui_system.hpp
     include/io/csv.hpp
     include/math/almost_equal.hpp
     include/math/index_to_matrix.hpp
