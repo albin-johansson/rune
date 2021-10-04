@@ -15,7 +15,6 @@ set(SOURCE_FILES
     rune/containers/vector_map_test.cpp
 
     rune/core/compiler_test.cpp
-    rune/core/configuration_test.cpp
     rune/core/from_string_test.cpp
 
     rune/io/csv_test.cpp
