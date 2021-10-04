@@ -62,7 +62,7 @@ target_compile_definitions(UnitTests PRIVATE
 target_include_directories(UnitTests
     PRIVATE
     ${PROJECT_SOURCE_DIR}
-    ${RUNE_INCLUDE_DIR}
+    ${RUNE_SOURCE_DIR}
 
     SYSTEM PRIVATE
     ${TEST_LIBRARY_DIR}/cereal

@@ -10,7 +10,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CXX_STANDARD_REQUIRED ON)
 set(CXX_EXTENSIONS OFF)
 
-set(RUNE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set(RUNE_SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
 set(RUNE_BINARY_DIR ${PROJECT_SOURCE_DIR}/bin)
 set(RUNE_LIBRARY_DIR ${PROJECT_SOURCE_DIR}/lib)
@@ -30,40 +29,40 @@ find_package(SDL2_ttf REQUIRED)
 add_library(${RUNE_LIBRARY_TARGET} INTERFACE)
 
 target_sources(${RUNE_LIBRARY_TARGET} PUBLIC INTERFACE
-    include/common/font_id.hpp
-    include/common/integers.hpp
-    include/common/json_type.hpp
-    include/common/maybe.hpp
-    include/common/str.hpp
-    include/common/texture_id.hpp
-    include/common/texture_index.hpp
-    include/containers/aabb.hpp
-    include/containers/aabb_node.hpp
-    include/containers/aabb_tree.hpp
-    include/containers/stack_resource.hpp
-    include/containers/static_vector.hpp
-    include/containers/vector_map.hpp
-    include/core/compiler.hpp
-    include/core/configuration.hpp
-    include/core/engine.hpp
-    include/core/from_string.hpp
-    include/core/graphics.hpp
-    include/core/input.hpp
-    include/core/iterable.hpp
-    include/core/rune_error.hpp
-    include/io/csv.hpp
-    include/math/almost_equal.hpp
-    include/math/index_to_matrix.hpp
-    include/math/max.hpp
-    include/math/min.hpp
-    include/math/random_utils.hpp
-    include/math/vector2.hpp
-    include/everything.hpp
+    src/common/font_id.hpp
+    src/common/integers.hpp
+    src/common/json_type.hpp
+    src/common/maybe.hpp
+    src/common/str.hpp
+    src/common/texture_id.hpp
+    src/common/texture_index.hpp
+    src/containers/aabb.hpp
+    src/containers/aabb_node.hpp
+    src/containers/aabb_tree.hpp
+    src/containers/stack_resource.hpp
+    src/containers/static_vector.hpp
+    src/containers/vector_map.hpp
+    src/core/compiler.hpp
+    src/core/configuration.hpp
+    src/core/engine.hpp
+    src/core/from_string.hpp
+    src/core/graphics.hpp
+    src/core/input.hpp
+    src/core/iterable.hpp
+    src/core/rune_error.hpp
+    src/io/csv.hpp
+    src/math/almost_equal.hpp
+    src/math/index_to_matrix.hpp
+    src/math/max.hpp
+    src/math/min.hpp
+    src/math/random_utils.hpp
+    src/math/vector2.hpp
+    src/everything.hpp
     )
 
 target_include_directories(${RUNE_LIBRARY_TARGET}
     PUBLIC INTERFACE
-    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/src
 
     SYSTEM PUBLIC INTERFACE
     ${SDL2_INCLUDE_DIR}
