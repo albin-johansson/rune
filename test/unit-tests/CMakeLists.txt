@@ -71,7 +71,8 @@ target_include_directories(UnitTests
     ${gmock_SOURCE_DIR}
     )
 
-target_link_libraries(UnitTests PRIVATE
+target_link_libraries(UnitTests
+    PRIVATE
     ${RUNE_LIBRARY_TARGET}
     gtest
     )
