@@ -44,7 +44,6 @@ target_precompile_headers(UnitTests PRIVATE
 
     <centurion.hpp>
     <entt.hpp>
-    <json.hpp>
     )
 
 if (MSVC)

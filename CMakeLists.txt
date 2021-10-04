@@ -64,7 +64,6 @@ target_include_directories(${RUNE_LIBRARY_TARGET}
     ${SDL2_MIXER_INCLUDE_DIRS}
     ${RUNE_LIBRARY_DIR}/centurion
     ${RUNE_LIBRARY_DIR}/entt
-    ${RUNE_LIBRARY_DIR}/json
     ${RUNE_LIBRARY_DIR}/init
     )
 
