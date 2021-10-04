@@ -30,7 +30,6 @@ add_library(${RUNE_LIBRARY_TARGET} INTERFACE)
 
 target_sources(${RUNE_LIBRARY_TARGET} PUBLIC INTERFACE
     src/common/cstr.hpp
-    src/common/font_id.hpp
     src/common/integers.hpp
     src/common/maybe.hpp
     src/containers/aabb.hpp
