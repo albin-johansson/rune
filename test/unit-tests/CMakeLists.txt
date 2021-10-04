@@ -52,7 +52,8 @@ if (MSVC)
       )
 endif ()
 
-target_compile_definitions(UnitTests PRIVATE
+target_compile_definitions(UnitTests
+    PRIVATE
     ENTT_STANDARD_CPP
     RUNE_DEBUG_CONTAINERS
     )
