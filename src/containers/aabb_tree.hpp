@@ -18,7 +18,6 @@
 
 #include "../common/integers.hpp"
 #include "../common/maybe.hpp"
-#include "../core/configuration.hpp"
 #include "../math/max.hpp"
 #include "../math/min.hpp"
 #include "../math/vector2.hpp"
@@ -83,7 +82,7 @@ class aabb_tree final
   /// \name Construction
   /// \{
 
-  explicit aabb_tree(const size_type capacity) : m_nodeCapacity{capacity}
+  explicit aabb_tree(const size_type capacity = 64u) : m_nodeCapacity{capacity}
   {
     assert(!m_root);
     assert(m_nodeCount == 0);
@@ -92,9 +91,6 @@ class aabb_tree final
     resize_to_match_node_capacity(0);
     assert(m_nextFreeIndex == 0);
   }
-
-  explicit aabb_tree() : aabb_tree{get_aabb_default_capacity()}
-  {}
 
   /// \} End of construction
 
