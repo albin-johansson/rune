@@ -1,7 +1,7 @@
 #include <iterator>  // back_inserter
 #include <vector>    // vector
 
-#include "../../src/everything.hpp"
+#include "../../src/rune.hpp"
 
 using rune::float2;
 using aabb_tree = rune::aabb_tree<entt::entity>;

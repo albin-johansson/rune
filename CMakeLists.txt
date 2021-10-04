@@ -54,7 +54,7 @@ target_sources(${RUNE_LIBRARY_TARGET} PUBLIC INTERFACE
     src/math/min.hpp
     src/math/random_utils.hpp
     src/math/vector2.hpp
-    src/everything.hpp
+    src/rune.hpp
     )
 
 target_include_directories(${RUNE_LIBRARY_TARGET}

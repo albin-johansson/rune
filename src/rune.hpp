@@ -20,8 +20,8 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef RUNE_EVERYTHING_HPP
-#define RUNE_EVERYTHING_HPP
+#ifndef RUNE_HPP_
+#define RUNE_HPP_
 
 #include "common/cstr.hpp"
 #include "common/font_id.hpp"
@@ -38,7 +38,6 @@
 #include "core/configuration.hpp"
 #include "core/engine.hpp"
 #include "core/from_string.hpp"
-#include "core/iterable.hpp"
 #include "core/rune_error.hpp"
 #include "math/almost_equal.hpp"
 #include "math/index_to_matrix.hpp"
@@ -47,4 +46,4 @@
 #include "math/random_utils.hpp"
 #include "math/vector2.hpp"
 
-#endif  // RUNE_EVERYTHING_HPP
+#endif  // RUNE_HPP_

@@ -2,9 +2,9 @@
   "project": "rune",
   "target": "single-include/rune.hpp",
   "sources": [
-    "include/everything.hpp"
+    "src/rune.hpp"
   ],
   "include_paths": [
-    "include"
+    "src"
   ]
 }
