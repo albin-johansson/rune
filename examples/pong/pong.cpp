@@ -4,6 +4,7 @@
 #include "../../include/everything.hpp"
 
 using rune::float2;
+using aabb_tree = rune::aabb_tree<entt::entity>;
 
 namespace {
 namespace comp {
@@ -15,6 +16,12 @@ struct movable final
 };
 
 struct paddle final
+{};
+
+struct left_paddle
+{};
+
+struct right_paddle
 {};
 
 struct ball final
@@ -70,7 +77,7 @@ auto make_ball(entt::registry& registry) -> entt::entity
   return entity;
 }
 
-class pong_game final : public rune::game_base
+class pong_game final
 {
   constexpr static auto key_left_up = cen::scancodes::w;
   constexpr static auto key_left_down = cen::scancodes::s;
@@ -79,103 +86,61 @@ class pong_game final : public rune::game_base
 
  public:
   pong_game()
-      : m_left{make_paddle(m_registry, initial_left_paddle_pos)}
-      , m_right{make_paddle(m_registry, initial_right_paddle_pos)}
-      , m_ball{make_ball(m_registry)}
   {
-    m_tree.disable_thickness_factor();
-    m_tree.insert(m_left, initial_left_paddle_pos, initial_left_paddle_pos + paddle_size);
-    m_tree.insert(m_right,
-                  initial_right_paddle_pos,
-                  initial_right_paddle_pos + paddle_size);
-    m_tree.insert(m_ball, initial_ball_pos, initial_ball_pos + ball_size);
+    mEngine.add_input_system<&pong_game::handle_input>(this);
+
+    mEngine.add_logic_system<&pong_game::update_movables>();
+    mEngine.add_logic_system<&pong_game::update_ball>();
+
+    mEngine.add_render_system<&pong_game::pre_render>();
+    mEngine.add_render_system<&pong_game::render_paddles>();
+    mEngine.add_render_system<&pong_game::render_ball>();
+    mEngine.add_render_system<&pong_game::post_render>();
+
+    auto& registry = mEngine.registry();
+    registry.set<cen::renderer>(mEngine.window(), cen::renderer::accelerated);
+
+    const auto left = make_paddle(registry, initial_left_paddle_pos);
+    const auto right = make_paddle(registry, initial_right_paddle_pos);
+    const auto ball = make_ball(registry);
+
+    registry.emplace<comp::left_paddle>(left);
+    registry.emplace<comp::right_paddle>(right);
+
+    auto& tree = registry.set<aabb_tree>();
+    tree.disable_thickness_factor();
+    tree.insert(left, initial_left_paddle_pos, initial_left_paddle_pos + paddle_size);
+    tree.insert(right, initial_right_paddle_pos, initial_right_paddle_pos + paddle_size);
+    tree.insert(ball, initial_ball_pos, initial_ball_pos + ball_size);
   }
 
-  void handle_input(const rune::input& input) override
+  void run()
   {
-    const auto& keyboard = input.keyboard;
-
-    if (keyboard.just_released(cen::keycodes::escape))
-    {
-      m_quit = true;
-      return;
-    }
-
-    auto updateMovable = [](comp::movable& movable, const bool up, const bool down) {
-      if (up && down || !up && !down)
-      {
-        movable.velocity.reset();
-      }
-      else if (up)
-      {
-        movable.velocity.y = -paddle_speed;
-      }
-      else
-      {
-        movable.velocity.y = paddle_speed;
-      }
-    };
-
-    updateMovable(m_registry.get<comp::movable>(m_left),
-                  keyboard.is_pressed(key_left_up),
-                  keyboard.is_pressed(key_left_down));
-
-    updateMovable(m_registry.get<comp::movable>(m_right),
-                  keyboard.is_pressed(key_right_up),
-                  keyboard.is_pressed(key_right_down));
-  }
-
-  void tick(const float dt) override
-  {
-    for (auto&& [entity, movable] : m_registry.view<comp::movable>().each())
-    {
-      movable.position += movable.velocity * dt;
-      m_tree.set_position(entity, movable.position);
-    }
-
-    update_ball();
-  }
-
-  void render(rune::graphics& graphics) const override
-  {
-    auto& renderer = graphics.get_renderer();
-    renderer.clear_with(cen::colors::teal);
-
-    renderer.set_color(cen::colors::white);
-    for (auto&& [entity, movable] : m_registry.view<comp::movable, comp::paddle>().each())
-    {
-      const auto& pos = movable.position;
-      renderer.fill_rect(cen::rect(pos.x, pos.y, paddle_width, paddle_height));
-    }
-
-    for (auto&& [entity, movable, ball] :
-         m_registry.view<comp::movable, comp::ball>().each())
-    {
-      const auto& pos = movable.position;
-      renderer.fill_circle({pos.x + ball_radius / 2.0f, pos.y + ball_radius / 2.0f},
-                           ball_radius);
-    }
-
-    renderer.present();
-  }
-
-  [[nodiscard]] auto should_quit() const noexcept -> bool override
-  {
-    return m_quit;
+    mEngine.run();
   }
 
  private:
-  entt::registry m_registry;
-  rune::aabb_tree<entt::entity> m_tree;
-  entt::entity m_left{entt::null};
-  entt::entity m_right{entt::null};
-  entt::entity m_ball{entt::null};
-  bool m_quit{};
+  rune::engine mEngine;
 
-  void update_ball()
+  // Movable system
+  static void update_movables(entt::registry& registry,
+                              entt::dispatcher& /*dispatcher*/,
+                              const float dt)
   {
-    for (auto&& [entity, movable, ball] :
-         m_registry.view<comp::movable, comp::ball>().each())
+    auto& tree = registry.ctx<aabb_tree>();
+    for (auto&& [entity, movable] : registry.view<comp::movable>().each())
+    {
+      movable.position += movable.velocity * dt;
+      tree.set_position(entity, movable.position);
+    }
+  }
+
+  // Ball system
+  static void update_ball(entt::registry& registry)
+  {
+    auto& tree = registry.ctx<aabb_tree>();
+    for (auto&& [ballEntity, movable, ball] :
+         registry.view<comp::movable, comp::ball>().each())
     {
       if (movable.position.y <= 0)
       {
@@ -191,10 +156,10 @@ class pong_game final : public rune::game_base
       if (ball.active)
       {
         std::vector<entt::entity> candidates;
-        m_tree.query(m_ball, std::back_inserter(candidates));
+        tree.query(ballEntity, std::back_inserter(candidates));
         for (const auto candidate : candidates)
         {
-          if (candidate == m_left || candidate == m_right)
+          if (registry.any_of<comp::left_paddle, comp::right_paddle>(candidate))
           {
             movable.velocity.x *= -1.0f;
             ball.active = false;
@@ -208,6 +173,80 @@ class pong_game final : public rune::game_base
         ball.active = true;
       }
     }
+  }
+
+  void handle_input(entt::registry& registry, entt::dispatcher& dispatcher)
+  {
+    const auto& keyboard = mEngine.keyboard();
+
+    if (keyboard.just_released(cen::keycodes::escape))
+    {
+      mEngine.stop();
+      return;
+    }
+
+    auto updateMovable = [&](const entt::entity entity, const bool up, const bool down) {
+      auto& movable = registry.get<comp::movable>(entity);
+
+      if (up && down || !up && !down)
+      {
+        movable.velocity.reset();
+      }
+      else if (up)
+      {
+        movable.velocity.y = -paddle_speed;
+      }
+      else
+      {
+        movable.velocity.y = paddle_speed;
+      }
+    };
+
+    updateMovable(registry.view<comp::movable, comp::left_paddle>().front(),
+                  keyboard.is_pressed(key_left_up),
+                  keyboard.is_pressed(key_left_down));
+
+    updateMovable(registry.view<comp::movable, comp::right_paddle>().front(),
+                  keyboard.is_pressed(key_right_up),
+                  keyboard.is_pressed(key_right_down));
+  }
+
+  static void pre_render(entt::registry& registry)
+  {
+    auto& renderer = registry.ctx<cen::renderer>();
+    renderer.clear_with(cen::colors::teal);
+  }
+
+  static void render_paddles(entt::registry& registry)
+  {
+    auto& renderer = registry.ctx<cen::renderer>();
+    renderer.set_color(cen::colors::white);
+
+    for (auto&& [entity, movable] : registry.view<comp::movable, comp::paddle>().each())
+    {
+      const auto& pos = movable.position;
+      renderer.fill_rect(cen::rect(pos.x, pos.y, paddle_width, paddle_height));
+    }
+  }
+
+  static void render_ball(entt::registry& registry)
+  {
+    auto& renderer = registry.ctx<cen::renderer>();
+    renderer.set_color(cen::colors::white);
+
+    for (auto&& [entity, movable, ball] :
+         registry.view<comp::movable, comp::ball>().each())
+    {
+      const auto& pos = movable.position;
+      renderer.fill_circle({pos.x + ball_radius / 2.0f, pos.y + ball_radius / 2.0f},
+                           ball_radius);
+    }
+  }
+
+  static void post_render(entt::registry& registry)
+  {
+    auto& renderer = registry.ctx<cen::renderer>();
+    renderer.present();
   }
 };
 
@@ -224,7 +263,9 @@ int main(int, char**)
   }
 
   rune::load_configuration("pong.ini");
-  rune::engine<pong_game> engine;
 
-  return engine.run();
+  pong_game game;
+  game.run();
+
+  return 0;
 }
