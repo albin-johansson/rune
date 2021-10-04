@@ -23,9 +23,9 @@
 #ifndef RUNE_EVERYTHING_HPP
 #define RUNE_EVERYTHING_HPP
 
+#include "common/cstr.hpp"
 #include "common/font_id.hpp"
 #include "common/integers.hpp"
-#include "common/str.hpp"
 #include "common/texture_id.hpp"
 #include "common/texture_index.hpp"
 #include "containers/aabb.hpp"

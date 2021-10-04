@@ -3,7 +3,7 @@
 
 #include <exception>  // exception
 
-#include "../common/str.hpp"
+#include "../common/cstr.hpp"
 
 namespace rune {
 
@@ -17,16 +17,16 @@ namespace rune {
 class rune_error final : public std::exception
 {
  public:
-  explicit rune_error(const str what) noexcept : m_what{what}
+  explicit rune_error(const cstr what) noexcept : m_what{what}
   {}
 
-  [[nodiscard]] auto what() const noexcept -> str override
+  [[nodiscard]] auto what() const noexcept -> cstr override
   {
     return m_what;
   }
 
  private:
-  str m_what{"n/a"};
+  cstr m_what{"n/a"};
 };
 
 }  // namespace rune
