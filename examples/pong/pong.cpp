@@ -86,6 +86,7 @@ class pong_game final
 
  public:
   pong_game()
+      : mEngine{rune::configuration{.window_title = "Pong", .window_size = {400, 300}}}
   {
     mEngine.add_input_system<&pong_game::handle_input>(this);
 
@@ -98,7 +99,8 @@ class pong_game final
     mEngine.add_render_system<&pong_game::post_render>();
 
     auto& registry = mEngine.registry();
-    registry.set<cen::renderer>(mEngine.window(), cen::renderer::accelerated);
+    auto& renderer = registry.set<cen::renderer>(mEngine.window());
+    renderer.set_logical_size({logical_width, logical_height});
 
     const auto left = make_paddle(registry, initial_left_paddle_pos);
     const auto right = make_paddle(registry, initial_right_paddle_pos);
@@ -261,8 +263,6 @@ int main(int, char**)
   {
     cen::log::set_priority(cen::log_priority::debug);
   }
-
-  rune::load_configuration("pong.ini");
 
   pong_game game;
   game.run();
