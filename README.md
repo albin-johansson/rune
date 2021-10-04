@@ -51,7 +51,7 @@ class AwesomeGame final
     mEngine.on_start<&AwesomeGame::on_start>(this); // Called once before the game loop starts running
     mEngine.on_exit<&AwesomeGame::on_exit>(this);   // Called once just before shutdown
     
-    /* Register the various systems, you register several systems of these different categories. 
+    /* Register the various systems, you can register several systems to these different categories. 
        Call order: input systems -> logic systems -> render systems */
     mEngine.add_input_system<&AwesomeGame::update_input>(this);
     mEngine.add_logic_system<&AwesomeGame::update_logic>(this);
