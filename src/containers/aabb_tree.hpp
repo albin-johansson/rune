@@ -1,6 +1,7 @@
 #ifndef RUNE_AABB_TREE_HPP_
 #define RUNE_AABB_TREE_HPP_
 
+#include <algorithm>      // min, max
 #include <array>          // array
 #include <cassert>        // assert
 #include <cmath>          // abs
@@ -18,8 +19,6 @@
 
 #include "../common/integers.hpp"
 #include "../common/maybe.hpp"
-#include "../math/max.hpp"
-#include "../math/min.hpp"
 #include "../math/vector2.hpp"
 #include "aabb.hpp"
 #include "aabb_node.hpp"
@@ -237,7 +236,7 @@ class aabb_tree final
 
         parentNode.left = index1;
         parentNode.right = index2;
-        parentNode.height = 1 + max(index1Node.height, index2Node.height);
+        parentNode.height = 1 + std::max(index1Node.height, index2Node.height);
         parentNode.box = merge(index1Node.box, index2Node.box);
         parentNode.parent = nothing;
 
@@ -281,7 +280,7 @@ class aabb_tree final
         const auto rightHeight = m_nodes.at(*node.right).height;
 
         const auto balance = std::abs(leftHeight - rightHeight);
-        maxBalance = max(maxBalance, static_cast<size_type>(balance));
+        maxBalance = std::max(maxBalance, static_cast<size_type>(balance));
       }
     }
 
@@ -779,8 +778,8 @@ class aabb_tree final
       node.box = merge(leftNode.box, rightRightNode.box);
       rightNode.box = merge(node.box, rightLeftNode.box);
 
-      node.height = 1 + max(leftNode.height, rightRightNode.height);
-      rightNode.height = 1 + max(node.height, rightLeftNode.height);
+      node.height = 1 + std::max(leftNode.height, rightRightNode.height);
+      rightNode.height = 1 + std::max(node.height, rightLeftNode.height);
     }
     else
     {
@@ -792,8 +791,8 @@ class aabb_tree final
       node.box = merge(leftNode.box, rightLeftNode.box);
       rightNode.box = merge(node.box, rightRightNode.box);
 
-      node.height = 1 + max(leftNode.height, rightLeftNode.height);
-      rightNode.height = 1 + max(node.height, rightRightNode.height);
+      node.height = 1 + std::max(leftNode.height, rightLeftNode.height);
+      rightNode.height = 1 + std::max(node.height, rightRightNode.height);
     }
   }
 
@@ -849,8 +848,8 @@ class aabb_tree final
       node.box = merge(rightNode.box, leftRightNode.box);
       leftNode.box = merge(node.box, leftLeftNode.box);
 
-      node.height = 1 + max(rightNode.height, leftRightNode.height);
-      leftNode.height = 1 + max(node.height, leftLeftNode.height);
+      node.height = 1 + std::max(rightNode.height, leftRightNode.height);
+      leftNode.height = 1 + std::max(node.height, leftLeftNode.height);
     }
     else
     {
@@ -862,8 +861,8 @@ class aabb_tree final
       node.box = merge(rightNode.box, leftLeftNode.box);
       leftNode.box = merge(node.box, leftRightNode.box);
 
-      node.height = 1 + max(rightNode.height, leftLeftNode.height);
-      leftNode.height = 1 + max(node.height, leftRightNode.height);
+      node.height = 1 + std::max(rightNode.height, leftLeftNode.height);
+      leftNode.height = 1 + std::max(node.height, leftRightNode.height);
     }
   }
 
@@ -912,7 +911,7 @@ class aabb_tree final
       const auto& rightNode = m_nodes.at(node.right.value());
 
       node.box = merge(leftNode.box, rightNode.box);
-      node.height = 1 + max(leftNode.height, rightNode.height);
+      node.height = 1 + std::max(leftNode.height, rightNode.height);
 
       index = node.parent;
     }
@@ -1047,7 +1046,7 @@ class aabb_tree final
     {
       const auto left = compute_height(node.left);
       const auto right = compute_height(node.right);
-      return 1 + max(left, right);
+      return 1 + std::max(left, right);
     }
   }
 
@@ -1121,7 +1120,7 @@ class aabb_tree final
 
       const auto leftHeight = m_nodes.at(*left).height;
       const auto rightHeight = m_nodes.at(*right).height;
-      const auto height = 1 + max(leftHeight, rightHeight);
+      const auto height = 1 + std::max(leftHeight, rightHeight);
       assert(node.height == height);
 
       const auto box = merge(m_nodes.at(*left).box, m_nodes.at(*right).box);

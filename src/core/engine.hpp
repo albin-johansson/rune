@@ -1,6 +1,7 @@
 #ifndef RUNE_ENGINE_HPP_
 #define RUNE_ENGINE_HPP_
 
+#include <algorithm>      // min, max
 #include <cassert>        // assert
 #include <centurion.hpp>  // window, event, counter, screen, keyboard, mouse
 #include <entt.hpp>       // registry, dispatcher, delegate
@@ -8,8 +9,6 @@
 #include <vector>         // vector
 
 #include "../common/maybe.hpp"
-#include "../math/max.hpp"
-#include "../math/min.hpp"
 #include "configuration.hpp"
 
 namespace rune {
@@ -23,12 +22,12 @@ class engine final
   using seconds_type = cen::seconds<double>;
   using delta_type = float;
 
-  engine()
-      : mWindow{get_window_title(), get_window_size()}
-      , mRate{rune::min(
-            get_engine_max_tick_rate(),
+  explicit engine(const configuration& cfg = {})
+      : mWindow{cfg.window_title, cfg.window_size}
+      , mRate{std::min(
+            cfg.max_tick_rate,
             static_cast<seconds_type::rep>(cen::screen::refresh_rate().value()))}
-      , mMaxFramesPerTick{rune::max(1, get_engine_max_frames_per_tick())}
+      , mMaxFramesPerTick{std::max(cfg.max_frames_per_tick, 1)}
       , mDelta{1.0 / mRate}
       , mCurrent{cen::counter::now_in_seconds<seconds_type::rep>()}
   {
@@ -257,7 +256,7 @@ class engine final
         break;
       }
 
-      const auto dt = rune::min(frameTime, mDelta);
+      const auto dt = std::min(frameTime, mDelta);
       update_logic(static_cast<delta_type>(dt.count()));
 
       frameTime -= dt;

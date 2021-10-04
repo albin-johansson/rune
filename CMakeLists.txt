@@ -47,8 +47,6 @@ target_sources(${RUNE_LIBRARY_TARGET}
     src/io/csv.hpp
     src/math/almost_equal.hpp
     src/math/index_to_matrix.hpp
-    src/math/max.hpp
-    src/math/min.hpp
     src/math/random_utils.hpp
     src/math/vector2.hpp
     src/rune.hpp
