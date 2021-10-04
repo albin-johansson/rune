@@ -11,7 +11,6 @@
 #include "../math/max.hpp"
 #include "../math/min.hpp"
 #include "configuration.hpp"
-#include "graphics.hpp"
 
 namespace rune {
 

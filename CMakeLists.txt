@@ -33,8 +33,6 @@ target_sources(${RUNE_LIBRARY_TARGET} PUBLIC INTERFACE
     src/common/font_id.hpp
     src/common/integers.hpp
     src/common/maybe.hpp
-    src/common/texture_id.hpp
-    src/common/texture_index.hpp
     src/containers/aabb.hpp
     src/containers/aabb_node.hpp
     src/containers/aabb_tree.hpp
@@ -45,7 +43,6 @@ target_sources(${RUNE_LIBRARY_TARGET} PUBLIC INTERFACE
     src/core/configuration.hpp
     src/core/engine.hpp
     src/core/from_string.hpp
-    src/core/graphics.hpp
     src/core/rune_error.hpp
     src/io/csv.hpp
     src/math/almost_equal.hpp
