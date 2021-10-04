@@ -46,8 +46,6 @@ target_sources(${RUNE_LIBRARY_TARGET} PUBLIC INTERFACE
     src/core/engine.hpp
     src/core/from_string.hpp
     src/core/graphics.hpp
-    src/core/input.hpp
-    src/core/iterable.hpp
     src/core/rune_error.hpp
     src/io/csv.hpp
     src/math/almost_equal.hpp

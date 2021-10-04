@@ -17,7 +17,6 @@ set(SOURCE_FILES
     rune/core/compiler_test.cpp
     rune/core/configuration_test.cpp
     rune/core/from_string_test.cpp
-    rune/core/iterable_test.cpp
 
     rune/io/csv_test.cpp
 
