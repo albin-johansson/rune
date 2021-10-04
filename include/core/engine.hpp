@@ -183,6 +183,16 @@ class engine final
     return mRegistry;
   }
 
+  [[nodiscard]] auto dispatcher() noexcept -> entt::dispatcher&
+  {
+    return mDispatcher;
+  }
+
+  [[nodiscard]] auto dispatcher() const noexcept -> const entt::dispatcher&
+  {
+    return mDispatcher;
+  }
+
   [[nodiscard]] auto keyboard() const noexcept -> const cen::keyboard&
   {
     return mKeyboard;
