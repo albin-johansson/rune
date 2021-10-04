@@ -37,8 +37,7 @@ set(SOURCE_FILES
     )
 
 add_executable(UnitTests ${SOURCE_FILES})
-
-set_compiler_options(UnitTests)
+add_dependencies(UnitTests ${RUNE_LIBRARY_TARGET})
 
 target_precompile_headers(UnitTests PRIVATE
     <array>
@@ -62,25 +61,17 @@ if (MSVC)
       )
 endif ()
 
-target_compile_definitions(UnitTests PRIVATE RUNE_DEBUG_CONTAINERS)
+target_compile_definitions(UnitTests PRIVATE
+    ENTT_STANDARD_CPP
+    RUNE_DEBUG_CONTAINERS
+    )
 
 target_include_directories(UnitTests
-    PUBLIC
+    PRIVATE
     ${PROJECT_SOURCE_DIR}
     ${RUNE_INCLUDE_DIR}
 
-    SYSTEM PUBLIC
-    ${SDL2_INCLUDE_DIR}
-    ${SDL2_IMAGE_INCLUDE_DIRS}
-    ${SDL2_MIXER_INCLUDE_DIRS}
-    ${SDL2_TTF_INCLUDE_DIRS}
-
-    ${RUNE_LIBRARY_DIR}/centurion
-    ${RUNE_LIBRARY_DIR}/entt
-    ${RUNE_LIBRARY_DIR}/json
-    ${RUNE_LIBRARY_DIR}/nenya
-    ${RUNE_LIBRARY_DIR}/init
-
+    SYSTEM PRIVATE
     ${TEST_LIBRARY_DIR}/cereal
     ${gtest_SOURCE_DIR}/include
     ${gtest_SOURCE_DIR}
@@ -88,11 +79,8 @@ target_include_directories(UnitTests
     ${gmock_SOURCE_DIR}
     )
 
-target_link_libraries(UnitTests PUBLIC
-    ${SDL2_IMAGE_LIBRARIES}
-    ${SDL2_MIXER_LIBRARIES}
-    ${SDL2_TTF_LIBRARIES}
-    ${SDL2_LIBRARY}
+target_link_libraries(UnitTests PRIVATE
+    ${RUNE_LIBRARY_TARGET}
     gtest
     )
 

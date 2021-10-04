@@ -46,41 +46,6 @@ function(copy_directory_post_build target from to)
       ${to})
 endfunction()
 
-# Sets appropriate compiler options depending on the current platform.
-#   target: the associated target.
-function(set_compiler_options target)
-  if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    target_compile_options(${target} PRIVATE
-        /EHsc
-        /MP
-        /W3
-        /Zc:__cplusplus # Force MSVC to use __cplusplus macro with correct value
-        /Zc:preprocessor # Enable conforming preprocessor
-        /wd5105  # Disable C5105: "macro expansion producing 'defined' has undefined behavior"
-        )
-
-  elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    target_compile_options(${target} PRIVATE
-        /EHsc)
-
-  elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    target_compile_options(${target} PRIVATE
-        -Wall
-        -Wextra
-        -Wpedantic
-        -Wdouble-promotion
-        -Wswitch-default
-        -Wswitch-enum
-        -Wuninitialized
-        -Wsuggest-final-types
-        -Wsuggest-final-methods
-        -Wsuggest-override
-        -Wduplicated-cond
-        -Wconversion
-        -Wno-attributes)
-  endif ()
-endfunction()
-
 # Adds an executable associated with the target, will be created using WIN32 on windows.
 #   target: the associated target.
 function(create_executable name files)
