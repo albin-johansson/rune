@@ -14,4 +14,3 @@ macro(configure_example target)
 endmacro()
 
 add_subdirectory(pong)
-add_subdirectory(ui)
