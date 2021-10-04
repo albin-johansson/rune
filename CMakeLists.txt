@@ -65,7 +65,6 @@ target_include_directories(${RUNE_LIBRARY_TARGET}
     ${RUNE_LIBRARY_DIR}/centurion
     ${RUNE_LIBRARY_DIR}/entt
     ${RUNE_LIBRARY_DIR}/json
-    ${RUNE_LIBRARY_DIR}/nenya
     ${RUNE_LIBRARY_DIR}/init
     )
 
