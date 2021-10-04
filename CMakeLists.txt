@@ -28,7 +28,8 @@ find_package(SDL2_ttf REQUIRED)
 
 add_library(${RUNE_LIBRARY_TARGET} INTERFACE)
 
-target_sources(${RUNE_LIBRARY_TARGET} PUBLIC INTERFACE
+target_sources(${RUNE_LIBRARY_TARGET}
+    PUBLIC INTERFACE
     src/common/cstr.hpp
     src/common/integers.hpp
     src/common/maybe.hpp
@@ -76,7 +77,8 @@ target_link_libraries(${RUNE_LIBRARY_TARGET}
     )
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-  target_compile_options(${RUNE_LIBRARY_TARGET} PUBLIC INTERFACE
+  target_compile_options(${RUNE_LIBRARY_TARGET}
+      PUBLIC INTERFACE
       /EHsc
       /MP
       /W3
@@ -86,12 +88,14 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
       )
 
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-  target_compile_options(${RUNE_LIBRARY_TARGET} PUBLIC INTERFACE
+  target_compile_options(${RUNE_LIBRARY_TARGET}
+      PUBLIC INTERFACE
       /EHsc
       )
 
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  target_compile_options(${RUNE_LIBRARY_TARGET} PUBLIC INTERFACE
+  target_compile_options(${RUNE_LIBRARY_TARGET}
+      PUBLIC INTERFACE
       -Wall
       -Wextra
       -Wpedantic
