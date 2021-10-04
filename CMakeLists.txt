@@ -31,7 +31,6 @@ add_library(${RUNE_LIBRARY_TARGET} INTERFACE)
 target_sources(${RUNE_LIBRARY_TARGET} PUBLIC INTERFACE
     src/common/font_id.hpp
     src/common/integers.hpp
-    src/common/json_type.hpp
     src/common/maybe.hpp
     src/common/str.hpp
     src/common/texture_id.hpp

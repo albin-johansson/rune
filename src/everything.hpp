@@ -25,7 +25,6 @@
 
 #include "common/font_id.hpp"
 #include "common/integers.hpp"
-#include "common/json_type.hpp"
 #include "common/str.hpp"
 #include "common/texture_id.hpp"
 #include "common/texture_index.hpp"
