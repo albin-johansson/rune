@@ -38,8 +38,6 @@
 #include "core/rune_error.hpp"
 #include "math/almost_equal.hpp"
 #include "math/index_to_matrix.hpp"
-#include "math/max.hpp"
-#include "math/min.hpp"
 #include "math/random_utils.hpp"
 #include "math/vector2.hpp"
 
