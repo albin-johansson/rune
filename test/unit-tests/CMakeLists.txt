@@ -19,9 +19,6 @@ set(SOURCE_FILES
     rune/core/from_string_test.cpp
     rune/core/iterable_test.cpp
 
-    rune/ecs/entity_type_test.cpp
-    rune/ecs/null_entity_test.cpp
-
     rune/io/csv_test.cpp
 
     rune/math/almost_equal_test.cpp

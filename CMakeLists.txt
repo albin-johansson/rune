@@ -51,11 +51,6 @@ target_sources(${RUNE_LIBRARY_TARGET} PUBLIC INTERFACE
     include/core/input.hpp
     include/core/iterable.hpp
     include/core/rune_error.hpp
-    include/ecs/ecs_utils.hpp
-    include/ecs/entity_type.hpp
-    include/ecs/null_entity.hpp
-    include/ecs/events/button_pressed_event.hpp
-    include/ecs/events/key_bind_triggered_event.hpp
     include/io/csv.hpp
     include/math/almost_equal.hpp
     include/math/index_to_matrix.hpp
