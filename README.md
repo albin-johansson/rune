@@ -47,6 +47,7 @@ class AwesomeGame final
 {
  public:
   AwesomeGame()
+    : mEngine{rune::configuration{.window_title = "AwesomeGame"}}
   {
     mEngine.on_start<&AwesomeGame::on_start>(this); // Called once before the game loop starts running
     mEngine.on_exit<&AwesomeGame::on_exit>(this);   // Called once just before shutdown
