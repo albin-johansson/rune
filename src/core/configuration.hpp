@@ -15,10 +15,7 @@ struct configuration final
 {
   std::string window_title{"Rune"};
   cen::iarea window_size{cen::window::default_size()};
-
   uint32 renderer_flags{cen::renderer::default_flags()};
-  cen::iarea logical_size{0, 0};
-
   double max_tick_rate{120.0};
   int max_frames_per_tick{5};
 };
