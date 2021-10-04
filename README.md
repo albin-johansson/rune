@@ -18,21 +18,23 @@ This framework was originally developed from the custom engine built for the
 
 The following is a (non-exhaustive) list of the features of Rune.
 
-* Distributed as a single header file
-* Simple framework with little to no performance overhead
-* Game loop implementation
-* Compile-time configuration
+* Header-only
+* Simple framework with very little performance overhead
+* Semi-fixed delta time game loop implementation
 * Efficient 2D vector implementation
-* AABB collision detection
-* [Tiled](https://github.com/mapeditor/tiled) JSON map parsing
-* `.ini` support.
-* Performant utilities and data structures, e.g. `static_vector`, `vector_map`, `stack_resource`, `from_string()`, etc
+* Performant utilities and data structures
+    * `static_vector`: a contiguous container with an API of a dynamic array, with static storage
+    * `vector_map`: an associative container that stores its key/value-pairs contiguously
+    * `stack_resource`:
+    * `from_string()`
+* AABB collision detection framework
 * Random number generation utilities
-* Serialization support, based on the Cereal API
 
 ## Dependencies
 
-The following table shows the dependencies of the Rune library. Note, SDL_ttf is the only mandatory SDL extension library for use of Rune, see the Centurion documentation for more details regarding extension libraries.
+The following table shows the dependencies of the Rune library. Note, SDL_ttf is the only mandatory
+SDL extension library for use of Rune, see the Centurion documentation for more details regarding
+extension libraries.
 
 | Dependency          | Source                                                                                   | Version |
 | ------------------- | ---------------------------------------------------------------------------------------- | ------- |
@@ -43,4 +45,5 @@ The following table shows the dependencies of the Rune library. Note, SDL_ttf is
 
 ## Documentation
 
-Detailed documentation and examples for the latest stable release can be found [here](https://albin-johansson.github.io/centurion/).
+Detailed documentation and examples for the latest stable release can be
+found [here](https://albin-johansson.github.io/centurion/).
