@@ -30,6 +30,100 @@ The following is a (non-exhaustive) list of the features of Rune.
 * AABB collision detection framework
 * Random number generation utilities
 
+## Example
+
+```C++
+#include <entt.hpp>
+#include <centurion.hpp>
+#include <rune.hpp>
+
+struct FooEvent final 
+{
+  int foo{};
+  int bar{};
+};
+
+class AwesomeGame final
+{
+ public:
+  AwesomeGame()
+  {
+    mEngine.on_start<&AwesomeGame::on_start>(this); // Called once before the game loop starts running
+    mEngine.on_exit<&AwesomeGame::on_exit>(this);   // Called once just before shutdown
+    
+    /* Register the various systems, you register several systems of these different categories. 
+       Call order: input systems -> logic systems -> render systems */
+    mEngine.add_input_system<&AwesomeGame::update_input>(this);
+    mEngine.add_logic_system<&AwesomeGame::update_logic>(this);
+    mEngine.add_render_system<&AwesomeGame::render>(this);
+    
+    auto& registry = mEngine.registry();
+    registry.set<cen::renderer>(mEngine.window());
+    
+    auto& dispatcher = mEngine.dispatcher();
+    dispatcher.sink<FooEvent>().connect<&AwesomeGame::on_foo>(this);
+  }
+  
+  void run()
+  {
+    mEngine.run();
+  }
+  
+ private:
+  rune::engine mEngine;
+  
+  void on_start() 
+  {
+    /* Prepare the game just before the main loop starts running */
+  }
+  
+  void on_exit() 
+  {
+    /* Prepare for imminent shutdown of the game, e.g. by creating an exit save */
+  }
+  
+  /* Input systems can omit the dispatcher parameter */
+  void update_input(entt::registry& registry, entt::dispatcher& dispatcher)
+  {
+    const auto& keyboard = mEngine.keyboard();
+    const auto& mouse = mEngine.mouse();
+    
+    /* Handle input state, input systems are always called before logic systems. */
+  }
+  
+  /* Logic systems can omit the dispatcher and delta time parameters */
+  void update_logic(entt::registry& registry, entt::dispatcher& dispatcher, float dt)
+  {
+    /* Update game logic */
+  }
+  
+  void render(entt::registry& registry)
+  {
+    auto& renderer = registry.ctx<cen::renderer>();
+    renderer.clear_with(cen::colors::black);
+    
+    /* Miscellaneous rendering code... */
+    
+    renderer.present();
+  }
+  
+  void on_foo(const FooEvent& event)
+  {
+    /* Handle the event... */
+  }
+};
+
+int main(int, char**)
+{
+  cen::library centurion;
+  
+  AwesomeGame game;
+  game.run();
+  
+  return 0;
+}
+```
+
 ## Dependencies
 
 The following table shows the dependencies of the Rune library. Note, SDL_ttf is the only mandatory
