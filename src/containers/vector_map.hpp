@@ -122,6 +122,31 @@ class vector_map final
   }
 
   /**
+   * \brief Adds a key/value pair to the map, as long as there isn't already an entry
+   * using the specified key.
+   *
+   * \tparam T the type of the key value.
+   * \tparam Args the types of the arguments that will be forwarded.
+   *
+   * \param key the key that will be associated with the value.
+   * \param args the arguments that will be forwarded to a `mapped_type` constructor.
+   *
+   * \return a reference to the added or existing key/value pair.
+   */
+  template <transparent_to<key_type> T, typename... Args>
+  auto try_emplace(const T& key, Args&&... args) -> value_type&
+  {
+    if (const auto it = find(key); it != m_data.end())
+    {
+      return *it;
+    }
+    else
+    {
+      return emplace(key, std::forward<Args>(args)...);
+    }
+  }
+
+  /**
    * \brief Adds or replaces a key/value pair in the map.
    *
    * \tparam Args the types of the arguments that will be forwarded.
@@ -291,18 +316,20 @@ class vector_map final
     }
   }
 
-  /// \copydoc at()
+  /**
+   * \brief Returns the existing value associated with the key, or attempts to insert a
+   * default constructed value for the key.
+   *
+   * \tparam T the type of the key.
+   *
+   * \param key the key associated with the desired value.
+   *
+   * \return a reference to the existing or created value.
+   */
   template <transparent_to<key_type> T>
   [[nodiscard]] auto operator[](const T& key) -> mapped_type&
   {
-    return at(key);
-  }
-
-  /// \copydoc at()
-  template <transparent_to<key_type> T>
-  [[nodiscard]] auto operator[](const T& key) const -> const mapped_type&
-  {
-    return at(key);
+    return try_emplace(key).second;
   }
 
   /**

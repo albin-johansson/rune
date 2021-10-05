@@ -279,10 +279,16 @@ TEST(VectorMap, At)
 TEST(VectorMap, Subscript)
 {
   map_type map;
-  ASSERT_THROW(map[42], rune::rune_error);
+  ASSERT_NO_THROW(map[42]);
+  ASSERT_TRUE(map.contains(42));
+  ASSERT_EQ(1u, map.size());
 
-  map.emplace(42, "foo");
-  ASSERT_EQ("foo", map[42]);
+  ASSERT_NO_THROW(map[42]);
+  ASSERT_TRUE(map.contains(42));
+  ASSERT_EQ(1u, map.size());
+
+  map[42] = "foo";
+  ASSERT_EQ("foo", map.at(42));
 }
 
 TEST(VectorMap, IndexOf)
