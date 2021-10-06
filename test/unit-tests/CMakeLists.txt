@@ -17,8 +17,6 @@ set(SOURCE_FILES
     rune/core/compiler_test.cpp
     rune/core/from_string_test.cpp
 
-    rune/io/csv_test.cpp
-
     rune/math/almost_equal_test.cpp
     rune/math/index_to_matrix_test.cpp
     rune/math/random_utils_test.cpp

@@ -44,7 +44,6 @@ target_sources(${RUNE_LIBRARY_TARGET}
     src/core/engine.hpp
     src/core/from_string.hpp
     src/core/rune_error.hpp
-    src/io/csv.hpp
     src/math/almost_equal.hpp
     src/math/index_to_matrix.hpp
     src/math/random_utils.hpp
