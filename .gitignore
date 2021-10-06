@@ -33,5 +33,6 @@
 
 # Custom stuff
 .idea
+.vscode
 cmake-build-*
 doxygen-out
