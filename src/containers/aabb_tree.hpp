@@ -17,8 +17,8 @@
 #include <unordered_map>  // unordered_map
 #include <vector>         // vector
 
-#include "../common/integers.hpp"
-#include "../common/maybe.hpp"
+#include "../core/common/integers.hpp"
+#include "../core/common/maybe.hpp"
 #include "../math/vector2.hpp"
 #include "aabb.hpp"
 #include "aabb_node.hpp"

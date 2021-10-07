@@ -3,8 +3,8 @@
 
 #include <concepts>  // floating_point
 
-#include "../common/integers.hpp"
-#include "../common/maybe.hpp"
+#include "../core/common/integers.hpp"
+#include "../core/common/maybe.hpp"
 #include "aabb.hpp"
 
 namespace rune {

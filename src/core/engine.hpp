@@ -9,7 +9,7 @@
 #include <utility>        // move
 #include <vector>         // vector
 
-#include "../common/maybe.hpp"
+#include "common/maybe.hpp"
 #include "configuration.hpp"
 
 namespace rune {

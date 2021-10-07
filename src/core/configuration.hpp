@@ -4,7 +4,7 @@
 #include <centurion.hpp>  // window, renderer, iarea
 #include <string>         // string
 
-#include "../common/integers.hpp"
+#include "common/integers.hpp"
 
 namespace rune {
 

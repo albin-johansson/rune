@@ -5,8 +5,8 @@
 #include <format>       // format_to_n
 #include <string_view>  // string_view
 
-#include "../common/cstr.hpp"
-#include "../common/integers.hpp"
+#include "common/cstr.hpp"
+#include "common/integers.hpp"
 
 namespace rune {
 

@@ -30,9 +30,6 @@ add_library(${RUNE_LIBRARY_TARGET} INTERFACE)
 
 target_sources(${RUNE_LIBRARY_TARGET}
     PUBLIC INTERFACE
-    src/common/cstr.hpp
-    src/common/integers.hpp
-    src/common/maybe.hpp
     src/containers/aabb.hpp
     src/containers/aabb_node.hpp
     src/containers/aabb_tree.hpp
@@ -45,6 +42,9 @@ target_sources(${RUNE_LIBRARY_TARGET}
     src/core/formatted_string.hpp
     src/core/from_string.hpp
     src/core/rune_error.hpp
+    src/core/common/cstr.hpp
+    src/core/common/integers.hpp
+    src/core/common/maybe.hpp
     src/math/almost_equal.hpp
     src/math/index_to_matrix.hpp
     src/math/random_utils.hpp
