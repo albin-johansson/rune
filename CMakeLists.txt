@@ -42,6 +42,7 @@ target_sources(${RUNE_LIBRARY_TARGET}
     src/core/compiler.hpp
     src/core/configuration.hpp
     src/core/engine.hpp
+    src/core/formatted_string.hpp
     src/core/from_string.hpp
     src/core/rune_error.hpp
     src/io/csv.hpp

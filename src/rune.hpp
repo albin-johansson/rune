@@ -34,6 +34,7 @@
 #include "core/compiler.hpp"
 #include "core/configuration.hpp"
 #include "core/engine.hpp"
+#include "core/formatted_string.hpp"
 #include "core/from_string.hpp"
 #include "core/rune_error.hpp"
 #include "math/almost_equal.hpp"
