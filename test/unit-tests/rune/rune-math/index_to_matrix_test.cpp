@@ -1,4 +1,4 @@
-#include "math/index_to_matrix.hpp"
+#include "rune-math/index_to_matrix.hpp"
 
 #include <gtest/gtest.h>
 

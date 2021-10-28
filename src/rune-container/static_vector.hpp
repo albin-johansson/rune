@@ -7,8 +7,8 @@
 #include <initializer_list>  // initializer_list
 #include <utility>           // forward, move
 
-#include "../core/common/integers.hpp"
-#include "../core/rune_error.hpp"
+#include "rune-core/integers.hpp"
+#include "rune-core/rune_error.hpp"
 
 namespace rune {
 

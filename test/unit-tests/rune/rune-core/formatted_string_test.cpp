@@ -1,4 +1,4 @@
-#include "core/formatted_string.hpp"
+#include "rune-core/formatted_string.hpp"
 
 #include <gtest/gtest.h>
 

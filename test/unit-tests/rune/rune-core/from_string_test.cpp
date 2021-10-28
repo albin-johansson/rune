@@ -1,8 +1,8 @@
-#include "core/from_string.hpp"
+#include "rune-core/from_string.hpp"
 
 #include <gtest/gtest.h>
 
-#include "core/common/integers.hpp"
+#include "rune-core/integers.hpp"
 
 TEST(FromString, Integer)
 {

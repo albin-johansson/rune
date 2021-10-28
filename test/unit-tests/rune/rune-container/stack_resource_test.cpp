@@ -1,4 +1,4 @@
-#include "containers/stack_resource.hpp"
+#include "rune-container/stack_resource.hpp"
 
 #include <gtest/gtest.h>
 

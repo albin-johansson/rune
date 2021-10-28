@@ -5,8 +5,8 @@
 #include <format>       // format_to_n
 #include <string_view>  // string_view
 
-#include "common/cstr.hpp"
-#include "common/integers.hpp"
+#include "core/cstr.hpp"
+#include "integers.hpp"
 
 namespace rune {
 
@@ -46,6 +46,8 @@ class formatted_string final
   std::array<char, Capacity + 1> m_buffer;  // NOLINT
   std::string_view m_view;
 };
+
+using fmt_string = formatted_string<128>;
 
 }  // namespace rune
 

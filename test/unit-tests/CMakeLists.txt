@@ -8,20 +8,20 @@ set(SOURCE_FILES
     serialization_utils.hpp
     test_main.cpp
 
-    rune/containers/aabb_test.cpp
-    rune/containers/aabb_tree_test.cpp
-    rune/containers/stack_resource_test.cpp
-    rune/containers/static_vector_test.cpp
-    rune/containers/vector_map_test.cpp
+    rune/rune-aabb/aabb_test.cpp
+    rune/rune-aabb/aabb_tree_test.cpp
+    rune/rune-container/stack_resource_test.cpp
+    rune/rune-container/static_vector_test.cpp
+    rune/rune-container/vector_map_test.cpp
 
-    rune/core/compiler_test.cpp
-    rune/core/formatted_string_test.cpp
-    rune/core/from_string_test.cpp
+    rune/rune-core/compiler_test.cpp
+    rune/rune-core/formatted_string_test.cpp
+    rune/rune-core/from_string_test.cpp
 
-    rune/math/almost_equal_test.cpp
-    rune/math/index_to_matrix_test.cpp
-    rune/math/random_utils_test.cpp
-    rune/math/vector2_test.cpp
+    rune/rune-math/almost_equal_test.cpp
+    rune/rune-math/index_to_matrix_test.cpp
+    rune/rune-math/random_utils_test.cpp
+    rune/rune-math/vector2_test.cpp
     )
 
 add_executable(UnitTests ${SOURCE_FILES})

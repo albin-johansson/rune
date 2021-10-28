@@ -30,26 +30,32 @@ add_library(${RUNE_LIBRARY_TARGET} INTERFACE)
 
 target_sources(${RUNE_LIBRARY_TARGET}
     PUBLIC INTERFACE
-    src/containers/aabb.hpp
-    src/containers/aabb_node.hpp
-    src/containers/aabb_tree.hpp
-    src/containers/stack_resource.hpp
-    src/containers/static_vector.hpp
-    src/containers/vector_map.hpp
-    src/core/compiler.hpp
+
     src/core/configuration.hpp
-    src/core/engine.hpp
-    src/core/formatted_string.hpp
-    src/core/from_string.hpp
-    src/core/rune_error.hpp
-    src/core/common/cstr.hpp
-    src/core/common/integers.hpp
-    src/core/common/maybe.hpp
-    src/math/almost_equal.hpp
-    src/math/index_to_matrix.hpp
-    src/math/random_utils.hpp
-    src/math/vector2.hpp
+    src/core/cstr.hpp
+
     src/rune.hpp
+
+    src/rune-aabb/aabb.hpp
+    src/rune-aabb/aabb_node.hpp
+    src/rune-aabb/aabb_tree.hpp
+
+    src/rune-container/stack_resource.hpp
+    src/rune-container/static_vector.hpp
+    src/rune-container/vector_map.hpp
+
+    src/rune-core/compiler.hpp
+    src/rune-core/formatted_string.hpp
+    src/rune-core/from_string.hpp
+    src/rune-core/rune_error.hpp
+    src/rune-core/integers.hpp
+
+    src/rune-engine/engine.hpp
+
+    src/rune-math/almost_equal.hpp
+    src/rune-math/index_to_matrix.hpp
+    src/rune-math/random_utils.hpp
+    src/rune-math/vector2.hpp
     )
 
 target_include_directories(${RUNE_LIBRARY_TARGET}
@@ -79,7 +85,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
       PUBLIC INTERFACE
       /EHsc
       /MP
-      /W3
+      /W4
       /Zc:__cplusplus  # Force MSVC to use __cplusplus macro with correct value
       /Zc:preprocessor # Enable conforming preprocessor
       /wd5105          # "macro expansion producing 'defined' has undefined behavior"

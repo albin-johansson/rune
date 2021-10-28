@@ -1,4 +1,4 @@
-#include "math/random_utils.hpp"
+#include "rune-math/random_utils.hpp"
 
 #include <gtest/gtest.h>
 

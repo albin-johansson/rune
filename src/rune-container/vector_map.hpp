@@ -5,12 +5,12 @@
 #include <cassert>    // assert
 #include <concepts>   // convertible_to
 #include <iterator>   // distance, iter_swap
+#include <optional>   // optional, nullopt
 #include <utility>    // pair, move, forward
 #include <vector>     // vector
 
-#include "../core/common/integers.hpp"
-#include "../core/common/maybe.hpp"
-#include "../core/rune_error.hpp"
+#include "rune-core/integers.hpp"
+#include "rune-core/rune_error.hpp"
 
 namespace rune {
 
@@ -337,11 +337,11 @@ class vector_map final
    *
    * \param key the key of the entry to look for.
    *
-   * \return the index of the specified entry in the underlying vector; `nothing` if
+   * \return the index of the specified entry in the underlying vector; `std::nullopt` if
    * the key is unused.
    */
   template <transparent_to<key_type> T>
-  [[nodiscard]] auto index_of(const T& key) const -> maybe<size_type>
+  [[nodiscard]] auto index_of(const T& key) const -> std::optional<size_type>
   {
     if (const auto it = find(key); it != end())
     {
@@ -349,7 +349,7 @@ class vector_map final
     }
     else
     {
-      return nothing;
+      return std::nullopt;
     }
   }
 

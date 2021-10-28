@@ -3,7 +3,7 @@
 
 #include <exception>  // exception
 
-#include "common/cstr.hpp"
+#include "core/cstr.hpp"
 
 namespace rune {
 

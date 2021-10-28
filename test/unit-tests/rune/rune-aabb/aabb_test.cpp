@@ -1,4 +1,4 @@
-#include "containers/aabb.hpp"
+#include "rune-aabb/aabb.hpp"
 
 #include <gtest/gtest.h>
 

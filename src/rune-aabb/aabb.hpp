@@ -5,7 +5,7 @@
 #include <cassert>    // assert
 #include <concepts>   // floating_point
 
-#include "../math/vector2.hpp"
+#include "../rune-math/vector2.hpp"
 
 namespace rune {
 

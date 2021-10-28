@@ -29,7 +29,7 @@ namespace rune {
  * \see `dot(const basic_vector2<T>&, const basic_vector2<T>&)`
  */
 template <std::floating_point T>
-class basic_vector2 final
+class [[deprecated]] basic_vector2 final
 {
  public:
   using value_type = T;               ///< The type of the coordinates.

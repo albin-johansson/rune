@@ -3,10 +3,9 @@
 
 #include <charconv>      // from_chars
 #include <concepts>      // floating_point, integral
+#include <optional>      // optional, nullopt
 #include <string_view>   // string_view
 #include <system_error>  // errc
-
-#include "common/maybe.hpp"
 
 namespace rune {
 
@@ -15,7 +14,7 @@ namespace rune {
 
 template <std::integral T>
 [[nodiscard]] auto from_string(const std::string_view str, const int base = 10)
-    -> maybe<T>
+    -> std::optional<T>
 {
   T value{};
 
@@ -27,12 +26,12 @@ template <std::integral T>
   }
   else
   {
-    return nothing;
+    return std::nullopt;
   }
 }
 
 template <std::floating_point T>
-[[nodiscard]] auto from_string(const std::string_view str) -> maybe<T>
+[[nodiscard]] auto from_string(const std::string_view str) -> std::optional<T>
 {
   T value{};
 
@@ -43,7 +42,7 @@ template <std::floating_point T>
   }
   else
   {
-    return nothing;
+    return std::nullopt;
   }
 }
 

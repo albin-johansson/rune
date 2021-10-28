@@ -1,4 +1,4 @@
-#include "containers/aabb_tree.hpp"
+#include "rune-aabb/aabb_tree.hpp"
 
 #include <gtest/gtest.h>
 

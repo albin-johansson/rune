@@ -1,4 +1,4 @@
-#include "core/compiler.hpp"
+#include "rune-core/compiler.hpp"
 
 #include <gtest/gtest.h>
 

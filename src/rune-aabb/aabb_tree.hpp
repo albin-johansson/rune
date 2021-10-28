@@ -10,6 +10,7 @@
 #include <deque>          // deque
 #include <iterator>       // output_iterator
 #include <limits>         // numeric_limits
+#include <optional>       // optional, nullopt
 #include <ostream>        // ostream
 #include <stack>          // stack
 #include <string>         // string
@@ -17,12 +18,11 @@
 #include <unordered_map>  // unordered_map
 #include <vector>         // vector
 
-#include "../core/common/integers.hpp"
-#include "../core/common/maybe.hpp"
-#include "../math/vector2.hpp"
+#include "../rune-math/vector2.hpp"
+#include "../rune-container/stack_resource.hpp"
+#include "../rune-core/integers.hpp"
 #include "aabb.hpp"
 #include "aabb_node.hpp"
-#include "stack_resource.hpp"
 
 namespace rune {
 
@@ -190,7 +190,7 @@ class aabb_tree final
 
       if (is_leaf(node))
       {
-        node.parent = nothing;
+        node.parent = std::nullopt;
         indices.at(static_cast<size_type>(count)) = index;
         ++count;
       }
@@ -238,7 +238,7 @@ class aabb_tree final
         parentNode.right = index2;
         parentNode.height = 1 + std::max(index1Node.height, index2Node.height);
         parentNode.box = merge(index1Node.box, index2Node.box);
-        parentNode.parent = nothing;
+        parentNode.parent = std::nullopt;
 
         index1Node.parent = parentIndex;
         index2Node.parent = parentIndex;
@@ -437,7 +437,7 @@ class aabb_tree final
     m_thickness = factor;
   }
 
-  [[nodiscard]] auto thickness_factor() const noexcept -> maybe<precision_type>
+  [[nodiscard]] auto thickness_factor() const noexcept -> std::optional<precision_type>
   {
     return m_thickness;
   }
@@ -455,8 +455,8 @@ class aabb_tree final
       const auto index = it->second;
       const auto& sourceNode = m_nodes.at(index);
 
-      stack_resource<BufferSize * sizeof(maybe<index_type>)> resource;
-      pmr_stack<maybe<index_type>> stack{resource.get()};
+      stack_resource<BufferSize * sizeof(std::optional<index_type>)> resource;
+      pmr_stack<std::optional<index_type>> stack{resource.get()};
 
       stack.push(m_root);
 
@@ -531,11 +531,11 @@ class aabb_tree final
 
   std::vector<node_type> m_nodes;                      ///< The collection of nodes
   std::unordered_map<key_type, index_type> m_indices;  ///< User IDs -> Node indices
-  maybe<index_type> m_root;                            ///< Root node index
-  maybe<index_type> m_nextFreeIndex{0};                ///< Index of next free node
+  std::optional<index_type> m_root;                    ///< Root node index
+  std::optional<index_type> m_nextFreeIndex{0};        ///< Index of next free node
   size_type m_nodeCount{0};                            ///< Number of nodes in the tree
   size_type m_nodeCapacity{};                          ///< Current node capacity
-  maybe<precision_type> m_thickness{def_thickness_factor};  ///< Thickness factor
+  std::optional<precision_type> m_thickness{def_thickness_factor};  ///< Thickness factor
   bool m_touchIsOverlap{true};  ///< Overlap detection strategy
 
   /// \name Allocation
@@ -560,7 +560,7 @@ class aabb_tree final
     }
 
     auto& node = m_nodes.at(end);
-    node.next = nothing;
+    node.next = std::nullopt;
     node.height = -1;
   }
 
@@ -598,9 +598,9 @@ class aabb_tree final
 
     m_nextFreeIndex = node.next;
 
-    node.parent = nothing;
-    node.left = nothing;
-    node.right = nothing;
+    node.parent = std::nullopt;
+    node.left = std::nullopt;
+    node.right = std::nullopt;
     node.height = 0;
 
     ++m_nodeCount;
@@ -631,7 +631,7 @@ class aabb_tree final
 
   void print(std::ostream& stream,
              const std::string& prefix,
-             const maybe<index_type> index,
+             const std::optional<index_type> index,
              const bool isLeft) const
   {
     if (index)
@@ -899,7 +899,7 @@ class aabb_tree final
     return index;
   }
 
-  void fix_tree_upwards(maybe<index_type> index)
+  void fix_tree_upwards(std::optional<index_type> index)
   {
     while (index)
     {
@@ -927,7 +927,7 @@ class aabb_tree final
     if (!m_root)
     {
       m_root = leafIndex;
-      m_nodes.at(leafIndex).parent = nothing;
+      m_nodes.at(leafIndex).parent = std::nullopt;
       return;
     }
 
@@ -978,7 +978,7 @@ class aabb_tree final
   {
     if (leafIndex == m_root)
     {
-      m_root = nothing;
+      m_root = std::nullopt;
       return;
     }
 
@@ -1010,7 +1010,7 @@ class aabb_tree final
     else
     {
       m_root = siblingIndex;
-      m_nodes.at(siblingIndex.value()).parent = nothing;
+      m_nodes.at(siblingIndex.value()).parent = std::nullopt;
       free_node(parentIndex.value());
     }
   }
@@ -1028,7 +1028,8 @@ class aabb_tree final
   /// \name Validation
   /// \{
 
-  [[nodiscard]] auto compute_height(const maybe<index_type> nodeIndex) const -> size_type
+  [[nodiscard]] auto compute_height(const std::optional<index_type> nodeIndex) const
+      -> size_type
   {
     if (!nodeIndex)
     {
@@ -1055,9 +1056,9 @@ class aabb_tree final
     return compute_height(m_root);
   }
 
-  void validate_structure(const maybe<index_type> nodeIndex) const
+  void validate_structure(const std::optional<index_type> nodeIndex) const
   {
-    if (nodeIndex == nothing)
+    if (nodeIndex == std::nullopt)
     {
       return;
     }
@@ -1093,7 +1094,7 @@ class aabb_tree final
     }
   }
 
-  void validate_metrics(const maybe<index_type> nodeIndex) const
+  void validate_metrics(const std::optional<index_type> nodeIndex) const
   {
     if (!nodeIndex)
     {
