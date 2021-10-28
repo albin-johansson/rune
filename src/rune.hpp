@@ -23,23 +23,22 @@
 #ifndef RUNE_HPP_
 #define RUNE_HPP_
 
-#include "containers/stack_resource.hpp"
-#include "containers/static_vector.hpp"
-#include "containers/vector_map.hpp"
-#include "core/configuration.hpp"
-#include "core/cstr.hpp"
-#include "math/almost_equal.hpp"
-#include "math/index_to_matrix.hpp"
-#include "math/random_utils.hpp"
-#include "math/vector2.hpp"
 #include "rune-aabb/aabb.hpp"
 #include "rune-aabb/aabb_node.hpp"
 #include "rune-aabb/aabb_tree.hpp"
+#include "rune-container/stack_resource.hpp"
+#include "rune-container/static_vector.hpp"
+#include "rune-container/vector_map.hpp"
 #include "rune-core/compiler.hpp"
 #include "rune-core/formatted_string.hpp"
 #include "rune-core/from_string.hpp"
 #include "rune-core/integers.hpp"
 #include "rune-core/rune_error.hpp"
+#include "rune-engine/configuration.hpp"
 #include "rune-engine/engine.hpp"
+#include "rune-math/almost_equal.hpp"
+#include "rune-math/index_to_matrix.hpp"
+#include "rune-math/random_utils.hpp"
+#include "rune-math/vector2.hpp"
 
 #endif  // RUNE_HPP_

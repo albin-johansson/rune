@@ -31,7 +31,7 @@ add_library(${RUNE_LIBRARY_TARGET} INTERFACE)
 target_sources(${RUNE_LIBRARY_TARGET}
     PUBLIC INTERFACE
 
-    src/core/configuration.hpp
+    src/rune-engine/configuration.hpp
     src/core/cstr.hpp
 
     src/rune.hpp

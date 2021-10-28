@@ -5,7 +5,6 @@
 #include <format>       // format_to_n
 #include <string_view>  // string_view
 
-#include "core/cstr.hpp"
 #include "integers.hpp"
 
 namespace rune {
@@ -22,7 +21,7 @@ class formatted_string final
     m_view = std::string_view{m_buffer.data(), res.out};
   }
 
-  [[nodiscard]] auto data() const noexcept -> cstr
+  [[nodiscard]] auto data() const noexcept -> const char*
   {
     return m_buffer.data();
   }
