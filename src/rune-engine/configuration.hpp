@@ -2,9 +2,8 @@
 #define RUNE_CONFIGURATION_HPP_
 
 #include <centurion.hpp>  // window, renderer, iarea
+#include <cstdint>        // uint32_t
 #include <string>         // string
-
-#include "rune-core/integers.hpp"
 
 namespace rune {
 
@@ -15,7 +14,7 @@ struct configuration final
 {
   std::string window_title{"Rune"};
   cen::iarea window_size{cen::window::default_size()};
-  uint32 renderer_flags{cen::renderer::default_flags()};
+  std::uint32_t renderer_flags{cen::renderer::default_flags()};
   double max_tick_rate{120.0};
   int max_frames_per_tick{5};
 };

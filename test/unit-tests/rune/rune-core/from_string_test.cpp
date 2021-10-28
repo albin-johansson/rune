@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "rune-core/integers.hpp"
+#include <cstdint>  // uint8_t
 
 TEST(FromString, Integer)
 {
@@ -10,7 +10,7 @@ TEST(FromString, Integer)
 
   ASSERT_EQ(42, rune::from_string<int>("42"));
   ASSERT_EQ(-123, rune::from_string<int>("-123"));
-  ASSERT_EQ(234, rune::from_string<rune::uint8>("234"));
+  ASSERT_EQ(234, rune::from_string<std::uint8_t>("234"));
 }
 
 TEST(FromString, Float)

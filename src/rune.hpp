@@ -32,7 +32,6 @@
 #include "rune-core/compiler.hpp"
 #include "rune-core/formatted_string.hpp"
 #include "rune-core/from_string.hpp"
-#include "rune-core/integers.hpp"
 #include "rune-core/rune_error.hpp"
 #include "rune-engine/configuration.hpp"
 #include "rune-engine/engine.hpp"

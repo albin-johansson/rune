@@ -2,10 +2,10 @@
 #define RUNE_AABB_NODE_HPP_
 
 #include <concepts>  // floating_point
+#include <cstddef>   // size_t
 #include <optional>  // optional
 
 #include "aabb.hpp"
-#include "rune-core/integers.hpp"
 
 namespace rune {
 
@@ -30,7 +30,7 @@ class aabb_node final
   using precision_type = Precision;                   ///< The vector coordinate type.
   using vector_type = basic_vector2<precision_type>;  ///< The associated vector type.
   using aabb_type = basic_aabb<precision_type>;       ///< The associated AABB type.
-  using index_type = usize;                           ///< The type used for node indices
+  using index_type = std::size_t;                     ///< The type used for node indices
 
   std::optional<key_type> id;        ///< The user-provided ID associated with the AABB.
   aabb_type box;                     ///< The associated AABB.

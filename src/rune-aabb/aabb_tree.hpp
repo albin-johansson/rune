@@ -6,7 +6,7 @@
 #include <cassert>        // assert
 #include <cmath>          // abs
 #include <concepts>       // floating_point, invocable, same_as
-#include <cstddef>        // byte
+#include <cstddef>        // byte, size_t
 #include <deque>          // deque
 #include <iterator>       // output_iterator
 #include <limits>         // numeric_limits
@@ -18,9 +18,8 @@
 #include <unordered_map>  // unordered_map
 #include <vector>         // vector
 
-#include "../rune-math/vector2.hpp"
 #include "../rune-container/stack_resource.hpp"
-#include "../rune-core/integers.hpp"
+#include "../rune-math/vector2.hpp"
 #include "aabb.hpp"
 #include "aabb_node.hpp"
 
@@ -73,8 +72,8 @@ class aabb_tree final
   using vector_type = basic_vector2<precision_type>;
   using aabb_type = basic_aabb<precision_type>;
   using node_type = aabb_node<key_type, precision_type>;
-  using index_type = usize;
-  using size_type = usize;
+  using index_type = std::size_t;
+  using size_type = std::size_t;
 
   // TODO reserve()?
 

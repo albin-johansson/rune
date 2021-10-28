@@ -4,12 +4,12 @@
 #include <algorithm>  // find_if
 #include <cassert>    // assert
 #include <concepts>   // convertible_to
+#include <cstddef>    // size_t
 #include <iterator>   // distance, iter_swap
 #include <optional>   // optional, nullopt
 #include <utility>    // pair, move, forward
 #include <vector>     // vector
 
-#include "rune-core/integers.hpp"
 #include "rune-core/rune_error.hpp"
 
 namespace rune {
@@ -49,7 +49,7 @@ class vector_map final
   using key_type = K;
   using mapped_type = V;
   using value_type = std::pair<key_type, mapped_type>;
-  using size_type = usize;
+  using size_type = std::size_t;
   using iterator = typename std::vector<value_type>::iterator;
   using const_iterator = typename std::vector<value_type>::const_iterator;
 

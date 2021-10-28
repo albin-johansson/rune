@@ -2,14 +2,13 @@
 #define RUNE_FORMATTED_STRING_HPP_
 
 #include <array>        // array
+#include <cstddef>      // size_t
 #include <format>       // format_to_n
 #include <string_view>  // string_view
 
-#include "integers.hpp"
-
 namespace rune {
 
-template <usize Capacity>
+template <std::size_t Capacity>
 class formatted_string final
 {
  public:
@@ -31,12 +30,12 @@ class formatted_string final
     return m_view;
   }
 
-  [[nodiscard]] auto size() const noexcept -> usize
+  [[nodiscard]] auto size() const noexcept -> std::size_t
   {
     return m_view.size();
   }
 
-  [[nodiscard]] constexpr auto capacity() const noexcept -> usize
+  [[nodiscard]] constexpr auto capacity() const noexcept -> std::size_t
   {
     return Capacity;
   }

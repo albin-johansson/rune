@@ -31,9 +31,6 @@ add_library(${RUNE_LIBRARY_TARGET} INTERFACE)
 target_sources(${RUNE_LIBRARY_TARGET}
     PUBLIC INTERFACE
 
-    src/rune-engine/configuration.hpp
-    src/core/cstr.hpp
-
     src/rune.hpp
 
     src/rune-aabb/aabb.hpp
@@ -48,8 +45,8 @@ target_sources(${RUNE_LIBRARY_TARGET}
     src/rune-core/formatted_string.hpp
     src/rune-core/from_string.hpp
     src/rune-core/rune_error.hpp
-    src/rune-core/integers.hpp
 
+    src/rune-engine/configuration.hpp
     src/rune-engine/engine.hpp
 
     src/rune-math/almost_equal.hpp
